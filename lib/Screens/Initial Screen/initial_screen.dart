@@ -2,6 +2,7 @@ import 'package:design_sprint/Screens/Initial%20Screen/splash_one.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 class InitialScreen extends StatefulWidget {
 
   @override

@@ -3,6 +3,7 @@ import 'package:design_sprint/Screens/Initial%20Screen/splash_two.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 class SplashOne extends StatefulWidget {
   @override
   _SplashOneState createState() => _SplashOneState();

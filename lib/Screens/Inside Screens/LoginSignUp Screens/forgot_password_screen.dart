@@ -2,6 +2,7 @@ import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/res
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+
 class ForgotPassword extends StatefulWidget {
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();

@@ -2,6 +2,7 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideati
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 bool statusDrawer = false;
 
 class CrazyEightEvaluation1 extends StatefulWidget {

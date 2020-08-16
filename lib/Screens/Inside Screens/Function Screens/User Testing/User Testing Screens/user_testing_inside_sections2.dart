@@ -1,5 +1,3 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Interview/user_interview_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Testing%20Screens/user_testing_inside_sections3.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

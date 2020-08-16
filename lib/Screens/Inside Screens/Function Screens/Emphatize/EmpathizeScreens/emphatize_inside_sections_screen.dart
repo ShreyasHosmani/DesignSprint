@@ -9,6 +9,7 @@ class EmphatizeInsideSections extends StatefulWidget {
   _EmphatizeInsideSectionsState createState() => _EmphatizeInsideSectionsState();
 }
 
+
 class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override

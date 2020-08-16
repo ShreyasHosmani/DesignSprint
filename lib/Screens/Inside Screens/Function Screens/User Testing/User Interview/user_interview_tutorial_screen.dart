@@ -1,6 +1,3 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_eight_evaluation_screen1.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/input_sprint_goal.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Prototyping/upload_prototype_idea_screen1.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Testing%20Screens/user_testing_inside_sections2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -20,3 +20,4 @@ class UpperClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper oldClipper) => true;
 }
+
