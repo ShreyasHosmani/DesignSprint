@@ -2,7 +2,6 @@ import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/log
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class SplashThree extends StatefulWidget {
   @override
   _SplashThreeState createState() => _SplashThreeState();

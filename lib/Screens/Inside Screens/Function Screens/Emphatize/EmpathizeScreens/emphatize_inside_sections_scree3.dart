@@ -1,6 +1,4 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/identify_painpoint_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/journey_mapping_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_tutorial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,7 +8,6 @@ class EmphatizeInsideSections3 extends StatefulWidget {
   @override
   _EmphatizeInsideSections3State createState() => _EmphatizeInsideSections3State();
 }
-
 
 class _EmphatizeInsideSections3State extends State<EmphatizeInsideSections3> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();

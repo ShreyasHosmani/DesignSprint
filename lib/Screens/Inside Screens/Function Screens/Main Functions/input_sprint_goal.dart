@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 bool statusDrawer = false;
 
-
 class InputSprintGoal extends StatefulWidget {
   @override
   _InputSprintGoalState createState() => _InputSprintGoalState();

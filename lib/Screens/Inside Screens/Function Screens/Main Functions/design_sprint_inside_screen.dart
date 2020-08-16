@@ -7,7 +7,6 @@ class DesignSprintInside extends StatefulWidget {
   _DesignSprintInsideState createState() => _DesignSprintInsideState();
 }
 
-
 class _DesignSprintInsideState extends State<DesignSprintInside> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override

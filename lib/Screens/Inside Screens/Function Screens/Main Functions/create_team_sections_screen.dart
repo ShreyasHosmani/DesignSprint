@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 bool statusDrawer = false;
 
-
 class CreateTeamSections extends StatefulWidget {
   @override
   _CreateTeamSectionsState createState() => _CreateTeamSectionsState();

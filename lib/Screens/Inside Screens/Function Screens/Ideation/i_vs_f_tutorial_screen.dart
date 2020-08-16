@@ -1,9 +1,6 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_eight_evaluation_screen1.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/i_vs_f_evaluation_screen1.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/input_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 bool statusDrawer = false;
 
