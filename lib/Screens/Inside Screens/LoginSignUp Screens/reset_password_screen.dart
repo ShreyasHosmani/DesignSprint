@@ -1,4 +1,8 @@
+import 'package:design_sprint/APIs/reset_password.dart';
 import 'package:flutter/material.dart';
+import 'package:design_sprint/utils/forgot_password_data.dart' as forgotPassword;
+import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:progress_dialog/progress_dialog.dart';
 
 class ResetPassword extends StatefulWidget {
   @override
@@ -6,8 +10,12 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
+
+  ResetPasswordApiProvider resetPasswordApiProvider = ResetPasswordApiProvider();
+
   @override
   Widget build(BuildContext context) {
+    forgotPassword.prResetPassword = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -21,7 +29,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 padding: EdgeInsets.only(left: 30),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Reset Password",
+                    child: Text(forgotPassword.resetPassword,
                       style: TextStyle(
                           fontSize: 32,
                           letterSpacing: 1,
@@ -34,7 +42,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 padding: EdgeInsets.only(left: 30),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("New Password",
+                    child: Text(forgotPassword.resetPassword,
                       style: TextStyle(
                         fontSize: 16,
                         letterSpacing: 1,
@@ -47,7 +55,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 padding: EdgeInsets.only(left: 30),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Confirm Password",
+                    child: Text(forgotPassword.confirmPassword,
                       style: TextStyle(
                         fontSize: 16,
                         letterSpacing: 1,
@@ -79,19 +87,20 @@ class _ResetPasswordState extends State<ResetPassword> {
           Theme(
             data: ThemeData(primaryColor: Color(0xff302b6f)),
             child: TextFormField(
+              controller: forgotPassword.passwordController,
               obscureText: _obscureText,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: Icon(Icons.lock, color: Colors.grey.shade300,),
                 ),
-                hintText: 'Password',
+                hintText: hint.hintPassword,
               ),
               validator: (value) {
                 if (value.length == 0) {
-                  return 'Password is compulsary!';
+                  return hint.validationPasswordCompulsary;
                 } else if (value.length < 6) {
-                  return 'Password must be more than 6 charecters';
+                  return hint.validationPasswordLength;
                 }
                 return null;
               },
@@ -121,19 +130,20 @@ class _ResetPasswordState extends State<ResetPassword> {
       child: Theme(
         data: ThemeData(primaryColor: Color(0xff302b6f)),
         child: TextFormField(
+          controller: forgotPassword.confirmPasswordController,
           obscureText: true,
           decoration: InputDecoration(
             prefixIcon: Padding(
               padding: const EdgeInsets.only(bottom: 5),
               child: Icon(Icons.lock, color: Colors.grey.shade300,),
             ),
-            hintText: 'Password',
+            hintText: hint.hintPassword,
           ),
           validator: (value) {
             if (value.length == 0) {
-              return 'Password is compulsary!';
+              return hint.validationPasswordCompulsary;
             } else if (value.length < 6) {
-              return 'Password must be more than 6 charecters';
+              return hint.validationPasswordLength;
             }
             return null;
           },
@@ -146,7 +156,8 @@ class _ResetPasswordState extends State<ResetPassword> {
     return GestureDetector(
       onTap: (){
         if(_formKey.currentState.validate()){
-          print("Password successfully changed");
+          forgotPassword.prResetPassword.show();
+          resetPasswordApiProvider.ResettPassword(context);
         }
       },
       child: Card(
@@ -165,7 +176,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               borderRadius: BorderRadius.all(Radius.circular(12))
           ),
           child: Center(
-            child: Text("Save",
+            child: Text(forgotPassword.buttonTextResetPassword,
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),

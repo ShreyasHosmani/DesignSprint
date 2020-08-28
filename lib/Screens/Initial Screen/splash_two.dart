@@ -30,7 +30,7 @@ class _SplashTwoState extends State<SplashTwo> {
   Widget buildSkipButton(BuildContext context){
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => Login(),
@@ -89,7 +89,7 @@ class _SplashTwoState extends State<SplashTwo> {
         SizedBox(height: 30,),
         GestureDetector(
           onTap: (){
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               PageRouteBuilder(
                 pageBuilder: (c, a1, a2) => SplashThree(),

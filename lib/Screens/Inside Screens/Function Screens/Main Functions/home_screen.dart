@@ -1,6 +1,9 @@
+import 'package:design_sprint/APIs/get_profile.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_sprint_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 class Home extends StatefulWidget {
   @override
@@ -47,7 +50,7 @@ class _HomeState extends State<Home> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Home",
+        child: Text(home.home,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -82,7 +85,7 @@ class _HomeState extends State<Home> {
 
   Widget buildNameWidget(BuildContext context){
 
-    Text hello = Text("Hello,",
+    Text hello = Text(home.hello,
       style: GoogleFonts.nunitoSans(
         textStyle: TextStyle(
           color: Color(0xff707070),
@@ -91,7 +94,7 @@ class _HomeState extends State<Home> {
         )
       ),
     );
-    Text name = Text(" Pratheek!",
+    Text name = Text(profile.nameList[0]+"!",
       style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
             color: Color(0xff707070),
@@ -139,7 +142,7 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 29, left: 35),
-                  child: Text("Design Sprint",
+                  child: Text(home.designSprint,
                     style: GoogleFonts.nunitoSans(
                       textStyle: TextStyle(
                         fontSize: 30,
@@ -150,7 +153,7 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 35),
-                  child: Text("Start your first design sprint now",
+                  child: Text(home.designSprintHint,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 12,
@@ -193,7 +196,7 @@ class _HomeState extends State<Home> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 29, left: 35),
-                child: Text("Manage Team",
+                child: Text(home.manageTeam,
                   style: GoogleFonts.nunitoSans(
                       textStyle: TextStyle(
                         fontSize: 30,
@@ -204,7 +207,7 @@ class _HomeState extends State<Home> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10, left: 35),
-                child: Text("Manage your team work process",
+                child: Text(home.manageTeamHint,
                   style: GoogleFonts.nunitoSans(
                       textStyle: TextStyle(
                         fontSize: 12,
@@ -272,7 +275,7 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                               textStyle: TextStyle(
                                 color: Colors.white,
@@ -281,7 +284,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -300,7 +303,7 @@ class _HomeState extends State<Home> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -317,7 +320,7 @@ class _HomeState extends State<Home> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -334,7 +337,7 @@ class _HomeState extends State<Home> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -351,7 +354,7 @@ class _HomeState extends State<Home> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -368,7 +371,7 @@ class _HomeState extends State<Home> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -385,7 +388,7 @@ class _HomeState extends State<Home> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -405,3 +408,47 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+class Load extends StatefulWidget {
+  @override
+  _LoadState createState() => _LoadState();
+}
+
+class _LoadState extends State<Load> {
+
+  ProfileApiProvider profileApiProvider = ProfileApiProvider();
+
+  jumpScreen(){
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (c, a1, a2) => Home(),
+          transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          transitionDuration: Duration(milliseconds: 300),
+        ),
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    profileApiProvider.getSideBarProfile();
+    profileApiProvider.getProfile(context).whenComplete((){
+      jumpScreen();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+

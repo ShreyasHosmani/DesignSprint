@@ -1,6 +1,10 @@
+import 'package:design_sprint/APIs/update_timeline.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/timeline_data.dart' as timeline;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
 
 class InputTimeline extends StatefulWidget {
   @override
@@ -8,6 +12,7 @@ class InputTimeline extends StatefulWidget {
 }
 
 class _InputTimelineState extends State<InputTimeline> {
+  UpdateTimelineApiProvider updateTimelineApiProvider = UpdateTimelineApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -48,7 +53,7 @@ class _InputTimelineState extends State<InputTimeline> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Design Sprint",
+        child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -130,7 +135,7 @@ class _InputTimelineState extends State<InputTimeline> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -139,7 +144,7 @@ class _InputTimelineState extends State<InputTimeline> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -158,7 +163,7 @@ class _InputTimelineState extends State<InputTimeline> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -175,7 +180,7 @@ class _InputTimelineState extends State<InputTimeline> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -192,7 +197,7 @@ class _InputTimelineState extends State<InputTimeline> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -209,7 +214,7 @@ class _InputTimelineState extends State<InputTimeline> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -226,7 +231,7 @@ class _InputTimelineState extends State<InputTimeline> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -243,7 +248,7 @@ class _InputTimelineState extends State<InputTimeline> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -254,6 +259,7 @@ class _InputTimelineState extends State<InputTimeline> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -265,7 +271,7 @@ class _InputTimelineState extends State<InputTimeline> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Timeline",
+      child: Text(timeline.title,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -280,14 +286,11 @@ class _InputTimelineState extends State<InputTimeline> {
   Widget buildTimeLine1Card(BuildContext context){
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        setState(() {
+          timeline.selectedTimeline = "5";
+        });
+        print(timeline.selectedTimeline);
+        updateTimelineApiProvider.updateTimeLine(context);
       },
       child: Card(
         elevation: 2,
@@ -309,7 +312,7 @@ class _InputTimelineState extends State<InputTimeline> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("5 Days",
+                    child: Text(timeline.timeline1Text1,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -320,7 +323,7 @@ class _InputTimelineState extends State<InputTimeline> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("- 6 hours a day",
+                    child: Text(timeline.timeline1Text2,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 14,
@@ -335,7 +338,7 @@ class _InputTimelineState extends State<InputTimeline> {
                 padding: const EdgeInsets.only(left: 35, bottom: 20),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Text("This is the Fastest iteration process",
+                  child: Text(timeline.timeline1Text3,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 14,
@@ -355,7 +358,11 @@ class _InputTimelineState extends State<InputTimeline> {
   Widget buildTimeLine2Card(BuildContext context){
     return GestureDetector(
       onTap: (){
-
+        setState(() {
+          timeline.selectedTimeline = "14";
+        });
+        print(timeline.selectedTimeline);
+        updateTimelineApiProvider.updateTimeLine(context);
       },
       child: Card(
         elevation: 2,
@@ -377,7 +384,7 @@ class _InputTimelineState extends State<InputTimeline> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("14 Days",
+                    child: Text(timeline.timeline2Text1,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -388,7 +395,7 @@ class _InputTimelineState extends State<InputTimeline> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("- 2 hours a day",
+                    child: Text(timeline.timeline2Text2,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 14,
@@ -403,7 +410,7 @@ class _InputTimelineState extends State<InputTimeline> {
                 padding: const EdgeInsets.only(left: 35, bottom: 20),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Text("This is the Moderate iteration process",
+                  child: Text(timeline.timeline2Text3,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 14,
@@ -423,7 +430,11 @@ class _InputTimelineState extends State<InputTimeline> {
   Widget buildTimeLine3Card(BuildContext context){
     return GestureDetector(
       onTap: (){
-
+        setState(() {
+          timeline.selectedTimeline = "30";
+        });
+        print(timeline.selectedTimeline);
+        updateTimelineApiProvider.updateTimeLine(context);
       },
       child: Card(
         elevation: 2,
@@ -445,7 +456,7 @@ class _InputTimelineState extends State<InputTimeline> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("30 Days",
+                    child: Text(timeline.timeline3Text1,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -456,7 +467,7 @@ class _InputTimelineState extends State<InputTimeline> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("- 1 hour a day",
+                    child: Text(timeline.timeline3Text2,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 14,
@@ -471,7 +482,7 @@ class _InputTimelineState extends State<InputTimeline> {
                 padding: const EdgeInsets.only(left: 35, bottom: 20),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Text("This is the Deep iteration process",
+                  child: Text(timeline.timeline3Text3,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 14,

@@ -1,7 +1,11 @@
+import 'package:design_sprint/APIs/signup.dart';
 import 'package:design_sprint/ReusableWidgets/upper_curve_clipper.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/signup_data.dart' as signup;
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:design_sprint/utils/hint_texts.dart' as hint;
 
 class SignUp extends StatefulWidget {
   @override
@@ -9,13 +13,17 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+
+  SignUpApiProvider apiProvider = SignUpApiProvider();
+
   @override
   Widget build(BuildContext context) {
+    signup.prSignUp = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: signup.formKey,
           child: Column(
             children: [
               buildUpperImage(context),
@@ -24,7 +32,7 @@ class _SignUpState extends State<SignUp> {
                 padding: EdgeInsets.only(left: 30),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Sign Up",
+                    child: Text(signup.signUpHeading,
                       style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                             fontSize: 32,
@@ -95,16 +103,17 @@ class _SignUpState extends State<SignUp> {
       child: Theme(
         data: ThemeData(primaryColor: Color(0xff302b6f)),
         child: TextFormField(
+          controller: signup.nameController,
           decoration: InputDecoration(
             prefixIcon: Padding(
               padding: const EdgeInsets.only(bottom: 5),
               child: Icon(Icons.perm_identity, color: Colors.grey.shade300,),
             ),
-            hintText: 'Name',
+            hintText: hint.hintName,
           ),
           validator: (value) {
             if (value.length == 0) {
-              return 'Name is compulsary!';
+              return hint.validationName;
             }
             return null;
           },
@@ -119,15 +128,16 @@ class _SignUpState extends State<SignUp> {
       child: Theme(
         data: ThemeData(primaryColor: Color(0xff302b6f)),
         child: TextFormField(
+          controller: signup.emailController,
           decoration: InputDecoration(
             prefixIcon: Padding(
               padding: const EdgeInsets.only(bottom: 5),
               child: Icon(Icons.email, color: Colors.grey.shade300,),
             ),
-            hintText: 'Email',
+            hintText: hint.hintEmail,
           ),
           validator: (val) => !EmailValidator.validate(val, true)
-              ? 'Not a valid email.'
+              ? hint.validationEmail
               : null,
         ),
       ),
@@ -138,7 +148,7 @@ class _SignUpState extends State<SignUp> {
 
     void toggle() {
       setState(() {
-        _obscureText = !_obscureText;
+        signup.obscureText = !signup.obscureText;
       });
     }
 
@@ -149,19 +159,20 @@ class _SignUpState extends State<SignUp> {
           Theme(
             data: ThemeData(primaryColor: Color(0xff302b6f)),
             child: TextFormField(
-              obscureText: _obscureText,
+              controller: signup.passwordController,
+              obscureText: signup.obscureText,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: Icon(Icons.lock, color: Colors.grey.shade300,),
                 ),
-                hintText: 'Password',
+                hintText: hint.hintPassword,
               ),
               validator: (value) {
                 if (value.length == 0) {
-                  return 'Password is compulsary!';
+                  return hint.validationPasswordCompulsary;
                 } else if (value.length < 6) {
-                  return 'Password must be more than 6 charecters';
+                  return hint.validationPasswordLength;
                 }
                 return null;
               },
@@ -187,8 +198,9 @@ class _SignUpState extends State<SignUp> {
   Widget buildSignUpButton(BuildContext context){
     return GestureDetector(
       onTap: (){
-        if(_formKey.currentState.validate()){
-          print("Logged in successfully");
+        if(signup.formKey.currentState.validate()){
+          signup.prSignUp.show();
+          apiProvider.signUp(context);
         }
       },
       child: Card(
@@ -204,7 +216,7 @@ class _SignUpState extends State<SignUp> {
               borderRadius: BorderRadius.all(Radius.circular(12))
           ),
           child: Center(
-            child: Text("Sign Up",
+            child: Text(signup.signUpHeading,
               style: TextStyle(color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
           ),
@@ -219,13 +231,13 @@ class _SignUpState extends State<SignUp> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Already a user?",
+          Text(signup.alreadyUser,
             style: TextStyle(
                 fontSize: 14,
                 letterSpacing: 0.4
             ),
           ),
-          Text(" Login",
+          Text(signup.login,
             style: TextStyle(
                 color: Color(0xff302b6f),
                 fontSize: 14,
@@ -239,26 +251,3 @@ class _SignUpState extends State<SignUp> {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// variable declarations
-bool _obscureText = true;
-final _formKey = GlobalKey<FormState>();

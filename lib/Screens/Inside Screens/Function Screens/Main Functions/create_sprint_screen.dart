@@ -1,6 +1,8 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_inside_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
 
 class CreateSprint extends StatefulWidget {
   @override
@@ -48,7 +50,7 @@ class _CreateSprintState extends State<CreateSprint> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Design Sprint",
+        child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -90,7 +92,7 @@ class _CreateSprintState extends State<CreateSprint> {
 
   Widget buildNameWidget(BuildContext context){
     return Center(
-      child: Text("Looks like you have'nt started any sprint.",
+      child: Text(home.title2,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -104,7 +106,7 @@ class _CreateSprintState extends State<CreateSprint> {
 
   Widget buildName2Widget(BuildContext context){
     return Center(
-      child: Text("Home",
+      child: Text(home.home,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -147,7 +149,7 @@ class _CreateSprintState extends State<CreateSprint> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("Start new",
+                    child: Text(home.startNew,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -158,7 +160,7 @@ class _CreateSprintState extends State<CreateSprint> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("Design Sprint",
+                    child: Text(home.designSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -236,7 +238,7 @@ class _CreateSprintState extends State<CreateSprint> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -245,7 +247,7 @@ class _CreateSprintState extends State<CreateSprint> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -264,7 +266,7 @@ class _CreateSprintState extends State<CreateSprint> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -281,7 +283,7 @@ class _CreateSprintState extends State<CreateSprint> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -298,7 +300,7 @@ class _CreateSprintState extends State<CreateSprint> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -315,7 +317,7 @@ class _CreateSprintState extends State<CreateSprint> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -332,7 +334,7 @@ class _CreateSprintState extends State<CreateSprint> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -349,96 +351,7 @@ class _CreateSprintState extends State<CreateSprint> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildStatuseDrawer(BuildContext context){
-    return Drawer(
-      elevation: 20.0,
-      child: Container(
-        child: Drawer(
-          elevation: 10,
-          child: Container(
-            color: Colors.white,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xff302B70),
-                        Color(0xff787CD1),
-                      ],
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 80,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
-                        ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
-                      ),
-                      SizedBox(width: 15,),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hi Pratheek!",
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
-                          ),
-                          SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -450,90 +363,6 @@ class _CreateSprintState extends State<CreateSprint> {
                   ],
                 ),
                 SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text("Design Sprint",
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text("Tips",
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text("Manage Team",
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text("FaQ's",
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text("Legal Policy",
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

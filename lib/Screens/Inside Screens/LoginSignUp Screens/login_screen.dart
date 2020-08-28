@@ -1,11 +1,13 @@
+import 'package:design_sprint/APIs/login.dart';
 import 'package:design_sprint/ReusableWidgets/upper_curve_clipper.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/forgot_password_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/signup_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:design_sprint/utils/login_data.dart' as login;
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:design_sprint/utils/hint_texts.dart' as hint;
 
 class Login extends StatefulWidget {
   @override
@@ -13,13 +15,15 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  LoginApiProvider apiProviderLogin = LoginApiProvider();
   @override
   Widget build(BuildContext context) {
+    login.prLogin = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: login.formKey,
           child: Column(
             children: [
               buildUpperImage(context),
@@ -27,7 +31,7 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.only(left: 30),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Login",
+                    child: Text(login.loginHeading,
                       style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                             fontSize: 32,
@@ -110,15 +114,16 @@ class _LoginState extends State<Login> {
       child: Theme(
         data: ThemeData(primaryColor: Color(0xff302b6f)),
         child: TextFormField(
+          controller: login.emailController,
           decoration: InputDecoration(
             prefixIcon: Padding(
               padding: const EdgeInsets.only(bottom: 5),
               child: Icon(Icons.email, color: Colors.grey.shade300,),
             ),
-                hintText: 'Email',
+                hintText: hint.hintEmail,
           ),
           validator: (val) => !EmailValidator.validate(val, true)
-              ? 'Not a valid email.'
+              ? hint.validationEmail
               : null,
         ),
       ),
@@ -129,7 +134,7 @@ class _LoginState extends State<Login> {
 
     void toggle() {
       setState(() {
-        _obscureText = !_obscureText;
+        login.obscureText = !login.obscureText;
       });
     }
 
@@ -140,19 +145,20 @@ class _LoginState extends State<Login> {
           Theme(
             data: ThemeData(primaryColor: Color(0xff302b6f)),
             child: TextFormField(
-              obscureText: _obscureText,
+              controller: login.passwordController,
+              obscureText: login.obscureText,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: Icon(Icons.lock, color: Colors.grey.shade300,),
                 ),
-                hintText: 'Password',
+                hintText: hint.hintPassword,
               ),
               validator: (value) {
                 if (value.length == 0) {
-                  return 'Password is compulsary!';
+                  return hint.validationPasswordCompulsary;
                 } else if (value.length < 6) {
-                  return 'Password must be more than 6 charecters';
+                  return hint.validationPasswordLength;
                 }
                 return null;
               },
@@ -191,7 +197,7 @@ class _LoginState extends State<Login> {
           alignment: Alignment.centerRight,
           child: Padding(
             padding: const EdgeInsets.only(right: 30, top: 10),
-            child: Text("Forgot Password?",
+            child: Text(login.forgotPassword,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey.shade600,
@@ -205,15 +211,9 @@ class _LoginState extends State<Login> {
   Widget buildLoginButton(BuildContext context){
     return GestureDetector(
       onTap: (){
-        if(_formKey.currentState.validate()){
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => Home(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
+        if(login.formKey.currentState.validate()){
+          login.prLogin.show();
+          apiProviderLogin.Login(context);
         }
       },
       child: Card(
@@ -229,7 +229,7 @@ class _LoginState extends State<Login> {
             borderRadius: BorderRadius.all(Radius.circular(12))
           ),
           child: Center(
-            child: Text("Login",
+            child: Text(login.loginHeading,
               style: TextStyle(color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
           ),
@@ -253,13 +253,13 @@ class _LoginState extends State<Login> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Don't have an Account?",
+          Text(login.dontHaveAnAccount,
             style: TextStyle(
                 fontSize: 14,
                 letterSpacing: 0.4
             ),
           ),
-          Text(" Sign Up",
+          Text(login.signUp,
             style: TextStyle(
               color: Color(0xff302b6f),
                 fontSize: 14,
@@ -275,7 +275,7 @@ class _LoginState extends State<Login> {
   Widget signInWith(BuildContext context){
     return Align(
       alignment: Alignment.center,
-      child: Text("Sign In with",
+      child: Text(login.signInWith,
         style: TextStyle(
             fontSize: 16,
             letterSpacing: 0.2,
@@ -316,7 +316,7 @@ class _LoginState extends State<Login> {
                   width: 25, height: 25,
                   child: Image.asset("assets/images/google.jpg")),
               SizedBox(width: 5,),
-              Text("Google",
+              Text(login.google,
                 style: TextStyle(color: Colors.grey, fontSize: 15),
               )
             ],
@@ -345,7 +345,7 @@ class _LoginState extends State<Login> {
                   width: 25, height: 25,
                   child: Image.asset("assets/images/facebook.png")),
               SizedBox(width: 5,),
-              Text("Facebook",
+              Text(login.facebook,
                 style: TextStyle(color: Colors.grey, fontSize: 15),
               )
             ],
@@ -356,25 +356,3 @@ class _LoginState extends State<Login> {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// variable declarations
-bool _obscureText = true;
-final _formKey = GlobalKey<FormState>();

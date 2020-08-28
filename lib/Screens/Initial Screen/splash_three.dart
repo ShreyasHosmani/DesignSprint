@@ -76,7 +76,7 @@ class _SplashThreeState extends State<SplashThree> {
         SizedBox(height: 30,),
         GestureDetector(
           onTap: (){
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               PageRouteBuilder(
                 pageBuilder: (c, a1, a2) => Login(),
