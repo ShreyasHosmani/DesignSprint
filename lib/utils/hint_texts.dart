@@ -10,3 +10,8 @@ String validationPasswordCompulsary = "Password is compulsary!";
 String validationPasswordLength = "Password must be more than 6 charecters";
 
 String validationName = "Name is compulsary!";
+
+String goalEmpty = "Goal is empty!";
+
+String memberName = "Member name";
+String memberEmail = "Member email";

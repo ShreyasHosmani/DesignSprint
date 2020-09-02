@@ -1,6 +1,11 @@
+import 'package:design_sprint/APIs/create_add_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/team_data.dart' as team;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/hint_texts.dart' as hint;
 
 bool statusDrawer = false;
 
@@ -10,12 +15,17 @@ class ManageTeam extends StatefulWidget {
 }
 
 class _ManageTeamState extends State<ManageTeam> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  TeamApiProvider teamApiProvider = TeamApiProvider();
+  @override
+  void initState() {
+    teamApiProvider.getTeamMembers(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      key: team.scaffoldKey2,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
@@ -56,7 +66,7 @@ class _ManageTeamState extends State<ManageTeam> {
       setState(() {
         statusDrawer = false;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey2.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -65,7 +75,7 @@ class _ManageTeamState extends State<ManageTeam> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Manage Team",
+        child: Text(team.appBarTitle,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -147,7 +157,7 @@ class _ManageTeamState extends State<ManageTeam> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -156,7 +166,7 @@ class _ManageTeamState extends State<ManageTeam> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -175,7 +185,7 @@ class _ManageTeamState extends State<ManageTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -192,7 +202,7 @@ class _ManageTeamState extends State<ManageTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -209,7 +219,7 @@ class _ManageTeamState extends State<ManageTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -226,7 +236,7 @@ class _ManageTeamState extends State<ManageTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -243,7 +253,7 @@ class _ManageTeamState extends State<ManageTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -260,7 +270,7 @@ class _ManageTeamState extends State<ManageTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -271,6 +281,7 @@ class _ManageTeamState extends State<ManageTeam> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -284,7 +295,7 @@ class _ManageTeamState extends State<ManageTeam> {
       setState(() {
         statusDrawer = true;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey2.currentState.openEndDrawer();
     }
     return Align(
       alignment: Alignment.topRight,
@@ -555,7 +566,7 @@ class _ManageTeamState extends State<ManageTeam> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Dezy It - UI/UX",
+      child: Text(team.teamNameController.text,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -570,7 +581,7 @@ class _ManageTeamState extends State<ManageTeam> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Add or remove team members",
+      child: Text(team.subTitleManageTeam2,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Colors.black,
@@ -583,26 +594,35 @@ class _ManageTeamState extends State<ManageTeam> {
   }
 
   Widget buildMemberCardWidget(BuildContext context){
-    return Container(
-      width: 302,
-      height: 57,
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff787cd1)),
-        borderRadius: BorderRadius.all(Radius.circular(7))
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Pratheek",
-              style: GoogleFonts.nunitoSans(
-                fontSize: 18,
-              ),
+    return ListView.builder(
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: team.teamMemberNameList == null ? 0 : team.teamMemberNameList.length,
+      itemBuilder: (context, i) => Padding(
+        padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+        child: Container(
+          width: 302,
+          height: 57,
+          decoration: BoxDecoration(
+              border: Border.all(color: Color(0xff787cd1)),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(team.teamMemberNameList[i],
+                  style: GoogleFonts.nunitoSans(
+                    fontSize: 18,
+                  ),
+                ),
+                Icon(Icons.close, color: Colors.grey,)
+              ],
             ),
-            Icon(Icons.close, color: Colors.grey,)
-          ],
+          ),
         ),
       ),
     );
@@ -611,7 +631,7 @@ class _ManageTeamState extends State<ManageTeam> {
   Widget buildAddMemberWidget(BuildContext context){
     return GestureDetector(
       onTap: (){
-
+        showAlertDialogAddTeamMember(context);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -671,6 +691,117 @@ class _ManageTeamState extends State<ManageTeam> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialogAddTeamMember(BuildContext context) {
+
+    Widget textField = Theme(
+        data: ThemeData(
+          primaryColor: Color(0xff787CD1),
+        ),
+        child: TextFormField(
+          controller: team.memberNameController,
+          decoration: InputDecoration(
+              hintText: hint.memberName
+          ),
+          validator: (value){
+            if(value.isEmpty){
+              return team.teamMemberNameEmpty;
+            }
+            return null;
+          },
+        ));
+
+    Widget textFieldEmail = Theme(
+        data: ThemeData(
+          primaryColor: Color(0xff787CD1),
+        ),
+        child: TextFormField(
+          controller: team.memberEmailController,
+          decoration: InputDecoration(
+              hintText: hint.memberEmail
+          ),
+          validator: (value){
+            if(value.isEmpty){
+              return team.teamMemberEmailEmpty;
+            }
+            return null;
+          },
+        ));
+
+    GestureDetector buildSaveButton = GestureDetector(
+      onTap: () async {
+        if(team.formKey2.currentState.validate()){
+          team.prTeam.show();
+          teamApiProvider.addTeamMember(context);
+          setState(() {
+
+          });
+        }
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 10,
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 2.4,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(12))
+          ),
+          child: Center(
+            child: Text("Next",
+                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
+            ),
+          ),
+        ),
+      ),
+    );
+
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      title: Column(
+        children: [
+          Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+          Text("Add member", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+        ],
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Container(
+          height: MediaQuery.of(context).size.height/3,
+          width: MediaQuery.of(context).size.width,
+          child: Form(
+            key: team.formKey2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                textField,
+                textFieldEmail,
+                SizedBox(height: 20),
+                buildSaveButton,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

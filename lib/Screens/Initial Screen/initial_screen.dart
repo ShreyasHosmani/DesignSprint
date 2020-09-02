@@ -37,13 +37,15 @@ class _InitialScreenState extends State<InitialScreen> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        height: 123,//MediaQuery.of(context).size.height/7,
-        width: 123,//MediaQuery.of(context).size.width/3.5,
+        height: 153,//MediaQuery.of(context).size.height/7,
+        width: 153,//MediaQuery.of(context).size.width/3.5,
         decoration: BoxDecoration(
-          color: Color(0xff787CD1),
+          color: Color(0xff302b70),
             borderRadius: BorderRadius.all(Radius.circular(25))
         ),
-        child: Center(child: Text("Dt",
+        child: Image.asset("assets/images/dezylogo.gif"),
+        /*
+        Center(child: Text("Dt",
           style: GoogleFonts.arimo(
             textStyle: TextStyle(
                 color: Colors.white,
@@ -52,6 +54,8 @@ class _InitialScreenState extends State<InitialScreen> {
             ),
           ),
         )),
+
+         */
       ),
     );
   }

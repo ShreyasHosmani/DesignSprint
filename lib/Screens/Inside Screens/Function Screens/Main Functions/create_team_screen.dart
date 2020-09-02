@@ -1,6 +1,11 @@
+import 'package:design_sprint/APIs/create_add_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/team_data.dart' as team;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:progress_dialog/progress_dialog.dart';
 
 bool statusDrawer = false;
 
@@ -10,12 +15,13 @@ class CreateTeam extends StatefulWidget {
 }
 
 class _CreateTeamState extends State<CreateTeam> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  TeamApiProvider teamApiProvider = TeamApiProvider();
   @override
   Widget build(BuildContext context) {
+    team.prTeam = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      key: team.scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
@@ -51,7 +57,7 @@ class _CreateTeamState extends State<CreateTeam> {
       setState(() {
         statusDrawer = false;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -60,7 +66,7 @@ class _CreateTeamState extends State<CreateTeam> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Manage Team",
+        child: Text(team.appBarTitle,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -142,7 +148,7 @@ class _CreateTeamState extends State<CreateTeam> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -151,7 +157,7 @@ class _CreateTeamState extends State<CreateTeam> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -170,7 +176,7 @@ class _CreateTeamState extends State<CreateTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -187,7 +193,7 @@ class _CreateTeamState extends State<CreateTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -204,7 +210,7 @@ class _CreateTeamState extends State<CreateTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -221,7 +227,7 @@ class _CreateTeamState extends State<CreateTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -238,7 +244,7 @@ class _CreateTeamState extends State<CreateTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -255,7 +261,7 @@ class _CreateTeamState extends State<CreateTeam> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -266,6 +272,7 @@ class _CreateTeamState extends State<CreateTeam> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -279,7 +286,7 @@ class _CreateTeamState extends State<CreateTeam> {
       setState(() {
         statusDrawer = true;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
       alignment: Alignment.topRight,
@@ -550,7 +557,7 @@ class _CreateTeamState extends State<CreateTeam> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Home",
+      child: Text(home.home,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -565,7 +572,7 @@ class _CreateTeamState extends State<CreateTeam> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Create a new Team",
+      child: Text(team.subTitle,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Colors.black,
@@ -596,7 +603,7 @@ class _CreateTeamState extends State<CreateTeam> {
             child: Icon(Icons.add, color: Colors.white,),
           ),
           SizedBox(height: 10,),
-          Text("Create Team",
+          Text(team.buttonText,
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
                   color: Color(0xff787CD1),
@@ -615,23 +622,28 @@ class _CreateTeamState extends State<CreateTeam> {
         data: ThemeData(
           primaryColor: Color(0xff787CD1),
         ),
-        child: TextFormField(
-          decoration: InputDecoration(
-              hintText: ''
+        child: Form(
+          key: team.formKey,
+          child: TextFormField(
+            controller: team.teamNameController,
+            decoration: InputDecoration(
+                hintText: ''
+            ),
+            validator: (value){
+              if(value.isEmpty){
+                return team.teamEmpty;
+              }
+              return null;
+            },
           ),
         ));
 
     GestureDetector buildSaveButton = GestureDetector(
       onTap: (){
-        Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => ManageTeam(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(team.formKey.currentState.validate()){
+          team.prTeam.show();
+          teamApiProvider.createTeamName(context);
+        }
       },
       child: Card(
         shape: RoundedRectangleBorder(

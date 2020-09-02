@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/timeline_data.dart' as timeline;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:progress_dialog/progress_dialog.dart';
 
 class InputTimeline extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class _InputTimelineState extends State<InputTimeline> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    home.prCreateSprint = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -290,6 +292,7 @@ class _InputTimelineState extends State<InputTimeline> {
           timeline.selectedTimeline = "5";
         });
         print(timeline.selectedTimeline);
+        home.prCreateSprint.show();
         updateTimelineApiProvider.updateTimeLine(context);
       },
       child: Card(
@@ -362,6 +365,7 @@ class _InputTimelineState extends State<InputTimeline> {
           timeline.selectedTimeline = "14";
         });
         print(timeline.selectedTimeline);
+        home.prCreateSprint.show();
         updateTimelineApiProvider.updateTimeLine(context);
       },
       child: Card(
@@ -434,6 +438,7 @@ class _InputTimelineState extends State<InputTimeline> {
           timeline.selectedTimeline = "30";
         });
         print(timeline.selectedTimeline);
+        home.prCreateSprint.show();
         updateTimelineApiProvider.updateTimeLine(context);
       },
       child: Card(

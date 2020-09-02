@@ -1,4 +1,3 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/input_time_line.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,7 +31,7 @@ class UpdateTimelineApiProvider{
 
       home.responseArrayTimelineMsg = home.responseArrayUpdateTimeLine['message'].toString();
       if(statusCode == 200){
-        if(home.responseArrayCreateSprintMsg == "Timeline updated Successfully"){
+        if(home.responseArrayTimelineMsg == "Timeline updated Successfully"){
           home.prCreateSprint.hide();
           Fluttertoast.showToast(msg: home.timelineSaved, backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){

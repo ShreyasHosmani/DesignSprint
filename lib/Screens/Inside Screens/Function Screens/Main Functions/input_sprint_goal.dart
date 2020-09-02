@@ -1,6 +1,12 @@
+import 'package:design_sprint/APIs/input_sprint_goal.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_team_sections_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/sprint_goal_data.dart' as goal;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:progress_dialog/progress_dialog.dart';
 
 bool statusDrawer = false;
 
@@ -10,9 +16,11 @@ class InputSprintGoal extends StatefulWidget {
 }
 
 class _InputSprintGoalState extends State<InputSprintGoal> {
+  InputGoalApiProvider inputGoalApiProvider = InputGoalApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    goal.prInputGoal = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -65,7 +73,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Design Sprint",
+        child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -147,7 +155,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -156,7 +164,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -175,7 +183,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -192,7 +200,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -209,7 +217,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -226,7 +234,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -243,7 +251,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -260,7 +268,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -271,6 +279,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -555,7 +564,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Define your Goal",
+      child: Text(goal.title,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -569,14 +578,29 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
 
   Widget buildNameWidget(BuildContext context){
     return Center(
-      child: Text("Type in your sprint goal in the\n          placeholder below.",
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-            )
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(goal.title2,
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                )
+            ),
+          ),
+          Text(goal.title3,
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                )
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -588,11 +612,20 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
         data: ThemeData(
           primaryColor: Color(0xff787CD1),
         ),
-        child: TextField(
-          maxLines: 20,
-          //controller: _noteController,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
+        child: Form(
+          key: goal.formKey,
+          child: TextFormField(
+            maxLines: 20,
+            controller: goal.goalController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+            validator: (value){
+              if(value.isEmpty){
+                return hint.goalEmpty;
+              }
+              return null;
+            },
           ),
         ),
       ),
@@ -601,7 +634,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
 
   Widget buildToolTipText(BuildContext context){
     return Center(
-      child: Text("This title will also be used as the name of your sprint.",
+      child: Text(goal.hintText,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Colors.black,
@@ -616,14 +649,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => CreateTeamSections(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(goal.formKey.currentState.validate()){
+          goal.prInputGoal.show();
+          inputGoalApiProvider.inputSprintGoal(context);
+        }
       },
       child: Center(
         child: Container(
@@ -634,7 +663,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
               borderRadius: BorderRadius.all(Radius.circular(7))
           ),
           child: Center(
-            child: Text("Next",
+            child: Text(goal.buttonText,
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
