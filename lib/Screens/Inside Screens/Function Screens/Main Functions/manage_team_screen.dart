@@ -735,8 +735,8 @@ class _ManageTeamState extends State<ManageTeam> {
         if(team.formKey2.currentState.validate()){
           team.prTeam.show();
           teamApiProvider.addTeamMember(context);
-          setState(() {
-
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.popAndPushNamed(context, '/trial');
           });
         }
       },
@@ -756,7 +756,7 @@ class _ManageTeamState extends State<ManageTeam> {
               borderRadius: BorderRadius.all(Radius.circular(12))
           ),
           child: Center(
-            child: Text("Next",
+            child: Text(team.nextButtonText,
                 style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
             ),
           ),
@@ -773,7 +773,7 @@ class _ManageTeamState extends State<ManageTeam> {
           Align(
               alignment: Alignment.centerRight,
               child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text("Add member", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text(team.addMember, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
         ],
       ),
       content: Padding(

@@ -1,7 +1,10 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/journey_map_pain_points_listView.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_digital_or_upload_screen.dart';
+import 'package:design_sprint/APIs/create_journey_map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:progress_dialog/progress_dialog.dart';
 
 bool statusDrawer = false;
 
@@ -11,9 +14,11 @@ class JourneyMappingMainScreen extends StatefulWidget {
 }
 
 class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
+  CreateJourneyApiProvider createJourneyApiProvider = CreateJourneyApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    empathize.prJourneyMapName = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -61,7 +66,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Emphatize",
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -143,7 +148,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -152,7 +157,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -171,7 +176,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -188,7 +193,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -205,7 +210,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -222,7 +227,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -239,7 +244,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -256,7 +261,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -267,6 +272,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -551,7 +557,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Journey Mapping",
+      child: Text(empathize.journeyMapping,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -587,7 +593,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("Create Journey",
+                    child: Text(empathize.journeyMapHint1,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -598,7 +604,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("Map Digitally",
+                    child: Text(empathize.journeyMapHint2,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -655,7 +661,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 29, left: 35),
-                  child: Text("Create Journey",
+                  child: Text(empathize.journeyMapHint1,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 30,
@@ -666,7 +672,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 35),
-                  child: Text("Map on paper",
+                  child: Text(empathize.journeyMapPaperHint,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 30,
@@ -702,27 +708,29 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
 
   showAlertDialog(BuildContext context) {
 
-    Widget textField = Theme(
+    Widget textFormField = Theme(
         data: ThemeData(
           primaryColor: Color(0xff787CD1),
         ),
         child: TextFormField(
+          controller: empathize.journeyNameController,
           decoration: InputDecoration(
-              hintText: 'Journey Map Name'
+              hintText: empathize.journeyMapPaperHint,
           ),
+          validator: (val){
+            if(val.isEmpty){
+              return empathize.journeyMapFieldValidation;
+            }
+            return null;
+          },
         ));
 
     GestureDetector buildSaveButton = GestureDetector(
       onTap: (){
-        Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => JourneyMapPainPointsListView(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(empathize.formKey2.currentState.validate()){
+          empathize.prJourneyMapName.show();
+          createJourneyApiProvider.createJourneyMapName(context);
+        }
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -758,7 +766,7 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
           Align(
               alignment: Alignment.centerRight,
               child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text("Name the journey Map.", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text(empathize.popUpHint, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
           Text("",style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
         ],
       ),
@@ -767,12 +775,15 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height/4,
           width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              textField,
-              buildSaveButton,
-            ],
+          child: Form(
+            key: empathize.formKey2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                textFormField,
+                buildSaveButton,
+              ],
+            ),
           ),
         ),
       ),

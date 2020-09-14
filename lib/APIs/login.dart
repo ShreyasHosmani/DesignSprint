@@ -13,7 +13,7 @@ class LoginApiProvider {
 
   Future<String> Login(context) async {
 
-    String url = globals.urlLogin + "login.php";
+    String url = globals.urlLogin + "login";
 
     http.post(url, body: {
 

@@ -1,6 +1,10 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/upload_persona_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
@@ -11,6 +15,7 @@ class CreateOrDownloadPersona extends StatefulWidget {
 
 class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Dio dio = Dio();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +65,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Emphatize",
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -142,7 +147,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -151,7 +156,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -170,7 +175,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -187,7 +192,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -204,7 +209,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -221,7 +226,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -238,7 +243,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -255,7 +260,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -266,6 +271,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -710,23 +716,28 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      width: 44,
-                      height: 44,
-                      child: Image.asset("assets/images/pdf.png")),
-                  SizedBox(height: 8.97,),
-                  Text("Save as PDF",
-                    style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                      )
+              InkWell(
+                onTap: () async {
+                  await dio.download("https://onetouchhosting.tk/appdata/personatemplate/template.pdf", "");
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        width: 44,
+                        height: 44,
+                        child: Image.asset("assets/images/pdf.png")),
+                    SizedBox(height: 8.97,),
+                    Text("Save as PDF",
+                      style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          fontSize: 14,
+                        )
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               SizedBox(width: 50,),
               Column(

@@ -1,8 +1,12 @@
+import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-bool statusDrawer = false;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:progress_dialog/progress_dialog.dart';
 
 class CreateDigitalPersona extends StatefulWidget {
   @override
@@ -10,52 +14,56 @@ class CreateDigitalPersona extends StatefulWidget {
 }
 
 class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
   @override
   Widget build(BuildContext context) {
+    empathize.prDigitalPersona = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      key: empathize.scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: empathize.statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 43,),
-                buildEditDpWidget(context),
-                SizedBox(height: 40,),
-                buildNameField(context),
-                SizedBox(height: 20,),
-                buildAgeField(context),
-                SizedBox(height: 20,),
-                buildLocationField(context),
-                SizedBox(height: 20,),
-                buildEducationField(context),
-                SizedBox(height: 20,),
-                buildJobField(context),
-                SizedBox(height: 20,),
-                buildBioField(context),
-                SizedBox(height: 20,),
-                buildGoalsAndMotivationField(context),
-                SizedBox(height: 40,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    saveButton(context),
-                    newPersonaButton(context),
-                  ],
-                ),
-                SizedBox(height: 40,),
-                buildNextButton(context),
-                SizedBox(height: 40,),
-              ],
+            Form(
+              key: empathize.formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20,),
+                  buildName2Widget(context),
+                  SizedBox(height: 43,),
+                  buildEditDpWidget(context),
+                  SizedBox(height: 40,),
+                  buildNameField(context),
+                  SizedBox(height: 20,),
+                  buildAgeField(context),
+                  SizedBox(height: 20,),
+                  buildLocationField(context),
+                  SizedBox(height: 20,),
+                  buildEducationField(context),
+                  SizedBox(height: 20,),
+                  buildJobField(context),
+                  SizedBox(height: 20,),
+                  buildBioField(context),
+                  SizedBox(height: 20,),
+                  buildGoalsAndMotivationField(context),
+                  SizedBox(height: 40,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      saveButton(context),
+                      newPersonaButton(context),
+                    ],
+                  ),
+                  SizedBox(height: 40,),
+                  buildNextButton(context),
+                  SizedBox(height: 40,),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 40),
@@ -72,9 +80,9 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
     Container line = Container(height:1,color: Colors.black,child: Divider());
     void _openEndDrawer() {
       setState(() {
-        statusDrawer = false;
+        empathize.statusDrawer = false;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      empathize.scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -83,7 +91,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Emphatize",
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -158,14 +166,14 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                             color: Colors.grey.shade100,
                             borderRadius: BorderRadius.all(Radius.circular(10))
                         ),
-                        child: Icon(Icons.person, color: Color(0xffd4d4d4), size: 40,),
+                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
                       ),
                       SizedBox(width: 15,),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -174,7 +182,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -193,7 +201,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -210,7 +218,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -227,7 +235,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -244,7 +252,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -261,7 +269,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -278,7 +286,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -289,6 +297,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -300,9 +309,9 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   Widget statusBarDrawer(BuildContext context){
     void _openEndDrawer() {
       setState(() {
-        statusDrawer = true;
+        empathize.statusDrawer = true;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      empathize.scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
       alignment: Alignment.topRight,
@@ -573,7 +582,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Digital persona",
+      child: Text(empathize.digitalPersona,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -643,10 +652,17 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          controller: empathize.nameController,
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'Name'
+            hintText: hint.hintName
           ),
+          validator: (val){
+            if(val.isEmpty){
+              return hint.validationName;
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -663,10 +679,17 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          controller: empathize.ageController,
           decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Age'
+              hintText: hint.hintAge
           ),
+          validator: (val){
+            if(val.isEmpty){
+              return hint.ageValidation;
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -683,10 +706,17 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          controller: empathize.locationController,
           decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Location'
+              hintText: hint.hintLocation
           ),
+          validator: (val){
+            if(val.isEmpty){
+              return hint.locationValidation;
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -703,10 +733,17 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          controller: empathize.educationController,
           decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Education'
+              hintText: hint.hintEducation
           ),
+          validator: (val){
+            if(val.isEmpty){
+              return hint.educationValidation;
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -723,10 +760,17 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          controller: empathize.jobController,
           decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Job'
+              hintText: hint.hintJob
           ),
+          validator: (val){
+            if(val.isEmpty){
+              return hint.jobValidation;
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -743,20 +787,21 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
-          //focusNode: _focusNode,
           autofocus:false ,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
           maxLines: 4,
-          //controller: _questionController,
+          controller: empathize.bioController,
           decoration: InputDecoration(
-            hintText: 'Bio\n\nDescribe the persona, their background, about their family, their hobbies the kind of car they drive as much as you can add in as much detail as possible.',
+            hintText: hint.hintBio,
             border: InputBorder.none,
           ),
-//        onEditingComplete: () {
-//          print("edit");
-//          _focusNode.unfocus();
-//        },
+          validator: (val){
+            if(val.isEmpty){
+              return hint.bioValidation;
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -773,40 +818,49 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
-          //focusNode: _focusNode,
+          controller: empathize.goalsAndMotivationController,
           autofocus:false ,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
           maxLines: 4,
-          //controller: _questionController,
           decoration: InputDecoration(
-            hintText: 'Goals and motivation\n\nDescribe the persona, their background, about their family, their hobbies the kind of car they drive as much as you can add in as much detail as possible.',
+            hintText: hint.hintGoalsAndMotivation,
             border: InputBorder.none,
           ),
-//        onEditingComplete: () {
-//          print("edit");
-//          _focusNode.unfocus();
-//        },
+          validator: (val){
+            if(val.isEmpty){
+              return hint.goalsAndMotivationValidation;
+            }
+            return null;
+          },
         ),
       ),
     );
   }
 
   Widget saveButton(BuildContext context){
-    return Container(
-      height: 35,
-      width: 114,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Color(0xffd4d4d4),
+    return InkWell(
+      onTap: (){
+        if(empathize.formKey.currentState.validate()){
+          empathize.prDigitalPersona.show();
+          createPersonaApiProvider.createDigitalPersona(context);
+        }
+      },
+      child: Container(
+        height: 35,
+        width: 114,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xffd4d4d4),
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(50)),
         ),
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-      ),
-      child: Center(
-        child: Text("Save",
-          style: GoogleFonts.nunitoSans(
-            fontSize: 16,
-            color: Colors.grey,
+        child: Center(
+          child: Text(empathize.saveButton,
+            style: GoogleFonts.nunitoSans(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
           ),
         ),
       ),
@@ -824,7 +878,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         borderRadius: BorderRadius.all(Radius.circular(50)),
       ),
       child: Center(
-        child: Text("New Persona",
+        child: Text(empathize.newPersonaButton,
           style: GoogleFonts.nunitoSans(
             fontSize: 16,
             color: Colors.grey,

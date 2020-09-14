@@ -15,3 +15,18 @@ String goalEmpty = "Goal is empty!";
 
 String memberName = "Member name";
 String memberEmail = "Member email";
+
+String nextButtonText = "Next";
+
+String hintAge = "Age";
+String ageValidation = "Age is compulsary!";
+String hintLocation = "Location";
+String locationValidation = "Location is compulsary!";
+String hintEducation = "Education";
+String educationValidation = "Education is compulsary!";
+String hintJob = "Job";
+String jobValidation = "Job is compulsary!";
+String hintBio = "Bio\n\nDescribe the persona";
+String bioValidation = "Bio is compulsary!";
+String hintGoalsAndMotivation = "Goals and motivation\n\nDescribe the persona";
+String goalsAndMotivationValidation = "Goals and Motivation is compulsary!";

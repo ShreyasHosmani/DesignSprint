@@ -2,6 +2,9 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphat
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_digital_or_upload_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
@@ -61,7 +64,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Emphatize",
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -143,7 +146,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -152,7 +155,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -171,7 +174,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -188,7 +191,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -205,7 +208,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -222,7 +225,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -239,7 +242,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -256,7 +259,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -267,6 +270,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -551,7 +555,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Create persona",
+      child: Text(empathize.createPersonas,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -594,7 +598,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("Create Personas",
+                    child: Text(empathize.createPersonas,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -605,7 +609,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("Digitally",
+                    child: Text(empathize.digitally,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -664,7 +668,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("Create Personas",
+                    child: Text(empathize.createPersonas,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -675,7 +679,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("on paper",
+                    child: Text(empathize.createPersonasOnPaper,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
