@@ -1,6 +1,11 @@
+import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 
 bool statusDrawer = false;
 
@@ -10,7 +15,16 @@ class SelectFinalPainPoints extends StatefulWidget {
 }
 
 class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
+  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    super.initState();
+    getPainPointsApiProvider.getPainPointsAccordingToVotes(context).whenComplete((){
+      setState(() {});
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +69,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Emphatize",
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -137,7 +151,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -146,7 +160,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -165,7 +179,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -182,7 +196,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -199,7 +213,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -216,7 +230,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -233,7 +247,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -250,7 +264,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -261,6 +275,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -545,7 +560,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Identify Pain Points",
+      child: Text(empathize.identifyPainPoints,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -560,7 +575,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Select the Final Pain points which need to be resolved.",
+      child: Text(empathize.finalPainPointHint1,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -577,7 +592,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       physics: ScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: 6,
+      itemCount: empathize.painPointIdsListAccToVotes == null ? 0 : empathize.painPointIdsListAccToVotes.length,
       itemBuilder: (context, i) => Column(
         children: [
           Row(
@@ -597,7 +612,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                 height: 61,
                 width: 280,
                 child: Center(
-                  child: Text("Every sprint has an objective, and the\nneeds to be set in the beginning of the\nteam is clear on what the whole.",
+                  child: Text(empathize.painPointsListAccToVotes[i],
                     maxLines: 5,
                     style: GoogleFonts.nunitoSans(
                       fontSize: 14,
@@ -610,7 +625,16 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                 onTap: (){
                   setState(() {
                     checkList[i] = !checkList[i];
+                    empathize.selectedFinalPainPointId = empathize.painPointIdsListAccToVotes[i].toString();
+                    if(checkList[i] == true){
+                      empathize.painPointStatus ="2";
+                    }else{
+                      empathize.painPointStatus ="1";
+                    }
                   });
+                  print(empathize.selectedFinalPainPointId);
+                  print(empathize.painPointStatus);
+                  votePainPointsApiProvider.selectFinalPainPoints(context);
                 },
                 child: Container(
                   height: 20,

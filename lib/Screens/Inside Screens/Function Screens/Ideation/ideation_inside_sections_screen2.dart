@@ -1,6 +1,10 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/i_vs_f_tutorial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
@@ -85,7 +89,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Ideation",
+        child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -167,7 +171,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -176,7 +180,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -195,7 +199,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -212,7 +216,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -229,7 +233,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -246,7 +250,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -263,7 +267,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -280,7 +284,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -291,6 +295,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -575,7 +580,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Agenda",
+      child: Text(ideation.agenda,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -589,16 +594,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
 
   Widget buildCrazy8Card(BuildContext context){
     return GestureDetector(
-      onTap: (){
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
-      },
+      onTap: (){},
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -625,7 +621,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                 padding: const EdgeInsets.only(left: 20, top: 38),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text("Crazy 8",
+                  child: Text(ideation.card1,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 25,
@@ -645,14 +641,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
   Widget buildIvsFCard(BuildContext context){
     return GestureDetector(
       onTap: (){
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
+
       },
       child: Card(
         elevation: 2,
@@ -680,7 +669,7 @@ class _IdeationInsideSections2State extends State<IdeationInsideSections2> {
                 padding: const EdgeInsets.only(top: 38, left: 21),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text("I vs F\nAnalysis",
+                  child: Text(ideation.card2text1+"\n"+ideation.card2text2,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 25,

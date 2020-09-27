@@ -1,7 +1,10 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Mapping%20Insights/Mapping_insights_tutorial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/time_line_data.dart' as timeLine;
+import 'package:design_sprint/utils/user_testing_data.dart' as userTesting;
 
 bool statusDrawer = false;
 
@@ -90,7 +93,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("User Testing",
+        child: Text(userTesting.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -172,7 +175,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -181,7 +184,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -200,7 +203,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -217,7 +220,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -234,7 +237,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -251,7 +254,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -268,7 +271,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -285,7 +288,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -296,6 +299,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -580,7 +584,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Agenda",
+      child: Text(userTesting.subTitle,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -595,14 +599,6 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
   Widget buildUserInterviewCard(BuildContext context){
     return GestureDetector(
       onTap: (){
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
       },
       child: Card(
         elevation: 2,
@@ -635,7 +631,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                 padding: const EdgeInsets.only(left: 35, bottom: 20),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Text("User Interview",
+                  child: Text(userTesting.sectionsScreenCard1,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 22,
@@ -695,7 +691,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                 padding: const EdgeInsets.only(left: 35, bottom: 20),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Text("Shadowing",
+                  child: Text(userTesting.sectionsScreenCard2,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 22,
@@ -755,7 +751,7 @@ class _UserTestingInsideSections3State extends State<UserTestingInsideSections3>
                 padding: const EdgeInsets.only(left: 35, bottom: 20),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Text("Mapping Insights",
+                  child: Text(userTesting.sectionsScreenCard3,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 22,

@@ -1,26 +1,68 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_eight_evaluation_screen2.dart';
+import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen4.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/prototyping_data.dart' as prototyping;
 
 bool statusDrawer = false;
 bool showImages = false;
 
+class UploadPrototypeImagesPageViewBuilder extends StatefulWidget {
+  @override
+  _UploadPrototypeImagesPageViewBuilderState createState() => _UploadPrototypeImagesPageViewBuilderState();
+}
+
+class _UploadPrototypeImagesPageViewBuilderState extends State<UploadPrototypeImagesPageViewBuilder> {
+  final controller = PageController(viewportFraction: 1);
+  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    prototyping.pageIndex = 0;
+    getPainPointsApiProvider.getPainPointsForPrototyping(context);
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: prototyping.painPointsForPrototypingList == null ? Center(
+        child: CircularProgressIndicator(),
+      ) : PageView.builder(
+        physics:new NeverScrollableScrollPhysics(),
+        itemCount: prototyping.painPointsForPrototypingList == null ? 0 : prototyping.painPointsForPrototypingList.length,
+        controller: controller,
+        onPageChanged: (index){
+          setState(() {
+            prototyping.pageIndex = index;
+          });
+          print(prototyping.pageIndex);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return UploadPrototype1(controller);
+        },
+      ),
+    );
+  }
+}
+
+
 class UploadPrototype1 extends StatefulWidget {
+  final controller;
+  UploadPrototype1(this.controller) : super();
   @override
   _UploadPrototype1State createState() => _UploadPrototype1State();
 }
 
 class _UploadPrototype1State extends State<UploadPrototype1> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     showImages = false;
   }
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -97,7 +139,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Prototyping",
+        child: Text(prototyping.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -179,7 +221,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -188,7 +230,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -207,7 +249,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -224,7 +266,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -241,7 +283,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -258,7 +300,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -275,7 +317,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -292,7 +334,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -303,6 +345,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -587,7 +630,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Prototype all of your ideas one by one and\nupload images of your prototype below.",
+      child: Text(prototyping.uploadPrototypeHint1,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -621,7 +664,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
         color: Color(0xff787cd1)
       ),
       child: Center(
-        child: Text("1",
+        child: Text((prototyping.pageIndex+1).toString(),
           style: GoogleFonts.nunitoSans(
             color: Colors.white,
             fontSize: 14,
@@ -633,7 +676,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
 
   Widget buildName4Widget(BuildContext context){
     return Center(
-      child: Text("Our users may find it difficult to use the\ncollaborative function and work along with\ntheir team using this workspace.",
+      child: Text(prototyping.painPointsForPrototypingList[prototyping.pageIndex],
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -785,14 +828,20 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeSections4(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
+          print("Last index reached, You are a great man ever!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          print("You are a loser bro, try again!");
+          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+        }
       },
       child: Center(
         child: Container(
@@ -818,14 +867,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
     GestureDetector buildSaveButton = GestureDetector(
       onTap: (){
         Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => CrazyEightEvaluation2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+
       },
       child: Card(
         shape: RoundedRectangleBorder(

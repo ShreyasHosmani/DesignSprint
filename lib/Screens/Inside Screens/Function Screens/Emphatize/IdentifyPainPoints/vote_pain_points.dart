@@ -1,20 +1,71 @@
+import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/select_final_painpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 
 bool statusDrawer = false;
 
+class VotePageViewBuilder extends StatefulWidget {
+  @override
+  _VotePageViewBuilderState createState() => _VotePageViewBuilderState();
+}
+
+class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
+  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  final controller = PageController(viewportFraction: 1);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    empathize.pageIndex = 0;
+    print(empathize.pageIndex);
+    getPainPointsApiProvider.getPainPoints(context).whenComplete((){
+      setState(() {});
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: empathize.painPointsList == null ? Center(
+        child: CircularProgressIndicator(),
+      ) : PageView.builder(
+        physics:new NeverScrollableScrollPhysics(),
+        itemCount: empathize.painPointsList == null ? 0 : empathize.painPointsList.length,
+        controller: controller,
+        onPageChanged: (index){
+          setState(() {
+            empathize.pageIndex = index;
+          });
+          print(empathize.pageIndex);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return VotePainPoints(controller);
+        },
+      ),
+    );
+  }
+}
+
+
 class VotePainPoints extends StatefulWidget {
+  final controller;
+  VotePainPoints(this.controller) : super();
   @override
   _VotePainPointsState createState() => _VotePainPointsState();
 }
 
 class _VotePainPointsState extends State<VotePainPoints> {
-
+  VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    empathize.selectedPainPointId = empathize.painPointIdsList[empathize.pageIndex];
     containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
   }
 
@@ -71,7 +122,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Emphatize",
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -82,7 +133,9 @@ class _VotePainPointsState extends State<VotePainPoints> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            widget.controller.animateToPage(empathize.pageIndex - 1, duration: Duration(seconds: 1), curve: Curves.easeIn);
+          },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),
@@ -153,7 +206,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -162,7 +215,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -181,7 +234,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -198,7 +251,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -215,7 +268,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -232,7 +285,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -249,7 +302,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -266,7 +319,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -277,6 +330,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -561,7 +615,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Identify Pain Points",
+      child: Text(empathize.identifyPainPoints,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -576,7 +630,8 @@ class _VotePainPointsState extends State<VotePainPoints> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Vote of each idea based on its\n               Importance.",
+      child: Text(empathize.voteHint1+"\n"+empathize.voteHint2+".",
+        textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 fontSize: 20,
@@ -610,7 +665,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
           borderRadius: BorderRadius.all(Radius.circular(50))
         ),
         child: Center(
-          child: Text("25",
+          child: Text((empathize.pageIndex+1).toString(),
             style: GoogleFonts.nunitoSans(
               fontSize: 16,
               color: Colors.white
@@ -626,7 +681,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
       child: Center(
-        child: Text("Our users may find it difficult to use the collaborative function and work along with their team using this workspace.",
+        child: Text(empathize.painPointsList[empathize.pageIndex],
           style: GoogleFonts.nunitoSans(
               textStyle: TextStyle(
                   fontSize: 16,
@@ -644,7 +699,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
       child: Center(
-        child: Text("Importance",
+        child: Text(empathize.voteHint2,
           style: GoogleFonts.nunitoSans(
               textStyle: TextStyle(
                 fontSize: 22,
@@ -687,10 +742,16 @@ class _VotePainPointsState extends State<VotePainPoints> {
                   GestureDetector(
                     onTap: (){
                       setState(() {
-                        selectedIndex = i.toString();
+                        empathize.selectedIndex = i.toString();
+                        var voteRangeTemp = (i + 1).toString();
+                        empathize.voteRange = voteRangeTemp.toString();
+                        empathize.selectedPainPointId = empathize.painPointIdsList[empathize.pageIndex];
                       });
-                      print(selectedIndex);
-                      setColorState(context, selectedIndex);
+                      print(empathize.selectedIndex);
+                      print(empathize.voteRange);
+                      print(empathize.selectedPainPointId);
+                      setColorState(context, empathize.selectedIndex);
+                      votePainPointsApiProvider.votePainPoints(context);
                     },
                     child: Container(
                       height: 20,
@@ -717,14 +778,20 @@ class _VotePainPointsState extends State<VotePainPoints> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => SelectFinalPainPoints(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(empathize.painPointIdsList.last == empathize.selectedPainPointId){
+          print("Last index reached, You are a great man ever!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => SelectFinalPainPoints(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          print("You are a loser bro, try again!");
+          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+        }
       },
       child: Center(
         child: Container(
@@ -871,4 +938,3 @@ class _VotePainPointsState extends State<VotePainPoints> {
 }
 
 var containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
-var selectedIndex;

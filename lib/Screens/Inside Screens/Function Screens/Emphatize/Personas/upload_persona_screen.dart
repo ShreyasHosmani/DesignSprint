@@ -1,6 +1,9 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 bool showSecondStep = false;
@@ -43,7 +46,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                 SizedBox(height: 43,),
                 buildUploadButton(context),
                 SizedBox(height: 25,),
-                showSecondStep == false ? Container(height: 1, width: 1,) : buildFileNameWidget(context),
+                showSecondStep == false ? Container(height: 1, width: 1,) :buildFileNameWidget(context),
                 showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
                 showSecondStep == false ? Container(height: 1, width: 1,) :buildName4Widget(context),
                 showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
@@ -70,9 +73,9 @@ class _UploadPersonaState extends State<UploadPersona> {
     Container line = Container(height:1,color: Colors.black,child: Divider());
     void _openEndDrawer() {
       setState(() {
-        statusDrawer = false;
+        empathize.statusDrawer = false;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      empathize.scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -81,7 +84,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Emphatize",
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -163,7 +166,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -172,7 +175,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -191,7 +194,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -208,7 +211,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -225,7 +228,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -242,7 +245,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -259,7 +262,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -276,7 +279,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -287,6 +290,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -298,9 +302,9 @@ class _UploadPersonaState extends State<UploadPersona> {
   Widget statusBarDrawer(BuildContext context){
     void _openEndDrawer() {
       setState(() {
-        statusDrawer = true;
+        empathize.statusDrawer = true;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      empathize.scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
       alignment: Alignment.topRight,
@@ -311,7 +315,7 @@ class _UploadPersonaState extends State<UploadPersona> {
           width: 37,
           decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: Color(0xffd4d4d4)),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15),
                 bottomLeft: Radius.circular(15),
@@ -366,7 +370,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(color: Color(0xffd4d4d4),),
                     ),
                     SizedBox(width: 10,),
                     Text("Sprint Goal",
@@ -389,14 +393,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
+                          border: Border.all(color: Color(0xffd4d4d4))
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(color: Color(0xffd4d4d4),),
                     ),
                     SizedBox(width: 10,),
                     Text("Empathize",
@@ -419,14 +423,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
+                          border: Border.all(color: Color(0xffd4d4d4))
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(color: Color(0xffd4d4d4),),
                     ),
                     SizedBox(width: 10,),
                     Text("Ideation",
@@ -449,14 +453,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
+                          border: Border.all(color: Color(0xffd4d4d4))
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(color: Color(0xffd4d4d4),),
                     ),
                     SizedBox(width: 10,),
                     Text("Prototype",
@@ -479,14 +483,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
+                          border: Border.all(color: Color(0xffd4d4d4))
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(color: Color(0xffd4d4d4),),
                     ),
                     SizedBox(width: 10,),
                     Text("User Testing",
@@ -509,14 +513,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
+                          border: Border.all(color: Color(0xffd4d4d4))
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(color: Color(0xffd4d4d4),),
                     ),
                     SizedBox(width: 10,),
                     Text("Re - Iterate",
@@ -539,14 +543,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
+                          border: Border.all(color: Color(0xffd4d4d4))
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(color: Color(0xffd4d4d4),),
                     ),
                     SizedBox(width: 10,),
                     Text("Team",
@@ -571,7 +575,7 @@ class _UploadPersonaState extends State<UploadPersona> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Paper Persona",
+      child: Text(empathize.paperPersona,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -586,7 +590,7 @@ class _UploadPersonaState extends State<UploadPersona> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("1. Upload the paper journey maps",
+      child: Text(empathize.paperPersonaHint1,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 fontSize: 20,
@@ -729,7 +733,7 @@ class _UploadPersonaState extends State<UploadPersona> {
   Widget buildName4Widget(BuildContext context){
 
     return Center(
-      child: Text("2. Mention the identified painpoints",
+      child: Text(empathize.paperPersonaHint2,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 fontSize: 20,

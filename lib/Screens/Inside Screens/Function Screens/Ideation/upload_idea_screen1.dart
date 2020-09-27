@@ -1,25 +1,84 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_eight_evaluation_screen2.dart';
+import 'dart:io';
+import 'package:design_sprint/APIs/upload_idea_image.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/ideation_inside_sections_screen2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:image_picker/image_picker.dart';
 
 bool statusDrawer = false;
 bool showImages = false;
 
+class UploadIdeaImagePageViewBuilder extends StatefulWidget {
+  @override
+  _UploadIdeaImagePageViewBuilderState createState() => _UploadIdeaImagePageViewBuilderState();
+}
+
+class _UploadIdeaImagePageViewBuilderState extends State<UploadIdeaImagePageViewBuilder> {
+  final controller = PageController(viewportFraction: 1);
+  @override
+  void initState() {
+    super.initState();
+    ideation.pageIndexIdea = 0;
+    print(ideation.pageIndexIdea);
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ideation.painPointsOfStatus2List == null ? Center(
+        child: CircularProgressIndicator(),
+      ) : PageView.builder(
+        physics:new NeverScrollableScrollPhysics(),
+        itemCount: ideation.painPointsOfStatus2List == null ? 0 : ideation.painPointsOfStatus2List.length,
+        controller: controller,
+        onPageChanged: (index){
+          setState(() {
+            ideation.pageIndexIdea = index;
+          });
+          print(ideation.pageIndexIdea);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return UploadIdea1(controller);
+        },
+      ),
+    );
+  }
+}
+
+
 class UploadIdea1 extends StatefulWidget {
+  final controller;
+  UploadIdea1(this.controller) : super();
   @override
   _UploadIdea1State createState() => _UploadIdea1State();
 }
 
 class _UploadIdea1State extends State<UploadIdea1> {
-
+  UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
+  final picker = ImagePicker();
+  Future getImageOne() async {
+    Navigator.of(context).pop();
+    var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
+    setState(() {
+      ideation.imageOne = File(pickedFile.path);
+    });
+  }
+  Future getImageOneGallery() async {
+    Navigator.of(context).pop();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    setState(() {
+      ideation.imageOne = File(pickedFile.path);
+    });
+  }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     showImages = false;
   }
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -98,7 +157,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Ideation",
+        child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -180,7 +239,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -189,7 +248,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -208,7 +267,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -225,7 +284,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -242,7 +301,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -259,7 +318,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -276,7 +335,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -293,7 +352,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -304,6 +363,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -588,7 +648,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Crazy 8",
+      child: Text(ideation.card1,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -603,7 +663,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Upload the picture of all the\nideas you created.",
+      child: Text(ideation.uploadIdeaHint1,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -637,7 +697,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
         color: Color(0xff787cd1)
       ),
       child: Center(
-        child: Text("1",
+        child: Text((ideation.pageIndexIdea+1).toString(),
           style: GoogleFonts.nunitoSans(
             color: Colors.white,
             fontSize: 14,
@@ -649,7 +709,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
 
   Widget buildName4Widget(BuildContext context){
     return Center(
-      child: Text("Our users may find it difficult to use the\ncollaborative function and work along with\ntheir team using this workspace.",
+      child: Text(ideation.painPointsOfStatus2List[ideation.pageIndexIdea],
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -664,6 +724,10 @@ class _UploadIdea1State extends State<UploadIdea1> {
   Widget buildUploadButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        setState(() {
+          ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List[ideation.pageIndexIdea];
+        });
+        print(ideation.selectedPainPointIdForUploadIdeaImage);
         showGeneralDialog(
           barrierLabel: "Label",
           barrierDismissible: true,
@@ -683,9 +747,12 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     children: [
                       GestureDetector(
                         onTap: (){
-                          Navigator.of(context).pop();
-                          setState(() {
-                            showImages = true;
+                          //Navigator.of(context).pop();
+//                          setState(() {
+//                            showImages = true;
+//                          });
+                          getImageOneGallery().then((value){
+                            uploadIdeaApiProvider.uploadIdeaImage(context);
                           });
                         },
                         child: Column(
@@ -697,7 +764,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                                 height: 44,
                                 child: Image.asset("assets/images/photo.png")),
                             SizedBox(height: 8.97,),
-                            Text("Gallery",
+                            Text(ideation.gallery,
                               style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   fontSize: 14,
@@ -717,7 +784,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                               height: 44,
                               child: Image.asset("assets/images/folder.png")),
                           SizedBox(height: 8.97,),
-                          Text("File Manager",
+                          Text(ideation.fileManager,
                             style: GoogleFonts.nunitoSans(
                               textStyle: TextStyle(
                                 fontSize: 14,
@@ -778,14 +845,20 @@ class _UploadIdea1State extends State<UploadIdea1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndexIdea]){
+          print("Last index reached, You are a great man ever!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          print("You are a loser bro, try again!");
+          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+        }
       },
       child: Center(
         child: Container(
@@ -803,86 +876,6 @@ class _UploadIdea1State extends State<UploadIdea1> {
           ),
         ),
       ),
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-
-    GestureDetector buildSaveButton = GestureDetector(
-      onTap: (){
-        Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => CrazyEightEvaluation2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        elevation: 10,
-        child: Container(
-          height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(50))
-          ),
-          child: Center(
-            child: Text("Next",
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
-          ),
-        ),
-      ),
-    );
-
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
-      title: Column(
-        children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          SizedBox(height: 10,),
-          Text("Time Up", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
-          Text("",style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
-          SizedBox(height: 10,)
-        ],
-      ),
-      content: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Container(
-          height: MediaQuery.of(context).size.height/3.8,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Container(
-                  height: 96,
-                  width: 96,
-                  child: Image.asset("assets/images/timer-image.png")),
-              SizedBox(height: 40,),
-              buildSaveButton,
-            ],
-          ),
-        ),
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:design_sprint/APIs/input_pain_point.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree3.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +9,7 @@ class JourneyMapPainPointsListView extends StatefulWidget {
 }
 
 class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListView> {
+  InputPainPointsApiProvider inputPainPointsApiProvider = InputPainPointsApiProvider();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +33,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        //inputPainPointsApiProvider.inputPainPoints(context);
         Navigator.push(
           context,
           PageRouteBuilder(

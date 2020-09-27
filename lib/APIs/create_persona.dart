@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePersonaApiProvider {
 
@@ -13,12 +14,20 @@ class CreatePersonaApiProvider {
 
     String url = globals.urlSignUp + "createpersonadigitally.php";
 
+    empathize.baseImage = base64Encode(empathize.imageOne.readAsBytesSync());
+
+    empathize.fileName = empathize.imageOne.path.split("/").last;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('test_image', empathize.imageOne.path);
+
     http.post(url, body: {
 
       "userID" : profile.userID,
       "sprintID": home.sprintID,
       "emapathizeid" : "null",
-      "image" : "null",
+      "image" : empathize.baseImage.toString(),
+      "imagename" : empathize.fileName.toString(),
       "name" : empathize.nameController.text,
       "age" : empathize.ageController.text,
       "location" : empathize.locationController.text,
@@ -70,6 +79,7 @@ class CreatePersonaApiProvider {
     empathize.jobController.clear();
     empathize.bioController.clear();
     empathize.goalsAndMotivationController.clear();
+    empathize.imageOne = null;
   }
 
 }

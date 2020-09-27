@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class CreateDigitalPersona extends StatefulWidget {
@@ -15,6 +17,91 @@ class CreateDigitalPersona extends StatefulWidget {
 
 class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
+  final picker = ImagePicker();
+  Future getImageOne() async {
+    Navigator.of(context).pop();
+    var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
+    setState(() {
+      empathize.imageOne = File(pickedFile.path);
+    });
+  }
+  Future getImageOneGallery() async {
+    Navigator.of(context).pop();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    setState(() {
+      empathize.imageOne = File(pickedFile.path);
+    });
+  }
+  void _settingModalBottomSheetOne(context){
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc){
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOne();
+                      },
+                      child: Row(
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using camera"))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOneGallery();
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using gallery"))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
   @override
   Widget build(BuildContext context) {
     empathize.prDigitalPersona = ProgressDialog(context);
@@ -597,7 +684,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   Widget buildAddPhotoWidget(BuildContext context){
     return GestureDetector(
       onTap: (){
-
+        _settingModalBottomSheetOne(context);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -614,7 +701,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
             child: Icon(Icons.add, color: Colors.grey,),
           ),
           SizedBox(height: 10,),
-          Text("Add Photo",
+          Text(empathize.addPhoto,
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
                   color: Colors.grey.shade700,
@@ -628,7 +715,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   }
 
   Widget buildEditDpWidget(BuildContext context){
-    return Container(
+    return empathize.imageOne == null ? Container(
       height: 192,
       width: 192,
       decoration: BoxDecoration(
@@ -637,6 +724,16 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       ),
       child: Center(
         child: buildAddPhotoWidget(context),
+      ),
+    ) : Container(
+      height: 192,
+      width: 192,
+      decoration: BoxDecoration(
+          border: Border.all(color: Color(0xffd4d4d4)),
+          borderRadius: BorderRadius.all(Radius.circular(7))
+      ),
+      child: Center(
+        child: Image.file(empathize.imageOne, fit: BoxFit.cover,),
       ),
     );
   }

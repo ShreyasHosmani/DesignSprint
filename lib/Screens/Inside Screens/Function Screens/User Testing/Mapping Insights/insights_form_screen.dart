@@ -1,5 +1,11 @@
+import 'package:design_sprint/APIs/add_insights.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Mapping%20Insights/congratulations_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/user_testing_data.dart' as userTesting;
 
 bool statusDrawer = false;
 bool showSecondStep = false;
@@ -12,11 +18,13 @@ class InsightsForm extends StatefulWidget {
 }
 
 class _InsightsFormState extends State<InsightsForm> {
+  InsightsApiProvider insightsApiProvider = InsightsApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    userTesting.uploadedInsightsList = [];
     statusDrawer = false;
     showSecondStep = false;
     showPainPoint = false;
@@ -38,9 +46,14 @@ class _InsightsFormState extends State<InsightsForm> {
                 SizedBox(height: 20,),
                 buildName2Widget(context),
                 SizedBox(height: 51,),
+                buildInsightsListViewBuilder(context),
+                SizedBox(height: 51,),
                 buildInsightTextFieldContainer(context),
                 SizedBox(height: 35,),
                 buildAddInsightButton(context),
+                SizedBox(height: 35,),
+                buildNextButton(context),
+                SizedBox(height: 35,),
               ],
             ),
             Padding(
@@ -69,7 +82,7 @@ class _InsightsFormState extends State<InsightsForm> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("User Testing",
+        child: Text(userTesting.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -151,7 +164,7 @@ class _InsightsFormState extends State<InsightsForm> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -160,7 +173,7 @@ class _InsightsFormState extends State<InsightsForm> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -179,7 +192,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -196,7 +209,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -213,7 +226,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -230,7 +243,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -247,7 +260,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -264,7 +277,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -275,6 +288,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -559,7 +573,7 @@ class _InsightsFormState extends State<InsightsForm> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Insights form",
+      child: Text(userTesting.insightsForm,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -571,62 +585,89 @@ class _InsightsFormState extends State<InsightsForm> {
     );
   }
 
+  Widget buildInsightsListViewBuilder(BuildContext context){
+    return ListView.builder(
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: userTesting.uploadedInsightsList == null ? 0 : userTesting.uploadedInsightsList.length,
+      itemBuilder: (context, i) => Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
+        child: Card(
+          elevation: 5,
+          child: Container(
+            width: 302,
+            height: 105.54,
+            child: Center(
+              child: Text(userTesting.uploadedInsightsList[i],
+                style: GoogleFonts.nunitoSans(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildInsightTextFieldContainer(BuildContext context){
     return Card(
       elevation: 5,
       child: Container(
         width: 302,
         height: 105.54,
-        child: showPainPoint == true ? Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20,),
-            child: Text(painPointController.text,
-              style: GoogleFonts.nunitoSans(
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ): Padding(
+        child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: painPointController,
-                decoration: InputDecoration(
-                  hintText: 'Type your insight here',
-                  border: InputBorder.none,
-                ),
-              ),
-              Divider(color: Color(0xff787CD1),height: 2,),
-              SizedBox(height: 24,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text("Cancel",
-                    style: GoogleFonts.nunitoSans(
-                        color: Color(0xff787CD1)
-                    ),
+          child: Form(
+            key: userTesting.formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: userTesting.painPointController,
+                  decoration: InputDecoration(
+                    hintText: userTesting.insightFormHint,
+                    border: InputBorder.none,
                   ),
-                  SizedBox(width: 36,),
-                  GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        showPainPoint = true;
-                      });
-                      setState(() {
+                ),
+                Divider(color: Color(0xff787CD1),height: 2,),
+                SizedBox(height: 24,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          painPointController.clear();
+                        });
+                        setState(() {
 
-                      });
-                    },
-                    child: Text("Done",
-                      style: GoogleFonts.nunitoSans(
-                          color: Color(0xff787CD1)
+                        });
+                      },
+                      child: Text(userTesting.cancel,
+                        style: GoogleFonts.nunitoSans(
+                            color: Color(0xff787CD1)
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                    SizedBox(width: 36,),
+                    GestureDetector(
+                      onTap: (){
+                        setState(() {
+
+                        });
+                      },
+                      child: Text(userTesting.done,
+                        style: GoogleFonts.nunitoSans(
+                            color: Color(0xff787CD1)
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -636,14 +677,18 @@ class _InsightsFormState extends State<InsightsForm> {
   Widget buildAddInsightButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => PersonaMainScreen(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
+        if(userTesting.painPointController.text == null || userTesting.painPointController.text == ""){
+          Fluttertoast.showToast(msg: "Insight cannot be empty!", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }else{
+          insightsApiProvider.addInsights(context).then((value){
+            Future.delayed(Duration(seconds: 3), () {
+              setState(() {
+
+              });
+            });
+          });
+        }
       },
       child: Center(
         child: Container(
@@ -654,9 +699,40 @@ class _InsightsFormState extends State<InsightsForm> {
               borderRadius: BorderRadius.all(Radius.circular(19))
           ),
           child: Center(
-            child: Text("Add Insight",
+            child: Text(userTesting.addInsight,
               style: TextStyle(
                   color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildNextButton(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => Congratulations(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Center(
+        child: Container(
+          height: 45,
+          width: 146,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Next",
+              style: TextStyle(
+                  color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
           ),
         ),

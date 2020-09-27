@@ -1,10 +1,60 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_eight_evaluation_screen2.dart';
+import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/ReusableWidgets/countdown_timer_widget.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/upload_idea_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
+class GetPainPointsOfStatusTwoPageViewBuilder extends StatefulWidget {
+  @override
+  _GetPainPointsOfStatusTwoPageViewBuilderState createState() => _GetPainPointsOfStatusTwoPageViewBuilderState();
+}
+
+class _GetPainPointsOfStatusTwoPageViewBuilderState extends State<GetPainPointsOfStatusTwoPageViewBuilder> {
+  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  final controller = PageController(viewportFraction: 1);
+  @override
+  void initState() {
+    super.initState();
+    ideation.pageIndex = 0;
+    print(ideation.pageIndex);
+    getPainPointsApiProvider.getPainPointsOfStatusTwo(context).whenComplete((){
+      setState(() {});
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ideation.painPointsOfStatus2List == null ? Center(
+        child: CircularProgressIndicator(),
+      ) : PageView.builder(
+        physics:new NeverScrollableScrollPhysics(),
+        itemCount: ideation.painPointsOfStatus2List == null ? 0 : ideation.painPointsOfStatus2List.length,
+        controller: controller,
+        onPageChanged: (index){
+          setState(() {
+            ideation.pageIndex = index;
+          });
+          print(ideation.pageIndex);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return CrazyEightEvaluation1(controller);
+        },
+      ),
+    );
+  }
+}
+
+
 class CrazyEightEvaluation1 extends StatefulWidget {
+  final controller;
+  CrazyEightEvaluation1(this.controller) : super();
   @override
   _CrazyEightEvaluation1State createState() => _CrazyEightEvaluation1State();
 }
@@ -73,7 +123,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Ideation",
+        child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -155,7 +205,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -164,7 +214,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -183,7 +233,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -200,7 +250,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -217,7 +267,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -234,7 +284,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -251,7 +301,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -268,7 +318,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -279,6 +329,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -563,7 +614,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Crazy 8",
+      child: Text(ideation.card1,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -578,7 +629,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("8 ideas in 8 mins, your time\nstarts now!",
+      child: Text(ideation.ideaHint1,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -612,7 +663,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
         color: Color(0xff787cd1)
       ),
       child: Center(
-        child: Text("1",
+        child: Text((ideation.pageIndex+1).toString(),
           style: GoogleFonts.nunitoSans(
             color: Colors.white,
             fontSize: 14,
@@ -624,7 +675,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
 
   Widget buildName4Widget(BuildContext context){
     return Center(
-      child: Text("Our users may find it difficult to use the\ncollaborative function and work along with\ntheir team using this workspace.",
+      child: Text(ideation.painPointsOfStatus2List[ideation.pageIndex],
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -638,14 +689,15 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
 
   Widget buildTimerWidget(BuildContext context){
     return Center(
-      child: Text("08:00",
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 29,
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-            )
+      child: CountDownTimer(
+        secondsRemaining: ideation.timer,
+        whenTimeExpires: () {
+          showAlertDialog(context);
+        },
+        countDownTimerStyle: TextStyle(
+          color: ideation.timer < 120 ? Colors.red : Colors.black,
+          fontWeight: FontWeight.w700,
+          fontSize: 29,
         ),
       ),
     );
@@ -654,7 +706,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget saveButton(BuildContext context){
     return GestureDetector(
       onTap: (){
-        showAlertDialog(context);
+        //showAlertDialog(context);
       },
       child: Container(
         height: 35,
@@ -666,7 +718,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
           borderRadius: BorderRadius.all(Radius.circular(50)),
         ),
         child: Center(
-          child: Text("Start",
+          child: Text(ideation.start,
             style: GoogleFonts.nunitoSans(
               fontSize: 16,
               color: Color(0xff787cd1),
@@ -679,7 +731,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
 
   Widget buildName5Widget(BuildContext context){
     return Center(
-      child: Text("Press start when you are ready",
+      child: Text(ideation.startTimerHint,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -695,14 +747,20 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => EmphatizeInsideSections2(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
+        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndex]){
+          print("Last index reached, You are a great man ever!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => UploadIdeaImagePageViewBuilder(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          print("You are a loser bro, try again!");
+          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+        }
       },
       child: Center(
         child: Container(
@@ -728,14 +786,6 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     GestureDetector buildSaveButton = GestureDetector(
       onTap: (){
         Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => CrazyEightEvaluation2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -771,7 +821,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
           Align(
               alignment: Alignment.centerRight,
               child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text("Time Up", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
+          Text(ideation.timeUp, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
         ],
       ),
       content: Padding(

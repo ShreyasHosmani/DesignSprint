@@ -1,16 +1,75 @@
+import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/idea_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
+class ImpactVsFeasibilityPageViewBuilder extends StatefulWidget {
+  @override
+  _ImpactVsFeasibilityPageViewBuilderState createState() => _ImpactVsFeasibilityPageViewBuilderState();
+}
+
+class _ImpactVsFeasibilityPageViewBuilderState extends State<ImpactVsFeasibilityPageViewBuilder> {
+  final controller = PageController(viewportFraction: 1);
+  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ideation.pageIndexIvsF = 0;
+    getPainPointsApiProvider.getPainPointsOfStatusTwo2(context).whenComplete((){
+      setState(() {});
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ideation.painPointsOfStatus2List2 == null ? Center(
+        child: CircularProgressIndicator(),
+      ) : PageView.builder(
+        physics:new NeverScrollableScrollPhysics(),
+        itemCount: ideation.painPointsOfStatus2List2 == null ? 0 : ideation.painPointsOfStatus2List2.length,
+        controller: controller,
+        onPageChanged: (index){
+          setState(() {
+            ideation.pageIndexIvsF = index;
+            ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+          });
+          print(ideation.pageIndexIvsF);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return IvsFEvaluation1(controller);
+        },
+      ),
+    );
+  }
+}
+
 class IvsFEvaluation1 extends StatefulWidget {
+  final controller;
+  IvsFEvaluation1(this.controller) : super();
   @override
   _IvsFEvaluation1State createState() => _IvsFEvaluation1State();
 }
 
 class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+    print(ideation.selectedPainPointIdForVoteOfIvsF);
+    containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
+    containerColorList2 = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +102,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                 SizedBox(height: 25,),
                 buildName5Widget(context),
                 SizedBox(height: 25,),
-                buildVoteRow(context),
+                buildVoteRow2(context),
                 SizedBox(height: 53,),
                 buildNextButton(context),
                 SizedBox(height: 40,),
@@ -75,7 +134,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Ideation",
+        child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -157,7 +216,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -166,7 +225,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -185,7 +244,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -202,7 +261,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -219,7 +278,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -236,7 +295,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -253,7 +312,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -270,7 +329,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -281,6 +340,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -565,7 +625,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Impact vs Feasibility Analysis",
+      child: Text(ideation.ivsfanalysis,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -580,7 +640,8 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Vote of each idea based on its\n               Importance.",
+      child: Text(ideation.ivsfHint1,
+        textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 fontSize: 20,
@@ -614,7 +675,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
             borderRadius: BorderRadius.all(Radius.circular(50))
         ),
         child: Center(
-          child: Text("1",
+          child: Text((ideation.pageIndexIvsF+1).toString(),
             style: GoogleFonts.nunitoSans(
                 fontSize: 16,
                 color: Colors.white
@@ -643,7 +704,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   Widget buildName4Widget(BuildContext context){
 
     return Center(
-      child: Text("Impact",
+      child: Text(ideation.ivsfHint2,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 fontSize: 20,
@@ -657,7 +718,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   Widget buildName5Widget(BuildContext context){
 
     return Center(
-      child: Text("Feasibility",
+      child: Text(ideation.ivsfHint3,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 fontSize: 20,
@@ -669,16 +730,6 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   }
 
   Widget buildVoteRow(BuildContext context){
-
-    Container colorContainer = Container(
-      height: 20,
-      width: 20,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-        color: Color(0xff787CD1),
-      ),
-    );
-
     return Center(
       child: Container(
         height: 20,
@@ -699,8 +750,12 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                     onTap: (){
                       setState(() {
                         selectedIndex = i.toString();
+                        var impactRangeTemp = (i + 1).toString();
+                        ideation.impactRange = impactRangeTemp.toString();
+                        ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
                       });
-                      print(selectedIndex);
+                      print(ideation.impactRange);
+                      print(ideation.selectedPainPointIdForVoteOfIvsF);
                       setColorState(context, selectedIndex);
                     },
                     child: Container(
@@ -710,6 +765,57 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         border: Border.all(color: Color(0xff787CD1)),
                         color: containerColorList[i],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 5,),
+                ],
+              ),
+            ),
+            SizedBox(width: 10,),
+            Text("10"),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget buildVoteRow2(BuildContext context){
+    return Center(
+      child: Container(
+        height: 20,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("1"),
+            SizedBox(width: 10,),
+            ListView.builder(
+              physics: ScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: 10,
+              itemBuilder: (context, i2) => Row(
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        selectedIndex2 = i2.toString();
+                        var feasibilityRangeTemp = (i2 + 1).toString();
+                        ideation.feasibilityRange = feasibilityRangeTemp.toString();
+                        ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+                      });
+                      print(ideation.feasibilityRange);
+                      print(ideation.selectedPainPointIdForVoteOfIvsF);
+                      setColorState2(context, selectedIndex2);
+                      votePainPointsApiProvider.votePainPointsAccToIvsF(context);
+                    },
+                    child: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        border: Border.all(color: Color(0xff787CD1)),
+                        color: containerColorList2[i2],
                       ),
                     ),
                   ),
@@ -844,18 +950,140 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
 //      containerColorList[int.parse(selectedIndex)] = Color(0xff787cd1);
 //    });
   }
+  void setColorState2(BuildContext context, selectedIndex2){
+    if(selectedIndex2 == "0" || selectedIndex2 == 0){
+      setState(() {
+        containerColorList2[0] = Color(0xff787cd1);
+        containerColorList2[0] = Colors.white;
+        containerColorList2[1] = Colors.white;
+        containerColorList2[2] = Colors.white;
+        containerColorList2[3] = Colors.white;
+        containerColorList2[4] = Colors.white;
+        containerColorList2[5] = Colors.white;
+        containerColorList2[6] = Colors.white;
+        containerColorList2[7] = Colors.white;
+        containerColorList2[8] = Colors.white;
+        containerColorList2[9] = Colors.white;
+      });
+    }else if(selectedIndex2 == "1" || selectedIndex2 == 1){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Colors.white;
+      containerColorList2[3] = Colors.white;
+      containerColorList2[4] = Colors.white;
+      containerColorList2[5] = Colors.white;
+      containerColorList2[6] = Colors.white;
+      containerColorList2[7] = Colors.white;
+      containerColorList2[8] = Colors.white;
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "2" || selectedIndex2 == 2){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Colors.white;
+      containerColorList2[4] = Colors.white;
+      containerColorList2[5] = Colors.white;
+      containerColorList2[6] = Colors.white;
+      containerColorList2[7] = Colors.white;
+      containerColorList2[8] = Colors.white;
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "3" || selectedIndex2 == 3){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Color(0xff787cd1);
+      containerColorList2[4] = Colors.white;
+      containerColorList2[5] = Colors.white;
+      containerColorList2[6] = Colors.white;
+      containerColorList2[7] = Colors.white;
+      containerColorList2[8] = Colors.white;
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "4" || selectedIndex2 == 4){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Color(0xff787cd1);
+      containerColorList2[4] = Color(0xff787cd1);
+      containerColorList2[5] = Colors.white;
+      containerColorList2[6] = Colors.white;
+      containerColorList2[7] = Colors.white;
+      containerColorList2[8] = Colors.white;
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "5" || selectedIndex2 == 5){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Color(0xff787cd1);
+      containerColorList2[4] = Color(0xff787cd1);
+      containerColorList2[5] = Color(0xff787cd1);
+      containerColorList2[6] = Colors.white;
+      containerColorList2[7] = Colors.white;
+      containerColorList2[8] = Colors.white;
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "6" || selectedIndex2 == 6){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Color(0xff787cd1);
+      containerColorList2[4] = Color(0xff787cd1);
+      containerColorList2[5] = Color(0xff787cd1);
+      containerColorList2[6] = Color(0xff787cd1);
+      containerColorList2[7] = Colors.white;
+      containerColorList2[8] = Colors.white;
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "7" || selectedIndex2 == 7){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Color(0xff787cd1);
+      containerColorList2[4] = Color(0xff787cd1);
+      containerColorList2[5] = Color(0xff787cd1);
+      containerColorList2[6] = Color(0xff787cd1);
+      containerColorList2[7] = Color(0xff787cd1);
+      containerColorList2[8] = Colors.white;
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "8" || selectedIndex2 == 8){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Color(0xff787cd1);
+      containerColorList2[4] = Color(0xff787cd1);
+      containerColorList2[5] = Color(0xff787cd1);
+      containerColorList2[6] = Color(0xff787cd1);
+      containerColorList2[7] = Color(0xff787cd1);
+      containerColorList2[8] = Color(0xff787cd1);
+      containerColorList2[9] = Colors.white;
+    }else if(selectedIndex2 == "9" || selectedIndex2 == 9){
+      containerColorList2[0] = Color(0xff787cd1);
+      containerColorList2[1] = Color(0xff787cd1);
+      containerColorList2[2] = Color(0xff787cd1);
+      containerColorList2[3] = Color(0xff787cd1);
+      containerColorList2[4] = Color(0xff787cd1);
+      containerColorList2[5] = Color(0xff787cd1);
+      containerColorList2[6] = Color(0xff787cd1);
+      containerColorList2[7] = Color(0xff787cd1);
+      containerColorList2[8] = Color(0xff787cd1);
+      containerColorList2[9] = Color(0xff787cd1);
+    }
+  }
 
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => IdeaSelection(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(ideation.painPointsIdsOfStatus2List2.last == ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF]){
+          print("Last index reached, You are a great man ever!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => IdeaSelection(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          print("You are a loser bro, try again!");
+          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+        }
       },
       child: Center(
         child: Container(
@@ -882,4 +1110,6 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
 }
 
 var containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
+var containerColorList2 = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
 var selectedIndex;
+var selectedIndex2;

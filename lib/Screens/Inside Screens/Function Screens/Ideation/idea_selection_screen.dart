@@ -1,6 +1,12 @@
+import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen3.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
@@ -10,16 +16,17 @@ class IdeaSelection extends StatefulWidget {
 }
 
 class _IdeaSelectionState extends State<IdeaSelection> {
-
+  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getPainPointsApiProvider.getPainPointsByIvsFPriority(context);
     boolSelectedList = [false,false,false,false,false,false,false,false,false,false,];
     counter = 0;
     textColorList = [Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), ];
   }
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -73,7 +80,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text("Ideation",
+        child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -155,7 +162,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi Pratheek!",
+                          Text("Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -164,7 +171,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                             ),
                           ),
                           SizedBox(height: 8,),
-                          Text("pratheeksharma@gmail.com",
+                          Text(profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
@@ -183,7 +190,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Home",
+                    Text(home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -200,7 +207,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Design Sprint",
+                    Text(home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -217,7 +224,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Tips",
+                    Text(home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -234,7 +241,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Manage Team",
+                    Text(home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -251,7 +258,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("FaQ's",
+                    Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -268,7 +275,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     SizedBox(width: 62,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
-                    Text("Legal Policy",
+                    Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.black,
@@ -279,6 +286,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     ),
                   ],
                 ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -563,7 +571,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Impact vs Feasibility Analysis",
+      child: Text(ideation.ivsfanalysis,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -578,7 +586,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text("Select the final 3-5 ideas which are to be\ntaken forward for prototyping.",
+      child: Text(ideation.select3to5FinalIdeas,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -597,7 +605,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: 10,
+        itemCount: ideation.painPointsByIvsFPriorityList == null ? 0 : ideation.painPointsByIvsFPriorityList.length,
         itemBuilder: (context, i) => Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -645,11 +653,21 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                   if(boolSelectedList[i] == false){
                     setState(() {
                       counter--;
+                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                      ideation.selectedPainPointForPrototypingStatus = "0";
                     });
+                    print(ideation.selectedPainPointIdForPrototyping);
+                    print(ideation.selectedPainPointForPrototypingStatus);
+                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context);
                   }else{
                     setState(() {
                       counter++;
+                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                      ideation.selectedPainPointForPrototypingStatus = "2";
                     });
+                    print(ideation.selectedPainPointIdForPrototyping);
+                    print(ideation.selectedPainPointForPrototypingStatus);
+                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context);
                   }
                 });
               },
