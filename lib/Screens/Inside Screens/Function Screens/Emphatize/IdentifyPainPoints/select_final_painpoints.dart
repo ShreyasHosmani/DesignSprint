@@ -22,7 +22,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   void initState() {
     super.initState();
     getPainPointsApiProvider.getPainPointsAccordingToVotes(context).whenComplete((){
-      setState(() {});
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
   }
   @override

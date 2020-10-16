@@ -1,4 +1,5 @@
 library main_app.homeglobals;
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -43,3 +44,20 @@ String timelineSaved = "Timeline saved";
 
 var responseArrayUpdateTimeLine;
 var responseArrayTimelineMsg;
+
+//Sprints Warehouse Data
+var responseArrayGetSprints;
+var responseArrayGetSprintsMsg;
+var sprintTitlesList;
+var sprintIdsList;
+var sprintStatusList;
+
+//Sprints : Goal
+var selectedSprintId;
+String defineGoal = "Define your goal";
+String sprintGoal = "Sprint Goal";
+var responseArrayGetGoal;
+var responseArrayGetGoalMsg;
+var sprintGoalList;
+
+

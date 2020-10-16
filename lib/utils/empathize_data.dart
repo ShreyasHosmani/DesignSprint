@@ -3,18 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
+String gallery = "Gallery";
+String fileManager = "File Manager";
 
 //Create Persona Data
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 ProgressDialog prDigitalPersona;
 
 String empathize = "Empathize";
+String personas = "Personas";
 String createPersonas = "Create Personas";
 String journeyMapping = "Journey Mapping";
 String identifyPainPoints = "Identify Painpoints";
 String timeline = "Timeline";
 String paperPersona = "Paper Persona";
-String paperPersonaHint1 = "1. Upload the paper journey maps";
+String paperPersonaHint1 = "1. Upload the paper personas";
 String paperPersonaHint2 = "2. Mention the identified painpoints";
 
 String digitally = "Digitally";
@@ -24,8 +27,15 @@ String personaSaved = "Persona saved";
 String addPhoto = "Add Photo";
 
 File imageOne;
+File imagePaperPersona;
 var baseImage;
 var fileName;
+var baseImagePaperPersona;
+var fileNamePaperPersona;
+var responseArrayUploadPaperPersona;
+var responseArrayUploadPaperPersonaMsg;
+String personaUploaded = "Image uploaded";
+String upload = "Upload";
 
 bool statusDrawer = false;
 
@@ -42,10 +52,32 @@ String newPersonaButton = "New Persona";
 
 final formKey = GlobalKey<FormState>();
 final formKey2 = GlobalKey<FormState>();
+final formKey3 = GlobalKey<FormState>();
 
 var responseArrayCreatePersonaDigitally;
 var responseArrayCreatePersonaDigitallyMsg;
 
+String downloadTemplate1 = "Download";
+String downloadTemplate2 = "Template";
+String uploadPersonas1 = "Upload";
+String uploadPersonas2 = "Personas";
+String saveAsPdf = "Save as PDF";
+String sendEmail = "Send Email";
+
+var paperPersonaImageNamesList;
+var responseArrayGetPersona;
+var responseArrayGetPersonaMsg;
+
+var responseArrayGetPersonaPast;
+var responseArrayGetPersonaPastMsg;
+var personaNameList;
+var personaAgeList;
+var personaLocationList;
+var personaEducationList;
+var personaJobList;
+var personaBioList;
+var personaGoalsList;
+var personaImagesList;
 
 
 
@@ -58,6 +90,7 @@ String journeyMapHint1 = "Create Journey";
 String journeyMapHint2 = "Map Digitally";
 
 String journeyMapPaperHint ="Map on paper";
+String paperJourneyMapHint1 = "1. Upload the paper journey maps";
 
 var responseArrayJourneyMapName;
 var responseArrayJourneyMapNameMsg;
@@ -68,6 +101,8 @@ String journeyMapFieldHint = "Journey map name";
 String journeyMapFieldValidation = "Journey map is compulsary!";
 
 String popUpHint = "Name the journey Map.";
+String paperJourneyMap = "Paper Journey Map";
+String journeyMaps = "Journey Maps";
 
 ProgressDialog prJourneyMapName;
 
@@ -78,7 +113,22 @@ var journeyMapId;
 var responseArrayInputPainPoints;
 var responseArrayInputPainPointsMsg;
 
+String touchPoints = "Touch Points";
+String customerThoughts = "Customer Thoughts";
+String customerExperience = "Customer Experience";
+String painPoints = "Pain Points";
 
+var touchPointController = new TextEditingController();
+
+File imagePaperJourneyMap;
+var baseImagePaperJourneyMap;
+var fileNamePaperJourneyMap;
+var responseArrayUploadPaperJourneyMap;
+var responseArrayUploadPaperJourneyMapMsg;
+
+var responseArrayGetJourneyMap;
+var responseArrayGetJourneyMapMsg;
+var journeyMapImageNamesList;
 
 
 
@@ -94,7 +144,6 @@ var responseArrayGetPainPoints;
 var responseArrayGetPainPointsMsg;
 var responseArrayGetPainPointsAccToVotes;
 var responseArrayGetPainPointsAccToVotesMsg;
-
 
 var painPointsList;
 var painPointIdsList;
@@ -114,5 +163,40 @@ var responseArrayVitePainPointsMsg;
 
 String voteSaved = "Vote saved";
 String painPointSelected = "selected";
+
+
+var tempPainPointsList;
+var tempPainPointIdsList;
+TextEditingController painPointController = new TextEditingController();
+ProgressDialog prInputPainPoint;
+
+
+//Journey Map Horizontal List Data
+var responseArrayUploadTouchPoints;
+var responseArrayUploadTouchPointsMsg;
+
+var responseArrayUploadCustomerThoughts;
+var responseArrayUploadCustomerThoughtsMsg;
+
+var responseArrayUploadCustomerExperiences;
+var responseArrayUploadCustomerExperiencesMsg;
+
+var responseArrayUploadPainPointFromDigitLJourneyMap;
+var responseArrayUploadPainPointFromDigitLJourneyMapMsg;
+
+var selectedTouchPointController;
+var selectedCustomerThoughtController;
+var selectedCustomerExperienceController;
+var selectedPainPointController;
+
+var responseArrayDeleteJourneyMap;
+var responseArrayDeleteJourneyMapMsg;
+
+var receivedTouchPointIdSingle;
+var receivedCustomerThoughtIdSingle;
+var receivedCustomerExperienceIdSingle;
+var receivedPainPointIdSingle;
+
+var selectedTouchPointId;
 
 

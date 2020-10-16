@@ -24,7 +24,7 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
     empathize.pageIndex = 0;
     print(empathize.pageIndex);
     getPainPointsApiProvider.getPainPoints(context).whenComplete((){
-      setState(() {});
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
   }
   @override

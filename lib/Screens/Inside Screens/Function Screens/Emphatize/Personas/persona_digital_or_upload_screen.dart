@@ -1,10 +1,12 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/upload_persona_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:url_launcher/url_launcher.dart';
 
 bool statusDrawer = false;
 
@@ -15,6 +17,15 @@ class CreateOrDownloadPersona extends StatefulWidget {
 
 class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final Email email = Email(
+    body: 'Please find the attachment of persona template below',
+    subject: 'Persona Template',
+    recipients: ['example@gmail.com'],
+    cc: [''],
+    //bcc: ['bcc@example.com'],
+    //attachmentPaths: ['/path/to/attachment.zip'],
+    isHTML: false,
+  );
   Dio dio = Dio();
   @override
   Widget build(BuildContext context) {
@@ -556,7 +567,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text("Paper Persona",
+      child: Text(empathize.paperPersona,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -592,7 +603,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("Download",
+                    child: Text(empathize.downloadTemplate1,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -603,7 +614,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("Template",
+                    child: Text(empathize.downloadTemplate2,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -662,7 +673,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text("Upload",
+                    child: Text(empathize.uploadPersonas1,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -673,7 +684,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text("Personas",
+                    child: Text(empathize.uploadPersonas2,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             fontSize: 30,
@@ -718,7 +729,8 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
             children: [
               InkWell(
                 onTap: () async {
-                  await dio.download("https://onetouchhosting.tk/appdata/personatemplate/template.pdf", "");
+                  //await dio.download("https://onetouchhosting.tk/appdata/personatemplate/template.pdf", "/sdcard/download/template.pdf");
+                  await launch("https://onetouchhosting.tk/appdata/personatemplate/template.pdf");
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -729,7 +741,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                         height: 44,
                         child: Image.asset("assets/images/pdf.png")),
                     SizedBox(height: 8.97,),
-                    Text("Save as PDF",
+                    Text(empathize.saveAsPdf,
                       style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
                           fontSize: 14,
@@ -740,23 +752,28 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
                 ),
               ),
               SizedBox(width: 50,),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      width: 44,
-                      height: 44,
-                      child: Image.asset("assets/images/gmail.png")),
-                  SizedBox(height: 8.97,),
-                  Text("Send Email",
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          fontSize: 14,
-                        )
+              InkWell(
+                onTap: () async {
+                  await FlutterEmailSender.send(email);
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        width: 44,
+                        height: 44,
+                        child: Image.asset("assets/images/gmail.png")),
+                    SizedBox(height: 8.97,),
+                    Text(empathize.sendEmail,
+                      style: GoogleFonts.nunitoSans(
+                          textStyle: TextStyle(
+                            fontSize: 14,
+                          )
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           )

@@ -734,9 +734,10 @@ class _ManageTeamState extends State<ManageTeam> {
       onTap: () async {
         if(team.formKey2.currentState.validate()){
           team.prTeam.show();
-          teamApiProvider.addTeamMember(context);
-          Future.delayed(const Duration(seconds: 3), () {
-            Navigator.popAndPushNamed(context, '/trial');
+          teamApiProvider.addTeamMember(context).whenComplete((){
+            Future.delayed(const Duration(seconds: 3), () {
+              setState(() {});
+            });
           });
         }
       },

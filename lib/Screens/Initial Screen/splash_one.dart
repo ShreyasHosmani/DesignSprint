@@ -16,6 +16,8 @@ class _SplashOneState extends State<SplashOne> {
       bottomNavigationBar: buildPositionWidget(context),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             buildSkipButton(context),
             SizedBox(height: MediaQuery.of(context).size.height/15),
@@ -71,6 +73,7 @@ class _SplashOneState extends State<SplashOne> {
   Widget buildInfoText(BuildContext context){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 35,),
         Text("WELCOME",

@@ -22,7 +22,9 @@ class _UploadPrototypeImagesPageViewBuilderState extends State<UploadPrototypeIm
     // TODO: implement initState
     super.initState();
     prototyping.pageIndex = 0;
-    getPainPointsApiProvider.getPainPointsForPrototyping(context);
+    getPainPointsApiProvider.getPainPointsForPrototyping(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    });
   }
   @override
   Widget build(BuildContext context) {

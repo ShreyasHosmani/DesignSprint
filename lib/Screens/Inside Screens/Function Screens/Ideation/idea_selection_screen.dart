@@ -22,7 +22,9 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPainPointsApiProvider.getPainPointsByIvsFPriority(context);
+    getPainPointsApiProvider.getPainPointsByIvsFPriority(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    });
     boolSelectedList = [false,false,false,false,false,false,false,false,false,false,];
     counter = 0;
     textColorList = [Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), ];

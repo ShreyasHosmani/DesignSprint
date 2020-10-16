@@ -71,6 +71,86 @@ class CreatePersonaApiProvider {
     });
   }
 
+  Future<String> uploadPaperPersona(context) async {
+
+    String url = globals.urlSignUp + "createpersonaonpaper.php";
+
+    empathize.baseImagePaperPersona = base64Encode(empathize.imagePaperPersona.readAsBytesSync());
+
+    empathize.fileNamePaperPersona = empathize.imagePaperPersona.path.split("/").last;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('test_image', empathize.imagePaperPersona.path);
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+      "emapathizeid" : "null",
+      "image" : empathize.baseImagePaperPersona.toString(),
+      "name" : empathize.fileNamePaperPersona.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayUploadPaperPersona = jsonDecode(response.body);
+      print(empathize.responseArrayUploadPaperPersona);
+
+      empathize.responseArrayUploadPaperPersonaMsg = empathize.responseArrayUploadPaperPersona['message'].toString();
+      print(empathize.responseArrayUploadPaperPersonaMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayUploadPaperPersonaMsg == "Persona Added Successfully"){
+          Fluttertoast.showToast(msg: empathize.personaUploaded, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }else{
+          Fluttertoast.showToast(msg: empathize.responseArrayUploadPaperPersonaMsg, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+    });
+  }
+
+  Future<String> getPersonaDetails(context) async {
+
+    String url = globals.urlSignUp + "getpersona.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetPersona = jsonDecode(response.body);
+      print(empathize.responseArrayGetPersona);
+
+      empathize.responseArrayGetPersonaMsg = empathize.responseArrayGetPersona['message'].toString();
+      print(empathize.responseArrayGetPersonaMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayGetPersonaMsg == "Profile Found"){
+
+          empathize.paperPersonaImageNamesList = List.generate(empathize.responseArrayGetPersona['data'].length, (i) => empathize.responseArrayGetPersona['data'][i]['personadocImage']);
+
+          print(empathize.paperPersonaImageNamesList.toList());
+
+        }else{
+
+          empathize.paperPersonaImageNamesList = null;
+
+        }
+      }
+    });
+  }
+
   void clearFields(BuildContext context){
     empathize.nameController.clear();
     empathize.ageController.clear();

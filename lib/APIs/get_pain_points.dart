@@ -17,7 +17,7 @@ class GetPainPointsApiProvider {
 
       "userID" : profile.userID,
       "sprintID": home.sprintID,
-      "mapID" : empathize.journeyMapId,
+      "mapID" : "null",
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -39,6 +39,8 @@ class GetPainPointsApiProvider {
           print(empathize.painPointsList.toList());
           print(empathize.painPointIdsList.toList());
         }else{
+
+          empathize.painPointsList = null;
 
         }
       }

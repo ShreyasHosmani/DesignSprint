@@ -23,7 +23,7 @@ class _ImpactVsFeasibilityPageViewBuilderState extends State<ImpactVsFeasibility
     super.initState();
     ideation.pageIndexIvsF = 0;
     getPainPointsApiProvider.getPainPointsOfStatusTwo2(context).whenComplete((){
-      setState(() {});
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
   }
   @override

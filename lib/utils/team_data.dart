@@ -39,8 +39,18 @@ String memberAdded = "Member added!";
 var responseArrayTeamDetails;
 var responseArrayTeamDetailsMsg;
 
+var teamMemberIdsList;
 var teamMemberNameList;
 var teamMemberEmailList;
 
 String addMember = "Add member";
 String nextButtonText = "Next";
+
+var responseArrayTeamNames;
+var responseArrayTeamNamesMsg;
+
+var teamNamesList;
+var teamNamesIdsList;
+
+var responseArrayRemoveMember;
+var responseArrayRemoveMemberMsg;

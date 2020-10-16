@@ -1,4 +1,6 @@
 import 'package:design_sprint/APIs/create_journey_map.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/journey_map_digital_or_upload_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/upload_journey_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -642,65 +644,77 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
   }
 
   Widget buildCreateOnPaperCard(BuildContext context){
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15))),
-      child: Container(
-        width: 302,
-        height: 286.22,
-        decoration: BoxDecoration(
-            color: Color(0xff787CD1),
-            borderRadius: BorderRadius.all(Radius.circular(15))
-        ),
-        child: Stack(
-          children: [
-            Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 29, left: 35),
-                  child: Text(empathize.journeyMapHint1,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                        )
+    return InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => CreateOrDownloadJourneyMap(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+        child: Container(
+          width: 302,
+          height: 286.22,
+          decoration: BoxDecoration(
+              color: Color(0xff787CD1),
+              borderRadius: BorderRadius.all(Radius.circular(15))
+          ),
+          child: Stack(
+            children: [
+              Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 29, left: 35),
+                    child: Text(empathize.journeyMapHint1,
+                      style: GoogleFonts.nunitoSans(
+                          textStyle: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                          )
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 35),
-                  child: Text(empathize.journeyMapPaperHint,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                        )
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 35),
+                    child: Text(empathize.journeyMapPaperHint,
+                      style: GoogleFonts.nunitoSans(
+                          textStyle: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                          )
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20, bottom: 20),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  onPressed: (){},
-                  icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20, bottom: 20),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                    onPressed: (){},
+                    icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 35, bottom: 30),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Image.asset("assets/images/papermap.png")
-              ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 35, bottom: 30),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Image.asset("assets/images/papermap.png")
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

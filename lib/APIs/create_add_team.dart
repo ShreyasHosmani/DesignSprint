@@ -58,6 +58,45 @@ class TeamApiProvider {
     });
   }
 
+  Future<String> createTeamName2(context) async {
+
+    String url = globals.urlLogin + "createteambyuserid.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "teamname" : team.teamNameController.text,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayTeamName = jsonDecode(response.body);
+      print(team.responseArrayTeamName);
+
+      team.responseArrayTeamNameMsg = team.responseArrayTeamName['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayTeamNameMsg == "Team Added Successfully"){
+          team.prTeam.hide();
+          team.teamID = team.responseArrayTeamName['data'];
+          print(team.teamID.toString());
+          Fluttertoast.showToast(msg: team.teamSaved, backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            Navigator.of(context).pop();
+          });
+        }else{
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: team.responseArrayTeamNameMsg, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
+
   Future<String> addTeamMember(context) async {
 
     String url = globals.urlLogin + "addteammember.php";
@@ -131,6 +170,45 @@ class TeamApiProvider {
         }else{
           team.teamMemberNameList = null;
           team.teamMemberEmailList = null;
+        }
+      }
+
+    });
+  }
+
+  Future<String> getTeamNames(context) async {
+
+    String url = globals.urlLogin + "getteamname.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayTeamNames = jsonDecode(response.body);
+      print(team.responseArrayTeamNames);
+
+      team.responseArrayTeamNamesMsg = team.responseArrayTeamNames['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayTeamNamesMsg == "Profile Found"){
+
+          team.teamNamesList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnName'].toString());
+          team.teamNamesIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnID'].toString());
+
+          print(team.teamNamesList.toList());
+          print(team.teamNamesIdsList.toList());
+
+        }else{
+
+          team.teamNamesList = null;
+          team.teamNamesIdsList = null;
+
         }
       }
 

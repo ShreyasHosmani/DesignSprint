@@ -1,9 +1,12 @@
+import 'dart:io';
+import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:image_picker/image_picker.dart';
 
 bool statusDrawer = false;
 bool showSecondStep = false;
@@ -17,13 +20,46 @@ class UploadPersona extends StatefulWidget {
 
 class _UploadPersonaState extends State<UploadPersona> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    createPersonaApiProvider.getPersonaDetails(context);
+    empathize.imagePaperPersona = null;
+    empathize.fileNamePaperPersona = "";
     statusDrawer = false;
     showSecondStep = false;
     showPainPoint = false;
+  }
+  final picker = ImagePicker();
+  Future getImageOne() async {
+    Navigator.of(context).pop();
+    var pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    setState(() {
+      empathize.imagePaperPersona = File(pickedFile.path);
+    });
+    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {
+        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
+          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+        });
+      });
+    });
+  }
+  Future getImageOneGallery() async {
+    Navigator.of(context).pop();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    setState(() {
+      empathize.imagePaperPersona = File(pickedFile.path);
+    });
+    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {
+        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
+          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+        });
+      });
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -46,13 +82,9 @@ class _UploadPersonaState extends State<UploadPersona> {
                 SizedBox(height: 43,),
                 buildUploadButton(context),
                 SizedBox(height: 25,),
-                showSecondStep == false ? Container(height: 1, width: 1,) :buildFileNameWidget(context),
+                buildFileNameWidget(context),
                 showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
                 showSecondStep == false ? Container(height: 1, width: 1,) :buildName4Widget(context),
-                showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
-                showSecondStep == false ? Container(height: 1, width: 1,) :buildPainPointTextFieldContainer(context),
-                showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 40,),
-                showSecondStep == false ? Container(height: 1, width: 1,) :buildAddPainPointWidget(context),
                 SizedBox(height: 162,),
                 buildNextButton(context),
                 SizedBox(height: 25,),
@@ -623,10 +655,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     children: [
                       GestureDetector(
                         onTap: (){
-                          Navigator.of(context).pop();
-                          setState(() {
-                            showSecondStep = true;
-                          });
+                          getImageOneGallery();
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -637,7 +666,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                                 height: 44,
                                 child: Image.asset("assets/images/photo.png")),
                             SizedBox(height: 8.97,),
-                            Text("Gallery",
+                            Text(empathize.gallery,
                               style: GoogleFonts.nunitoSans(
                                   textStyle: TextStyle(
                                     fontSize: 14,
@@ -648,24 +677,29 @@ class _UploadPersonaState extends State<UploadPersona> {
                           ],
                         ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                              width: 44,
-                              height: 44,
-                              child: Image.asset("assets/images/folder.png")),
-                          SizedBox(height: 8.97,),
-                          Text("File Manager",
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  fontSize: 14,
-                                    color: Colors.white,
-                                ),
+                      InkWell(
+                        onTap: (){
+                          getImageOne();
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                width: 44,
+                                height: 44,
+                                child: Image.asset("assets/images/folder.png")),
+                            SizedBox(height: 8.97,),
+                            Text(empathize.fileManager,
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 14,
+                                      color: Colors.white,
+                                  ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -705,7 +739,7 @@ class _UploadPersonaState extends State<UploadPersona> {
               borderRadius: BorderRadius.all(Radius.circular(19))
           ),
           child: Center(
-            child: Text("Upload",
+            child: Text(empathize.upload,
               style: TextStyle(
                   color: Color(0xff302B70), letterSpacing: 1, fontSize: 16),
             ),
@@ -716,121 +750,39 @@ class _UploadPersonaState extends State<UploadPersona> {
   }
 
   Widget buildFileNameWidget(BuildContext context){
-
-    return Center(
-      child: Text("Alex.jpg",
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            )
+    return ListView.builder(
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
+      itemBuilder: (context, i) => Center(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                )
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget buildName4Widget(BuildContext context){
-
     return Center(
-      child: Text(empathize.paperPersonaHint2,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildPainPointTextFieldContainer(BuildContext context){
-    return Card(
-      elevation: 5,
-      child: Container(
-        width: 302,
-        height: 105.54,
-        child: showPainPoint == true ? Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20,),
-            child: Text(painPointController.text,
-              style: GoogleFonts.nunitoSans(
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ): Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: painPointController,
-                decoration: InputDecoration(
-                  hintText: 'Type your painpoint',
-                  border: InputBorder.none,
-                ),
-              ),
-              Divider(color: Color(0xff787CD1),height: 2,),
-              SizedBox(height: 24,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text("Cancel",
-                    style: GoogleFonts.nunitoSans(
-                      color: Color(0xff787CD1)
-                    ),
-                  ),
-                  SizedBox(width: 36,),
-                  GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        showPainPoint = true;
-                      });
-                      setState(() {
-
-                      });
-                    },
-                    child: Text("Done",
-                      style: GoogleFonts.nunitoSans(
-                          color: Color(0xff787CD1)
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildAddPainPointWidget(BuildContext context){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            color: Color(0xff787CD1),
-          ),
-          child: Icon(Icons.add, color: Colors.white,),
-        ),
-        SizedBox(height: 10,),
-        Text("Add Pain Point",
+        child: Text(empathize.paperPersonaHint2,
           style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-              color: Color(0xff787CD1),
-              fontSize: 14,
-            )
+              textStyle: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500
+              )
           ),
-        )
-      ],
-    );
+        ),
+      );
   }
 
   Widget buildNextButton(BuildContext context) {

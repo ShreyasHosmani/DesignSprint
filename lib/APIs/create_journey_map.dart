@@ -7,8 +7,10 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateJourneyApiProvider{
+
   Future<String> createJourneyMapName(context) async {
 
     String url = globals.urlLogin + "createjourneymap.php";
@@ -57,4 +59,116 @@ class CreateJourneyApiProvider{
       }
     });
   }
+
+  Future<String> uploadPaperJourneyMap(context) async {
+
+    String url = globals.urlSignUp + "createjourneymaponpaper.php";
+
+    empathize.baseImagePaperJourneyMap = base64Encode(empathize.imagePaperJourneyMap.readAsBytesSync());
+
+    empathize.fileNamePaperJourneyMap = empathize.imagePaperJourneyMap.path.split("/").last;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('test_image', empathize.imagePaperJourneyMap.path);
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+      "image" : empathize.baseImagePaperJourneyMap.toString(),
+      "name" : empathize.fileNamePaperJourneyMap.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayUploadPaperJourneyMap = jsonDecode(response.body);
+      print(empathize.responseArrayUploadPaperJourneyMap);
+
+      empathize.responseArrayUploadPaperJourneyMapMsg = empathize.responseArrayUploadPaperJourneyMap['message'].toString();
+      print(empathize.responseArrayUploadPaperJourneyMapMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayUploadPaperJourneyMapMsg == "Journeymap Added Successfully"){
+          Fluttertoast.showToast(msg: empathize.personaUploaded, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }else{
+          Fluttertoast.showToast(msg: empathize.responseArrayUploadPaperJourneyMapMsg, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+    });
+  }
+
+  Future<String> getJourneyMapDetails(context) async {
+
+    String url = globals.urlSignUp + "getjourneymap.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetJourneyMap = jsonDecode(response.body);
+      print(empathize.responseArrayGetJourneyMap);
+
+      empathize.responseArrayGetJourneyMapMsg = empathize.responseArrayGetJourneyMap['message'].toString();
+      print(empathize.responseArrayGetJourneyMapMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayGetJourneyMapMsg == "Data Found"){
+
+          empathize.journeyMapImageNamesList = List.generate(empathize.responseArrayGetJourneyMap['data'].length, (i) => empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage']);
+
+          print(empathize.journeyMapImageNamesList.toList());
+
+        }else{
+
+          empathize.journeyMapImageNamesList = null;
+
+        }
+      }
+    });
+  }
+
+  Future<String> deleteJourneyMapName(context) async {
+
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+
+    String url = globals.urlLogin + "deletejourneymap.php";
+
+    http.post(url, body: {
+
+      "mapID" : empathize.journeyMapId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayDeleteJourneyMap = jsonDecode(response.body);
+      print(empathize.responseArrayDeleteJourneyMap);
+
+      empathize.responseArrayDeleteJourneyMapMsg = empathize.responseArrayDeleteJourneyMap['message'].toString();
+      if(statusCode == 200){
+        if(empathize.responseArrayDeleteJourneyMapMsg == "Journey Map deleted"){
+
+        }else{
+
+        }
+      }
+    });
+  }
+
 }

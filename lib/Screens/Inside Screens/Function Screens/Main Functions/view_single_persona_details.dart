@@ -1,42 +1,59 @@
-import 'package:design_sprint/APIs/create_sprint.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/input_time_line.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class DesignSprintInside extends StatefulWidget {
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+class ViewSinglePersonaDetails extends StatefulWidget {
+  final name;
+  final image;
+  final age;
+  final location;
+  final education;
+  final job;
+  final bio;
+  final goals;
+  ViewSinglePersonaDetails(this.name, this.image, this.age, this.location, this.education, this.job, this.bio, this.goals) : super();
   @override
-  _DesignSprintInsideState createState() => _DesignSprintInsideState();
+  _ViewSinglePersonaDetailsState createState() => _ViewSinglePersonaDetailsState();
 }
 
-class _DesignSprintInsideState extends State<DesignSprintInside> {
-
-  CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+class _ViewSinglePersonaDetailsState extends State<ViewSinglePersonaDetails> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.name);
+    print(widget.image);
+    print(widget.age);
+    print(widget.location);
+    print(widget.education);
+    print(widget.job);
+    print(widget.bio);
+    print(widget.goals);
+  }
   @override
   Widget build(BuildContext context) {
-    home.prCreateSprint = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: buildProfileDrawer(context),
+      bottomNavigationBar: buildBottomNavigationBar(context),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 25,),
             buildName2Widget(context),
-            SizedBox(height: 25,),
-            buildDesignSprintCard(context),
-            SizedBox(height: 25,),
-            buildViewSprintCard(context),
-            SizedBox(height: 40,),
+            SizedBox(height: 43,),
+            buildProfileImageCard(context),
+            SizedBox(height: 50,),
+            buildDetailsColumn(context),
           ],
         ),
       ),
@@ -56,7 +73,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text(home.designSprint,
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -96,148 +113,21 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
-    return Center(
-      child: Text(home.home,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                color: Color(0xff707070),
-                fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildDesignSprintCard(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        showAlertDialog(context);
-      },
+  Widget buildBottomNavigationBar(BuildContext context){
+    return Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width,
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        child: Container(
-          width: 302,
-          height: 286.22,
-          decoration: BoxDecoration(
-              color: Color(0xffF1A042),
-              borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
-          child: Stack(
-            children: [
-              Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text(home.startNew,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          )
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text(home.designSprint,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          )
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20, bottom: 20),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: IconButton(
-                    onPressed: (){},
-                    icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
-                  ),
-                ),
+        color: Color(0xffE5E5E5),
+        child: Center(
+          child: Text("Comments",
+            style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
               )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildViewSprintCard(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => ViewSprints(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
-      },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        child: Container(
-          width: 302,
-          height: 286.22,
-          decoration: BoxDecoration(
-              color: Color(0xff787CD1),
-              borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
-          child: Stack(
-            children: [
-              Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text(home.continueOrView,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          )
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text(home.designSprints,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          )
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20, bottom: 20),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: IconButton(
-                    onPressed: (){},
-                    icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
-                  ),
-                ),
-              )
-            ],
+            ),
           ),
         ),
       ),
@@ -419,95 +309,239 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
     );
   }
 
-  showAlertDialog(BuildContext context) {
+  Widget buildName2Widget(BuildContext context){
 
-    Widget textField = Theme(
-      data: ThemeData(
-        primaryColor: Color(0xff787CD1),
-      ),
-        child: TextFormField(
-          controller: home.sprintNameController,
-      decoration: InputDecoration(
-          hintText: home.popUpHintTextField
-      ),
-          validator: (value){
-            if(value.isEmpty){
-              return home.sprintNameValidation;
-            }
-            return null;
-          },
-    ));
-
-    GestureDetector buildSaveButton = GestureDetector(
-      onTap: (){
-        if(home.formKey.currentState.validate()){
-          home.prCreateSprint.show();
-          createSprintApiProvider.createSprint(context);
-        }
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        elevation: 10,
-        child: Container(
-          height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(12))
-          ),
-          child: Center(
-            child: Text(home.popUpButton,
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
-          ),
+    return Center(
+      child: Text(empathize.digitalPersona,
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w200
+            )
         ),
       ),
     );
+  }
 
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
+  Widget buildProfileImageCard(BuildContext context){
+    return Center(child: Container(
+      width: 192,
+      height: 192,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(7)),
+        image: DecorationImage(
+          image: NetworkImage(widget.image),
+        ),
       ),
-      title: Column(
+    ));
+  }
+
+  Widget buildDetailsColumn(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 40, right: 40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          SizedBox(height: 10,),
-          Text(home.popUp1, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
-          Text(home.popUp2,style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
-          SizedBox(height: 10,)
+          buildNameField(context),
+          SizedBox(height: 25,),
+          buildAgeField(context),
+          SizedBox(height: 25,),
+          buildLocationField(context),
+          SizedBox(height: 25,),
+          buildEducationField(context),
+          SizedBox(height: 25,),
+          buildJobField(context),
+          SizedBox(height: 25,),
+          buildBioField(context),
+          SizedBox(height: 25,),
+          buildGoalsField(context),
+          SizedBox(height: 25,),
         ],
       ),
-      content: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Container(
-          height: MediaQuery.of(context).size.height/3.5,
-          width: MediaQuery.of(context).size.width,
-          child: Form(
-            key: home.formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                textField,
-                buildSaveButton,
-              ],
-            ),
+    );
+  }
+
+  Widget buildNameField(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Name  :  ",
+          style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            )
           ),
         ),
-      ),
+        Text(widget.name,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+              )
+          ),
+        ),
+      ],
     );
+  }
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+  Widget buildAgeField(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Age  :  ",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              )
+          ),
+        ),
+        Text(widget.age,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+              )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildLocationField(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Location  :  ",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              )
+          ),
+        ),
+        Text(widget.location,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+              )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildEducationField(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Education  :  ",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              )
+          ),
+        ),
+        Text(widget.education,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+              )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildJobField(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Job  :  ",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              )
+          ),
+        ),
+        Text(widget.job,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+              )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildBioField(BuildContext context){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Bio  :  \n",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              )
+          ),
+        ),
+        Text(widget.bio,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+              )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildGoalsField(BuildContext context){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Goals and Motivation  :  \n",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              )
+          ),
+        ),
+        Text(widget.goals,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+              )
+          ),
+        ),
+      ],
     );
   }
 
