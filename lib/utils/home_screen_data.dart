@@ -1,4 +1,6 @@
 library main_app.homeglobals;
+import 'dart:io';
+
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -59,5 +61,17 @@ String sprintGoal = "Sprint Goal";
 var responseArrayGetGoal;
 var responseArrayGetGoalMsg;
 var sprintGoalList;
+
+//Profile Screen Data
+final formKeyProfile = GlobalKey<FormState>();
+TextEditingController profileNameController = TextEditingController();
+TextEditingController profileEmailController = TextEditingController();
+TextEditingController profilePasswordController = TextEditingController();
+TextEditingController profileMobileNumberController = TextEditingController();
+var responseArrayEditProfile;
+var responseArrayEditProfileMsg;
+var profileBaseImage;
+var profileFileName;
+File profileImage;
 
 

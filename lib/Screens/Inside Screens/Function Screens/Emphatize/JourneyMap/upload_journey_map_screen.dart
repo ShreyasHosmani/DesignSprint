@@ -35,6 +35,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
     super.initState();
     createJourneyApiProvider.getJourneyMapDetails(context);
     getPainPointsApiProvider.getPainPoints(context);
+    ppListStatic = [];
     empathize.imagePaperJourneyMap = null;
     empathize.painPointsList = null;
     empathize.fileNamePaperJourneyMap = "";
@@ -108,6 +109,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                 buildUploadButton(context),
                 SizedBox(height: 25,),
                 buildFileNameWidget(context),
+                SizedBox(height: 25,),
+                buildPainPointListView(context),
                 showSecondStep == false && empathize.journeyMapImageNamesList == null ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
                 showSecondStep == false && empathize.journeyMapImageNamesList == null ? Container(height: 1, width: 1,) :buildName4Widget(context),
                 showSecondStep == false && empathize.journeyMapImageNamesList == null ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
@@ -651,7 +654,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text(empathize.paperPersonaHint1,
+      child: Text(empathize.paperJourneyMapHint1,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 fontSize: 20,
@@ -816,20 +819,26 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   }
 
   Widget buildPainPointListView(BuildContext context){
-    return empathize.painPointsList == null ? Container() : ListView.builder(
+    return ppListStatic == null ? Container() : ListView.builder(
       physics: ScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: empathize.painPointsList == null ? 0 : empathize.painPointsList.length,
-      itemBuilder: (context, i) => Container(
-        width: 302,
-        height: 105.54,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20,),
-            child: Text(empathize.painPointsList[i],
-              style: GoogleFonts.nunitoSans(
-                fontSize: 16,
+      itemCount: ppListStatic == null || ppListStatic.isEmpty ? 0 : ppListStatic.length,
+      itemBuilder: (context, i) => Padding(
+        padding: const EdgeInsets.only(left: 35, right: 35, bottom: 2),
+        child: Card(
+          elevation: 2,
+          child: Container(
+            width: 302,
+            height: 105.54,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20,),
+                child: Text(ppListStatic[i],
+                  style: GoogleFonts.nunitoSans(
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
           ),
@@ -899,7 +908,12 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       onTap: (){
         if(empathize.formKey3.currentState.validate()){
           empathize.prInputPainPoint.show();
-          inputPainPointsApiProvider.inputPainPoints(context);
+          inputPainPointsApiProvider.inputPainPoints(context).whenComplete((){
+            setState(() {
+              ppListStatic.add(empathize.painPointController.text);
+            });
+            print(ppListStatic.toList());
+          });
         }
       },
       child: Column(
@@ -964,3 +978,5 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   }
 
 }
+
+List<String> ppListStatic;

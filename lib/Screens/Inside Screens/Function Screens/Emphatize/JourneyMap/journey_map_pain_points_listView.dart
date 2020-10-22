@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class JourneyMapPainPointsListView extends StatefulWidget {
   @override
@@ -85,6 +84,15 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   Padding(
                     padding: const EdgeInsets.only(left: 35, right: 0),
                     child: buildPainPointsRow(context),
+                  ),
+                  SizedBox(height: 40,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      saveButton(context),
+                      newPersonaButton(context),
+                    ],
                   ),
                   SizedBox(height: 40,),
                   buildNextButton(context),
@@ -3229,16 +3237,75 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                         empathize.selectedTouchPointId = touchPointIdListStorage[i];
                       });
                       print(empathize.selectedPainPointController);
-                      inputPainPointsApiProvider.inputPainPointsFromDigitalJourneyMap(context).whenComplete((){
-                        Future.delayed(const Duration(seconds: 3), () {
-                          painPointIdListStorage.insert(i, empathize.receivedPainPointIdSingle);
-                          print(painPointIdListStorage.toList());
+                      if(painPointIdListStorage[i] == "x"){
+                        inputPainPointsApiProvider.inputPainPointsFromDigitalJourneyMap(context).whenComplete((){
+                          Future.delayed(const Duration(seconds: 3), () {
+                            painPointIdListStorage.insert(i, empathize.receivedPainPointIdSingle);
+                            print(painPointIdListStorage.toList());
+                          });
                         });
-                      });
+                      }else{
+                        setState(() {
+                          empathize.selectedTouchPointId = painPointIdListStorage[i];
+                        });
+                        inputPainPointsApiProvider.updatePainPointsFromDigitalJourneyMap(context).whenComplete((){
+
+                        });
+                      }
                     },
                   ),
                 ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget saveButton(BuildContext context){
+    return InkWell(
+      onTap: (){
+
+      },
+      child: Container(
+        height: 35,
+        width: 114,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xffd4d4d4),
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(50)),
+        ),
+        child: Center(
+          child: Text(empathize.saveButton,
+            style: GoogleFonts.nunitoSans(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget newPersonaButton(BuildContext context){
+    return InkWell(
+      onTap: () => showAlertDialogNewMap(context),
+      child: Container(
+        height: 35,
+        width: 114,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xffd4d4d4),
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(50)),
+        ),
+        child: Center(
+          child: Text("New map",
+            style: GoogleFonts.nunitoSans(
+              fontSize: 16,
+              color: Colors.grey,
             ),
           ),
         ),
@@ -3314,6 +3381,99 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
     );
 
     // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showAlertDialogNewMap(BuildContext context) {
+
+    Widget textFormField = Theme(
+        data: ThemeData(
+          primaryColor: Color(0xff787CD1),
+        ),
+        child: TextFormField(
+          controller: empathize.journeyNameController,
+          decoration: InputDecoration(
+            hintText: empathize.journeyMapPaperHint,
+          ),
+          validator: (val){
+            if(val.isEmpty){
+              return empathize.journeyMapFieldValidation;
+            }
+            return null;
+          },
+        ));
+
+    GestureDetector buildSaveButton = GestureDetector(
+      onTap: (){
+        if(empathize.formKey2.currentState.validate()){
+          empathize.prJourneyMapName.show();
+          createJourneyApiProvider.createNewJourneyMapName(context).whenComplete((){
+
+          });
+        }
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 10,
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 2.4,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(12))
+          ),
+          child: Center(
+            child: Text("Next",
+                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
+            ),
+          ),
+        ),
+      ),
+    );
+
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+          Text(empathize.popUpHint, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text("",style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+        ],
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Container(
+          height: MediaQuery.of(context).size.height/4,
+          width: MediaQuery.of(context).size.width,
+          child: Form(
+            key: empathize.formKey2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                textFormField,
+                buildSaveButton,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
     showDialog(
       context: context,
       builder: (BuildContext context) {

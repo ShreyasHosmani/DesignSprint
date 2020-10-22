@@ -1,5 +1,6 @@
 import 'package:design_sprint/APIs/get_profile.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_sprint_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/edit_profile_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -257,57 +258,69 @@ class _HomeState extends State<Home> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xff302B70),
-                        Color(0xff787CD1),
-                      ],
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 80,
-                        width: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.all(Radius.circular(10))
-                        ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (c, a1, a2) => EditProfile(),
+                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionDuration: Duration(milliseconds: 300),
                       ),
-                      SizedBox(width: 15,),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hi, " + profile.name + "!",
-                            style: GoogleFonts.nunitoSans(
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
-                          ),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff302B70),
+                          Color(0xff787CD1),
                         ],
                       ),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.all(Radius.circular(10))
+                          ),
+                          child: Icon(Icons.person, color: Colors.grey, size: 40,),
+                        ),
+                        SizedBox(width: 15,),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Hi, " + profile.name + "!",
+                              style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                )
+                              ),
+                            ),
+                            SizedBox(height: 8,),
+                            Text(profile.email,
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  )
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 42,),

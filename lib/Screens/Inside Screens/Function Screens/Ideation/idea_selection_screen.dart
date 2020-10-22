@@ -1,10 +1,11 @@
 import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/upload_idea_image.dart';
 import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen3.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
@@ -18,11 +19,16 @@ class IdeaSelection extends StatefulWidget {
 class _IdeaSelectionState extends State<IdeaSelection> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
+  UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    ideation.ideaAllImagesPainPointWiseList = null;
     getPainPointsApiProvider.getPainPointsByIvsFPriority(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    });
+    uploadIdeaApiProvider.getAllIdeaImages(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
     boolSelectedList = [false,false,false,false,false,false,false,false,false,false,];
@@ -614,14 +620,21 @@ class _IdeaSelectionState extends State<IdeaSelection> {
           children: [
             Stack(
               children: [
-                Container(
+                ideation.ideaAllImagesPainPointWiseList == null ? Container(
+                  height: 161,
+                  width: 302,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                ) : Container(
                   height: 161,
                   width: 302,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(7)),
                     border: Border.all(color: Colors.grey),
                     image: DecorationImage(
-                        image: NetworkImage('https://www.freshtilledsoil.com/wp-content/uploads/5_phases.jpeg'),
+                        image: NetworkImage(globals.urlSignUp+ideation.ideaAllImagesPainPointWiseList[i]),
                         fit: BoxFit.cover
                     ),
                   ),

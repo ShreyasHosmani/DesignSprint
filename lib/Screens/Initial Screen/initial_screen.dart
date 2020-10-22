@@ -1,14 +1,16 @@
-import 'package:design_sprint/Screens/Initial%20Screen/splash_one.dart';
+import 'package:design_sprint/APIs/get_profile.dart';
+import 'package:design_sprint/Screens/Initial%20Screen/splash_page_view_builder.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialScreen extends StatefulWidget {
-
   @override
   _InitialScreenState createState() => _InitialScreenState();
 }
 
 class _InitialScreenState extends State<InitialScreen> {
+  ProfileApiProvider profileApiProvider = ProfileApiProvider();
   @override
   void initState() {
     // TODO: implement initState
@@ -37,25 +39,13 @@ class _InitialScreenState extends State<InitialScreen> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        height: 153,//MediaQuery.of(context).size.height/7,
-        width: 153,//MediaQuery.of(context).size.width/3.5,
+        height: 153,
+        width: 153,
         decoration: BoxDecoration(
           color: Color(0xff302b70),
             borderRadius: BorderRadius.all(Radius.circular(25))
         ),
         child: Image.asset("assets/images/dezylogo.gif"),
-        /*
-        Center(child: Text("Dt",
-          style: GoogleFonts.arimo(
-            textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 54,
-                fontWeight: FontWeight.bold,
-            ),
-          ),
-        )),
-
-         */
       ),
     );
   }
@@ -66,12 +56,26 @@ class _InitialScreenState extends State<InitialScreen> {
     );
   }
 
-  void jumpScreen(BuildContext context){
+  Future<void> jumpScreen(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var tempID = await prefs.getString("userID"); //setString("userID", profile.userID);
+    print(tempID);
+    profileApiProvider.getProfile(context);
+    Future.delayed(const Duration(seconds: 2), () {
+      profileApiProvider.getSideBarProfile();
+    });
     Future.delayed(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SplashOne()),
-      );
+      if(tempID == null || tempID == "null"){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SplashPageViewBuilder()),
+        );
+      }else{
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Load()),
+        );
+      }
     });
   }
 }

@@ -87,6 +87,7 @@ class _SplashTwoState extends State<SplashTwo> {
         Text("A day by day guide for building", style: textStyle(),),
         Text("your digital products", style: textStyle(),),
         SizedBox(height: 30,),
+        /*
         GestureDetector(
           onTap: (){
             Navigator.pushReplacement(
@@ -109,6 +110,8 @@ class _SplashTwoState extends State<SplashTwo> {
             ),
           ),
         )
+
+         */
       ],
     );
   }

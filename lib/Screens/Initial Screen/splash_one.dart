@@ -91,6 +91,7 @@ class _SplashOneState extends State<SplashOne> {
         Text("assists you to run successful design", style: textStyle(),),
         Text("sprints.", style: textStyle(),),
         SizedBox(height: 24,),
+        /*
         GestureDetector(
           onTap: (){
             Navigator.pushReplacement(
@@ -113,6 +114,8 @@ class _SplashOneState extends State<SplashOne> {
             ),
           ),
         ),
+
+         */
       ],
     );
   }

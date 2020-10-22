@@ -78,6 +78,16 @@ class _UploadIdea1State extends State<UploadIdea1> {
   void initState() {
     super.initState();
     showImages = false;
+    ideation.ideaImagesPainPointWiseList = null;
+    ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List[ideation.pageIndexIdea];
+    print(ideation.selectedPainPointIdForUploadIdeaImage);
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        uploadIdeaApiProvider.getIdeaImages(context).whenComplete((){
+          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+        });
+      });
+    });
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
@@ -108,24 +118,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                 SizedBox(height: 34,),
                 buildUploadButton(context),
                 SizedBox(height: 23,),
-                showImages == false ? Container() : Text("Image.jpg",
-                  style: GoogleFonts.nunitoSans(
-                      color: Colors.grey,
-                      fontSize: 12
-                  ),
-                ),
-                showImages == false ? Container() : Text("Image-2.jpg",
-                  style: GoogleFonts.nunitoSans(
-                      color: Colors.grey,
-                      fontSize: 12
-                  ),
-                ),
-                showImages == false ? Container() : Text("Image-3.jpg",
-                  style: GoogleFonts.nunitoSans(
-                      color: Colors.grey,
-                      fontSize: 12
-                  ),
-                ),
+                buildFileNameWidget(context),
                 SizedBox(height: 118,),
                 buildNextButton(context),
                 SizedBox(height: 52,),
@@ -721,6 +714,29 @@ class _UploadIdea1State extends State<UploadIdea1> {
     );
   }
 
+  Widget buildFileNameWidget(BuildContext context){
+    return ideation.ideaImagesPainPointWiseList == null ? Container() : ListView.builder(
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: ideation.ideaImagesPainPointWiseList == null ? 0 : ideation.ideaImagesPainPointWiseList.length,
+      itemBuilder: (context, i) => Center(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Text(ideation.ideaImagesPainPointWiseList[i],
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                )
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildUploadButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
@@ -753,6 +769,11 @@ class _UploadIdea1State extends State<UploadIdea1> {
 //                          });
                           getImageOneGallery().then((value){
                             uploadIdeaApiProvider.uploadIdeaImage(context);
+                            Future.delayed(const Duration(seconds: 3), () {
+                              uploadIdeaApiProvider.getIdeaImages(context).whenComplete((){
+                                Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                              });
+                            });
                           });
                         },
                         child: Column(

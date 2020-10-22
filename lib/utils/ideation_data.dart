@@ -73,3 +73,17 @@ var selectedPainPointForPrototypingStatus;
 
 var responseArrayUpdateImpactPriority;
 var responseArrayUpdateImpactPriorityMsg;
+
+var responseArrayUploadIdeaImage;
+var responseArrayUploadIdeaImageMsg;
+var responseArrayGetIdeaImages;
+var responseArrayGetIdeaImagesMsg;
+var ideaImagesPainPointWiseList;
+var responseArrayGetAllIdeaImages;
+var responseArrayGetAllIdeaImagesMsg;
+var ideaAllImagesPainPointWiseList;
+var responseArrayGetAllIdeaImagesByStatus;
+var responseArrayGetAllIdeaImagesByStatusMsg;
+var ideaAllImagesOfStatusTwo;
+
+var selectedPainPointIdForGettingIdeaImage;

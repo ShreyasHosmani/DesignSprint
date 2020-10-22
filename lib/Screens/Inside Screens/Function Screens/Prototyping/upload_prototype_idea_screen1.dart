@@ -1,10 +1,13 @@
 import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/upload_idea_image.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen4.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/prototyping_data.dart' as prototyping;
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/globals.dart' as globals;
 
 bool statusDrawer = false;
 bool showImages = false;
@@ -59,11 +62,15 @@ class UploadPrototype1 extends StatefulWidget {
 }
 
 class _UploadPrototype1State extends State<UploadPrototype1> {
+  UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     showImages = false;
+    uploadIdeaApiProvider.getIdeaImagesByStatus(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    });
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
@@ -693,14 +700,21 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildIdeaImageContainer(BuildContext context){
     return Stack(
       children: [
-        Container(
+        ideation.ideaAllImagesOfStatusTwo == null ? Container(
+          height: 161,
+          width: 302,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(7)),
+            border: Border.all(color: Colors.grey),
+          ),
+        ) : Container(
           height: 161,
           width: 302,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(7)),
             border: Border.all(color: Colors.grey),
             image: DecorationImage(
-                image: NetworkImage('https://www.freshtilledsoil.com/wp-content/uploads/5_phases.jpeg'),
+                image: NetworkImage(globals.urlSignUp+ideation.ideaAllImagesOfStatusTwo[prototyping.pageIndex]),
                 fit: BoxFit.cover
             ),
           ),

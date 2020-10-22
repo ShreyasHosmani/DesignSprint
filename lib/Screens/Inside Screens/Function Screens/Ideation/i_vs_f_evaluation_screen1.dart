@@ -1,10 +1,11 @@
 import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/upload_idea_image.dart';
 import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/idea_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
@@ -18,12 +19,15 @@ class ImpactVsFeasibilityPageViewBuilder extends StatefulWidget {
 class _ImpactVsFeasibilityPageViewBuilderState extends State<ImpactVsFeasibilityPageViewBuilder> {
   final controller = PageController(viewportFraction: 1);
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
   void initState() {
     // TODO: implement initState
     super.initState();
     ideation.pageIndexIvsF = 0;
     getPainPointsApiProvider.getPainPointsOfStatusTwo2(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {});
+      });
     });
   }
   @override
@@ -61,10 +65,20 @@ class IvsFEvaluation1 extends StatefulWidget {
 class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
+  UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    ideation.ideaImagesPainPointWiseList = null;
+    uploadIdeaApiProvider.getIdeaImages(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+        });
+        print(ideation.selectedPainPointIdForUploadIdeaImage);
+      });
+    });
     ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
     print(ideation.selectedPainPointIdForVoteOfIvsF);
     containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
@@ -687,14 +701,21 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   }
 
   Widget buildImageContainer(BuildContext context){
-    return Container(
+    return ideation.ideaImagesPainPointWiseList == null ? Container(
+      height: 161,
+      width: 302,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(7)),
+        border: Border.all(color: Colors.grey),
+      ),
+    ) : Container(
       height: 161,
       width: 302,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(7)),
         border: Border.all(color: Colors.grey),
         image: DecorationImage(
-          image: NetworkImage('https://www.freshtilledsoil.com/wp-content/uploads/5_phases.jpeg'),
+          image: NetworkImage(globals.urlSignUp + ideation.ideaImagesPainPointWiseList[0]),
           fit: BoxFit.cover
         ),
       ),

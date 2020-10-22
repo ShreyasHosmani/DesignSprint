@@ -199,6 +199,8 @@ class InputPainPointsApiProvider {
     });
   }
 
+
+
   //APIs for Horizontal Journey Map - Edit/Update Section
 
   Future<String> updateTouchPoints(context) async {
@@ -269,7 +271,7 @@ class InputPainPointsApiProvider {
 
   Future<String> updateCustomerExperiences(context) async {
 
-    String url = globals.urlSignUp + "editcustomerexperience.php";
+    String url = globals.urlSignUp + "editcustomerexpeience.php";
 
     http.post(url, body: {
 
@@ -302,15 +304,12 @@ class InputPainPointsApiProvider {
 
   Future<String> updatePainPointsFromDigitalJourneyMap(context) async {
 
-    String url = globals.urlSignUp + "createpainpointbytouchpoint.php";
+    String url = globals.urlSignUp + "editpainpoint.php";
 
     http.post(url, body: {
 
-      "userID" : profile.userID,
-      "sprintID": home.sprintID,
-      "mapID" : empathize.journeyMapId,
-      "painpointname": empathize.selectedPainPointController,
-      "touchpointID" : empathize.selectedTouchPointId,
+      "text": empathize.selectedPainPointController,
+      "painpointID" : empathize.selectedTouchPointId,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -325,9 +324,7 @@ class InputPainPointsApiProvider {
       empathize.responseArrayInputPainPointsMsg = empathize.responseArrayInputPainPoints['message'].toString();
       print(empathize.responseArrayInputPainPointsMsg);
       if(statusCode == 200){
-        if(empathize.responseArrayInputPainPointsMsg == "Painpoint Added Successfully"){
-          empathize.receivedPainPointIdSingle = empathize.responseArrayInputPainPoints['data'].toString();
-          print(empathize.receivedPainPointIdSingle);
+        if(empathize.responseArrayInputPainPointsMsg == "Pain Point Edited Successfully"){
           Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
             textColor: Colors.white,);
         }else{

@@ -171,4 +171,53 @@ class CreateJourneyApiProvider{
     });
   }
 
+  Future<String> createNewJourneyMapName(context) async {
+
+    String url = globals.urlLogin + "createjourneymap.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID" : home.sprintID,
+      "journeymapname" : empathize.journeyNameController.text,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayJourneyMapName = jsonDecode(response.body);
+      print(empathize.responseArrayJourneyMapName);
+
+      empathize.responseArrayJourneyMapNameMsg = empathize.responseArrayJourneyMapName['message'].toString();
+      if(statusCode == 200){
+        if(empathize.responseArrayJourneyMapNameMsg == "Journey Map Added Successfully"){
+          empathize.prJourneyMapName.hide().whenComplete((){
+            empathize.journeyMapId = empathize.responseArrayJourneyMapName['data'].toString();
+            print(empathize.journeyMapId);
+            Navigator.of(context).pop();
+            Fluttertoast.showToast(msg: empathize.journeyMapSaved, backgroundColor: Colors.black,
+              textColor: Colors.white,);
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => JourneyMapPainPointsListView(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          });
+        }else{
+          empathize.prJourneyMapName.hide().whenComplete((){
+            Fluttertoast.showToast(msg: empathize.responseArrayJourneyMapNameMsg, backgroundColor: Colors.black,
+              textColor: Colors.white,);
+          });
+
+        }
+      }
+    });
+  }
+
 }
