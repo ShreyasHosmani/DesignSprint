@@ -1,97 +1,20 @@
-import 'dart:async';
-
-import 'package:design_sprint/APIs/get_pain_points.dart';
-import 'package:design_sprint/ReusableWidgets/countdown_timer_widget.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/upload_idea_screen1.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/reiterate_tutorial_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Testing%20Screens/user_testing_inside_sections1.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/ideation_data.dart' as ideation;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/time_line_data.dart' as timeLine;
 
 bool statusDrawer = false;
-Timer _timer;
-int _start = 480;
 
-class GetPainPointsOfStatusTwoPageViewBuilder extends StatefulWidget {
+class EmphatizeSections5 extends StatefulWidget {
   @override
-  _GetPainPointsOfStatusTwoPageViewBuilderState createState() => _GetPainPointsOfStatusTwoPageViewBuilderState();
+  _EmphatizeSections5State createState() => _EmphatizeSections5State();
 }
 
-class _GetPainPointsOfStatusTwoPageViewBuilderState extends State<GetPainPointsOfStatusTwoPageViewBuilder> {
-  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
-  final controller = PageController(viewportFraction: 1);
-  @override
-  void initState() {
-    super.initState();
-    ideation.pageIndex = 0;
-    print(ideation.pageIndex);
-    getPainPointsApiProvider.getPainPointsOfStatusTwo(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ideation.painPointsOfStatus2List == null ? Center(
-        child: CircularProgressIndicator(),
-      ) : PageView.builder(
-        physics:new NeverScrollableScrollPhysics(),
-        itemCount: ideation.painPointsOfStatus2List == null ? 0 : ideation.painPointsOfStatus2List.length,
-        controller: controller,
-        onPageChanged: (index){
-          setState(() {
-            ideation.pageIndex = index;
-          });
-          print(ideation.pageIndex);
-        },
-        itemBuilder: (BuildContext context, int index) {
-          return CrazyEightEvaluation1(controller);
-        },
-      ),
-    );
-  }
-}
-
-
-class CrazyEightEvaluation1 extends StatefulWidget {
-  final controller;
-  CrazyEightEvaluation1(this.controller) : super();
-  @override
-  _CrazyEightEvaluation1State createState() => _CrazyEightEvaluation1State();
-}
-
-class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
+class _EmphatizeSections5State extends State<EmphatizeSections5> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-          (Timer timer) => setState(
-            () {
-          if (_start < 1) {
-            timer.cancel();
-            showAlertDialog(context);
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
-    );
-  }
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _start = 480;
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,23 +32,47 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
               children: [
                 SizedBox(height: 20,),
                 buildName2Widget(context),
-                SizedBox(height: 68,),
-                buildName3Widget(context),
-                SizedBox(height: 35,),
-                buildLevelContainer(context),
-                SizedBox(height: 72,),
-                buildNumberIndicator(context),
-                SizedBox(height: 35,),
-                buildName4Widget(context),
-                SizedBox(height: 50,),
-                buildTimerWidget(context),
-                SizedBox(height: 42,),
-                saveButton(context),
-                SizedBox(height: 20,),
-                buildName5Widget(context),
-                SizedBox(height: 52,),
+                SizedBox(height: MediaQuery.of(context).size.height/20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        buildFilledContainer(context),
+                        buildFilledContainerSeperater(context),
+                        buildFilledContainer(context),
+                        buildFilledContainerSeperater(context),
+                        buildFilledContainer(context),
+                        buildFilledContainerSeperater(context),
+                        buildFilledContainer(context),
+                        buildFilledContainerSeperater(context),
+                        buildFilledContainer(context),
+                      ],
+                    ),
+                    SizedBox(width: 30,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        buildFirstButton(context),
+                        SizedBox(height: 40,),
+                        buildSecondButton(context),
+                        SizedBox(height: 40,),
+                        buildThirdButton(context),
+                        SizedBox(height: 40,),
+                        buildFourthButton(context),
+                        SizedBox(height: 40,),
+                        buildFifthButton(context),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height/10,),
                 buildNextButton(context),
-                SizedBox(height: 52,),
+                SizedBox(height: MediaQuery.of(context).size.height/10,),
               ],
             ),
           ),
@@ -154,7 +101,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text(ideation.title,
+        child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -645,7 +592,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(ideation.card1,
+      child: Text(timeLine.title,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -657,113 +604,30 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
-    return Center(
-      child: Text(ideation.ideaHint1,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
-        ),
-      ),
-    );
-  }
-
-  Widget buildNumberIndicator(BuildContext context){
-    return Container(
-      height: 32,
-      width: 32,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-        color: Color(0xff787cd1)
-      ),
-      child: Center(
-        child: Text((ideation.pageIndex+1).toString(),
-          style: GoogleFonts.nunitoSans(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildName4Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.painPointsOfStatus2List[ideation.pageIndex],
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildTimerWidget(BuildContext context){
-    return Center(
-      child: Text("$_start",
-        style: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-      /*
-      CountDownTimer(
-        secondsRemaining: ideation.timer,
-        whenTimeExpires: () {
-          showAlertDialog(context);
-        },
-        countDownTimerStyle: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-
-       */
-    );
-  }
-
-  Widget saveButton(BuildContext context){
+  Widget buildFirstButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        //showAlertDialog(context);
-        startTimer();
+//        Navigator.push(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//            transitionDuration: Duration(milliseconds: 300),
+//          ),
+//        );
       },
-      child: Container(
-        height: 35,
-        width: 114,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(0xff787cd1),
+      child: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height/17,
+          width: MediaQuery.of(context).size.width/1.5,
+          decoration: BoxDecoration(
+              border: Border.all(color : Color(0xff7579cb)),
+              borderRadius: BorderRadius.all(Radius.circular(7))
           ),
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-        ),
-        child: Center(
-          child: Text(ideation.start,
-            style: GoogleFonts.nunitoSans(
-              fontSize: 16,
-              color: Color(0xff787cd1),
+          child: Center(
+            child: Text("Emphatize - Day 1",
+              style: TextStyle(
+                  color: Color(0xff787CD1), letterSpacing: 1, fontSize: 16),
             ),
           ),
         ),
@@ -771,17 +635,171 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     );
   }
 
-  Widget buildName5Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.startTimerHint,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500
-            )
+  Widget buildSecondButton(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+//        Navigator.push(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//            transitionDuration: Duration(milliseconds: 300),
+//          ),
+//        );
+      },
+      child: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height/17,
+          width: MediaQuery.of(context).size.width/1.5,
+          decoration: BoxDecoration(
+              border: Border.all(color : Color(0xff7579cb)),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Ideation - Day 2",
+              style: TextStyle(
+                  color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
+            ),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget buildThirdButton(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+//        Navigator.push(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//            transitionDuration: Duration(milliseconds: 300),
+//          ),
+//        );
+      },
+      child: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height/17,
+          width: MediaQuery.of(context).size.width/1.5,
+          decoration: BoxDecoration(
+              border: Border.all(color : Color(0xff787cd1)),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Prototyping - Day 3",
+              style: TextStyle(
+                  color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildFourthButton(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+//        Navigator.push(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//            transitionDuration: Duration(milliseconds: 300),
+//          ),
+//        );
+      },
+      child: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height/17,
+          width: MediaQuery.of(context).size.width/1.5,
+          decoration: BoxDecoration(
+              border: Border.all(color : Color(0xff787cd1)),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("User Testing - Day 4",
+              style: TextStyle(
+                  color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildFifthButton(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+//        Navigator.push(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//            transitionDuration: Duration(milliseconds: 300),
+//          ),
+//        );
+      },
+      child: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height/17,
+          width: MediaQuery.of(context).size.width/1.5,
+          decoration: BoxDecoration(
+              border: Border.all(color : Color(0xff787cd1)),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Re Iterate - Day 5",
+              style: TextStyle(
+                  color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildNonFilledContainer(BuildContext context){
+    return Container(
+      height: 25,
+      width: 25,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(50))
+      ),
+    );
+  }
+  Widget buildFilledContainer(BuildContext context){
+    return Container(
+      height: 25,
+      width: 25,
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xff787CD1),
+            width: 2,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(50))
+      ),
+    );
+  }
+
+  Widget buildContainerSeperater(BuildContext context){
+    return Container(
+      height: MediaQuery.of(context).size.height/13,
+      width: 1,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+      ),
+    );
+  }
+  Widget buildFilledContainerSeperater(BuildContext context){
+    return Container(
+      height: MediaQuery.of(context).size.height/13,
+      width: 2,
+      decoration: BoxDecoration(
+        color: Color(0xff787cd1),
       ),
     );
   }
@@ -789,20 +807,14 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndex]){
-          print("Last index reached, You are a great man ever!");
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => UploadIdeaImagePageViewBuilder(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
-        }else{
-          print("You are a loser bro, try again!");
-          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-        }
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ReIterateTutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
       },
       child: Center(
         child: Container(
@@ -820,76 +832,6 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
           ),
         ),
       ),
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-
-    GestureDetector buildSaveButton = GestureDetector(
-      onTap: (){
-        Navigator.of(context).pop();
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        elevation: 10,
-        child: Container(
-          height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(50))
-          ),
-          child: Center(
-            child: Text("Next",
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
-          ),
-        ),
-      ),
-    );
-
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text(ideation.timeUp, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
-        ],
-      ),
-      content: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Container(
-          height: MediaQuery.of(context).size.height/3.5,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  height: 96,
-                  width: 96,
-                  child: Image.asset("assets/images/timer-image.png")),
-              buildSaveButton,
-            ],
-          ),
-        ),
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 

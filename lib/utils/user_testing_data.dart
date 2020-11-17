@@ -23,3 +23,8 @@ var responseArrayGetInsights;
 var responseArrayGetInsightsMsg;
 
 List<String> uploadedInsightsList;
+
+var responseArrayGetWareHouseInsights;
+var responseArrayGetWareHouseInsightsMsg;
+
+var wareHouseInsightsList;

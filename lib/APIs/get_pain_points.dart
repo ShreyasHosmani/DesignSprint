@@ -9,6 +9,44 @@ import 'dart:convert';
 
 class GetPainPointsApiProvider {
 
+  Future<String> getAllPainPoints(context) async {
+
+    String url = globals.urlSignUp + "getpainpoint.php";
+
+    http.post(url, body: {
+
+      "userID" : "null",
+      "sprintID": home.selectedSprintId,
+      "mapID" : "null",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetPainPoints = jsonDecode(response.body);
+      print(empathize.responseArrayGetPainPoints);
+
+      empathize.responseArrayGetPainPointsMsg = empathize.responseArrayGetPainPoints['message'].toString();
+      print(empathize.responseArrayGetPainPointsMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayGetPainPointsMsg == "Painpoint Data Found"){
+          empathize.painPointsList = List.generate(empathize.responseArrayGetPainPoints['data'].length, (index) => empathize.responseArrayGetPainPoints['data'][index]['ppName'].toString());
+          empathize.painPointIdsList = List.generate(empathize.responseArrayGetPainPoints['data'].length, (index) => empathize.responseArrayGetPainPoints['data'][index]['ppID'].toString());
+
+          print(empathize.painPointsList.toList());
+          print(empathize.painPointIdsList.toList());
+        }else{
+
+          empathize.painPointsList = null;
+
+        }
+      }
+    });
+  }
+
   Future<String> getPainPoints(context) async {
 
     String url = globals.urlSignUp + "getpainpoint.php";

@@ -1,32 +1,30 @@
-import 'package:design_sprint/APIs/get_warehouse_journeymap_data.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_digital_journey_map_details.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_paper_journey_map_details.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_crazy8_pain_points.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_ivsf_inside_sections.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_journey_maps_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_personas_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:shimmer/shimmer.dart';
-import 'package:design_sprint/utils/warehouse_journey_map_data.dart' as journeyMapWH;
-import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-class ViewJourneyMaps extends StatefulWidget {
+class ViewIdeationInsideSections extends StatefulWidget {
+  final sprintid;
+  ViewIdeationInsideSections(this.sprintid) : super();
   @override
-  _ViewJourneyMapsState createState() => _ViewJourneyMapsState();
+  _ViewIdeationInsideSectionsState createState() => _ViewIdeationInsideSectionsState();
 }
 
-class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
-  GetWareHouseJourneyMapDataApiProvider getWareHouseJourneyMapDataApiProvider = GetWareHouseJourneyMapDataApiProvider();
+class _ViewIdeationInsideSectionsState extends State<ViewIdeationInsideSections> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    journeyMapWH.journeyMapWareHouseIdsList = null;
-    getWareHouseJourneyMapDataApiProvider.getJourneyMapWareHouseData(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    home.selectedSprintId = widget.sprintid;
+    print(home.selectedSprintId);
   }
   @override
   Widget build(BuildContext context) {
@@ -41,10 +39,11 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 70,),
+            buildCrazy8Card(context),
             SizedBox(height: 25,),
-            buildName2Widget(context),
-            SizedBox(height: 51,),
-            buildJourneyMapsListViewBuilder(context),
+            buildIvsFCard(context),
+            SizedBox(height: 40,),
           ],
         ),
       ),
@@ -64,7 +63,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text(empathize.empathize,
+        child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -279,123 +278,71 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
+  Widget buildCrazy8Card(BuildContext context){
     return Center(
-      child: Text(empathize.journeyMaps,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                color: Color(0xff707070),
-                fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildJourneyMapsListViewBuilder(BuildContext context){
-    return Padding(
-      padding: const EdgeInsets.only(left: 35, right: 35),
-      child: journeyMapWH.journeyMapWareHouseIdsList == null ? Container() : ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: journeyMapWH.journeyMapWareHouseIdsList == null ? 0 : journeyMapWH.journeyMapWareHouseIdsList.length,
-        itemBuilder: (context, i) => InkWell(
-          onTap: (){
-            setState(() {
-              journeyMapWH.selectedWareHouseMapId = journeyMapWH.journeyMapWareHouseIdsList[i];
-            });
-            print(journeyMapWH.selectedWareHouseMapId);
-            print(journeyMapWH.journeyMapWareHouseImagesList[i]);
-            if(journeyMapWH.journeyMapWareHouseImagesList[i] == "null"){
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ViewDigitalJourneyMapDetails(),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
-            }else{
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ViewPaperJourneyMapDetails(journeyMapWH.journeyMapWareHouseIdsList[i], journeyMapWH.journeyMapWareHouseImagesList[i]),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: Container(
-              width: 303,
-              height: 130,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Color(0xffEBEBEB)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  journeyMapWH.journeyMapWareHouseImagesList[i] == "null" ? Container(
-                    width: 132,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
-                        bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
-                      ),
-                      border: Border.all(color: Color(0xffEBEBEB)),
-                      color: Color(0xff787cd1),
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/journey.png"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ) : Container(
-                    width: 132,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
-                        bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
-                      ),
-                      border: Border.all(color: Color(0xffEBEBEB)),
-                      color: Color(0xff787cd1),
-                      image: DecorationImage(
-                        image: NetworkImage(globals.urlSignUp+journeyMapWH.journeyMapWareHouseImagesList[i]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 180,
-                          child: Text(journeyMapWH.journeyMapWareHouseUserNameList[i],
-                            maxLines: 2,
-                            //textScaleFactor: 0.7,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                )
-                            ),
-                          ),
+      child: GestureDetector(
+        onTap: (){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => ViewCrazy8PainPoints(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        },
+        child: Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          child: Container(
+            width: 302,
+            height: 286.22,
+            decoration: BoxDecoration(
+                color: Color(0xff96C3CB),
+                borderRadius: BorderRadius.all(Radius.circular(15))
+            ),
+            child: Stack(
+              children: [
+                Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 29, left: 35),
+                      child: Text("Crazy 8",
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                            )
                         ),
-                      ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 35),
+                      child: Text("Documents",
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                            )
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, bottom: 20),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      onPressed: (){},
+                      icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
                     ),
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),
@@ -403,4 +350,75 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
     );
   }
 
+  Widget buildIvsFCard(BuildContext context){
+    return Center(
+      child: GestureDetector(
+        onTap: (){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => ViewIvsFInsideSections(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        },
+        child: Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          child: Container(
+            width: 302,
+            height: 286.22,
+            decoration: BoxDecoration(
+                color: Color(0xff787cd1),
+                borderRadius: BorderRadius.all(Radius.circular(15))
+            ),
+            child: Stack(
+              children: [
+                Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 29, left: 35),
+                      child: Text("I vs F Analysis",
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                            )
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 35),
+                      child: Text("Documents",
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                            )
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, bottom: 20),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      onPressed: (){},
+                      icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -21,6 +21,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   @override
   void initState() {
     super.initState();
+    checkList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
     getPainPointsApiProvider.getPainPointsAccordingToVotes(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
@@ -687,4 +688,4 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
 
 }
 
-var checkList = [false,false,false,false,false,false,];
+var checkList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];

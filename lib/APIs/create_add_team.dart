@@ -99,7 +99,7 @@ class TeamApiProvider {
 
   Future<String> addTeamMember(context) async {
 
-    String url = globals.urlLogin + "addteammember.php";
+    String url = globals.urlLogin + "addteammember";
 
     http.post(url, body: {
 
@@ -177,6 +177,124 @@ class TeamApiProvider {
   }
 
   Future<String> getTeamNames(context) async {
+
+    String url = globals.urlLogin + "getteamname.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayTeamNames = jsonDecode(response.body);
+      print(team.responseArrayTeamNames);
+
+      team.responseArrayTeamNamesMsg = team.responseArrayTeamNames['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayTeamNamesMsg == "Profile Found"){
+
+          team.teamNamesList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnName'].toString());
+          team.teamNamesIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnID'].toString());
+
+          print(team.teamNamesList.toList());
+          print(team.teamNamesIdsList.toList());
+
+        }else{
+
+          team.teamNamesList = null;
+          team.teamNamesIdsList = null;
+
+        }
+      }
+
+    });
+  }
+
+  Future<String> addTeamMemberBySprint(context) async {
+
+    String url = globals.urlLogin + "addteammember.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID" : home.sprintID,
+      "teamid" : team.teamID,
+      "membername" : team.memberNameController.text,
+      "memberemail" : team.memberEmailController.text,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayAddTeam = jsonDecode(response.body);
+      print(team.responseArrayAddTeam);
+
+      team.responseArrayAddTeamMsg = team.responseArrayAddTeam['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayAddTeamMsg == "Team Added Successfully"){
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: team.memberAdded, backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            team.memberEmailController.clear();
+            team.memberNameController.clear();
+            getTeamMembers(context);
+            Navigator.of(context).pop();
+          });
+        }else{
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: team.responseArrayAddTeamMsg, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
+
+  Future<String> getTeamMembersBySprint(context) async {
+
+    String url = globals.urlLogin + "getteamstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID" : home.sprintID,
+      "teamID" : team.teamID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayTeamDetails = jsonDecode(response.body);
+      print(team.responseArrayTeamDetails);
+
+      team.responseArrayTeamDetailsMsg = team.responseArrayTeamDetails['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayTeamDetailsMsg == "Profile Found"){
+          team.teamMemberNameList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
+          team.teamMemberEmailList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'].toString());
+          print(team.teamMemberNameList.toList());
+          print(team.teamMemberEmailList.toList());
+        }else{
+          team.teamMemberNameList = null;
+          team.teamMemberEmailList = null;
+        }
+      }
+
+    });
+  }
+
+  Future<String> getTeamNamesBySprint(context) async {
 
     String url = globals.urlLogin + "getteamname.php";
 

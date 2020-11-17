@@ -1,13 +1,17 @@
+import 'dart:io';
 import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/APIs/upload_idea_image.dart';
+import 'package:design_sprint/APIs/upload_prototype_images.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen4.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/prototyping_data.dart' as prototyping;
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:image_picker/image_picker.dart';
 
 bool statusDrawer = false;
 bool showImages = false;
@@ -63,13 +67,35 @@ class UploadPrototype1 extends StatefulWidget {
 
 class _UploadPrototype1State extends State<UploadPrototype1> {
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
+  PrototypeApiProvider prototypeApiProvider = PrototypeApiProvider();
+  final picker = ImagePicker();
+  Future getImageOne() async {
+    Navigator.of(context).pop();
+    var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
+    setState(() {
+      prototyping.imageOne = File(pickedFile.path);
+    });
+  }
+  Future getImageOneGallery() async {
+    Navigator.of(context).pop();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    setState(() {
+      prototyping.imageOne = File(pickedFile.path);
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     showImages = false;
     uploadIdeaApiProvider.getIdeaImagesByStatus(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {});
+        setState(() {
+          prototyping.selectedPainPointIdForUploadingPrototypeImage = prototyping.painPointIdsForPrototypingList[prototyping.pageIndex];
+        });
+        print(prototyping.selectedPainPointIdForUploadingPrototypeImage);
+      });
     });
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -99,24 +125,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                 SizedBox(height: 34,),
                 buildUploadButton(context),
                 SizedBox(height: 23,),
-                showImages == false ? Container() : Text("Image.jpg",
-                  style: GoogleFonts.nunitoSans(
-                      color: Colors.grey,
-                      fontSize: 12
-                  ),
-                ),
-                showImages == false ? Container() : Text("Image-2.jpg",
-                  style: GoogleFonts.nunitoSans(
-                      color: Colors.grey,
-                      fontSize: 12
-                  ),
-                ),
-                showImages == false ? Container() : Text("Image-3.jpg",
-                  style: GoogleFonts.nunitoSans(
-                      color: Colors.grey,
-                      fontSize: 12
-                  ),
-                ),
+                buildFileNameWidget(context),
                 SizedBox(height: 70,),
                 buildNextButton(context),
                 SizedBox(height: 52,),
@@ -727,6 +736,30 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
     );
   }
 
+  Widget buildFileNameWidget(BuildContext context){
+    return prototyping.prototypeImagesPPWiseList == null ? Container() : ListView.builder(
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: prototyping.prototypeImagesPPWiseList == null ? 0 : prototyping.prototypeImagesPPWiseList.length,
+      itemBuilder: (context, i) => Center(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Text(prototyping.prototypeImagesPPWiseList[i],
+            textAlign: TextAlign.center,
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                )
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildUploadButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
@@ -749,9 +782,17 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     children: [
                       GestureDetector(
                         onTap: (){
-                          Navigator.of(context).pop();
-                          setState(() {
-                            showImages = true;
+//                          Navigator.of(context).pop();
+//                          setState(() {
+//                            showImages = true;
+//                          });
+                          getImageOneGallery().then((value){
+                            prototypeApiProvider.uploadPrototypeImage(context);
+                            Future.delayed(const Duration(seconds: 3), () {
+                              prototypeApiProvider.getPrototypeImagesPainPointWise(context).whenComplete((){
+                                Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                              });
+                            });
                           });
                         },
                         child: Column(
@@ -844,19 +885,24 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
-          print("Last index reached, You are a great man ever!");
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => EmphatizeSections4(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
+        if(prototyping.prototypeImagesPPWiseList == null){
+          Fluttertoast.showToast(msg: "You must upload atleast one image", backgroundColor: Colors.black,
+            textColor: Colors.white,);
         }else{
-          print("You are a loser bro, try again!");
-          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+          if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
+            print("Last index reached, You are a great man ever!");
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }else{
+            print("You are a loser bro, try again!");
+            widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+          }
         }
       },
       child: Center(
@@ -875,79 +921,6 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
           ),
         ),
       ),
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-
-    GestureDetector buildSaveButton = GestureDetector(
-      onTap: (){
-        Navigator.of(context).pop();
-
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        elevation: 10,
-        child: Container(
-          height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(50))
-          ),
-          child: Center(
-            child: Text("Next",
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
-          ),
-        ),
-      ),
-    );
-
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
-      title: Column(
-        children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          SizedBox(height: 10,),
-          Text("Time Up", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
-          Text("",style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
-          SizedBox(height: 10,)
-        ],
-      ),
-      content: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Container(
-          height: MediaQuery.of(context).size.height/3.8,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Container(
-                  height: 96,
-                  width: 96,
-                  child: Image.asset("assets/images/timer-image.png")),
-              SizedBox(height: 40,),
-              buildSaveButton,
-            ],
-          ),
-        ),
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 

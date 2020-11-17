@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:design_sprint/APIs/upload_idea_image.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/ideation_inside_sections_screen2.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
@@ -10,7 +11,6 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:image_picker/image_picker.dart';
 
 bool statusDrawer = false;
-bool showImages = false;
 
 class UploadIdeaImagePageViewBuilder extends StatefulWidget {
   @override
@@ -77,7 +77,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
   @override
   void initState() {
     super.initState();
-    showImages = false;
+    ideation.showImagesIdea = false;
     ideation.ideaImagesPainPointWiseList = null;
     ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List[ideation.pageIndexIdea];
     print(ideation.selectedPainPointIdForUploadIdeaImage);
@@ -866,19 +866,24 @@ class _UploadIdea1State extends State<UploadIdea1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndexIdea]){
-          print("Last index reached, You are a great man ever!");
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
+        if(ideation.ideaImagesPainPointWiseList == null){
+          Fluttertoast.showToast(msg: "You must upload atleast one image", backgroundColor: Colors.black,
+            textColor: Colors.white,);
         }else{
-          print("You are a loser bro, try again!");
-          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+          if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndexIdea]){
+            print("Last index reached, You are a great man ever!");
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }else{
+            print("You are a loser bro, try again!");
+            widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+          }
         }
       },
       child: Center(

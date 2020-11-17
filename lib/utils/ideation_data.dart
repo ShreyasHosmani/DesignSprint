@@ -2,6 +2,9 @@ library main_app.ideationglobals;
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+bool showImagesIdea = false;
+bool showImagesPrototype = false;
+
 String title = "Ideation";
 String agenda = "Agenda";
 

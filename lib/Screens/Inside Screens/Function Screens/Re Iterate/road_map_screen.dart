@@ -1,96 +1,33 @@
-import 'dart:async';
-
-import 'package:design_sprint/APIs/get_pain_points.dart';
-import 'package:design_sprint/ReusableWidgets/countdown_timer_widget.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/upload_idea_screen1.dart';
+import 'package:design_sprint/APIs/reiterate_calls.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/ideation_data.dart' as ideation;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
+import 'package:design_sprint/utils/globals.dart' as globals;
 
 bool statusDrawer = false;
-Timer _timer;
-int _start = 480;
-
-class GetPainPointsOfStatusTwoPageViewBuilder extends StatefulWidget {
+class RoadMap extends StatefulWidget {
   @override
-  _GetPainPointsOfStatusTwoPageViewBuilderState createState() => _GetPainPointsOfStatusTwoPageViewBuilderState();
+  _RoadMapState createState() => _RoadMapState();
 }
 
-class _GetPainPointsOfStatusTwoPageViewBuilderState extends State<GetPainPointsOfStatusTwoPageViewBuilder> {
-  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
-  final controller = PageController(viewportFraction: 1);
-  @override
-  void initState() {
-    super.initState();
-    ideation.pageIndex = 0;
-    print(ideation.pageIndex);
-    getPainPointsApiProvider.getPainPointsOfStatusTwo(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ideation.painPointsOfStatus2List == null ? Center(
-        child: CircularProgressIndicator(),
-      ) : PageView.builder(
-        physics:new NeverScrollableScrollPhysics(),
-        itemCount: ideation.painPointsOfStatus2List == null ? 0 : ideation.painPointsOfStatus2List.length,
-        controller: controller,
-        onPageChanged: (index){
-          setState(() {
-            ideation.pageIndex = index;
-          });
-          print(ideation.pageIndex);
-        },
-        itemBuilder: (BuildContext context, int index) {
-          return CrazyEightEvaluation1(controller);
-        },
-      ),
-    );
-  }
-}
-
-
-class CrazyEightEvaluation1 extends StatefulWidget {
-  final controller;
-  CrazyEightEvaluation1(this.controller) : super();
-  @override
-  _CrazyEightEvaluation1State createState() => _CrazyEightEvaluation1State();
-}
-
-class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
+class _RoadMapState extends State<RoadMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-          (Timer timer) => setState(
-            () {
-          if (_start < 1) {
-            timer.cancel();
-            showAlertDialog(context);
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
-    );
-  }
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
+  ReIterateApiProvider reIterateApiProvider = ReIterateApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _start = 480;
+    reIterateApiProvider.getRoadMapData(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    });
+    print(reiterate.roadMapNotesList.toList());
+    print(reiterate.roadMapNotesList1.toList());
+    print(reiterate.roadMapNotesList2.toList());
+    print(reiterate.roadMapTaskList.toList());
+    print(reiterate.roadMapTaskList1.toList());
+    print(reiterate.roadMapTaskList2.toList());
   }
   @override
   Widget build(BuildContext context) {
@@ -100,40 +37,25 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20,),
+            buildName2Widget(context),
+            SizedBox(height: 40,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 68,),
-                buildName3Widget(context),
-                SizedBox(height: 35,),
-                buildLevelContainer(context),
-                SizedBox(height: 72,),
-                buildNumberIndicator(context),
-                SizedBox(height: 35,),
-                buildName4Widget(context),
-                SizedBox(height: 50,),
-                buildTimerWidget(context),
-                SizedBox(height: 42,),
-                saveButton(context),
-                SizedBox(height: 20,),
-                buildName5Widget(context),
-                SizedBox(height: 52,),
-                buildNextButton(context),
-                SizedBox(height: 52,),
+                buildSeperaterListView(context),
+                SizedBox(width: 47,),
+                buildRoadMapListViewBuilder(context),
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -154,7 +76,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text(ideation.title,
+        child: Text(reiterate.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -377,7 +299,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
@@ -432,8 +354,8 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.black,
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
@@ -645,7 +567,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(ideation.card1,
+      child: Text(reiterate.roadMap,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -657,239 +579,238 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
-    return Center(
-      child: Text(ideation.ideaHint1,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
+  Widget buildRoadMapListViewBuilder(BuildContext context){
+    return reiterate.uploadedTaskList == null ? Container() : Container(
+      width: 250,
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: reiterate.uploadedTaskList == null ? 0 : reiterate.uploadedTaskList.length,
+        itemBuilder: (context, i) => Padding(
+          padding: const EdgeInsets.only(bottom: 40),
+          child: Center(
+            child: Container(
+              //height: 574,
+              width: 248,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Color(0xffF2F2F2)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        height: 130,
+                        width: 248,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(7),
+                              topRight: Radius.circular(7),
+                              bottomRight: Radius.circular(0),
+                              bottomLeft: Radius.circular(0),
+                            ),
+                          image: DecorationImage(
+                            image: NetworkImage(globals.urlSignUp+reiterate.prototypeAllImagesListOfStatusTwo[i]),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 24,
+                            width: 24,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              color: Color(0xff787cd1),
+                            ),
+                            child: Center(
+                              child: Text((i+1).toString(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 27,),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Note:",
+                          style: GoogleFonts.nunitoSans(
+                            color: Color(0xff787cd1),
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 15,),
+                        Text("Note number 1 this is note number one for this prototype",
+                          style: GoogleFonts.nunitoSans(
+                            fontSize: 14,
+                          ),
+                        ),
+                        SizedBox(height: 15,),
+                        ListView.builder(
+                          physics: ScrollPhysics(),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: i == 0 ? reiterate.roadMapTaskList.length : i == 1 ? reiterate.roadMapTaskList1.length : reiterate.roadMapTaskList2.length,
+                          itemBuilder: (context, i2) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Center(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Color(0xffd4d4d4)),
+                                    borderRadius: BorderRadius.all(Radius.circular(7))
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Task:",
+                                        style: GoogleFonts.nunitoSans(
+                                            textStyle: TextStyle(
+                                              color: Color(0xff787cd1),
+                                              fontSize: 14,
+                                            )
+                                        ),
+                                      ),
+                                      SizedBox(height: 10,),
+                                      Text(i == 0 ? reiterate.roadMapTaskList[i2] : i == 1 ? reiterate.roadMapTaskList1[i2] : reiterate.roadMapTaskList2[i2],
+                                        style: GoogleFonts.nunitoSans(
+                                            textStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            )
+                                        ),
+                                      ),
+                                      SizedBox(height: 10,),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Icon(Icons.perm_identity, color: Colors.grey, size: 12,),
+                                              SizedBox(width: 6,),
+                                              Text("member name",
+                                                style: GoogleFonts.nunitoSans(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 30,),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Icon(Icons.date_range, color: Colors.grey, size: 12,),
+                                              SizedBox(width: 6,),
+                                              Text("12-11-20",
+                                                style: GoogleFonts.nunitoSans(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
-        ),
-      ),
-    );
-  }
-
-  Widget buildNumberIndicator(BuildContext context){
+  Widget buildSeperaterListView(BuildContext context){
     return Container(
-      height: 32,
-      width: 32,
+      width: 20,
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: reiterate.uploadedTaskList == null ? 0 : reiterate.uploadedTaskList.length,
+        itemBuilder: (context, i) => Column(
+          children: [
+            buildFilledContainer(context),
+            buildFilledContainerSeperater(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNonFilledContainer(BuildContext context){
+    return Container(
+      height: 25,
+      width: 25,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-        color: Color(0xff787cd1)
-      ),
-      child: Center(
-        child: Text((ideation.pageIndex+1).toString(),
-          style: GoogleFonts.nunitoSans(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildName4Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.painPointsOfStatus2List[ideation.pageIndex],
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildTimerWidget(BuildContext context){
-    return Center(
-      child: Text("$_start",
-        style: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-      /*
-      CountDownTimer(
-        secondsRemaining: ideation.timer,
-        whenTimeExpires: () {
-          showAlertDialog(context);
-        },
-        countDownTimerStyle: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-
-       */
-    );
-  }
-
-  Widget saveButton(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        //showAlertDialog(context);
-        startTimer();
-      },
-      child: Container(
-        height: 35,
-        width: 114,
-        decoration: BoxDecoration(
           border: Border.all(
-            color: Color(0xff787cd1),
+            color: Colors.grey,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-        ),
-        child: Center(
-          child: Text(ideation.start,
-            style: GoogleFonts.nunitoSans(
-              fontSize: 16,
-              color: Color(0xff787cd1),
-            ),
+          borderRadius: BorderRadius.all(Radius.circular(50))
+      ),
+    );
+  }
+  Widget buildFilledContainer(BuildContext context){
+    return Container(
+      height: 25,
+      width: 25,
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xff787CD1),
+            width: 2,
           ),
-        ),
+          borderRadius: BorderRadius.all(Radius.circular(50))
       ),
     );
   }
 
-  Widget buildName5Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.startTimerHint,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500
-            )
-        ),
+  Widget buildContainerSeperater(BuildContext context){
+    return Container(
+      height: MediaQuery.of(context).size.height/13,
+      width: 1,
+      decoration: BoxDecoration(
+        color: Colors.grey,
       ),
     );
   }
-
-  Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndex]){
-          print("Last index reached, You are a great man ever!");
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => UploadIdeaImagePageViewBuilder(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
-        }else{
-          print("You are a loser bro, try again!");
-          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-        }
-      },
-      child: Center(
-        child: Container(
-          height: 45,
-          width: 146,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
-          child: Center(
-            child: Text("Next",
-              style: TextStyle(
-                  color: Colors.white, letterSpacing: 1, fontSize: 16),
-            ),
-          ),
-        ),
+  Widget buildFilledContainerSeperater(BuildContext context){
+    return Container(
+      height: 520,
+      width: 2,
+      decoration: BoxDecoration(
+        color: Color(0xff787cd1),
       ),
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-
-    GestureDetector buildSaveButton = GestureDetector(
-      onTap: (){
-        Navigator.of(context).pop();
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        elevation: 10,
-        child: Container(
-          height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(50))
-          ),
-          child: Center(
-            child: Text("Next",
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
-          ),
-        ),
-      ),
-    );
-
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text(ideation.timeUp, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
-        ],
-      ),
-      content: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Container(
-          height: MediaQuery.of(context).size.height/3.5,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  height: 96,
-                  width: 96,
-                  child: Image.asset("assets/images/timer-image.png")),
-              buildSaveButton,
-            ],
-          ),
-        ),
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 

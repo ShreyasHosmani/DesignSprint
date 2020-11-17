@@ -30,3 +30,7 @@ String hintBio = "Bio\n\nDescribe the persona";
 String bioValidation = "Bio is compulsary!";
 String hintGoalsAndMotivation = "Goals and motivation\n\nDescribe the persona";
 String goalsAndMotivationValidation = "Goals and Motivation is compulsary!";
+
+String addTask = "Add Task";
+String choseTeamMember = "Choose Team Member";
+String dueDate = "Due Date";

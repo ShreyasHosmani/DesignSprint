@@ -1,102 +1,37 @@
-import 'dart:async';
-
-import 'package:design_sprint/APIs/get_pain_points.dart';
-import 'package:design_sprint/ReusableWidgets/countdown_timer_widget.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/upload_idea_screen1.dart';
+import 'package:design_sprint/APIs/create_add_team.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen_seperate.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/ideation_data.dart' as ideation;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/team_data.dart' as team;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:progress_dialog/progress_dialog.dart';
 
 bool statusDrawer = false;
-Timer _timer;
-int _start = 480;
 
-class GetPainPointsOfStatusTwoPageViewBuilder extends StatefulWidget {
+class TeamDataAndManageTeamSprintWise extends StatefulWidget {
   @override
-  _GetPainPointsOfStatusTwoPageViewBuilderState createState() => _GetPainPointsOfStatusTwoPageViewBuilderState();
+  _TeamDataAndManageTeamSprintWiseState createState() => _TeamDataAndManageTeamSprintWiseState();
 }
 
-class _GetPainPointsOfStatusTwoPageViewBuilderState extends State<GetPainPointsOfStatusTwoPageViewBuilder> {
-  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
-  final controller = PageController(viewportFraction: 1);
+class _TeamDataAndManageTeamSprintWiseState extends State<TeamDataAndManageTeamSprintWise> {
+  TeamApiProvider teamApiProvider = TeamApiProvider();
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    ideation.pageIndex = 0;
-    print(ideation.pageIndex);
-    getPainPointsApiProvider.getPainPointsOfStatusTwo(context).whenComplete((){
+    team.teamNamesList = null;
+    teamApiProvider.getTeamNames(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
   }
   @override
   Widget build(BuildContext context) {
+    team.prTeam = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ideation.painPointsOfStatus2List == null ? Center(
-        child: CircularProgressIndicator(),
-      ) : PageView.builder(
-        physics:new NeverScrollableScrollPhysics(),
-        itemCount: ideation.painPointsOfStatus2List == null ? 0 : ideation.painPointsOfStatus2List.length,
-        controller: controller,
-        onPageChanged: (index){
-          setState(() {
-            ideation.pageIndex = index;
-          });
-          print(ideation.pageIndex);
-        },
-        itemBuilder: (BuildContext context, int index) {
-          return CrazyEightEvaluation1(controller);
-        },
-      ),
-    );
-  }
-}
-
-
-class CrazyEightEvaluation1 extends StatefulWidget {
-  final controller;
-  CrazyEightEvaluation1(this.controller) : super();
-  @override
-  _CrazyEightEvaluation1State createState() => _CrazyEightEvaluation1State();
-}
-
-class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-          (Timer timer) => setState(
-            () {
-          if (_start < 1) {
-            timer.cancel();
-            showAlertDialog(context);
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
-    );
-  }
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _start = 480;
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      key: team.scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
@@ -109,23 +44,11 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
               children: [
                 SizedBox(height: 20,),
                 buildName2Widget(context),
-                SizedBox(height: 68,),
-                buildName3Widget(context),
-                SizedBox(height: 35,),
-                buildLevelContainer(context),
-                SizedBox(height: 72,),
-                buildNumberIndicator(context),
-                SizedBox(height: 35,),
-                buildName4Widget(context),
-                SizedBox(height: 50,),
-                buildTimerWidget(context),
-                SizedBox(height: 42,),
-                saveButton(context),
-                SizedBox(height: 20,),
-                buildName5Widget(context),
-                SizedBox(height: 52,),
-                buildNextButton(context),
-                SizedBox(height: 52,),
+                SizedBox(height: 40,),
+                buildTeamNameCardWidget(context),
+                SizedBox(height: 40,),
+                buildAddTeamWidget(context),
+                SizedBox(height: 40,),
               ],
             ),
           ),
@@ -145,7 +68,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       setState(() {
         statusDrawer = false;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -154,7 +77,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text(ideation.title,
+        child: Text(team.appBarTitle,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -374,7 +297,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       setState(() {
         statusDrawer = true;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
       alignment: Alignment.topRight,
@@ -645,7 +568,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(ideation.card1,
+      child: Text(home.home,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -657,181 +580,120 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
-    return Center(
-      child: Text(ideation.ideaHint1,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
-        ),
-      ),
-    );
-  }
-
-  Widget buildNumberIndicator(BuildContext context){
-    return Container(
-      height: 32,
-      width: 32,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-        color: Color(0xff787cd1)
-      ),
-      child: Center(
-        child: Text((ideation.pageIndex+1).toString(),
-          style: GoogleFonts.nunitoSans(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildName4Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.painPointsOfStatus2List[ideation.pageIndex],
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildTimerWidget(BuildContext context){
-    return Center(
-      child: Text("$_start",
-        style: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-      /*
-      CountDownTimer(
-        secondsRemaining: ideation.timer,
-        whenTimeExpires: () {
-          showAlertDialog(context);
-        },
-        countDownTimerStyle: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-
-       */
-    );
-  }
-
-  Widget saveButton(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        //showAlertDialog(context);
-        startTimer();
-      },
-      child: Container(
-        height: 35,
-        width: 114,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(0xff787cd1),
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-        ),
-        child: Center(
-          child: Text(ideation.start,
-            style: GoogleFonts.nunitoSans(
-              fontSize: 16,
-              color: Color(0xff787cd1),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildName5Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.startTimerHint,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndex]){
-          print("Last index reached, You are a great man ever!");
+  Widget buildTeamNameCardWidget(BuildContext context){
+    return team.teamNamesList == null ? Container() : ListView.builder(
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: team.teamNamesList == null ? 0 : team.teamNamesList.length,
+      itemBuilder: (context, i) => InkWell(
+        onTap: (){
           Navigator.push(
             context,
             PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => UploadIdeaImagePageViewBuilder(),
+              pageBuilder: (c, a1, a2) => ManageTeamSeperate(team.teamNamesIdsList[i], team.teamNamesList[i]),
               transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
               transitionDuration: Duration(milliseconds: 300),
             ),
           );
-        }else{
-          print("You are a loser bro, try again!");
-          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-        }
-      },
-      child: Center(
-        child: Container(
-          height: 45,
-          width: 146,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
-          child: Center(
-            child: Text("Next",
-              style: TextStyle(
-                  color: Colors.white, letterSpacing: 1, fontSize: 16),
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+          child: Container(
+            width: 302,
+            height: 57,
+            decoration: BoxDecoration(
+                border: Border.all(color: Color(0xff787cd1)),
+                borderRadius: BorderRadius.all(Radius.circular(7))
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: Center(
+                child: Text(team.teamNamesList[i],
+                  style: GoogleFonts.nunitoSans(
+                    fontSize: 18,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildAddTeamWidget(BuildContext context){
+    return GestureDetector(
+      onTap: (){
+        showAlertDialog(context);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              color: Color(0xff787CD1),
+            ),
+            child: Icon(Icons.add, color: Colors.white,),
+          ),
+          SizedBox(height: 10,),
+          Text("Create Team",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  color: Color(0xff787CD1),
+                  fontSize: 14,
+                )
+            ),
+          )
+        ],
       ),
     );
   }
 
   showAlertDialog(BuildContext context) {
 
+    Widget textField = Theme(
+        data: ThemeData(
+          primaryColor: Color(0xff787CD1),
+        ),
+        child: Form(
+          key: team.formKey,
+          child: TextFormField(
+            controller: team.teamNameController,
+            decoration: InputDecoration(
+                hintText: ''
+            ),
+            validator: (value){
+              if(value.isEmpty){
+                return team.teamEmpty;
+              }
+              return null;
+            },
+          ),
+        ));
+
     GestureDetector buildSaveButton = GestureDetector(
       onTap: (){
-        Navigator.of(context).pop();
+        if(team.formKey.currentState.validate()){
+          team.prTeam.show();
+          teamApiProvider.createTeamName2(context).whenComplete((){
+            Future.delayed(const Duration(seconds: 2), () {
+              teamApiProvider.getTeamNames(context).whenComplete((){
+                Future.delayed(const Duration(seconds: 2), () {
+                  setState(() {});
+                });
+              });
+            });
+          });
+        }
       },
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(12.0),
         ),
         elevation: 10,
         child: Container(
@@ -842,7 +704,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
               .width / 2.4,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(50))
+              borderRadius: BorderRadius.all(Radius.circular(12))
           ),
           child: Center(
             child: Text("Next",
@@ -858,26 +720,25 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
           borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
       title: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Align(
               alignment: Alignment.centerRight,
               child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text(ideation.timeUp, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
+          //SizedBox(height: 10,),
+          Text("What would you like to name", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text("your Team?",style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          //SizedBox(height: 10,)
         ],
       ),
       content: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: MediaQuery.of(context).size.height/3.5,
+          height: MediaQuery.of(context).size.height/4,
           width: MediaQuery.of(context).size.width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                  height: 96,
-                  width: 96,
-                  child: Image.asset("assets/images/timer-image.png")),
+              textField,
               buildSaveButton,
             ],
           ),

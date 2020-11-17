@@ -1,96 +1,54 @@
-import 'dart:async';
-
-import 'package:design_sprint/APIs/get_pain_points.dart';
-import 'package:design_sprint/ReusableWidgets/countdown_timer_widget.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/upload_idea_screen1.dart';
+import 'package:design_sprint/APIs/create_journey_map.dart';
+import 'package:design_sprint/APIs/get_warehouse_journeymap_data.dart';
+import 'package:design_sprint/APIs/input_pain_point.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree3.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/ideation_data.dart' as ideation;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/warehouse_journey_map_data.dart' as journeyMapWH;
 
-bool statusDrawer = false;
-Timer _timer;
-int _start = 480;
-
-class GetPainPointsOfStatusTwoPageViewBuilder extends StatefulWidget {
+class ViewDigitalJourneyMapDetails extends StatefulWidget {
   @override
-  _GetPainPointsOfStatusTwoPageViewBuilderState createState() => _GetPainPointsOfStatusTwoPageViewBuilderState();
+  _ViewDigitalJourneyMapDetailsState createState() => _ViewDigitalJourneyMapDetailsState();
 }
 
-class _GetPainPointsOfStatusTwoPageViewBuilderState extends State<GetPainPointsOfStatusTwoPageViewBuilder> {
-  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
-  final controller = PageController(viewportFraction: 1);
-  @override
-  void initState() {
-    super.initState();
-    ideation.pageIndex = 0;
-    print(ideation.pageIndex);
-    getPainPointsApiProvider.getPainPointsOfStatusTwo(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ideation.painPointsOfStatus2List == null ? Center(
-        child: CircularProgressIndicator(),
-      ) : PageView.builder(
-        physics:new NeverScrollableScrollPhysics(),
-        itemCount: ideation.painPointsOfStatus2List == null ? 0 : ideation.painPointsOfStatus2List.length,
-        controller: controller,
-        onPageChanged: (index){
-          setState(() {
-            ideation.pageIndex = index;
-          });
-          print(ideation.pageIndex);
-        },
-        itemBuilder: (BuildContext context, int index) {
-          return CrazyEightEvaluation1(controller);
-        },
-      ),
-    );
-  }
-}
-
-
-class CrazyEightEvaluation1 extends StatefulWidget {
-  final controller;
-  CrazyEightEvaluation1(this.controller) : super();
-  @override
-  _CrazyEightEvaluation1State createState() => _CrazyEightEvaluation1State();
-}
-
-class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
+class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDetails> {
+  InputPainPointsApiProvider inputPainPointsApiProvider = InputPainPointsApiProvider();
+  CreateJourneyApiProvider createJourneyApiProvider = CreateJourneyApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-          (Timer timer) => setState(
-            () {
-          if (_start < 1) {
-            timer.cancel();
-            showAlertDialog(context);
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
-    );
-  }
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
+  GetWareHouseJourneyMapDataApiProvider getWareHouseJourneyMapDataApiProvider = GetWareHouseJourneyMapDataApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _start = 480;
+    getWareHouseJourneyMapDataApiProvider.getJourneyMapWareHouseDataMapIdWise(context);
+    touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x'];
+    customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x'];
+    customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x'];
+    painPointIdListStorage = ['x', 'x', 'x', 'x', 'x'];
+    _controllerListTouchPoints = List.generate(5, (i) => TextEditingController());
+    _controllerListCustomerThoughts = List.generate(5, (i) => TextEditingController());
+    _controllerListPainPoints = List.generate(5, (i) => TextEditingController());
+    emojiList1 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList2 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList3 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList4 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList5 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    boolEmojis1 = [false,false,false,false,false,false,false,false,];
+    boolEmojis2 = [false,false,false,false,false,false,false,false,];
+    boolEmojis3 = [false,false,false,false,false,false,false,false,];
+    boolEmojis4 = [false,false,false,false,false,false,false,false,];
+    boolEmojis5 = [false,false,false,false,false,false,false,false,];
+    focusNodesTouchPoints = List.generate(5, (i) => FocusNode());
+    focusEnableTouchPoints = [false,false,false,false,false];
+    focusNodesCustomerThoughts = List.generate(5, (i) => FocusNode());
+    focusEnableCustomerThoughts = [false,false,false,false,false];
+    focusNodesCustomerExperience = List.generate(5, (i) => FocusNode());
+    focusEnableCustomerExperience = [false,false,false,false,false];
+    focusNodesPainPoint = List.generate(5, (i) => FocusNode());
+    focusEnablePainPoint = [false,false,false,false,false];
   }
   @override
   Widget build(BuildContext context) {
@@ -100,40 +58,44 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 20,),
                 buildName2Widget(context),
-                SizedBox(height: 68,),
-                buildName3Widget(context),
-                SizedBox(height: 35,),
-                buildLevelContainer(context),
-                SizedBox(height: 72,),
-                buildNumberIndicator(context),
-                SizedBox(height: 35,),
-                buildName4Widget(context),
-                SizedBox(height: 50,),
-                buildTimerWidget(context),
-                SizedBox(height: 42,),
-                saveButton(context),
-                SizedBox(height: 20,),
-                buildName5Widget(context),
-                SizedBox(height: 52,),
-                buildNextButton(context),
-                SizedBox(height: 52,),
+                SizedBox(height: 40,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 35, right: 0),
+                  child: buildTouchPointRow(context),
+                ),
+                SizedBox(height: 30,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 35, right: 0),
+                  child: buildCustomerThoughtsRow(context),
+                ),
+                SizedBox(height: 30,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 35, right: 0),
+                  child: buildCustomerExperienceRow(context),
+                ),
+                SizedBox(height: 30,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 35, right: 0),
+                  child: buildPainPointsRow(context),
+                ),
+                SizedBox(height: 40,),
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: statusBarDrawer(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -154,7 +116,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Text(ideation.title,
+        child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -165,7 +127,9 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),
@@ -645,7 +609,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(ideation.card1,
+      child: Text(empathize.journeyMapping,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -660,7 +624,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildName3Widget(BuildContext context){
 
     return Center(
-      child: Text(ideation.ideaHint1,
+      child: Text(empathize.finalPainPointHint1,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -672,98 +636,50 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     );
   }
 
-  Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
-        ),
-      ),
-    );
-  }
-
-  Widget buildNumberIndicator(BuildContext context){
+  Widget buildTouchPointRow(BuildContext context){
     return Container(
-      height: 32,
-      width: 32,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-        color: Color(0xff787cd1)
-      ),
-      child: Center(
-        child: Text((ideation.pageIndex+1).toString(),
-          style: GoogleFonts.nunitoSans(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildName4Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.painPointsOfStatus2List[ideation.pageIndex],
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildTimerWidget(BuildContext context){
-    return Center(
-      child: Text("$_start",
-        style: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-      /*
-      CountDownTimer(
-        secondsRemaining: ideation.timer,
-        whenTimeExpires: () {
-          showAlertDialog(context);
-        },
-        countDownTimerStyle: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-
-       */
-    );
-  }
-
-  Widget saveButton(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        //showAlertDialog(context);
-        startTimer();
-      },
+      height: 95,
       child: Container(
-        height: 35,
-        width: 114,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(0xff787cd1),
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-        ),
-        child: Center(
-          child: Text(ideation.start,
-            style: GoogleFonts.nunitoSans(
-              fontSize: 16,
-              color: Color(0xff787cd1),
+        height: 95,
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          physics: ScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (context, i) => i == 0 ? Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 127,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(empathize.touchPoints,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.nunitoSans(
+                      textStyle: TextStyle(
+                        color: Color(0xff787cd1),
+                        fontSize: 20,
+                      )
+                  ),
+                ),
+              ),
+            ),
+          ) : Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 254,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(i == 1 ? journeyMapWH.journeyMapWareHouseTouchPointsList[0] :i == 2 ? journeyMapWH.journeyMapWareHouseTouchPointsList[1] : i == 3 ? journeyMapWH.journeyMapWareHouseTouchPointsList[2] : journeyMapWH.journeyMapWareHouseTouchPointsList[3]),
+              ),
             ),
           ),
         ),
@@ -771,126 +687,188 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     );
   }
 
-  Widget buildName5Widget(BuildContext context){
-    return Center(
-      child: Text(ideation.startTimerHint,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500
-            )
+  Widget buildCustomerThoughtsRow(BuildContext context){
+    return Container(
+      height: 95,
+      child: Container(
+        height: 95,
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          physics: ScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (context, i) => i == 0 ? Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 127,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(empathize.customerThoughts,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.nunitoSans(
+                      textStyle: TextStyle(
+                        color: Color(0xff787cd1),
+                        fontSize: 20,
+                      )
+                  ),
+                ),
+              ),
+            ),
+          ) : Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 254,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(i == 1 ? journeyMapWH.journeyMapWareHouseCustomerThoughtsList[0] :i == 2 ? journeyMapWH.journeyMapWareHouseCustomerThoughtsList[1] : i == 3 ? journeyMapWH.journeyMapWareHouseCustomerThoughtsList[2] : journeyMapWH.journeyMapWareHouseCustomerThoughtsList[3]),
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndex]){
-          print("Last index reached, You are a great man ever!");
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => UploadIdeaImagePageViewBuilder(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
+  Widget buildCustomerExperienceRow(BuildContext context){
+    return Container(
+      height: 95,
+      child: Container(
+        height: 95,
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          physics: AlwaysScrollableScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (context, i) => i == 0 ? Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 127,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(empathize.customerExperience,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.nunitoSans(
+                      textStyle: TextStyle(
+                        color: Color(0xff787cd1),
+                        fontSize: 20,
+                      )
+                  ),
+                ),
+              ),
             ),
-          );
-        }else{
-          print("You are a loser bro, try again!");
-          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-        }
-      },
-      child: Center(
-        child: Container(
-          height: 45,
-          width: 146,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
-          child: Center(
-            child: Text("Next",
-              style: TextStyle(
-                  color: Colors.white, letterSpacing: 1, fontSize: 16),
+          ) : Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 254,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(i == 1 ? journeyMapWH.journeyMapWareHouseCustomerExperiencesList[0] :i == 2 ? journeyMapWH.journeyMapWareHouseCustomerExperiencesList[1] : i == 3 ? journeyMapWH.journeyMapWareHouseCustomerExperiencesList[2] : journeyMapWH.journeyMapWareHouseCustomerExperiencesList[3]),
+              ),
             ),
           ),
-        ),
+      ),
       ),
     );
   }
 
-  showAlertDialog(BuildContext context) {
-
-    GestureDetector buildSaveButton = GestureDetector(
-      onTap: (){
-        Navigator.of(context).pop();
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        elevation: 10,
-        child: Container(
-          height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(50))
-          ),
-          child: Center(
-            child: Text("Next",
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
+  Widget buildPainPointsRow(BuildContext context){
+    return Container(
+      height: 95,
+      child: Container(
+        height: 95,
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          physics: ScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (context, i) => i == 0 ? Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 127,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(empathize.painPoints,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.nunitoSans(
+                      textStyle: TextStyle(
+                        color: Color(0xff787cd1),
+                        fontSize: 20,
+                      )
+                  ),
+                ),
+              ),
+            ),
+          ) : Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              height: 95,
+              width: 254,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Center(
+                child: Text(i == 1 ? journeyMapWH.journeyMapWareHousePainPointsList[0] :i == 2 ? journeyMapWH.journeyMapWareHousePainPointsList[1] : i == 3 ? journeyMapWH.journeyMapWareHousePainPointsList[2] : journeyMapWH.journeyMapWareHousePainPointsList[3]),
+              ),
             ),
           ),
         ),
       ),
-    );
-
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text(ideation.timeUp, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1, color: Color(0xff787cd1)),)),
-        ],
-      ),
-      content: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Container(
-          height: MediaQuery.of(context).size.height/3.5,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  height: 96,
-                  width: 96,
-                  child: Image.asset("assets/images/timer-image.png")),
-              buildSaveButton,
-            ],
-          ),
-        ),
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 
 }
+
+List<TextEditingController> _controllerListTouchPoints = List.generate(5, (i) => TextEditingController());
+List<TextEditingController> _controllerListCustomerThoughts = List.generate(5, (i) => TextEditingController());
+List<TextEditingController> _controllerListPainPoints = List.generate(5, (i) => TextEditingController());
+
+List<FocusNode> focusNodesTouchPoints = List.generate(5, (i) => FocusNode());
+List<bool> focusEnableTouchPoints = [false,false,false,false,false];
+List<FocusNode> focusNodesCustomerThoughts = List.generate(5, (i) => FocusNode());
+List<bool> focusEnableCustomerThoughts = [false,false,false,false,false];
+List<FocusNode> focusNodesCustomerExperience = List.generate(5, (i) => FocusNode());
+List<bool> focusEnableCustomerExperience = [false,false,false,false,false];
+List<FocusNode> focusNodesPainPoint = List.generate(5, (i) => FocusNode());
+List<bool> focusEnablePainPoint = [false,false,false,false,false];
+
+var selectedEmoji;
+List<String> emojiList1 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList2 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList3 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList4 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList5 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<bool> boolEmojis1 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis2 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis3 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis4 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis5 = [false,false,false,false,false,false,false,false,];
+
+
+List<String> touchPointIdListStorage;
+List<String> customerThoughtIdListStorage;
+List<String> customerExperienceIdListStorage;
+List<String> painPointIdListStorage;

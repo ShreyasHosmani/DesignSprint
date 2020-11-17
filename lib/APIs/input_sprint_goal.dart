@@ -46,6 +46,19 @@ class InputGoalApiProvider {
               ),
             );
           });
+        }else if(goal.responseArrayCreateGoalMsg == "Goal Added Successfully, E-Mail Not Verified"){
+          goal.prInputGoal.hide();
+          Fluttertoast.showToast(msg: goal.goalSaved, backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => CreateTeamSections(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          });
         }else{
           goal.prInputGoal.hide();
           Fluttertoast.showToast(msg: goal.responseArrayCreateGoalMsg, backgroundColor: Colors.black,

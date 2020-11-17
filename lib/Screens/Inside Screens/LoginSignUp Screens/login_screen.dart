@@ -1,11 +1,15 @@
 import 'package:design_sprint/APIs/login.dart';
+import 'package:design_sprint/ReusableWidgets/facebook_custom_web_view.dart';
 import 'package:design_sprint/ReusableWidgets/upper_curve_clipper.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/forgot_password_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/signup_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/login_data.dart' as login;
+import 'dart:convert' as JSON;
+import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
 
@@ -16,6 +20,67 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   LoginApiProvider apiProviderLogin = LoginApiProvider();
+  String your_client_id = "963311327761537";
+  String your_redirect_url = "https://www.facebook.com/connect/login_success.html";
+//  loginWithFacebook() async{
+//    String result = await Navigator.push(
+//      context,
+//      MaterialPageRoute(
+//          builder: (context) => CustomWebView(
+//            selectedUrl:
+//            'https://www.facebook.com/dialog/oauth?client_id=$your_client_id&redirect_uri=$your_redirect_url&response_type=token&scope=email,public_profile,',
+//          ),
+//          maintainState: true),
+//    );}
+  loginWithFacebook() async{
+    final result = await login.facebookLogin.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        final token = result.accessToken.token;
+        final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
+        final profile = JSON.jsonDecode(graphResponse.body);
+        print(profile);
+        setState(() {
+          login.userProfile = profile;
+          login.isLoggedIn = true;
+          login.facebookName = profile['name'];
+          login.facebookEmail = profile['email'];
+          login.facebookAuthId = profile['id'];
+        });
+        print(login.facebookName);
+        print(login.facebookEmail);
+        print(login.facebookAuthId);
+        apiProviderLogin.LoginUsingFacebook(context);
+        break;
+
+      case FacebookLoginStatus.cancelledByUser:
+        setState(() => login.isLoggedIn = false );
+        break;
+      case FacebookLoginStatus.error:
+        setState(() => login.isLoggedIn = false );
+        break;
+    }
+
+  }
+  Future<void> _handleSignIn() async {
+    try {
+      await login.googleSignIn.signIn().then((value) {
+        login.prLogin.hide();
+        setState(() {
+          login.googleEmail = login.googleSignIn.currentUser.email;
+          login.googleName = login.googleSignIn.currentUser.displayName;
+          login.googleAuthId = login.googleSignIn.currentUser.id;
+        });
+        login.prLogin.show();
+        apiProviderLogin.LoginUsingGoogle(context);
+      });
+    } catch (error) {
+      print(error);
+      _handleSignOut();
+    }
+  }
+  Future<void> _handleSignOut() => login.googleSignIn.disconnect();
   @override
   Widget build(BuildContext context) {
     login.prLogin = ProgressDialog(context);
@@ -298,28 +363,34 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildGoogleLogin(BuildContext context){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      elevation: 1,
-      shadowColor: Colors.grey.shade500,
-      child: Container(
-        width: MediaQuery.of(context).size.width/3,
-        height: 40,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  width: 25, height: 25,
-                  child: Image.asset("assets/images/google.jpg")),
-              SizedBox(width: 5,),
-              Text(login.google,
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )
-            ],
+    return InkWell(
+      onTap: (){
+        login.prLogin.show();
+        _handleSignIn();
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 1,
+        shadowColor: Colors.grey.shade500,
+        child: Container(
+          width: MediaQuery.of(context).size.width/3,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    width: 25, height: 25,
+                    child: Image.asset("assets/images/google.jpg")),
+                SizedBox(width: 5,),
+                Text(login.google,
+                  style: TextStyle(color: Colors.grey, fontSize: 15),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -327,28 +398,34 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildFacebookLogin(BuildContext context){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      elevation: 1,
-      shadowColor: Colors.grey.shade500,
-      child: Container(
-        width: MediaQuery.of(context).size.width/3,
-        height: 40,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  width: 25, height: 25,
-                  child: Image.asset("assets/images/facebook.png")),
-              SizedBox(width: 5,),
-              Text(login.facebook,
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )
-            ],
+    return InkWell(
+      onTap: (){
+        login.prLogin.show();
+        loginWithFacebook();
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 1,
+        shadowColor: Colors.grey.shade500,
+        child: Container(
+          width: MediaQuery.of(context).size.width/3,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    width: 25, height: 25,
+                    child: Image.asset("assets/images/facebook.png")),
+                SizedBox(width: 5,),
+                Text(login.facebook,
+                  style: TextStyle(color: Colors.grey, fontSize: 15),
+                )
+              ],
+            ),
           ),
         ),
       ),

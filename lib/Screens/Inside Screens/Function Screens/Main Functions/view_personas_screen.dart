@@ -1,5 +1,6 @@
 import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/APIs/get_persona.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_paper_persona_details.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_single_persona_details.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -321,23 +322,34 @@ class _ViewPersonasState extends State<ViewPersonas> {
             ),
           ),
         ),
-      ) : empathize.personaNameList[0] == "null" ? Container() : ListView.builder(
+      ) : ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: empathize.personaNameList == null ? 0 : empathize.personaNameList.length,
         itemBuilder: (context, i) => InkWell(
           onTap: (){
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ViewSinglePersonaDetails(empathize.personaNameList[i], empathize.personaImagesList[i],
-                empathize.personaAgeList[i], empathize.personaLocationList[i], empathize.personaEducationList[i], empathize.personaJobList[i],
-                empathize.personaBioList[i], empathize.personaGoalsList[i]),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
+            if(empathize.personaNameList[i] == "null"){
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => ViewPaperPersonaDetails(empathize.personaImagesList[i]),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }else{
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => ViewSinglePersonaDetails(empathize.personaNameList[i], empathize.personaImagesList[i],
+                      empathize.personaAgeList[i], empathize.personaLocationList[i], empathize.personaEducationList[i], empathize.personaJobList[i],
+                      empathize.personaBioList[i], empathize.personaGoalsList[i]),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 25),
@@ -375,7 +387,7 @@ class _ViewPersonasState extends State<ViewPersonas> {
                       children: [
                         Container(
                           width: 180,
-                          child: Text(empathize.personaNameList[i],
+                          child: Text(empathize.personaNameList[i] == "null" ? "Paper persona" : empathize.personaNameList[i],
                             maxLines: 2,
                             //textScaleFactor: 0.7,
                             overflow: TextOverflow.ellipsis,
@@ -390,7 +402,7 @@ class _ViewPersonasState extends State<ViewPersonas> {
                         SizedBox(height: 7,),
                         Container(
                           width: 180,
-                          child: Text("Working as a " + empathize.personaJobList[i],
+                          child: Text(empathize.personaJobList[i] == "null" ? "Paper persona : click to view" : "Working as a " + empathize.personaJobList[i],
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             //textScaleFactor: 0.7,

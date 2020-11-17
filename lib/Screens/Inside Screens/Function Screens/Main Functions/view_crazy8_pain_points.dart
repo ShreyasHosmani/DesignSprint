@@ -1,30 +1,29 @@
-import 'package:design_sprint/APIs/get_warehouse_journeymap_data.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_digital_journey_map_details.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_paper_journey_map_details.dart';
+import 'package:design_sprint/APIs/get_pain_points.dart';
+import 'package:design_sprint/APIs/warehouse_get_pain_points_and_idea_images.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_crazy8_ideas.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:shimmer/shimmer.dart';
-import 'package:design_sprint/utils/warehouse_journey_map_data.dart' as journeyMapWH;
-import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/warehouse_pain_points_data.dart' as painPointWH;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-class ViewJourneyMaps extends StatefulWidget {
+class ViewCrazy8PainPoints extends StatefulWidget {
   @override
-  _ViewJourneyMapsState createState() => _ViewJourneyMapsState();
+  _ViewCrazy8PainPointsState createState() => _ViewCrazy8PainPointsState();
 }
 
-class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
-  GetWareHouseJourneyMapDataApiProvider getWareHouseJourneyMapDataApiProvider = GetWareHouseJourneyMapDataApiProvider();
+class _ViewCrazy8PainPointsState extends State<ViewCrazy8PainPoints> {
+  WareHousePainPointApiProvider wareHousePainPointApiProvider = WareHousePainPointApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    journeyMapWH.journeyMapWareHouseIdsList = null;
-    getWareHouseJourneyMapDataApiProvider.getJourneyMapWareHouseData(context).whenComplete((){
+    painPointWH.responseArrayWHPainPointsList = null;
+    painPointWH.responseArrayWHPainPointsList = null;
+    wareHousePainPointApiProvider.getAllPainPoints(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
   }
@@ -44,7 +43,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
             SizedBox(height: 25,),
             buildName2Widget(context),
             SizedBox(height: 51,),
-            buildJourneyMapsListViewBuilder(context),
+            buildPainPointsListViewBuilder(context),
           ],
         ),
       ),
@@ -294,107 +293,97 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
     );
   }
 
-  Widget buildJourneyMapsListViewBuilder(BuildContext context){
+  Widget buildPainPointsListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: journeyMapWH.journeyMapWareHouseIdsList == null ? Container() : ListView.builder(
+      child:
+      painPointWH.responseArrayWHPainPointsList == null ? Container() :
+      ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: journeyMapWH.journeyMapWareHouseIdsList == null ? 0 : journeyMapWH.journeyMapWareHouseIdsList.length,
+        itemCount: painPointWH.responseArrayWHPainPointsList == null ? 0 : painPointWH.responseArrayWHPainPointsList.length,
         itemBuilder: (context, i) => InkWell(
           onTap: (){
             setState(() {
-              journeyMapWH.selectedWareHouseMapId = journeyMapWH.journeyMapWareHouseIdsList[i];
+              painPointWH.selectedPainPointIdForIdeaImage = painPointWH.responseArrayWHPainPointsIdsList[i].toString();
             });
-            print(journeyMapWH.selectedWareHouseMapId);
-            print(journeyMapWH.journeyMapWareHouseImagesList[i]);
-            if(journeyMapWH.journeyMapWareHouseImagesList[i] == "null"){
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ViewDigitalJourneyMapDetails(),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
-            }else{
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ViewPaperJourneyMapDetails(journeyMapWH.journeyMapWareHouseIdsList[i], journeyMapWH.journeyMapWareHouseImagesList[i]),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
-            }
+            print(painPointWH.selectedPainPointIdForIdeaImage);
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => ViewCrazy8Ideas((i+1).toString(), painPointWH.responseArrayWHPainPointsIdsList[i]),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 25),
             child: Container(
-              width: 303,
-              height: 130,
+              width: 302,
+              height: 160,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Color(0xffEBEBEB)),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                border: Border.all(color: Color(0xff787cd1))
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  journeyMapWH.journeyMapWareHouseImagesList[i] == "null" ? Container(
-                    width: 132,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
-                        bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
-                      ),
-                      border: Border.all(color: Color(0xffEBEBEB)),
-                      color: Color(0xff787cd1),
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/journey.png"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ) : Container(
-                    width: 132,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
-                        bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
-                      ),
-                      border: Border.all(color: Color(0xffEBEBEB)),
-                      color: Color(0xff787cd1),
-                      image: DecorationImage(
-                        image: NetworkImage(globals.urlSignUp+journeyMapWH.journeyMapWareHouseImagesList[i]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 180,
-                          child: Text(journeyMapWH.journeyMapWareHouseUserNameList[i],
-                            maxLines: 2,
-                            //textScaleFactor: 0.7,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                )
-                            ),
+                        Text("Pain point number " + (i+1).toString(),
+                          style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              )
                           ),
                         ),
+                        SizedBox(height: 10,),
+                        Text(painPointWH.responseArrayWHPainPointsList[i],
+                          style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                                color: Colors.black,
+                              )
+                          ),
+                        ),
+                        SizedBox(height: 10,),
                       ],
                     ),
-                  ),
-                ],
+                    GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          painPointWH.selectedPainPointIdForIdeaImage = painPointWH.responseArrayWHPainPointsIdsList[i].toString();
+                        });
+                        print(painPointWH.selectedPainPointIdForIdeaImage);
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (c, a1, a2) => ViewCrazy8Ideas((i+1).toString(), painPointWH.responseArrayWHPainPointsIdsList[i]),
+                            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                            transitionDuration: Duration(milliseconds: 300),
+                          ),
+                        );
+                      },
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text("View Ideas",
+                          style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                                color: Color(0xff787cd1),
+                              )
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

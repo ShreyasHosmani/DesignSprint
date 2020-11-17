@@ -44,6 +44,19 @@ class UpdateTimelineApiProvider{
               ),
             );
           });
+        }else if(home.responseArrayTimelineMsg == "Timeline updated Successfully. E-Mail Not Verified"){
+          home.prCreateSprint.hide();
+          Fluttertoast.showToast(msg: home.timelineSaved, backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          });
         }else{
           home.prCreateSprint.hide();
           Fluttertoast.showToast(msg: home.responseArrayTimelineMsg, backgroundColor: Colors.black,

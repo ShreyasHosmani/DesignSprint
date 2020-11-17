@@ -1,5 +1,11 @@
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_empathize_inside_sections.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_ideation_inside_sections.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_prototypes.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_road_map_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_goal.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_user_testing_insights.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/road_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -406,221 +412,281 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
   }
 
   Widget buildIdeationCard(BuildContext context){
-    return Container(
-      width: 302,
-      height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color(0xff787cd1),
-      ),
-      child: Stack(
-        children: [
-          Container(
-              width: 302,
-              child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 30),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                constraints: BoxConstraints(maxWidth: 250),
-                child: Text("Ideation",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                      )
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ViewIdeationInsideSections(widget.sprintid),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Container(
+        width: 302,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color(0xff787cd1),
+        ),
+        child: Stack(
+          children: [
+            Container(
+                width: 302,
+                child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, top: 30),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 250),
+                  child: Text("Ideation",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 30, bottom: 30),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Icon(Icons.arrow_forward, color: Colors.white,),
+            Padding(
+              padding: const EdgeInsets.only(right: 30, bottom: 30),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Icon(Icons.arrow_forward, color: Colors.white,),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget buildPrototypeCard(BuildContext context){
-    return Container(
-      width: 302,
-      height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color(0xffFFB8B8),
-      ),
-      child: Stack(
-        children: [
-          Container(
-              width: 302,
-              child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 30),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                constraints: BoxConstraints(maxWidth: 250),
-                child: Text("Prototype",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                      )
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ViewPrototypes(widget.sprintid),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Container(
+        width: 302,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color(0xffFFB8B8),
+        ),
+        child: Stack(
+          children: [
+            Container(
+                width: 302,
+                child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, top: 30),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 250),
+                  child: Text("Prototype",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 30, bottom: 30),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Icon(Icons.arrow_forward, color: Colors.white,),
+            Padding(
+              padding: const EdgeInsets.only(right: 30, bottom: 30),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Icon(Icons.arrow_forward, color: Colors.white,),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget buildUserTestingCard(BuildContext context){
-    return Container(
-      width: 302,
-      height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color(0xff302B70),
-      ),
-      child: Stack(
-        children: [
-          Container(
-              width: 302,
-              child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 30),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                constraints: BoxConstraints(maxWidth: 250),
-                child: Text("User Testing",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                      )
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ViewUserTestingInsights(widget.sprintid),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Container(
+        width: 302,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color(0xff302B70),
+        ),
+        child: Stack(
+          children: [
+            Container(
+                width: 302,
+                child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, top: 30),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 250),
+                  child: Text("User Testing",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 30, bottom: 30),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Icon(Icons.arrow_forward, color: Colors.white,),
+            Padding(
+              padding: const EdgeInsets.only(right: 30, bottom: 30),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Icon(Icons.arrow_forward, color: Colors.white,),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget buildReIterateCard(BuildContext context){
-    return Container(
-      width: 302,
-      height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color(0xff707070),
-      ),
-      child: Stack(
-        children: [
-          Container(
-              width: 302,
-              child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 30),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                constraints: BoxConstraints(maxWidth: 250),
-                child: Text("Re - Iterate",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                      )
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ViewRoadMap(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Container(
+        width: 302,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color(0xff707070),
+        ),
+        child: Stack(
+          children: [
+            Container(
+                width: 302,
+                child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, top: 30),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 250),
+                  child: Text("Re - Iterate",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 30, bottom: 30),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Icon(Icons.arrow_forward, color: Colors.white,),
+            Padding(
+              padding: const EdgeInsets.only(right: 30, bottom: 30),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Icon(Icons.arrow_forward, color: Colors.white,),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget buildTeamCard(BuildContext context){
-    return Container(
-      width: 302,
-      height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color(0xff00C24E),
-      ),
-      child: Stack(
-        children: [
-          Container(
-              width: 302,
-              child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 30),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                constraints: BoxConstraints(maxWidth: 250),
-                child: Text("Team",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                      )
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => TeamDataAndManageTeam(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Container(
+        width: 302,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color(0xff00C24E),
+        ),
+        child: Stack(
+          children: [
+            Container(
+                width: 302,
+                child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, top: 30),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 250),
+                  child: Text("Team",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 30, bottom: 30),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Icon(Icons.arrow_forward, color: Colors.white,),
+            Padding(
+              padding: const EdgeInsets.only(right: 30, bottom: 30),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Icon(Icons.arrow_forward, color: Colors.white,),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,5 @@
+import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/APIs/get_warehouse_journeymap_data.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_digital_journey_map_details.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_paper_journey_map_details.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -12,21 +11,25 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-class ViewJourneyMaps extends StatefulWidget {
+class ViewPaperJourneyMapDetails extends StatefulWidget {
+  final mapId;
+  final imageLink;
+  ViewPaperJourneyMapDetails(this.mapId, this.imageLink) : super();
   @override
-  _ViewJourneyMapsState createState() => _ViewJourneyMapsState();
+  _ViewPaperJourneyMapDetailsState createState() => _ViewPaperJourneyMapDetailsState();
 }
 
-class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
-  GetWareHouseJourneyMapDataApiProvider getWareHouseJourneyMapDataApiProvider = GetWareHouseJourneyMapDataApiProvider();
+class _ViewPaperJourneyMapDetailsState extends State<ViewPaperJourneyMapDetails> {
+  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    journeyMapWH.journeyMapWareHouseIdsList = null;
-    getWareHouseJourneyMapDataApiProvider.getJourneyMapWareHouseData(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    setState(() {
+      journeyMapWH.selectedWareHouseMapId = widget.mapId.toString();
     });
+    print(home.selectedSprintId);
+    getPainPointsApiProvider.getPainPoints(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -38,13 +41,13 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
       endDrawer: buildProfileDrawer(context),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 25,),
             buildName2Widget(context),
-            SizedBox(height: 51,),
-            buildJourneyMapsListViewBuilder(context),
+            SizedBox(height: 20,),
+            buildJourneyMapImageContainer(context),
           ],
         ),
       ),
@@ -280,7 +283,6 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
   }
 
   Widget buildName2Widget(BuildContext context){
-
     return Center(
       child: Text(empathize.journeyMaps,
         style: GoogleFonts.nunitoSans(
@@ -294,112 +296,14 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
     );
   }
 
-  Widget buildJourneyMapsListViewBuilder(BuildContext context){
-    return Padding(
-      padding: const EdgeInsets.only(left: 35, right: 35),
-      child: journeyMapWH.journeyMapWareHouseIdsList == null ? Container() : ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: journeyMapWH.journeyMapWareHouseIdsList == null ? 0 : journeyMapWH.journeyMapWareHouseIdsList.length,
-        itemBuilder: (context, i) => InkWell(
-          onTap: (){
-            setState(() {
-              journeyMapWH.selectedWareHouseMapId = journeyMapWH.journeyMapWareHouseIdsList[i];
-            });
-            print(journeyMapWH.selectedWareHouseMapId);
-            print(journeyMapWH.journeyMapWareHouseImagesList[i]);
-            if(journeyMapWH.journeyMapWareHouseImagesList[i] == "null"){
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ViewDigitalJourneyMapDetails(),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
-            }else{
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ViewPaperJourneyMapDetails(journeyMapWH.journeyMapWareHouseIdsList[i], journeyMapWH.journeyMapWareHouseImagesList[i]),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: Container(
-              width: 303,
-              height: 130,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Color(0xffEBEBEB)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  journeyMapWH.journeyMapWareHouseImagesList[i] == "null" ? Container(
-                    width: 132,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
-                        bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
-                      ),
-                      border: Border.all(color: Color(0xffEBEBEB)),
-                      color: Color(0xff787cd1),
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/journey.png"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ) : Container(
-                    width: 132,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
-                        bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
-                      ),
-                      border: Border.all(color: Color(0xffEBEBEB)),
-                      color: Color(0xff787cd1),
-                      image: DecorationImage(
-                        image: NetworkImage(globals.urlSignUp+journeyMapWH.journeyMapWareHouseImagesList[i]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 180,
-                          child: Text(journeyMapWH.journeyMapWareHouseUserNameList[i],
-                            maxLines: 2,
-                            //textScaleFactor: 0.7,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                )
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+  Widget buildJourneyMapImageContainer(BuildContext context){
+    return Container(
+      height: 261,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: Color(0xff787cd1),
       ),
+      child: Image.network(globals.urlSignUp+widget.imageLink),
     );
   }
 

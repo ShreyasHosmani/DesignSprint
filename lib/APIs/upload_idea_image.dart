@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadIdeaApiProvider {
@@ -74,6 +73,7 @@ class UploadIdeaApiProvider {
 
       if(ideation.responseArrayGetIdeaImagesMsg == "Painpoint Data Found"){
 
+        ideation.showImagesIdea = true;
         ideation.ideaImagesPainPointWiseList = List.generate(ideation.responseArrayGetIdeaImages['data'].length, (i) => ideation.responseArrayGetIdeaImages['data'][i]['iiImgpath'].toString());
 
         print(ideation.ideaImagesPainPointWiseList.toList());

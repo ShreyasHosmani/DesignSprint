@@ -1,7 +1,7 @@
 library main_app.globals;
 
-String urlLogin = "https://onetouchhosting.tk/api/users/";
-String urlSignUp = "https://onetouchhosting.tk/api/users/";
+String urlLogin = "https://jawaby.tk/dezyit/api/users/";
+String urlSignUp = "https://jawaby.tk/dezyit/api/users/";
 
-String url = "https://onetouchhosting.tk/api/objects/";
-String urlImage = "https://onetouchhosting.tk/";
+String url = "https://jawaby.tk/dezyit/api/objects/";
+String urlImage = "https://jawaby.tk/dezyit/";
