@@ -1,15 +1,19 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_empathize_inside_sections.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_ideation_inside_sections.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_prototypes.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_road_map_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_goal.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_team_by_sprints_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_user_testing_insights.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/road_map_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/road_map_screen_sprint_wise.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/comments_data.dart' as comments;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -22,13 +26,59 @@ class ViewSprintInsideSections extends StatefulWidget {
 
 class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      comments.responseArrayAddComments1 = null;
+      comments.responseArrayAddComments1Msg = null;
+
+      comments.responseArrayGetComments1 = null;
+      comments.responseArrayGetComments1Msg = null;
+
+      comments.commentsPaperPersonaList = null;
+      comments.commentsUserNamePaperPersonaList = null;
+      comments.commentsProfilePicPaperPersonaList = null;
+
+      comments.responseArrayAddComments0 = null;
+      comments.responseArrayAddComments0Msg = null;
+
+      comments.responseArrayGetComments0 = null;
+      comments.responseArrayGetComments0Msg = null;
+
+      comments.commentsDigitalPersonaList = null;
+      comments.commentsUserNameDigitalPersonaList = null;
+      comments.commentsProfilePicDigitlPersonaList = null;
+
+      comments.responseArrayAddComments2 = null;
+      comments.responseArrayAddComments2Msg = null;
+
+      comments.responseArrayGetComments2 = null;
+      comments.responseArrayGetComments2Msg = null;
+
+      comments.commentsDigitalMapList = null;
+      comments.commentsUserNameDigitalMapList = null;
+      comments.commentsProfilePicDigitalMapList = null;
+
+      comments.responseArrayAddComments3 = null;
+      comments.responseArrayAddComments3Msg = null;
+
+      comments.responseArrayGetComments3 = null;
+      comments.responseArrayGetComments3Msg = null;
+
+      comments.commentsPaperMapList = null;
+      comments.commentsUserNamePaperMapList = null;
+      comments.commentsProfilePicPaperMapList = null;
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
+      endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -585,7 +635,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => ViewRoadMap(),
+            pageBuilder: (c, a1, a2) => RoadMapSprintWise(widget.sprintid),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -641,7 +691,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => TeamDataAndManageTeam(),
+            pageBuilder: (c, a1, a2) => ViewTeamBySprints(widget.sprintid),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),

@@ -48,7 +48,7 @@ class InputGoalApiProvider {
           });
         }else if(goal.responseArrayCreateGoalMsg == "Goal Added Successfully, E-Mail Not Verified"){
           goal.prInputGoal.hide();
-          Fluttertoast.showToast(msg: goal.goalSaved, backgroundColor: Colors.black,
+          Fluttertoast.showToast(msg: "Goal Added Successfully, E-Mail Not Verified", backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
             Navigator.push(
               context,

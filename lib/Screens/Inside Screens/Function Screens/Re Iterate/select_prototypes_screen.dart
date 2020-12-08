@@ -1,4 +1,6 @@
 import 'package:design_sprint/APIs/reiterate_calls.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/add_notes_and_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,7 +32,7 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerUserTesting() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

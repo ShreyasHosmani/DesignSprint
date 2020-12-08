@@ -1,6 +1,9 @@
 import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/APIs/upload_idea_image.dart';
 import 'package:design_sprint/APIs/vote_pain_point.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/i_vs_f_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/idea_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,42 +94,52 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 48,),
-                buildName3Widget(context),
-                SizedBox(height: 20,),
-                buildLevelContainer(context),
-                SizedBox(height: 46,),
-                buildPainPointNumberIndicator(context),
-                SizedBox(height: 28,),
-                buildImageContainer(context),
-                SizedBox(height: 43,),
-                buildName4Widget(context),
-                SizedBox(height: 25,),
-                buildVoteRow(context),
-                SizedBox(height: 25,),
-                buildName5Widget(context),
-                SizedBox(height: 25,),
-                buildVoteRow2(context),
-                SizedBox(height: 53,),
-                buildNextButton(context),
-                SizedBox(height: 40,),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: statusBarDrawer(context),
-            ),
-          ],
+      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
+      body: WillPopScope(
+        onWillPop: () => Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => IvsFTutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20,),
+                  buildName2Widget(context),
+                  SizedBox(height: 48,),
+                  buildName3Widget(context),
+                  SizedBox(height: 20,),
+                  buildLevelContainer(context),
+                  SizedBox(height: 46,),
+                  buildPainPointNumberIndicator(context),
+                  SizedBox(height: 28,),
+                  buildImageContainer(context),
+                  SizedBox(height: 43,),
+                  buildName4Widget(context),
+                  SizedBox(height: 25,),
+                  buildVoteRow(context),
+                  SizedBox(height: 25,),
+                  buildName5Widget(context),
+                  SizedBox(height: 25,),
+                  buildVoteRow2(context),
+                  SizedBox(height: 53,),
+                  buildNextButton(context),
+                  SizedBox(height: 40,),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: statusBarDrawer(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -159,7 +172,16 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => IvsFTutorial(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+            },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),

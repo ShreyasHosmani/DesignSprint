@@ -26,8 +26,12 @@ class ProfileApiProvider {
 
       profile.email = profile.responseArrayProfile['data']['userEmail'].toString();
       profile.name = profile.responseArrayProfile['data']['userFullname'].toString();
+      profile.mobileNo = profile.responseArrayProfile['data']['userPhoneno'].toString();
+      profile.profilePicImage = profile.responseArrayProfile['data']['userProfilepic'].toString();
 
       print(profile.email);
+      print(profile.mobileNo);
+      print(profile.profilePicImage);
 
       profile.nameList = profile.name.split(' ');
       print(profile.nameList.toList());

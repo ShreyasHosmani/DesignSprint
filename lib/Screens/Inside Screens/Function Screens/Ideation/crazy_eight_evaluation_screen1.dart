@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/ReusableWidgets/countdown_timer_widget.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_8_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/upload_idea_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,41 +102,51 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 68,),
-                buildName3Widget(context),
-                SizedBox(height: 35,),
-                buildLevelContainer(context),
-                SizedBox(height: 72,),
-                buildNumberIndicator(context),
-                SizedBox(height: 35,),
-                buildName4Widget(context),
-                SizedBox(height: 50,),
-                buildTimerWidget(context),
-                SizedBox(height: 42,),
-                saveButton(context),
-                SizedBox(height: 20,),
-                buildName5Widget(context),
-                SizedBox(height: 52,),
-                buildNextButton(context),
-                SizedBox(height: 52,),
-              ],
+      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
+      body: WillPopScope(
+        onWillPop: () => Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => Crazy8Tutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        ),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20,),
+                  buildName2Widget(context),
+                  SizedBox(height: 68,),
+                  buildName3Widget(context),
+                  SizedBox(height: 35,),
+                  buildLevelContainer(context),
+                  SizedBox(height: 72,),
+                  buildNumberIndicator(context),
+                  SizedBox(height: 35,),
+                  buildName4Widget(context),
+                  SizedBox(height: 50,),
+                  buildTimerWidget(context),
+                  SizedBox(height: 42,),
+                  saveButton(context),
+                  SizedBox(height: 20,),
+                  buildName5Widget(context),
+                  SizedBox(height: 52,),
+                  buildNextButton(context),
+                  SizedBox(height: 52,),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: statusBarDrawer(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -165,7 +178,16 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => Crazy8Tutorial(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),

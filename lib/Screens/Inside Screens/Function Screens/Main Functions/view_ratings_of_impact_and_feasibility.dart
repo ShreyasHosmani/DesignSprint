@@ -1,4 +1,5 @@
 import 'package:design_sprint/APIs/warehouse_get_ivsf_and_selected_ideaimages.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
@@ -46,7 +47,7 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
+      endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

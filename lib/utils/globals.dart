@@ -1,7 +1,7 @@
 library main_app.globals;
 
-String urlLogin = "https://jawaby.tk/dezyit/api/users/";
-String urlSignUp = "https://jawaby.tk/dezyit/api/users/";
+String urlLogin = "https://dezyit.ml/mobileapp/api/users/";
+String urlSignUp = "https://dezyit.ml/mobileapp/api/users/";
 
-String url = "https://jawaby.tk/dezyit/api/objects/";
-String urlImage = "https://jawaby.tk/dezyit/";
+String url = "https://dezyit.ml/mobileapp/api/objects/";
+String urlImage = "https://dezyit.ml/mobileapp/";

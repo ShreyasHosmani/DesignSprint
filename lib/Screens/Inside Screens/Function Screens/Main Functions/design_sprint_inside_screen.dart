@@ -1,4 +1,7 @@
 import 'package:design_sprint/APIs/create_sprint.dart';
+import 'package:design_sprint/APIs/get_profile.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/edit_profile_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/input_time_line.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
 
 class DesignSprintInside extends StatefulWidget {
   @override
@@ -13,7 +17,7 @@ class DesignSprintInside extends StatefulWidget {
 }
 
 class _DesignSprintInsideState extends State<DesignSprintInside> {
-
+  ProfileApiProvider profileApiProvider = ProfileApiProvider();
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -25,7 +29,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
+      endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -255,57 +259,115 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xff302B70),
-                        Color(0xff787CD1),
-                      ],
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 80,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
-                        ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (c, a1, a2) => EditProfile(),
+                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionDuration: Duration(milliseconds: 300),
                       ),
-                      SizedBox(width: 15,),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hi, " + profile.name + "!",
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
-                          ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
-                          ),
+                    ).whenComplete((){
+                      profileApiProvider.getSideBarProfile();
+                      profileApiProvider.getProfile(context).whenComplete((){
+                        Future.delayed(const Duration(seconds: 4), () {
+                          setState(() {
+
+                          });
+                        });
+                      });
+                    });
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff302B70),
+                          Color(0xff787CD1),
                         ],
                       ),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            image: DecorationImage(
+                              image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 15,),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Hi, " + profile.name + "!",
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  )
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(profile.email,
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                  )
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Container(
+                              height: 20,
+                              child: RaisedButton(
+                                color: Colors.white,
+                                onPressed: (){
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (c, a1, a2) => EditProfile(),
+                                      transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                      transitionDuration: Duration(milliseconds: 300),
+                                    ),
+                                  ).whenComplete((){
+                                    profileApiProvider.getSideBarProfile();
+                                    profileApiProvider.getProfile(context).whenComplete((){
+                                      Future.delayed(const Duration(seconds: 4), () {
+                                        setState(() {
+
+                                        });
+                                      });
+                                    });
+                                  });
+                                },
+                                child: Center(
+                                  child: Text("Edit profile",
+                                    style: TextStyle(
+                                      color: Color(0xff787cd1),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 42,),
@@ -474,6 +536,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
           borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
       title: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Align(
               alignment: Alignment.centerRight,
@@ -481,13 +544,13 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
           SizedBox(height: 10,),
           Text(home.popUp1, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
           Text(home.popUp2,style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
-          SizedBox(height: 10,)
+          //SizedBox(height: 10,)
         ],
       ),
       content: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: MediaQuery.of(context).size.height/3.5,
+          height: MediaQuery.of(context).size.height/4.5,
           width: MediaQuery.of(context).size.width,
           child: Form(
             key: home.formKey,
@@ -495,6 +558,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 textField,
+                SizedBox(height: 5,),
                 buildSaveButton,
               ],
             ),

@@ -1,4 +1,6 @@
 import 'package:design_sprint/APIs/reiterate_calls.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -19,15 +21,20 @@ class _RoadMapState extends State<RoadMap> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    reIterateApiProvider.getRoadMapData(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    reIterateApiProvider.getRoadMapDataNotes(context).whenComplete((){
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          reIterateApiProvider.getRoadMapDataTasksAndTimeLines(context).whenComplete((){
+            Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+          });
+        });
+      });
     });
-    print(reiterate.roadMapNotesList.toList());
-    print(reiterate.roadMapNotesList1.toList());
-    print(reiterate.roadMapNotesList2.toList());
-    print(reiterate.roadMapTaskList.toList());
-    print(reiterate.roadMapTaskList1.toList());
-    print(reiterate.roadMapTaskList2.toList());
+    setState(() {
+      reiterate.allPrototypeNotes = null;
+      reiterate.allPrototypeTasks = null;
+      reiterate.allPrototypeDueDates = null;
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,7 @@ class _RoadMapState extends State<RoadMap> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerUserTesting() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -54,6 +61,9 @@ class _RoadMapState extends State<RoadMap> {
                 buildRoadMapListViewBuilder(context),
               ],
             ),
+            SizedBox(height: 40,),
+            buildNextButton(context),
+            SizedBox(height: 40,),
           ],
         ),
       ),
@@ -580,13 +590,13 @@ class _RoadMapState extends State<RoadMap> {
   }
 
   Widget buildRoadMapListViewBuilder(BuildContext context){
-    return reiterate.uploadedTaskList == null ? Container() : Container(
+    return reiterate.allPrototypeNotes == null || reiterate.allPrototypeDueDates == null || reiterate.allPrototypeTasks == null || reiterate.prototypeAllImagesListOfStatusTwo == null ? Container() : Container(
       width: 250,
       child: ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: reiterate.uploadedTaskList == null ? 0 : reiterate.uploadedTaskList.length,
+        itemCount: reiterate.allPrototypeNotes == null ? 0 : reiterate.allPrototypeNotes.length,
         itemBuilder: (context, i) => Padding(
           padding: const EdgeInsets.only(bottom: 40),
           child: Center(
@@ -654,18 +664,13 @@ class _RoadMapState extends State<RoadMap> {
                           ),
                         ),
                         SizedBox(height: 15,),
-                        Text("Note number 1 this is note number one for this prototype",
+                        Text(reiterate.allPrototypeNotes[i],
                           style: GoogleFonts.nunitoSans(
                             fontSize: 14,
                           ),
                         ),
                         SizedBox(height: 15,),
-                        ListView.builder(
-                          physics: ScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: i == 0 ? reiterate.roadMapTaskList.length : i == 1 ? reiterate.roadMapTaskList1.length : reiterate.roadMapTaskList2.length,
-                          itemBuilder: (context, i2) => Padding(
+                        Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Center(
                               child: Container(
@@ -688,7 +693,7 @@ class _RoadMapState extends State<RoadMap> {
                                         ),
                                       ),
                                       SizedBox(height: 10,),
-                                      Text(i == 0 ? reiterate.roadMapTaskList[i2] : i == 1 ? reiterate.roadMapTaskList1[i2] : reiterate.roadMapTaskList2[i2],
+                                      Text(reiterate.allPrototypeTasks[i],
                                         style: GoogleFonts.nunitoSans(
                                             textStyle: TextStyle(
                                               color: Colors.black,
@@ -722,7 +727,7 @@ class _RoadMapState extends State<RoadMap> {
                                             children: [
                                               Icon(Icons.date_range, color: Colors.grey, size: 12,),
                                               SizedBox(width: 6,),
-                                              Text("12-11-20",
+                                              Text(reiterate.allPrototypeDueDates[i],
                                                 style: GoogleFonts.nunitoSans(
                                                   color: Colors.black,
                                                   fontSize: 12,
@@ -738,7 +743,6 @@ class _RoadMapState extends State<RoadMap> {
                               ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -806,10 +810,34 @@ class _RoadMapState extends State<RoadMap> {
   }
   Widget buildFilledContainerSeperater(BuildContext context){
     return Container(
-      height: 520,
+      height: 330,
       width: 2,
       decoration: BoxDecoration(
         color: Color(0xff787cd1),
+      ),
+    );
+  }
+
+  Widget buildNextButton(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      },
+      child: Center(
+        child: Container(
+          height: 45,
+          width: 146,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Done",
+              style: TextStyle(
+                  color: Colors.white, letterSpacing: 1, fontSize: 16),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -4,9 +4,12 @@ import 'package:design_sprint/APIs/create_journey_map.dart';
 import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/APIs/input_pain_point.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree3.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -54,6 +57,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           createJourneyApiProvider.getJourneyMapDetails(context).whenComplete((){
+            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+              textColor: Colors.white,);
             Future.delayed(const Duration(seconds: 3), () {setState(() {});});
             if(empathize.imagePaperJourneyMap == null){
 
@@ -75,6 +80,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           createJourneyApiProvider.getJourneyMapDetails(context).whenComplete((){
+            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+              textColor: Colors.white,);
             Future.delayed(const Duration(seconds: 3), () {setState(() {});});
             if(empathize.imagePaperJourneyMap == null){
 
@@ -94,7 +101,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Stack(
           children: [
@@ -790,7 +797,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       itemBuilder: (context, i) => Center(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 2),
-          child: Text(empathize.journeyMapImageNamesList[i],
+          child: Text(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null" ? ("Digital Journey Map"+(i+1).toString()) : empathize.journeyMapImageNamesList[i],
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
                   fontSize: 12,

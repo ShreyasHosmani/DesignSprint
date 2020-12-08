@@ -1,5 +1,8 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/create_digital_persona.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_digital_or_upload_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_tutorial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
@@ -22,27 +25,37 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 25,),
-                buildCreateDigitallyCard(context),
-                SizedBox(height: 25,),
-                buildCreateOnPaperCard(context),
-                SizedBox(height: 25,),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: statusBarDrawer(context),
-            ),
-          ],
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
+      body: WillPopScope(
+        onWillPop: () => Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => PersonaTutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20,),
+                  buildName2Widget(context),
+                  SizedBox(height: 25,),
+                  buildCreateDigitallyCard(context),
+                  SizedBox(height: 25,),
+                  buildCreateOnPaperCard(context),
+                  SizedBox(height: 25,),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: statusBarDrawer(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -75,7 +88,16 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => PersonaTutorial(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),

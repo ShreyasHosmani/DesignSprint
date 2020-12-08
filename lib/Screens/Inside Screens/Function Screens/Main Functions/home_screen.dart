@@ -1,11 +1,23 @@
+import 'dart:io';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_home_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_tips.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/APIs/get_profile.dart';
+import 'package:design_sprint/APIs/logout.dart';
+import 'package:design_sprint/Screens/Initial%20Screen/initial_screen.dart';
+import 'package:design_sprint/Screens/Initial%20Screen/initial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_sprint_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/edit_profile_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
+import 'package:design_sprint/main.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -14,6 +26,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  LogoutApiProvider logoutApiProvider = LogoutApiProvider();
+  ProfileApiProvider profileApiProvider = ProfileApiProvider();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,19 +35,45 @@ class _HomeState extends State<Home> {
       appBar: buildAppBar(context),
       backgroundColor: Colors.white,
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 40,),
-            buildNameWidget(context),
-            SizedBox(height: 25,),
-            buildDesignSprintCard(context),
-            SizedBox(height: 25,),
-            buildManageTeamCard(context),
-            SizedBox(height: 40,),
-          ],
+      endDrawer: ProfileDrawerHomeScreen(),
+      body: WillPopScope(
+        onWillPop: () => showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit the App'),
+            actions: <Widget>[
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(false),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text("No"),
+                ),
+              ),
+              SizedBox(height: 16),
+              new GestureDetector(
+                onTap: () => exit(0),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text("Yes"),
+                ),
+              ),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 40,),
+              buildNameWidget(context),
+              SizedBox(height: 25,),
+              buildDesignSprintCard(context),
+              SizedBox(height: 25,),
+              buildManageTeamCard(context),
+              SizedBox(height: 40,),
+            ],
+          ),
         ),
       ),
     );
@@ -50,6 +90,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
+      leading: Container(),
       title: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Text(home.home,
@@ -267,7 +308,16 @@ class _HomeState extends State<Home> {
                         transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
-                    );
+                    ).whenComplete((){
+                      profileApiProvider.getSideBarProfile();
+                      profileApiProvider.getProfile(context).whenComplete((){
+                        Future.delayed(const Duration(seconds: 4), () {
+                          setState(() {
+
+                          });
+                        });
+                      });
+                    });
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -291,9 +341,12 @@ class _HomeState extends State<Home> {
                           width: 80,
                           decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                              image: DecorationImage(
+                                image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
+                                fit: BoxFit.cover,
+                              ),
                           ),
-                          child: Icon(Icons.person, color: Colors.grey, size: 40,),
                         ),
                         SizedBox(width: 15,),
                         Column(
@@ -304,17 +357,51 @@ class _HomeState extends State<Home> {
                               style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 20,
+                                  fontSize: 18,
                                 )
                               ),
                             ),
-                            SizedBox(height: 8,),
+                            SizedBox(height: 5,),
                             Text(profile.email,
                               style: GoogleFonts.nunitoSans(
                                   textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                   )
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Container(
+                              height: 20,
+                              child: RaisedButton(
+                                color: Colors.white,
+                                onPressed: (){
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (c, a1, a2) => EditProfile(),
+                                      transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                      transitionDuration: Duration(milliseconds: 300),
+                                    ),
+                                  ).whenComplete((){
+                                    profileApiProvider.getSideBarProfile();
+                                    profileApiProvider.getProfile(context).whenComplete((){
+                                      Future.delayed(const Duration(seconds: 4), () {
+                                        setState(() {
+
+                                        });
+                                      });
+                                    });
+                                  });
+                                },
+                                child: Center(
+                                  child: Text("Edit profile",
+                                    style: TextStyle(
+                                      color: Color(0xff787cd1),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -324,72 +411,114 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingHome,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
+                InkWell(
+                  onTap: (){
+                    Fluttertoast.showToast(msg: "You're on the homepage", backgroundColor: Colors.black,
+                      textColor: Colors.white,);
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(width: 62,),
+                      Icon(Icons.image, color: Colors.grey.shade500,),
+                      SizedBox(width: 10,),
+                      Text(home.sideBarHeadingHome,
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            )
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingDesignSprint,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (c, a1, a2) => ViewSprints(),
+                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionDuration: Duration(milliseconds: 300),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(width: 62,),
+                      Icon(Icons.image, color: Colors.grey.shade500,),
+                      SizedBox(width: 10,),
+                      Text(home.sideBarHeadingDesignSprint,
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            )
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingTips,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (c, a1, a2) => ViewTips(),
+                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionDuration: Duration(milliseconds: 300),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(width: 62,),
+                      Icon(Icons.image, color: Colors.grey.shade500,),
+                      SizedBox(width: 10,),
+                      Text(home.sideBarHeadingTips,
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            )
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingManageTeam,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (c, a1, a2) => TeamDataAndManageTeam(),
+                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionDuration: Duration(milliseconds: 300),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(width: 62,),
+                      Icon(Icons.image, color: Colors.grey.shade500,),
+                      SizedBox(width: 10,),
+                      Text(home.sideBarHeadingManageTeam,
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            )
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 42,),
                 Row(
@@ -426,6 +555,28 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 SizedBox(height: 42,),
+                InkWell(
+                  onTap: (){
+                    showAlertDialogLogout(context);
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(width: 62,),
+                      Icon(Icons.image, color: Colors.grey.shade500,),
+                      SizedBox(width: 10,),
+                      Text(home.logout,
+                        style: GoogleFonts.nunitoSans(
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            )
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 42,),
               ],
             ),
           ),
@@ -433,6 +584,61 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  showAlertDialogLogout(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed:  () async {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.clear();
+        Navigator.of(context).pop();
+        Future.delayed(const Duration(seconds: 1), () {
+        main();
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => InitialScreen(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+        });
+        Fluttertoast.showToast(msg: "Logged out", backgroundColor: Colors.black,
+          textColor: Colors.white,);
+        Future.delayed(const Duration(seconds: 3), () {
+          logoutApiProvider.Logout(context);
+        });
+      },
+
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Logout"),
+      content: Text("Are you sure you want to logout?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }
 
 class Load extends StatefulWidget {

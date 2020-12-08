@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/APIs/upload_idea_image.dart';
 import 'package:design_sprint/APIs/upload_prototype_images.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_ideation.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen4.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -106,7 +108,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerIdeation() : ProfileDrawerCommon(),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -789,6 +791,8 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                           getImageOneGallery().then((value){
                             prototypeApiProvider.uploadPrototypeImage(context);
                             Future.delayed(const Duration(seconds: 3), () {
+                              Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                                textColor: Colors.white,);
                               prototypeApiProvider.getPrototypeImagesPainPointWise(context).whenComplete((){
                                 Future.delayed(const Duration(seconds: 3), () {setState(() {});});
                               });

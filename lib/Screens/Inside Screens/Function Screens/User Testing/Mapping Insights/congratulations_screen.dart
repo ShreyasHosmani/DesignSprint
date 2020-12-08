@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen5.dart';
@@ -27,7 +29,7 @@ class _CongratulationsState extends State<Congratulations> {
       backgroundColor: Colors.white,
       endDrawerEnableOpenDragGesture: true,
       appBar: buildAppBar(context),
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
       body: WillPopScope(
         onWillPop: () => showDialog(
           context: context,
@@ -55,18 +57,21 @@ class _CongratulationsState extends State<Congratulations> {
         ),
         child: Stack(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                buildImage(context),
-                SizedBox(height: 60,),
-                buildText(context),
-                SizedBox(height: 26,),
-                buildInfoText(context),
-                SizedBox(height: 70,),
-                buildNextButton(context),
-              ],
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildImage(context),
+                  SizedBox(height: 60,),
+                  buildText(context),
+                  SizedBox(height: 26,),
+                  buildInfoText(context),
+                  SizedBox(height: 70,),
+                  buildNextButton(context),
+                  SizedBox(height: 40,),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 80),

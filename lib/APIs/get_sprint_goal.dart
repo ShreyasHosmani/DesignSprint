@@ -28,7 +28,7 @@ class GetSprintGoalApiProvider{
       if(statusCode == 200){
         if(home.responseArrayGetGoalMsg == "Data Found"){
 
-          home.sprintGoalList = home.responseArrayGetGoal['data'][0]['goalName'].toString();
+          home.sprintGoalList = home.responseArrayGetGoal['data'][home.responseArrayGetGoal['data'].length-1]['goalName'].toString();
 
           print(home.sprintGoalList);
 

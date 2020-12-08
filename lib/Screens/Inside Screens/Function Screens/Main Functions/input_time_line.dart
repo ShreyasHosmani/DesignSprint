@@ -1,4 +1,7 @@
+import 'package:design_sprint/APIs/create_journey_map.dart';
+import 'package:design_sprint/APIs/delete_sprint.dart';
 import 'package:design_sprint/APIs/update_timeline.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +17,7 @@ class InputTimeline extends StatefulWidget {
 
 class _InputTimelineState extends State<InputTimeline> {
   UpdateTimelineApiProvider updateTimelineApiProvider = UpdateTimelineApiProvider();
+  DeleteSprintApiProvider deleteSprintApiProvider = DeleteSprintApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class _InputTimelineState extends State<InputTimeline> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
+      endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -66,7 +70,10 @@ class _InputTimelineState extends State<InputTimeline> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            //showAlertDialog(context);
+            Navigator.of(context).pop();
+            },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),
@@ -501,6 +508,47 @@ class _InputTimelineState extends State<InputTimeline> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel",style: GoogleFonts.nunitoSans(),),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue",style: GoogleFonts.nunitoSans(),),
+      onPressed:  () async {
+        deleteSprintApiProvider.deleteSprint(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Warning",
+        style: GoogleFonts.nunitoSans(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      content: Text("If you go back, this sprint will be discarded. Are you sure you want to go back?",
+        style: GoogleFonts.nunitoSans(),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

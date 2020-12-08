@@ -14,13 +14,13 @@ class LoginApiProvider {
 
   Future<String> Login(context) async {
 
-    String url = globals.urlLogin + "login";
+    String url = globals.urlLogin + "login.php";
 
     http.post(url, body: {
 
       "email" : login.emailController.text,
       "password" : login.passwordController.text,
-      "fcmtoken" : "12345",//mainData.userToken.toString(),
+      "fcmtoken" : mainData.userToken.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -70,7 +70,7 @@ class LoginApiProvider {
 
   Future<String> LoginUsingGoogle(context) async {
 
-    String url = globals.urlSignUp + "socialregister";
+    String url = globals.urlSignUp + "socialregister.php";
 
     http.post(url, body: {
 
@@ -122,7 +122,7 @@ class LoginApiProvider {
 
   Future<String> LoginUsingFacebook(context) async {
 
-    String url = globals.url + "socialregister";
+    String url = globals.url + "socialregister.php";
 
     http.post(url, body: {
 

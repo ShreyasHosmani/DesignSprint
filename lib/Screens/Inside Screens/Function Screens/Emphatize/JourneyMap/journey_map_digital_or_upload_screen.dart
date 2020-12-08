@@ -1,3 +1,5 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/upload_journey_map_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/upload_persona_screen.dart';
 import 'package:dio/dio.dart';
@@ -35,7 +37,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Stack(
           children: [

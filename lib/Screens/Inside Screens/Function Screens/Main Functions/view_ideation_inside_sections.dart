@@ -1,3 +1,4 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_crazy8_pain_points.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_ivsf_inside_sections.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_journey_maps_screen.dart';
@@ -33,7 +34,7 @@ class _ViewIdeationInsideSectionsState extends State<ViewIdeationInsideSections>
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
+      endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

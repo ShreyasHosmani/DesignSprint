@@ -36,6 +36,7 @@ var responseArrayCreateSprintMsg;
 
 String sprintNameSaved = "Sprint name saved";
 String sprintNameValidation = "Sprint Name is empty!";
+String logout = "Logout";
 
 final formKey = GlobalKey<FormState>();
 ProgressDialog prCreateSprint;
@@ -73,5 +74,9 @@ var responseArrayEditProfileMsg;
 var profileBaseImage;
 var profileFileName;
 File profileImage;
+
+ProgressDialog prEditProfile;
+
+var selectedSprintIdForDeleting;
 
 

@@ -1,8 +1,11 @@
 import 'package:design_sprint/APIs/create_sprint.dart';
+import 'package:design_sprint/APIs/delete_sprint.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_inside_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -15,6 +18,7 @@ class ViewSprints extends StatefulWidget {
 
 class _ViewSprintsState extends State<ViewSprints> {
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
+  DeleteSprintApiProvider deleteSprintApiProvider = DeleteSprintApiProvider();
   @override
   void initState() {
     // TODO: implement initState
@@ -31,7 +35,7 @@ class _ViewSprintsState extends State<ViewSprints> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
+      endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -328,7 +332,7 @@ class _ViewSprintsState extends State<ViewSprints> {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(home.sprintIdsList[i]),
+                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(home.sprintIdsList.reversed.toList()[i]),
                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                 transitionDuration: Duration(milliseconds: 300),
               ),
@@ -336,53 +340,83 @@ class _ViewSprintsState extends State<ViewSprints> {
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 25),
-            child: Container(
-              width: 302,
-              height: 130,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Color(0xff96C3CB),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                      width: 302,
-                      child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30, top: 30),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        constraints: BoxConstraints(maxWidth: 250),
-                        child: Text(home.sprintTitlesList[i],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.nunitoSans(
-                              textStyle: TextStyle(
-                                fontSize: 30,
-                                color: Colors.white,
-                              )
+            child: Stack(
+              children: [
+                Center(
+                  child: Container(
+                    width: 302,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color(0xff96C3CB),
+                    ),
+                    child: Stack(
+                      children: [
+                        Container(
+                            width: 302,
+                            child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30, top: 30),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              constraints: BoxConstraints(maxWidth: 250),
+                              child: Text(home.sprintTitlesList.reversed.toList()[i],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.nunitoSans(
+                                    textStyle: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                    )
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 30, bottom: 30),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(home.sprintStatusList[i] == "0" ? "Completed" : "Ongoing",
-                        style: GoogleFonts.nunitoSans(
-                            textStyle: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            )
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30, bottom: 30),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(home.sprintStatusList.reversed.toList()[i] == "0" ? "Completed" : "Ongoing",
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  )
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(Icons.close, color: Colors.white,size: 20,),
+                      onPressed: (){
+                        setState(() {
+                          home.selectedSprintIdForDeleting = home.sprintIdsList.reversed.toList()[i];
+                        });
+                        print(home.selectedSprintIdForDeleting);
+                        deleteSprintApiProvider.deleteSprintFromSprints(context).whenComplete((){
+                          Future.delayed(const Duration(seconds: 3), () {
+                            createSprintApiProvider.getSprints(context).whenComplete((){
+                              Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
+                                textColor: Colors.white,);
+                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                            });
+                          });
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

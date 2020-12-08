@@ -1,4 +1,7 @@
+import 'package:design_sprint/APIs/get_team_by_sprints.dart';
 import 'package:design_sprint/APIs/reiterate_calls.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/road_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +10,8 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:design_sprint/utils/team_by_sprints_data.dart' as teamBySprints;
 
 bool statusDrawer = false;
 
@@ -18,11 +23,17 @@ class AddNotesAndTimeLinePageViewBuilder extends StatefulWidget {
 class _AddNotesAndTimeLinePageViewBuilderState extends State<AddNotesAndTimeLinePageViewBuilder> {
   final controller = PageController(viewportFraction: 1);
   ReIterateApiProvider reIterateApiProvider = ReIterateApiProvider();
+  GetTeamBySprintApiProvider getTeamBySprintApiProvider = GetTeamBySprintApiProvider();
   void initState() {
     // TODO: implement initState
     super.initState();
     reiterate.pageIndexNotesAndTimeLine = 0;
     initLists();
+    setState(() {
+      reiterate.noteUploaded = false;
+      selectedTeamMember = null;
+    });
+    getTeamBySprintApiProvider.getTeamdata2(context);
     reIterateApiProvider.getPrototypeOfStatusTwo(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {});
@@ -92,11 +103,28 @@ class AddNotesAndTimeLine extends StatefulWidget {
 class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ReIterateApiProvider reIterateApiProvider = ReIterateApiProvider();
+  DateTime selectedDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2501));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        teamBySprints.dateForSending = selectedDate.toString().substring(0,10);
+        datePicked = true;
+      });
+    print(teamBySprints.dateForSending);
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
+      teamBySprints.dateForSending = "";
+      datePicked = false;
       reiterate.noteUploaded = false;
       reiterate.notesController.clear();
       reiterate.uploadedTaskList = [];
@@ -117,7 +145,7 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerUserTesting() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -697,6 +725,64 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
           ),
         ),
       ),
+    ) : reiterate.noteUploaded == false ? Center(
+      child: Container(
+        width: 302,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(reiterate.addNotes,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                  )
+              ),
+            ),
+            SizedBox(height: 25,),
+            Container(
+              height: 148,
+              width: 302,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xffd4d4d4)),
+                  borderRadius: BorderRadius.all(Radius.circular(7))
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 35, right: 35),
+                child: TextFormField(
+                  autofocus:false ,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  focusNode: reiterate.notesFocus,
+                  maxLines: 4,
+                  controller: reiterate.notesController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  validator: (val){
+                    if(val.isEmpty){
+                      return hint.bioValidation;
+                    }
+                    return null;
+                  },
+                  onEditingComplete: (){
+                    reiterate.notesFocus.unfocus();
+                    reIterateApiProvider.uploadPrototypeNote(context).whenComplete((){
+                      Future.delayed(const Duration(seconds: 3), () {
+                        setState(() {
+                          reiterate.noteUploaded = true;
+                        });
+                        insertNotes();
+                      });
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     ) : Center(
       child: Container(
         width: 302,
@@ -729,7 +815,6 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
                   focusNode: reiterate.notesFocus,
                   maxLines: 4,
                   controller: reiterate.notesController,
-
                   decoration: InputDecoration(
                     border: InputBorder.none,
                   ),
@@ -826,7 +911,43 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
                           data: ThemeData(
                             primaryColor: Color(0xff787cd1)
                           ),
-                          child: TextFormField(
+                          child: SearchableDropdown.single(
+                              items: teamBySprints.teamMemberNamesBySprintsList2 == null ? []: teamBySprints.teamMemberNamesBySprintsList2.map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: new Text(
+                                    value[1] == "0"||value[1] == "1"||value[1] == "2"||value[1] == "3"||value[1] == "4"||value[1] == "5"||value[1] == "6"||value[1] == "7"||value[1] == "8"||value[1] == "9" ? value.substring(2) : value.substring(1),
+                                  ),
+                                );
+                              }).toList(),
+                              value: selectedTeamMember == null ? "Select member" : selectedTeamMember,
+                              hint: "Select member",
+                              searchHint: "Select member",
+                              clearIcon: Icon(null),
+                              onChanged: (value) {
+                                setState(() {
+                                  if(value[1] == "0"||value[1] == "1"||value[1] == "2"||value[1] == "3"||value[1] == "4"||value[1] == "5"||value[1] == "6"||value[1] == "7"||value[1] == "8"||value[1] == "9"){
+                                    teamBySprints.selectedTeamMemberIdForTasks = value[0]+value[1];
+                                  }else{
+                                    teamBySprints.selectedTeamMemberIdForTasks = value[0];
+                                  }
+                                  if(value[1] == "0"||value[1] == "1"||value[1] == "2"||value[1] == "3"||value[1] == "4"||value[1] == "5"||value[1] == "6"||value[1] == "7"||value[1] == "8"||value[1] == "9"){
+                                    selectedTeamMemberName = value.toString().substring(2);
+                                  }else{
+                                    selectedTeamMemberName = value.toString().substring(1);
+                                  }
+                                  print(selectedTeamMemberName);
+                                });
+                                print(teamBySprints.selectedTeamMemberIdForTasks);
+//                                setState(() {
+//                                  //teamBySprints.selectedTeamMemberIdForTasks = teamBySprints.teamMemberIdsBySprintsList2[index];
+//                                });
+//                                //print(teamBySprints.selectedTeamMemberIdForTasks);
+                              },
+                              isExpanded: true
+                          ),
+                          /*
+                          TextFormField(
                             autofocus:false ,
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.done,
@@ -842,6 +963,8 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
                               return null;
                             },
                           ),
+
+                           */
                         ),
                       ),
                     ),
@@ -853,21 +976,26 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
                           data: ThemeData(
                               primaryColor: Color(0xff787cd1)
                           ),
-                          child: TextFormField(
-                            autofocus:false ,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.done,
-                            maxLines: 1,
-                            controller: reiterate.dueDateController,
-                            decoration: InputDecoration(
-                              hintText: hint.dueDate,
+                          child: InkWell(
+                            onTap: () => _selectDate(context),
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5, right: 5),
+                                    child: Text(teamBySprints.dateForSending == "" ? "Chose due date" : teamBySprints.dateForSending.toString().substring(0,10),
+                                      style: GoogleFonts.nunitoSans(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(color: Colors.grey,),
+                                ],
+                              ),
                             ),
-                            validator: (val){
-                              if(val.isEmpty){
-                                return hint.bioValidation;
-                              }
-                              return null;
-                            },
                           ),
                         ),
                       ),
@@ -973,7 +1101,16 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
         onTap: (){
           reIterateApiProvider.uploadPrototypeTaksAndTimeLine(context).whenComplete((){
             Future.delayed(const Duration(seconds: 3), () {
-              setState(() {});
+              setState(() {
+                reiterate.uploadedTaskList.add(reiterate.taskLineController.text);
+                print(reiterate.uploadedTaskList.toList());
+
+                reiterate.uploadedTeamMemberList.add(selectedTeamMemberName.toString());
+                print(reiterate.uploadedTeamMemberList.toList());
+
+                reiterate.uploadedDueDateList.add(teamBySprints.dateForSending.toString());
+                print(reiterate.uploadedDueDateList.toList());
+              });
             });
           });
         },
@@ -1044,6 +1181,7 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
 
   insertNotes(){
     setState(() {
+      reiterate.noteUploaded = true;
       if(reiterate.pageIndexNotesAndTimeLine == 0){
         reiterate.roadMapNotesList.add(reiterate.notesController.text);
         print(reiterate.roadMapNotesList.toList());
@@ -1082,3 +1220,7 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
   }
 
 }
+
+var selectedTeamMember;
+bool datePicked = false;
+var selectedTeamMemberName;

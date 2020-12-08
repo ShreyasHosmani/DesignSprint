@@ -1,4 +1,5 @@
 import 'package:design_sprint/APIs/reiterate_calls.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -26,7 +27,7 @@ class _ViewRoadMapState extends State<ViewRoadMap> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

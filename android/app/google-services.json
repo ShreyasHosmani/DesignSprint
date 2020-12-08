@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "193105011728",
+    "firebase_url": "https://dezyit.firebaseio.com",
+    "project_id": "dezyit",
+    "storage_bucket": "dezyit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193105011728:android:ea1cf4cb4fcf321db71695",
+        "android_client_info": {
+          "package_name": "com.dezy.it.design.sprint.design_sprint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193105011728-8qclacknftrn57qf18vu3e89ivc0dbga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dezy.it.design.sprint.design_sprint",
+            "certificate_hash": "f3e62fead3c4ca0749bc2c26719967892a9099d8"
+          }
+        },
+        {
+          "client_id": "193105011728-7r0e46gmieatdbajf4nenn1etsvlg6pu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIADYK7xyGo3cqnvPe-RB4_Eo8qJKWUSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193105011728-7r0e46gmieatdbajf4nenn1etsvlg6pu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

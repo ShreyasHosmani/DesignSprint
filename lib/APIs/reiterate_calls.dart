@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
+import 'package:design_sprint/utils/team_by_sprints_data.dart' as teamBySprints;
 
 class ReIterateApiProvider{
 
@@ -208,8 +209,8 @@ class ReIterateApiProvider{
       "sprintID" : home.sprintID.toString(),
       "prototypeID" : reiterate.selectedPrototypeIdForUploadingNotesAndTimeLine.toString(),
       "tasktext" : reiterate.taskLineController.text,
-      "userID" : reiterate.teamMemberController.text,
-      "duedate" : reiterate.dueDateController.text,
+      "userID" : teamBySprints.selectedTeamMemberIdForTasks.toString(),
+      "duedate" : teamBySprints.dateForSending,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -229,16 +230,7 @@ class ReIterateApiProvider{
         Fluttertoast.showToast(msg: "task and timeline saved", backgroundColor: Colors.black,
           textColor: Colors.white,);
 
-        reiterate.uploadedTaskList.add(reiterate.taskLineController.text);
-        print(reiterate.uploadedTaskList.toList());
-
-        reiterate.uploadedTeamMemberList.add(reiterate.teamMemberController.text);
-        print(reiterate.uploadedTeamMemberList.toList());
-
-        reiterate.uploadedDueDateList.add(reiterate.dueDateController.text);
-        print(reiterate.uploadedDueDateList.toList());
-
-        insertTaskAndTimeLine();
+        //insertTaskAndTimeLine();
 
         reiterate.taskLineController.clear();
         reiterate.teamMemberController.clear();
@@ -254,9 +246,9 @@ class ReIterateApiProvider{
     });
   }
 
-  Future<String> getRoadMapData(context) async {
+  Future<String> getRoadMapDataNotes(context) async {
 
-    String url = "https://jawaby.tk/api/users/" + "getroadmap.php";
+    String url = globals.urlSignUp + "getprototypenotebysprint.php";
 
     http.post(url, body: {
 
@@ -269,24 +261,172 @@ class ReIterateApiProvider{
         throw new Exception("Error fetching data");
       }
 
-      reiterate.responseArrayGetRoadMap = jsonDecode(response.body);
-      print(reiterate.responseArrayGetRoadMap.toString());
+      reiterate.responseArrayGetRoadNotesMap = jsonDecode(response.body);
+      print(reiterate.responseArrayGetRoadNotesMap.toString());
 
-//      reiterate.responseArrayGetRoadMapMsg = reiterate.responseArrayGetRoadMap['message'].toString();
-//      if(reiterate.responseArrayGetRoadMapMsg == "Data Found"){
-//
-//        reiterate.roadMapNotesList1 = List.generate(1, (i) => reiterate.responseArrayGetRoadMap['images'][i]['notes'][i]['ptnNotetext']);
-//        reiterate.roadMapTaskList1 = List.generate(reiterate.responseArrayGetRoadMap['images'].length, (i) => reiterate.responseArrayGetRoadMap['images'][i]['tasks'][i]['pptTasktext']);
-//
-//        print(reiterate.roadMapNotesList1.toList());
-//        print(reiterate.roadMapTaskList1.toList());
-//
-//      }else{
-//
-//
-//
-//      }
+      reiterate.responseArrayGetRoadMapNotesMsg = reiterate.responseArrayGetRoadNotesMap['message'].toString();
+      if(reiterate.responseArrayGetRoadMapNotesMsg == "Data Found"){
 
+        reiterate.allPrototypeNotes = List.generate(reiterate.responseArrayGetRoadNotesMap['images'].length, (i) => reiterate.responseArrayGetRoadNotesMap['images'][i]['ptnNotetext']);
+
+        print(reiterate.allPrototypeNotes.toList());
+
+      }else{
+
+        reiterate.allPrototypeNotes = null;
+
+      }
+
+
+    });
+  }
+
+  Future<String> getRoadMapDataTasksAndTimeLines(context) async {
+
+    String url = globals.urlSignUp + "getprototypetaskbysprint.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      reiterate.responseArrayGetRoadTasksMap = jsonDecode(response.body);
+      print(reiterate.responseArrayGetRoadTasksMap.toString());
+
+      reiterate.responseArrayGetRoadTasksMsg = reiterate.responseArrayGetRoadTasksMap['message'].toString();
+      if(reiterate.responseArrayGetRoadTasksMsg == "Data Found"){
+
+        reiterate.allPrototypeTasks = List.generate(reiterate.responseArrayGetRoadTasksMap['images'].length, (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]['pptTasktext']);
+        reiterate.allPrototypeDueDates = List.generate(reiterate.responseArrayGetRoadTasksMap['images'].length, (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]['pptDuedate']);
+
+        print(reiterate.allPrototypeTasks.toList());
+        print(reiterate.allPrototypeDueDates.toList());
+
+      }else{
+
+        reiterate.allPrototypeTasks = null;
+
+      }
+
+
+    });
+  }
+
+  Future<String> getRoadMapDataNotes2(context) async {
+
+    print(home.selectedSprintId);
+    String url = globals.urlSignUp + "getprototypenotebysprint.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      reiterate.responseArrayGetRoadNotesMap = jsonDecode(response.body);
+      print(reiterate.responseArrayGetRoadNotesMap.toString());
+
+      reiterate.responseArrayGetRoadMapNotesMsg = reiterate.responseArrayGetRoadNotesMap['message'].toString();
+      if(reiterate.responseArrayGetRoadMapNotesMsg == "Data Found"){
+
+        reiterate.allPrototypeNotes = List.generate(reiterate.responseArrayGetRoadNotesMap['images'].length, (i) => reiterate.responseArrayGetRoadNotesMap['images'][i]['ptnNotetext']);
+
+        print(reiterate.allPrototypeNotes.toList());
+
+      }else{
+
+        reiterate.allPrototypeNotes = null;
+
+      }
+
+
+    });
+  }
+
+  Future<String> getRoadMapDataTasksAndTimeLines2(context) async {
+
+    print(home.selectedSprintId);
+    String url = globals.urlSignUp + "getprototypetaskbysprint.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      reiterate.responseArrayGetRoadTasksMap = jsonDecode(response.body);
+      print(reiterate.responseArrayGetRoadTasksMap.toString());
+
+      reiterate.responseArrayGetRoadTasksMsg = reiterate.responseArrayGetRoadTasksMap['message'].toString();
+      if(reiterate.responseArrayGetRoadTasksMsg == "Data Found"){
+
+        reiterate.allPrototypeTasks = List.generate(reiterate.responseArrayGetRoadTasksMap['images'].length, (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]['pptTasktext']);
+        reiterate.allPrototypeDueDates = List.generate(reiterate.responseArrayGetRoadTasksMap['images'].length, (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]['pptDuedate']);
+
+        print(reiterate.allPrototypeTasks.toList());
+        print(reiterate.allPrototypeDueDates.toList());
+
+      }else{
+
+        reiterate.allPrototypeTasks = null;
+
+      }
+
+
+    });
+  }
+
+  Future<String> getRoadMapPrototypeOfStatusTwo(context) async {
+
+    String url = globals.urlSignUp + "getprototypebystatus.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString(),
+      "status" : "2",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2 = jsonDecode(response.body);
+      print(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2);
+
+      reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg2 = reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2['message'].toString();
+      print(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg2);
+
+      if(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg2 == "Data Found"){
+
+        reiterate.prototypeAllImagesListOfStatusTwo2 = List.generate(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2['data'].length, (i) => reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2['data'][i]['ptiImgpath'].toString());
+        reiterate.prototypeAllImagesIdsListOfStatusTwo2 = List.generate(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2['data'].length, (i) => reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2['data'][i]['ptiID'].toString());
+
+        print(reiterate.prototypeAllImagesListOfStatusTwo2.toList());
+        print(reiterate.prototypeAllImagesIdsListOfStatusTwo2.toList());
+
+      }else{
+
+        reiterate.prototypeAllImagesListOfStatusTwo2 = null;
+
+      }
 
     });
   }

@@ -1,11 +1,15 @@
 import 'package:design_sprint/APIs/create_journey_map.dart';
 import 'package:design_sprint/APIs/input_pain_point.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree3.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+
+int counter = 6;
 
 class JourneyMapPainPointsListView extends StatefulWidget {
   @override
@@ -20,31 +24,52 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   void initState() {
     // TODO: implement initState
     super.initState();
-    touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x'];
-    customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x'];
-    customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x'];
-    painPointIdListStorage = ['x', 'x', 'x', 'x', 'x'];
-    _controllerListTouchPoints = List.generate(5, (i) => TextEditingController());
-    _controllerListCustomerThoughts = List.generate(5, (i) => TextEditingController());
-    _controllerListPainPoints = List.generate(5, (i) => TextEditingController());
+    counter = 6;
+    touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+    customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+    customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+    painPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+    _controllerListTouchPoints = List.generate(15, (i) => TextEditingController());
+    _controllerListCustomerThoughts = List.generate(15, (i) => TextEditingController());
+    _controllerListPainPoints = List.generate(15, (i) => TextEditingController());
     emojiList1 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
     emojiList2 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
     emojiList3 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
     emojiList4 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
     emojiList5 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList6 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList7 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList8 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList9 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList10 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList11 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList12 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList13 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList14 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+    emojiList15 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
     boolEmojis1 = [false,false,false,false,false,false,false,false,];
     boolEmojis2 = [false,false,false,false,false,false,false,false,];
     boolEmojis3 = [false,false,false,false,false,false,false,false,];
     boolEmojis4 = [false,false,false,false,false,false,false,false,];
     boolEmojis5 = [false,false,false,false,false,false,false,false,];
-    focusNodesTouchPoints = List.generate(5, (i) => FocusNode());
-    focusEnableTouchPoints = [false,false,false,false,false];
-    focusNodesCustomerThoughts = List.generate(5, (i) => FocusNode());
-    focusEnableCustomerThoughts = [false,false,false,false,false];
-    focusNodesCustomerExperience = List.generate(5, (i) => FocusNode());
-    focusEnableCustomerExperience = [false,false,false,false,false];
-    focusNodesPainPoint = List.generate(5, (i) => FocusNode());
-    focusEnablePainPoint = [false,false,false,false,false];
+    boolEmojis6 = [false,false,false,false,false,false,false,false,];
+    boolEmojis7 = [false,false,false,false,false,false,false,false,];
+    boolEmojis8 = [false,false,false,false,false,false,false,false,];
+    boolEmojis9 = [false,false,false,false,false,false,false,false,];
+    boolEmojis10 = [false,false,false,false,false,false,false,false,];
+    boolEmojis11 = [false,false,false,false,false,false,false,false,];
+    boolEmojis12 = [false,false,false,false,false,false,false,false,];
+    boolEmojis13 = [false,false,false,false,false,false,false,false,];
+    boolEmojis14 = [false,false,false,false,false,false,false,false,];
+    boolEmojis15 = [false,false,false,false,false,false,false,false,];
+    focusNodesTouchPoints = List.generate(15, (i) => FocusNode());
+    focusEnableTouchPoints = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+    focusNodesCustomerThoughts = List.generate(15, (i) => FocusNode());
+    focusEnableCustomerThoughts = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+    focusNodesCustomerExperience = List.generate(15, (i) => FocusNode());
+    focusEnableCustomerExperience = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+    focusNodesPainPoint = List.generate(15, (i) => FocusNode());
+    focusEnablePainPoint = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
   }
   @override
   Widget build(BuildContext context) {
@@ -53,57 +78,80 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: WillPopScope(
         onWillPop: () => showAlertDialog(context),
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
                 children: [
                   SizedBox(height: 20,),
-                  buildName2Widget(context),
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(child: buildName2Widget(context))),
                   SizedBox(height: 40,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 0),
-                    child: buildTouchPointRow(context),
-                  ),
-                  SizedBox(height: 30,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 0),
-                    child: buildCustomerThoughtsRow(context),
-                  ),
-                  SizedBox(height: 30,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 0),
-                    child: buildCustomerExperienceRow(context),
-                  ),
-                  SizedBox(height: 30,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 0),
-                    child: buildPainPointsRow(context),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 35, right: 0),
+                          child: buildTouchPointRow(context),
+                        ),
+                        SizedBox(height: 30,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 35, right: 0),
+                          child: buildCustomerThoughtsRow(context),
+                        ),
+                        SizedBox(height: 30,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 35, right: 0),
+                          child: buildCustomerExperienceRow(context),
+                        ),
+                        SizedBox(height: 30,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 35, right: 0),
+                          child: buildPainPointsRow(context),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 40,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      saveButton(context),
-                      newPersonaButton(context),
-                    ],
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        saveButton(context),
+                        newPersonaButton(context),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 40,),
-                  buildNextButton(context),
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(child: buildNextButton(context))),
+                  SizedBox(height: 40,),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: statusBarDrawer(context),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40,),
+                  child: statusBarDrawer(context),
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -137,6 +185,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
           onPressed: (){
+            //Navigator.of(context).pop();
             showAlertDialog(context);
           },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -650,83 +699,110 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       height: 95,
       child: Container(
         height: 95,
-        width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          physics: ScrollPhysics(),
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (context, i) => i == 0 ? Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 127,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(empathize.touchPoints,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        color: Color(0xff787cd1),
-                        fontSize: 20,
-                      )
+        //width: MediaQuery.of(context).size.width,
+        child: Expanded(
+          child: ListView.builder(
+            physics: ClampingScrollPhysics(),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: counter,
+            itemBuilder: (context, i) => i == 0 ? Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Container(
+                height: 95,
+                width: 127,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Text(empathize.touchPoints,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          color: Color(0xff787cd1),
+                          fontSize: 20,
+                        )
+                    ),
                   ),
                 ),
               ),
-            ),
-          ) : Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 254,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    maxLines: 2,
-                    focusNode: focusNodesTouchPoints[i],
-                    textInputAction: TextInputAction.done,
-                    controller: _controllerListTouchPoints[i],
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Receives an introductory set of emails and connect request on linkedIn"
+            ) : i == (counter-1) ? Padding(
+              padding: const EdgeInsets.only(right: 50),
+              child: InkWell(
+                onTap: (){
+                  setState(() {
+                    counter++;
+                  });
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Color(0xff787cd1),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                      ),
+                      child: Center(
+                        child: Icon(Icons.add, color: Colors.white,size: 20,),
+                      ),
                     ),
-                    validator: (val){
-                      if(val.isEmpty){
-                        return 'Touch Point cannot be empty!';
-                      }
-                      return null;
-                    },
-                    onEditingComplete: (){
-                      focusNodesTouchPoints[i].unfocus();
-                      setState(() {
-                        empathize.selectedTouchPointController = _controllerListTouchPoints[i].text.toString();
-                      });
-                      print(empathize.selectedTouchPointController);
-                      if(touchPointIdListStorage[i] == "x"){
-                        inputPainPointsApiProvider.uploadTouchPoints(context).whenComplete((){
-                          Future.delayed(const Duration(seconds: 3), () {
-                            touchPointIdListStorage.insert(i, empathize.receivedTouchPointIdSingle);
-                            print(touchPointIdListStorage.toList());
-                          });
-                        });
-                      }else{
+                  ],
+                ),
+              ),
+            ) : Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Container(
+                height: 95,
+                width: 254,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: TextFormField(
+                      maxLines: 2,
+                      focusNode: focusNodesTouchPoints[i],
+                      textInputAction: TextInputAction.done,
+                      controller: _controllerListTouchPoints[i],
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Receives an introductory set of emails and connect request on linkedIn"
+                      ),
+                      validator: (val){
+                        if(val.isEmpty){
+                          return 'Touch Point cannot be empty!';
+                        }
+                        return null;
+                      },
+                      onEditingComplete: (){
+                        focusNodesTouchPoints[i].unfocus();
                         setState(() {
-                          empathize.selectedTouchPointId = touchPointIdListStorage[i].toString();
+                          empathize.selectedTouchPointController = _controllerListTouchPoints[i].text.toString();
                         });
-                        print(empathize.selectedTouchPointId);
-                        inputPainPointsApiProvider.updateTouchPoints(context).whenComplete((){
+                        print(empathize.selectedTouchPointController);
+                        if(touchPointIdListStorage[i] == "x"){
+                          inputPainPointsApiProvider.uploadTouchPoints(context).whenComplete((){
+                            Future.delayed(const Duration(seconds: 3), () {
+                              touchPointIdListStorage.insert(i, empathize.receivedTouchPointIdSingle);
+                              print(touchPointIdListStorage.toList());
+                            });
+                          });
+                        }else{
+                          setState(() {
+                            empathize.selectedTouchPointId = touchPointIdListStorage[i].toString();
+                          });
+                          print(empathize.selectedTouchPointId);
+                          inputPainPointsApiProvider.updateTouchPoints(context).whenComplete((){
 
-                        });
-                      }
-                    },
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -742,12 +818,12 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       height: 95,
       child: Container(
         height: 95,
-        width: MediaQuery.of(context).size.width,
+        //width: MediaQuery.of(context).size.width,
         child: ListView.builder(
-          physics: ScrollPhysics(),
+          physics: ClampingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: counter,
           itemBuilder: (context, i) => i == 0 ? Padding(
             padding: const EdgeInsets.only(right: 25),
             child: Container(
@@ -768,6 +844,24 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   ),
                 ),
               ),
+            ),
+          ) : i == (counter-1) ? Padding(
+            padding: const EdgeInsets.only(right: 50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Color(0xff787cd1),
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.add, color: Colors.white,size: 20,),
+                  ),
+                ),
+              ],
             ),
           ) : Padding(
             padding: const EdgeInsets.only(right: 25),
@@ -835,12 +929,12 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       height: 95,
       child: Container(
         height: 95,
-        width: MediaQuery.of(context).size.width,
+        //width: MediaQuery.of(context).size.width,
         child: ListView.builder(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: ClampingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: counter,
           itemBuilder: (context, i) => i == 0 ? Padding(
             padding: const EdgeInsets.only(right: 25),
             child: Container(
@@ -861,6 +955,24 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   ),
                 ),
               ),
+            ),
+          ) : i == (counter-1) ? Padding(
+            padding: const EdgeInsets.only(right: 50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Color(0xff787cd1),
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.add, color: Colors.white,size: 20,),
+                  ),
+                ),
+              ],
             ),
           ) : Padding(
             padding: const EdgeInsets.only(right: 25),
@@ -2766,6 +2878,5242 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                       ),
                     ],
                   ) :
+                  i == 5 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[0] = !boolEmojis5[0];
+                                boolEmojis5[1] = false;
+                                boolEmojis5[2] = false;
+                                boolEmojis5[3] = false;
+                                boolEmojis5[4] = false;
+                                boolEmojis5[5] = false;
+                                boolEmojis5[6] = false;
+                                boolEmojis5[7] = false;
+                                selectedEmoji = emojiList5[0];
+                              });
+                              print(boolEmojis5[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[1] = !boolEmojis5[1];
+                                boolEmojis5[0] = false;
+                                boolEmojis5[2] = false;
+                                boolEmojis5[3] = false;
+                                boolEmojis5[4] = false;
+                                boolEmojis5[5] = false;
+                                boolEmojis5[6] = false;
+                                boolEmojis5[7] = false;
+                                selectedEmoji = emojiList5[1];
+                              });
+                              print(boolEmojis5[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[2] = !boolEmojis5[2];
+                                boolEmojis5[1] = false;
+                                boolEmojis5[0] = false;
+                                boolEmojis5[3] = false;
+                                boolEmojis5[4] = false;
+                                boolEmojis5[5] = false;
+                                boolEmojis5[6] = false;
+                                boolEmojis5[7] = false;
+                                selectedEmoji = emojiList5[2];
+                              });
+                              print(boolEmojis5[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[3] = !boolEmojis5[3];
+                                boolEmojis5[1] = false;
+                                boolEmojis5[2] = false;
+                                boolEmojis5[0] = false;
+                                boolEmojis5[4] = false;
+                                boolEmojis5[5] = false;
+                                boolEmojis5[6] = false;
+                                boolEmojis5[7] = false;
+                                selectedEmoji = emojiList5[3];
+                              });
+                              print(boolEmojis5[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[4] = !boolEmojis5[4];
+                                boolEmojis5[1] = false;
+                                boolEmojis5[2] = false;
+                                boolEmojis5[3] = false;
+                                boolEmojis5[0] = false;
+                                boolEmojis5[5] = false;
+                                boolEmojis5[6] = false;
+                                boolEmojis5[7] = false;
+                                selectedEmoji = emojiList5[4];
+                              });
+                              print(boolEmojis5[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[5] = !boolEmojis5[5];
+                                boolEmojis5[1] = false;
+                                boolEmojis5[2] = false;
+                                boolEmojis5[3] = false;
+                                boolEmojis5[4] = false;
+                                boolEmojis5[0] = false;
+                                boolEmojis5[6] = false;
+                                boolEmojis5[7] = false;
+                                selectedEmoji = emojiList5[5];
+                              });
+                              print(boolEmojis5[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[6] = !boolEmojis5[6];
+                                boolEmojis5[1] = false;
+                                boolEmojis5[2] = false;
+                                boolEmojis5[3] = false;
+                                boolEmojis5[4] = false;
+                                boolEmojis5[5] = false;
+                                boolEmojis5[0] = false;
+                                boolEmojis5[7] = false;
+                                selectedEmoji = emojiList5[6];
+                              });
+                              print(boolEmojis5[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis5[7] = !boolEmojis5[7];
+                                boolEmojis5[1] = false;
+                                boolEmojis5[2] = false;
+                                boolEmojis5[3] = false;
+                                boolEmojis5[4] = false;
+                                boolEmojis5[5] = false;
+                                boolEmojis5[6] = false;
+                                boolEmojis5[0] = false;
+                                selectedEmoji = emojiList5[7];
+                              });
+                              print(boolEmojis5[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[5];
+                              });
+                              if(customerExperienceIdListStorage[5] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis5[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList5[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList5[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 6 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[0] = !boolEmojis6[0];
+                                boolEmojis6[1] = false;
+                                boolEmojis6[2] = false;
+                                boolEmojis6[3] = false;
+                                boolEmojis6[4] = false;
+                                boolEmojis6[5] = false;
+                                boolEmojis6[6] = false;
+                                boolEmojis6[7] = false;
+                                selectedEmoji = emojiList6[0];
+                              });
+                              print(boolEmojis6[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[1] = !boolEmojis6[1];
+                                boolEmojis6[0] = false;
+                                boolEmojis6[2] = false;
+                                boolEmojis6[3] = false;
+                                boolEmojis6[4] = false;
+                                boolEmojis6[5] = false;
+                                boolEmojis6[6] = false;
+                                boolEmojis6[7] = false;
+                                selectedEmoji = emojiList6[1];
+                              });
+                              print(boolEmojis6[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[2] = !boolEmojis6[2];
+                                boolEmojis6[1] = false;
+                                boolEmojis6[0] = false;
+                                boolEmojis6[3] = false;
+                                boolEmojis6[4] = false;
+                                boolEmojis6[5] = false;
+                                boolEmojis6[6] = false;
+                                boolEmojis6[7] = false;
+                                selectedEmoji = emojiList6[2];
+                              });
+                              print(boolEmojis6[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[3] = !boolEmojis6[3];
+                                boolEmojis6[1] = false;
+                                boolEmojis6[2] = false;
+                                boolEmojis6[0] = false;
+                                boolEmojis6[4] = false;
+                                boolEmojis6[5] = false;
+                                boolEmojis6[6] = false;
+                                boolEmojis6[7] = false;
+                                selectedEmoji = emojiList6[3];
+                              });
+                              print(boolEmojis6[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[4] = !boolEmojis6[4];
+                                boolEmojis6[1] = false;
+                                boolEmojis6[2] = false;
+                                boolEmojis6[3] = false;
+                                boolEmojis6[0] = false;
+                                boolEmojis6[5] = false;
+                                boolEmojis6[6] = false;
+                                boolEmojis6[7] = false;
+                                selectedEmoji = emojiList6[4];
+                              });
+                              print(boolEmojis6[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[5] = !boolEmojis6[5];
+                                boolEmojis6[1] = false;
+                                boolEmojis6[2] = false;
+                                boolEmojis6[3] = false;
+                                boolEmojis6[4] = false;
+                                boolEmojis6[0] = false;
+                                boolEmojis6[6] = false;
+                                boolEmojis6[7] = false;
+                                selectedEmoji = emojiList6[5];
+                              });
+                              print(boolEmojis6[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[6] = !boolEmojis6[6];
+                                boolEmojis6[1] = false;
+                                boolEmojis6[2] = false;
+                                boolEmojis6[3] = false;
+                                boolEmojis6[4] = false;
+                                boolEmojis6[5] = false;
+                                boolEmojis6[0] = false;
+                                boolEmojis6[7] = false;
+                                selectedEmoji = emojiList6[6];
+                              });
+                              print(boolEmojis6[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis6[7] = !boolEmojis6[7];
+                                boolEmojis6[1] = false;
+                                boolEmojis6[2] = false;
+                                boolEmojis6[3] = false;
+                                boolEmojis6[4] = false;
+                                boolEmojis6[5] = false;
+                                boolEmojis6[6] = false;
+                                boolEmojis6[0] = false;
+                                selectedEmoji = emojiList6[7];
+                              });
+                              print(boolEmojis6[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[6];
+                              });
+                              if(customerExperienceIdListStorage[6] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis6[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList6[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList6[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 7 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[0] = !boolEmojis7[0];
+                                boolEmojis7[1] = false;
+                                boolEmojis7[2] = false;
+                                boolEmojis7[3] = false;
+                                boolEmojis7[4] = false;
+                                boolEmojis7[5] = false;
+                                boolEmojis7[6] = false;
+                                boolEmojis7[7] = false;
+                                selectedEmoji = emojiList7[0];
+                              });
+                              print(boolEmojis7[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[1] = !boolEmojis7[1];
+                                boolEmojis7[0] = false;
+                                boolEmojis7[2] = false;
+                                boolEmojis7[3] = false;
+                                boolEmojis7[4] = false;
+                                boolEmojis7[5] = false;
+                                boolEmojis7[6] = false;
+                                boolEmojis7[7] = false;
+                                selectedEmoji = emojiList7[1];
+                              });
+                              print(boolEmojis7[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[2] = !boolEmojis7[2];
+                                boolEmojis7[1] = false;
+                                boolEmojis7[0] = false;
+                                boolEmojis7[3] = false;
+                                boolEmojis7[4] = false;
+                                boolEmojis7[5] = false;
+                                boolEmojis7[6] = false;
+                                boolEmojis7[7] = false;
+                                selectedEmoji = emojiList7[2];
+                              });
+                              print(boolEmojis7[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[3] = !boolEmojis7[3];
+                                boolEmojis7[1] = false;
+                                boolEmojis7[2] = false;
+                                boolEmojis7[0] = false;
+                                boolEmojis7[4] = false;
+                                boolEmojis7[5] = false;
+                                boolEmojis7[6] = false;
+                                boolEmojis7[7] = false;
+                                selectedEmoji = emojiList7[3];
+                              });
+                              print(boolEmojis7[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[4] = !boolEmojis7[4];
+                                boolEmojis7[1] = false;
+                                boolEmojis7[2] = false;
+                                boolEmojis7[3] = false;
+                                boolEmojis7[0] = false;
+                                boolEmojis7[5] = false;
+                                boolEmojis7[6] = false;
+                                boolEmojis7[7] = false;
+                                selectedEmoji = emojiList7[4];
+                              });
+                              print(boolEmojis7[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[5] = !boolEmojis7[5];
+                                boolEmojis7[1] = false;
+                                boolEmojis7[2] = false;
+                                boolEmojis7[3] = false;
+                                boolEmojis7[4] = false;
+                                boolEmojis7[0] = false;
+                                boolEmojis7[6] = false;
+                                boolEmojis7[7] = false;
+                                selectedEmoji = emojiList7[5];
+                              });
+                              print(boolEmojis7[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[6] = !boolEmojis7[6];
+                                boolEmojis7[1] = false;
+                                boolEmojis7[2] = false;
+                                boolEmojis7[3] = false;
+                                boolEmojis7[4] = false;
+                                boolEmojis7[5] = false;
+                                boolEmojis7[0] = false;
+                                boolEmojis7[7] = false;
+                                selectedEmoji = emojiList7[6];
+                              });
+                              print(boolEmojis7[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis7[7] = !boolEmojis7[7];
+                                boolEmojis7[1] = false;
+                                boolEmojis7[2] = false;
+                                boolEmojis7[3] = false;
+                                boolEmojis7[4] = false;
+                                boolEmojis7[5] = false;
+                                boolEmojis7[6] = false;
+                                boolEmojis7[0] = false;
+                                selectedEmoji = emojiList7[7];
+                              });
+                              print(boolEmojis7[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[7];
+                              });
+                              if(customerExperienceIdListStorage[7] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis7[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList7[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList7[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 8 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[0] = !boolEmojis8[0];
+                                boolEmojis8[1] = false;
+                                boolEmojis8[2] = false;
+                                boolEmojis8[3] = false;
+                                boolEmojis8[4] = false;
+                                boolEmojis8[5] = false;
+                                boolEmojis8[6] = false;
+                                boolEmojis8[7] = false;
+                                selectedEmoji = emojiList8[0];
+                              });
+                              print(boolEmojis8[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[1] = !boolEmojis8[1];
+                                boolEmojis8[0] = false;
+                                boolEmojis8[2] = false;
+                                boolEmojis8[3] = false;
+                                boolEmojis8[4] = false;
+                                boolEmojis8[5] = false;
+                                boolEmojis8[6] = false;
+                                boolEmojis8[7] = false;
+                                selectedEmoji = emojiList8[1];
+                              });
+                              print(boolEmojis8[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[2] = !boolEmojis8[2];
+                                boolEmojis8[1] = false;
+                                boolEmojis8[0] = false;
+                                boolEmojis8[3] = false;
+                                boolEmojis8[4] = false;
+                                boolEmojis8[5] = false;
+                                boolEmojis8[6] = false;
+                                boolEmojis8[7] = false;
+                                selectedEmoji = emojiList8[2];
+                              });
+                              print(boolEmojis8[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[3] = !boolEmojis8[3];
+                                boolEmojis8[1] = false;
+                                boolEmojis8[2] = false;
+                                boolEmojis8[0] = false;
+                                boolEmojis8[4] = false;
+                                boolEmojis8[5] = false;
+                                boolEmojis8[6] = false;
+                                boolEmojis8[7] = false;
+                                selectedEmoji = emojiList8[3];
+                              });
+                              print(boolEmojis8[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[4] = !boolEmojis8[4];
+                                boolEmojis8[1] = false;
+                                boolEmojis8[2] = false;
+                                boolEmojis8[3] = false;
+                                boolEmojis8[0] = false;
+                                boolEmojis8[5] = false;
+                                boolEmojis8[6] = false;
+                                boolEmojis8[7] = false;
+                                selectedEmoji = emojiList8[4];
+                              });
+                              print(boolEmojis8[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[5] = !boolEmojis8[5];
+                                boolEmojis8[1] = false;
+                                boolEmojis8[2] = false;
+                                boolEmojis8[3] = false;
+                                boolEmojis8[4] = false;
+                                boolEmojis8[0] = false;
+                                boolEmojis8[6] = false;
+                                boolEmojis8[7] = false;
+                                selectedEmoji = emojiList8[5];
+                              });
+                              print(boolEmojis8[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[6] = !boolEmojis8[6];
+                                boolEmojis8[1] = false;
+                                boolEmojis8[2] = false;
+                                boolEmojis8[3] = false;
+                                boolEmojis8[4] = false;
+                                boolEmojis8[5] = false;
+                                boolEmojis8[0] = false;
+                                boolEmojis8[7] = false;
+                                selectedEmoji = emojiList8[6];
+                              });
+                              print(boolEmojis8[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis8[7] = !boolEmojis8[7];
+                                boolEmojis8[1] = false;
+                                boolEmojis8[2] = false;
+                                boolEmojis8[3] = false;
+                                boolEmojis8[4] = false;
+                                boolEmojis8[5] = false;
+                                boolEmojis8[6] = false;
+                                boolEmojis8[0] = false;
+                                selectedEmoji = emojiList8[7];
+                              });
+                              print(boolEmojis8[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[8];
+                              });
+                              if(customerExperienceIdListStorage[8] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis8[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList8[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList8[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 9 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[0] = !boolEmojis9[0];
+                                boolEmojis9[1] = false;
+                                boolEmojis9[2] = false;
+                                boolEmojis9[3] = false;
+                                boolEmojis9[4] = false;
+                                boolEmojis9[5] = false;
+                                boolEmojis9[6] = false;
+                                boolEmojis9[7] = false;
+                                selectedEmoji = emojiList9[0];
+                              });
+                              print(boolEmojis9[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[1] = !boolEmojis9[1];
+                                boolEmojis9[0] = false;
+                                boolEmojis9[2] = false;
+                                boolEmojis9[3] = false;
+                                boolEmojis9[4] = false;
+                                boolEmojis9[5] = false;
+                                boolEmojis9[6] = false;
+                                boolEmojis9[7] = false;
+                                selectedEmoji = emojiList9[1];
+                              });
+                              print(boolEmojis9[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[2] = !boolEmojis9[2];
+                                boolEmojis9[1] = false;
+                                boolEmojis9[0] = false;
+                                boolEmojis9[3] = false;
+                                boolEmojis9[4] = false;
+                                boolEmojis9[5] = false;
+                                boolEmojis9[6] = false;
+                                boolEmojis9[7] = false;
+                                selectedEmoji = emojiList9[2];
+                              });
+                              print(boolEmojis9[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[3] = !boolEmojis9[3];
+                                boolEmojis9[1] = false;
+                                boolEmojis9[2] = false;
+                                boolEmojis9[0] = false;
+                                boolEmojis9[4] = false;
+                                boolEmojis9[5] = false;
+                                boolEmojis9[6] = false;
+                                boolEmojis9[7] = false;
+                                selectedEmoji = emojiList9[3];
+                              });
+                              print(boolEmojis9[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[4] = !boolEmojis9[4];
+                                boolEmojis9[1] = false;
+                                boolEmojis9[2] = false;
+                                boolEmojis9[3] = false;
+                                boolEmojis9[0] = false;
+                                boolEmojis9[5] = false;
+                                boolEmojis9[6] = false;
+                                boolEmojis9[7] = false;
+                                selectedEmoji = emojiList9[4];
+                              });
+                              print(boolEmojis9[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[5] = !boolEmojis9[5];
+                                boolEmojis9[1] = false;
+                                boolEmojis9[2] = false;
+                                boolEmojis9[3] = false;
+                                boolEmojis9[4] = false;
+                                boolEmojis9[0] = false;
+                                boolEmojis9[6] = false;
+                                boolEmojis9[7] = false;
+                                selectedEmoji = emojiList9[5];
+                              });
+                              print(boolEmojis9[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[6] = !boolEmojis9[6];
+                                boolEmojis9[1] = false;
+                                boolEmojis9[2] = false;
+                                boolEmojis9[3] = false;
+                                boolEmojis9[4] = false;
+                                boolEmojis9[5] = false;
+                                boolEmojis9[0] = false;
+                                boolEmojis9[7] = false;
+                                selectedEmoji = emojiList9[6];
+                              });
+                              print(boolEmojis9[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis9[7] = !boolEmojis9[7];
+                                boolEmojis9[1] = false;
+                                boolEmojis9[2] = false;
+                                boolEmojis9[3] = false;
+                                boolEmojis9[4] = false;
+                                boolEmojis9[5] = false;
+                                boolEmojis9[6] = false;
+                                boolEmojis9[0] = false;
+                                selectedEmoji = emojiList9[7];
+                              });
+                              print(boolEmojis9[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[9];
+                              });
+                              if(customerExperienceIdListStorage[9] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis9[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList9[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList9[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 10 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[0] = !boolEmojis10[0];
+                                boolEmojis10[1] = false;
+                                boolEmojis10[2] = false;
+                                boolEmojis10[3] = false;
+                                boolEmojis10[4] = false;
+                                boolEmojis10[5] = false;
+                                boolEmojis10[6] = false;
+                                boolEmojis10[7] = false;
+                                selectedEmoji = emojiList10[0];
+                              });
+                              print(boolEmojis10[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[1] = !boolEmojis10[1];
+                                boolEmojis10[0] = false;
+                                boolEmojis10[2] = false;
+                                boolEmojis10[3] = false;
+                                boolEmojis10[4] = false;
+                                boolEmojis10[5] = false;
+                                boolEmojis10[6] = false;
+                                boolEmojis10[7] = false;
+                                selectedEmoji = emojiList10[1];
+                              });
+                              print(boolEmojis10[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[2] = !boolEmojis10[2];
+                                boolEmojis10[1] = false;
+                                boolEmojis10[0] = false;
+                                boolEmojis10[3] = false;
+                                boolEmojis10[4] = false;
+                                boolEmojis10[5] = false;
+                                boolEmojis10[6] = false;
+                                boolEmojis10[7] = false;
+                                selectedEmoji = emojiList10[2];
+                              });
+                              print(boolEmojis10[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[3] = !boolEmojis10[3];
+                                boolEmojis10[1] = false;
+                                boolEmojis10[2] = false;
+                                boolEmojis10[0] = false;
+                                boolEmojis10[4] = false;
+                                boolEmojis10[5] = false;
+                                boolEmojis10[6] = false;
+                                boolEmojis10[7] = false;
+                                selectedEmoji = emojiList10[3];
+                              });
+                              print(boolEmojis10[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[4] = !boolEmojis10[4];
+                                boolEmojis10[1] = false;
+                                boolEmojis10[2] = false;
+                                boolEmojis10[3] = false;
+                                boolEmojis10[0] = false;
+                                boolEmojis10[5] = false;
+                                boolEmojis10[6] = false;
+                                boolEmojis10[7] = false;
+                                selectedEmoji = emojiList10[4];
+                              });
+                              print(boolEmojis10[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[5] = !boolEmojis10[5];
+                                boolEmojis10[1] = false;
+                                boolEmojis10[2] = false;
+                                boolEmojis10[3] = false;
+                                boolEmojis10[4] = false;
+                                boolEmojis10[0] = false;
+                                boolEmojis10[6] = false;
+                                boolEmojis10[7] = false;
+                                selectedEmoji = emojiList10[5];
+                              });
+                              print(boolEmojis10[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[6] = !boolEmojis10[6];
+                                boolEmojis10[1] = false;
+                                boolEmojis10[2] = false;
+                                boolEmojis10[3] = false;
+                                boolEmojis10[4] = false;
+                                boolEmojis10[5] = false;
+                                boolEmojis10[0] = false;
+                                boolEmojis10[7] = false;
+                                selectedEmoji = emojiList10[6];
+                              });
+                              print(boolEmojis10[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis10[7] = !boolEmojis10[7];
+                                boolEmojis10[1] = false;
+                                boolEmojis10[2] = false;
+                                boolEmojis10[3] = false;
+                                boolEmojis10[4] = false;
+                                boolEmojis10[5] = false;
+                                boolEmojis10[6] = false;
+                                boolEmojis10[0] = false;
+                                selectedEmoji = emojiList10[7];
+                              });
+                              print(boolEmojis10[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[10];
+                              });
+                              if(customerExperienceIdListStorage[10] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis10[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList10[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList10[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 11 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[0] = !boolEmojis11[0];
+                                boolEmojis11[1] = false;
+                                boolEmojis11[2] = false;
+                                boolEmojis11[3] = false;
+                                boolEmojis11[4] = false;
+                                boolEmojis11[5] = false;
+                                boolEmojis11[6] = false;
+                                boolEmojis11[7] = false;
+                                selectedEmoji = emojiList11[0];
+                              });
+                              print(boolEmojis11[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[1] = !boolEmojis11[1];
+                                boolEmojis11[0] = false;
+                                boolEmojis11[2] = false;
+                                boolEmojis11[3] = false;
+                                boolEmojis11[4] = false;
+                                boolEmojis11[5] = false;
+                                boolEmojis11[6] = false;
+                                boolEmojis11[7] = false;
+                                selectedEmoji = emojiList11[1];
+                              });
+                              print(boolEmojis11[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[2] = !boolEmojis11[2];
+                                boolEmojis11[1] = false;
+                                boolEmojis11[0] = false;
+                                boolEmojis11[3] = false;
+                                boolEmojis11[4] = false;
+                                boolEmojis11[5] = false;
+                                boolEmojis11[6] = false;
+                                boolEmojis11[7] = false;
+                                selectedEmoji = emojiList11[2];
+                              });
+                              print(boolEmojis11[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[3] = !boolEmojis11[3];
+                                boolEmojis11[1] = false;
+                                boolEmojis11[2] = false;
+                                boolEmojis11[0] = false;
+                                boolEmojis11[4] = false;
+                                boolEmojis11[5] = false;
+                                boolEmojis11[6] = false;
+                                boolEmojis11[7] = false;
+                                selectedEmoji = emojiList11[3];
+                              });
+                              print(boolEmojis11[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[4] = !boolEmojis11[4];
+                                boolEmojis11[1] = false;
+                                boolEmojis11[2] = false;
+                                boolEmojis11[3] = false;
+                                boolEmojis11[0] = false;
+                                boolEmojis11[5] = false;
+                                boolEmojis11[6] = false;
+                                boolEmojis11[7] = false;
+                                selectedEmoji = emojiList11[4];
+                              });
+                              print(boolEmojis11[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[5] = !boolEmojis11[5];
+                                boolEmojis11[1] = false;
+                                boolEmojis11[2] = false;
+                                boolEmojis11[3] = false;
+                                boolEmojis11[4] = false;
+                                boolEmojis11[0] = false;
+                                boolEmojis11[6] = false;
+                                boolEmojis11[7] = false;
+                                selectedEmoji = emojiList11[5];
+                              });
+                              print(boolEmojis11[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[6] = !boolEmojis11[6];
+                                boolEmojis11[1] = false;
+                                boolEmojis11[2] = false;
+                                boolEmojis11[3] = false;
+                                boolEmojis11[4] = false;
+                                boolEmojis11[5] = false;
+                                boolEmojis11[0] = false;
+                                boolEmojis11[7] = false;
+                                selectedEmoji = emojiList11[6];
+                              });
+                              print(boolEmojis11[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis11[7] = !boolEmojis11[7];
+                                boolEmojis11[1] = false;
+                                boolEmojis11[2] = false;
+                                boolEmojis11[3] = false;
+                                boolEmojis11[4] = false;
+                                boolEmojis11[5] = false;
+                                boolEmojis11[6] = false;
+                                boolEmojis11[0] = false;
+                                selectedEmoji = emojiList11[7];
+                              });
+                              print(boolEmojis11[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[11];
+                              });
+                              if(customerExperienceIdListStorage[11] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis11[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList11[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList11[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 12 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[0] = !boolEmojis12[0];
+                                boolEmojis12[1] = false;
+                                boolEmojis12[2] = false;
+                                boolEmojis12[3] = false;
+                                boolEmojis12[4] = false;
+                                boolEmojis12[5] = false;
+                                boolEmojis12[6] = false;
+                                boolEmojis12[7] = false;
+                                selectedEmoji = emojiList12[0];
+                              });
+                              print(boolEmojis12[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[1] = !boolEmojis12[1];
+                                boolEmojis12[0] = false;
+                                boolEmojis12[2] = false;
+                                boolEmojis12[3] = false;
+                                boolEmojis12[4] = false;
+                                boolEmojis12[5] = false;
+                                boolEmojis12[6] = false;
+                                boolEmojis12[7] = false;
+                                selectedEmoji = emojiList12[1];
+                              });
+                              print(boolEmojis12[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[2] = !boolEmojis12[2];
+                                boolEmojis12[1] = false;
+                                boolEmojis12[0] = false;
+                                boolEmojis12[3] = false;
+                                boolEmojis12[4] = false;
+                                boolEmojis12[5] = false;
+                                boolEmojis12[6] = false;
+                                boolEmojis12[7] = false;
+                                selectedEmoji = emojiList12[2];
+                              });
+                              print(boolEmojis12[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[3] = !boolEmojis12[3];
+                                boolEmojis12[1] = false;
+                                boolEmojis12[2] = false;
+                                boolEmojis12[0] = false;
+                                boolEmojis12[4] = false;
+                                boolEmojis12[5] = false;
+                                boolEmojis12[6] = false;
+                                boolEmojis12[7] = false;
+                                selectedEmoji = emojiList12[3];
+                              });
+                              print(boolEmojis12[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[4] = !boolEmojis12[4];
+                                boolEmojis12[1] = false;
+                                boolEmojis12[2] = false;
+                                boolEmojis12[3] = false;
+                                boolEmojis12[0] = false;
+                                boolEmojis12[5] = false;
+                                boolEmojis12[6] = false;
+                                boolEmojis12[7] = false;
+                                selectedEmoji = emojiList12[4];
+                              });
+                              print(boolEmojis12[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[5] = !boolEmojis12[5];
+                                boolEmojis12[1] = false;
+                                boolEmojis12[2] = false;
+                                boolEmojis12[3] = false;
+                                boolEmojis12[4] = false;
+                                boolEmojis12[0] = false;
+                                boolEmojis12[6] = false;
+                                boolEmojis12[7] = false;
+                                selectedEmoji = emojiList12[5];
+                              });
+                              print(boolEmojis12[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[6] = !boolEmojis12[6];
+                                boolEmojis12[1] = false;
+                                boolEmojis12[2] = false;
+                                boolEmojis12[3] = false;
+                                boolEmojis12[4] = false;
+                                boolEmojis12[5] = false;
+                                boolEmojis12[0] = false;
+                                boolEmojis12[7] = false;
+                                selectedEmoji = emojiList12[6];
+                              });
+                              print(boolEmojis12[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis12[7] = !boolEmojis12[7];
+                                boolEmojis12[1] = false;
+                                boolEmojis12[2] = false;
+                                boolEmojis12[3] = false;
+                                boolEmojis12[4] = false;
+                                boolEmojis12[5] = false;
+                                boolEmojis12[6] = false;
+                                boolEmojis12[0] = false;
+                                selectedEmoji = emojiList12[7];
+                              });
+                              print(boolEmojis12[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[12];
+                              });
+                              if(customerExperienceIdListStorage[12] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis12[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList12[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList12[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 13 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[0] = !boolEmojis13[0];
+                                boolEmojis13[1] = false;
+                                boolEmojis13[2] = false;
+                                boolEmojis13[3] = false;
+                                boolEmojis13[4] = false;
+                                boolEmojis13[5] = false;
+                                boolEmojis13[6] = false;
+                                boolEmojis13[7] = false;
+                                selectedEmoji = emojiList13[0];
+                              });
+                              print(boolEmojis13[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[1] = !boolEmojis13[1];
+                                boolEmojis13[0] = false;
+                                boolEmojis13[2] = false;
+                                boolEmojis13[3] = false;
+                                boolEmojis13[4] = false;
+                                boolEmojis13[5] = false;
+                                boolEmojis13[6] = false;
+                                boolEmojis13[7] = false;
+                                selectedEmoji = emojiList13[1];
+                              });
+                              print(boolEmojis13[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[2] = !boolEmojis13[2];
+                                boolEmojis13[1] = false;
+                                boolEmojis13[0] = false;
+                                boolEmojis13[3] = false;
+                                boolEmojis13[4] = false;
+                                boolEmojis13[5] = false;
+                                boolEmojis13[6] = false;
+                                boolEmojis13[7] = false;
+                                selectedEmoji = emojiList13[2];
+                              });
+                              print(boolEmojis13[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[3] = !boolEmojis13[3];
+                                boolEmojis13[1] = false;
+                                boolEmojis13[2] = false;
+                                boolEmojis13[0] = false;
+                                boolEmojis13[4] = false;
+                                boolEmojis13[5] = false;
+                                boolEmojis13[6] = false;
+                                boolEmojis13[7] = false;
+                                selectedEmoji = emojiList13[3];
+                              });
+                              print(boolEmojis13[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[4] = !boolEmojis13[4];
+                                boolEmojis13[1] = false;
+                                boolEmojis13[2] = false;
+                                boolEmojis13[3] = false;
+                                boolEmojis13[0] = false;
+                                boolEmojis13[5] = false;
+                                boolEmojis13[6] = false;
+                                boolEmojis13[7] = false;
+                                selectedEmoji = emojiList13[4];
+                              });
+                              print(boolEmojis13[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[5] = !boolEmojis13[5];
+                                boolEmojis13[1] = false;
+                                boolEmojis13[2] = false;
+                                boolEmojis13[3] = false;
+                                boolEmojis13[4] = false;
+                                boolEmojis13[0] = false;
+                                boolEmojis13[6] = false;
+                                boolEmojis13[7] = false;
+                                selectedEmoji = emojiList13[5];
+                              });
+                              print(boolEmojis13[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[6] = !boolEmojis13[6];
+                                boolEmojis13[1] = false;
+                                boolEmojis13[2] = false;
+                                boolEmojis13[3] = false;
+                                boolEmojis13[4] = false;
+                                boolEmojis13[5] = false;
+                                boolEmojis13[0] = false;
+                                boolEmojis13[7] = false;
+                                selectedEmoji = emojiList13[6];
+                              });
+                              print(boolEmojis13[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis13[7] = !boolEmojis13[7];
+                                boolEmojis13[1] = false;
+                                boolEmojis13[2] = false;
+                                boolEmojis13[3] = false;
+                                boolEmojis13[4] = false;
+                                boolEmojis13[5] = false;
+                                boolEmojis13[6] = false;
+                                boolEmojis13[0] = false;
+                                selectedEmoji = emojiList13[7];
+                              });
+                              print(boolEmojis13[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[13];
+                              });
+                              if(customerExperienceIdListStorage[13] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis13[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList13[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList13[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 14 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[0] = !boolEmojis14[0];
+                                boolEmojis14[1] = false;
+                                boolEmojis14[2] = false;
+                                boolEmojis14[3] = false;
+                                boolEmojis14[4] = false;
+                                boolEmojis14[5] = false;
+                                boolEmojis14[6] = false;
+                                boolEmojis14[7] = false;
+                                selectedEmoji = emojiList14[0];
+                              });
+                              print(boolEmojis14[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[1] = !boolEmojis14[1];
+                                boolEmojis14[0] = false;
+                                boolEmojis14[2] = false;
+                                boolEmojis14[3] = false;
+                                boolEmojis14[4] = false;
+                                boolEmojis14[5] = false;
+                                boolEmojis14[6] = false;
+                                boolEmojis14[7] = false;
+                                selectedEmoji = emojiList14[1];
+                              });
+                              print(boolEmojis14[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[2] = !boolEmojis14[2];
+                                boolEmojis14[1] = false;
+                                boolEmojis14[0] = false;
+                                boolEmojis14[3] = false;
+                                boolEmojis14[4] = false;
+                                boolEmojis14[5] = false;
+                                boolEmojis14[6] = false;
+                                boolEmojis14[7] = false;
+                                selectedEmoji = emojiList14[2];
+                              });
+                              print(boolEmojis14[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[3] = !boolEmojis14[3];
+                                boolEmojis14[1] = false;
+                                boolEmojis14[2] = false;
+                                boolEmojis14[0] = false;
+                                boolEmojis14[4] = false;
+                                boolEmojis14[5] = false;
+                                boolEmojis14[6] = false;
+                                boolEmojis14[7] = false;
+                                selectedEmoji = emojiList14[3];
+                              });
+                              print(boolEmojis14[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[4] = !boolEmojis14[4];
+                                boolEmojis14[1] = false;
+                                boolEmojis14[2] = false;
+                                boolEmojis14[3] = false;
+                                boolEmojis14[0] = false;
+                                boolEmojis14[5] = false;
+                                boolEmojis14[6] = false;
+                                boolEmojis14[7] = false;
+                                selectedEmoji = emojiList14[4];
+                              });
+                              print(boolEmojis14[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[5] = !boolEmojis14[5];
+                                boolEmojis14[1] = false;
+                                boolEmojis14[2] = false;
+                                boolEmojis14[3] = false;
+                                boolEmojis14[4] = false;
+                                boolEmojis14[0] = false;
+                                boolEmojis14[6] = false;
+                                boolEmojis14[7] = false;
+                                selectedEmoji = emojiList14[5];
+                              });
+                              print(boolEmojis14[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[6] = !boolEmojis14[6];
+                                boolEmojis14[1] = false;
+                                boolEmojis14[2] = false;
+                                boolEmojis14[3] = false;
+                                boolEmojis14[4] = false;
+                                boolEmojis14[5] = false;
+                                boolEmojis14[0] = false;
+                                boolEmojis14[7] = false;
+                                selectedEmoji = emojiList14[6];
+                              });
+                              print(boolEmojis14[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis14[7] = !boolEmojis14[7];
+                                boolEmojis14[1] = false;
+                                boolEmojis14[2] = false;
+                                boolEmojis14[3] = false;
+                                boolEmojis14[4] = false;
+                                boolEmojis14[5] = false;
+                                boolEmojis14[6] = false;
+                                boolEmojis14[0] = false;
+                                selectedEmoji = emojiList14[7];
+                              });
+                              print(boolEmojis14[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[14];
+                              });
+                              if(customerExperienceIdListStorage[14] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis14[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList14[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList14[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
+                  i == 15 ?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[0] = !boolEmojis15[0];
+                                boolEmojis15[1] = false;
+                                boolEmojis15[2] = false;
+                                boolEmojis15[3] = false;
+                                boolEmojis15[4] = false;
+                                boolEmojis15[5] = false;
+                                boolEmojis15[6] = false;
+                                boolEmojis15[7] = false;
+                                selectedEmoji = emojiList15[0];
+                              });
+                              print(boolEmojis15[0]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[0] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[0],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[0],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[1] = !boolEmojis15[1];
+                                boolEmojis15[0] = false;
+                                boolEmojis15[2] = false;
+                                boolEmojis15[3] = false;
+                                boolEmojis15[4] = false;
+                                boolEmojis15[5] = false;
+                                boolEmojis15[6] = false;
+                                boolEmojis15[7] = false;
+                                selectedEmoji = emojiList15[1];
+                              });
+                              print(boolEmojis15[1]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[1] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[1],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[1],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[2] = !boolEmojis15[2];
+                                boolEmojis15[1] = false;
+                                boolEmojis15[0] = false;
+                                boolEmojis15[3] = false;
+                                boolEmojis15[4] = false;
+                                boolEmojis15[5] = false;
+                                boolEmojis15[6] = false;
+                                boolEmojis15[7] = false;
+                                selectedEmoji = emojiList15[2];
+                              });
+                              print(boolEmojis15[2]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[2] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[2],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[2],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[3] = !boolEmojis15[3];
+                                boolEmojis15[1] = false;
+                                boolEmojis15[2] = false;
+                                boolEmojis15[0] = false;
+                                boolEmojis15[4] = false;
+                                boolEmojis15[5] = false;
+                                boolEmojis15[6] = false;
+                                boolEmojis15[7] = false;
+                                selectedEmoji = emojiList15[3];
+                              });
+                              print(boolEmojis15[3]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[3] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[3],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[3],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[4] = !boolEmojis15[4];
+                                boolEmojis15[1] = false;
+                                boolEmojis15[2] = false;
+                                boolEmojis15[3] = false;
+                                boolEmojis15[0] = false;
+                                boolEmojis15[5] = false;
+                                boolEmojis15[6] = false;
+                                boolEmojis15[7] = false;
+                                selectedEmoji = emojiList15[4];
+                              });
+                              print(boolEmojis15[4]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[4] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[4],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[4],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[5] = !boolEmojis15[5];
+                                boolEmojis15[1] = false;
+                                boolEmojis15[2] = false;
+                                boolEmojis15[3] = false;
+                                boolEmojis15[4] = false;
+                                boolEmojis15[0] = false;
+                                boolEmojis15[6] = false;
+                                boolEmojis15[7] = false;
+                                selectedEmoji = emojiList15[5];
+                              });
+                              print(boolEmojis15[5]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[5] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[5],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[5],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[6] = !boolEmojis15[6];
+                                boolEmojis15[1] = false;
+                                boolEmojis15[2] = false;
+                                boolEmojis15[3] = false;
+                                boolEmojis15[4] = false;
+                                boolEmojis15[5] = false;
+                                boolEmojis15[0] = false;
+                                boolEmojis15[7] = false;
+                                selectedEmoji = emojiList15[6];
+                              });
+                              print(boolEmojis15[6]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[6] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[6],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[6],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                boolEmojis15[7] = !boolEmojis15[7];
+                                boolEmojis15[1] = false;
+                                boolEmojis15[2] = false;
+                                boolEmojis15[3] = false;
+                                boolEmojis15[4] = false;
+                                boolEmojis15[5] = false;
+                                boolEmojis15[6] = false;
+                                boolEmojis15[0] = false;
+                                selectedEmoji = emojiList15[7];
+                              });
+                              print(boolEmojis15[7]);
+                              print(selectedEmoji);
+                              setState(() {
+                                empathize.selectedCustomerExperienceController = selectedEmoji;
+                                empathize.selectedTouchPointId = touchPointIdListStorage[15];
+                              });
+                              if(customerExperienceIdListStorage[15] == "x"){
+                                inputPainPointsApiProvider.uploadCustomerExperiences(context).whenComplete((){
+                                  Future.delayed(const Duration(seconds: 3), () {
+                                    customerExperienceIdListStorage.insert(i, empathize.receivedCustomerExperienceIdSingle);
+                                    print(customerExperienceIdListStorage.toList());
+                                  });
+                                });
+                              }else{
+                                setState(() {
+                                  empathize.selectedTouchPointId = customerExperienceIdListStorage[i].toString();
+                                });
+                                print(empathize.selectedTouchPointId);
+                                inputPainPointsApiProvider.updateCustomerExperiences(context).whenComplete((){
+
+                                });
+                              }
+                            },
+                            child: boolEmojis15[7] == true ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: Color(0xff787cd1)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(emojiList15[7],
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      letterSpacing: 2.0
+                                  ),
+                                ),
+                              ),
+                            ) : Text(emojiList15[7],
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2.0
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ) :
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -3176,12 +8524,12 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       height: 95,
       child: Container(
         height: 95,
-        width: MediaQuery.of(context).size.width,
+        //width: MediaQuery.of(context).size.width,
         child: ListView.builder(
-          physics: ScrollPhysics(),
+          physics: ClampingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: counter,
           itemBuilder: (context, i) => i == 0 ? Padding(
             padding: const EdgeInsets.only(right: 25),
             child: Container(
@@ -3202,6 +8550,24 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   ),
                 ),
               ),
+            ),
+          ) : i == (counter-1) ? Padding(
+            padding: const EdgeInsets.only(right: 50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Color(0xff787cd1),
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.add, color: Colors.white,size: 20,),
+                  ),
+                ),
+              ],
             ),
           ) : Padding(
             padding: const EdgeInsets.only(right: 25),
@@ -3355,6 +8721,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       child: Text("Cancel",style: GoogleFonts.nunitoSans(),),
       onPressed:  () {
         Navigator.of(context).pop();
+        Navigator.of(context).pop();
       },
     );
     Widget continueButton = FlatButton(
@@ -3371,7 +8738,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
           fontWeight: FontWeight.w500,
         ),
       ),
-      content: Text("If you go back, this journey map will be discarded. Are you sure you want to go back?",
+      content: Text("Press Continue to discard this journey map, else press Cancel to go back without deleting.",
         style: GoogleFonts.nunitoSans(),
       ),
       actions: [
@@ -3484,18 +8851,18 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
 
 }
 
-List<TextEditingController> _controllerListTouchPoints = List.generate(5, (i) => TextEditingController());
-List<TextEditingController> _controllerListCustomerThoughts = List.generate(5, (i) => TextEditingController());
-List<TextEditingController> _controllerListPainPoints = List.generate(5, (i) => TextEditingController());
+List<TextEditingController> _controllerListTouchPoints = List.generate(15, (i) => TextEditingController());
+List<TextEditingController> _controllerListCustomerThoughts = List.generate(15, (i) => TextEditingController());
+List<TextEditingController> _controllerListPainPoints = List.generate(15, (i) => TextEditingController());
 
-List<FocusNode> focusNodesTouchPoints = List.generate(5, (i) => FocusNode());
-List<bool> focusEnableTouchPoints = [false,false,false,false,false];
-List<FocusNode> focusNodesCustomerThoughts = List.generate(5, (i) => FocusNode());
-List<bool> focusEnableCustomerThoughts = [false,false,false,false,false];
-List<FocusNode> focusNodesCustomerExperience = List.generate(5, (i) => FocusNode());
-List<bool> focusEnableCustomerExperience = [false,false,false,false,false];
-List<FocusNode> focusNodesPainPoint = List.generate(5, (i) => FocusNode());
-List<bool> focusEnablePainPoint = [false,false,false,false,false];
+List<FocusNode> focusNodesTouchPoints = List.generate(15, (i) => FocusNode());
+List<bool> focusEnableTouchPoints = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+List<FocusNode> focusNodesCustomerThoughts = List.generate(15, (i) => FocusNode());
+List<bool> focusEnableCustomerThoughts = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+List<FocusNode> focusNodesCustomerExperience = List.generate(15, (i) => FocusNode());
+List<bool> focusEnableCustomerExperience = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+List<FocusNode> focusNodesPainPoint = List.generate(15, (i) => FocusNode());
+List<bool> focusEnablePainPoint = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
 
 var selectedEmoji;
 List<String> emojiList1 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
@@ -3503,11 +8870,31 @@ List<String> emojiList2 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠
 List<String> emojiList3 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
 List<String> emojiList4 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
 List<String> emojiList5 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList6 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList7 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList8 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList9 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList10 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList11 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList12 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList13 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList14 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+List<String> emojiList15 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
 List<bool> boolEmojis1 = [false,false,false,false,false,false,false,false,];
 List<bool> boolEmojis2 = [false,false,false,false,false,false,false,false,];
 List<bool> boolEmojis3 = [false,false,false,false,false,false,false,false,];
 List<bool> boolEmojis4 = [false,false,false,false,false,false,false,false,];
 List<bool> boolEmojis5 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis6 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis7 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis8 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis9 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis10 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis11 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis12 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis13 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis14 = [false,false,false,false,false,false,false,false,];
+List<bool> boolEmojis15 = [false,false,false,false,false,false,false,false,];
 
 
 List<String> touchPointIdListStorage;

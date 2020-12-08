@@ -26,8 +26,13 @@ var responseArrayChangePrototypeStatusMsg;
 
 var responseArrayGetAllPrototypeImagesOfStatusTwo;
 var responseArrayGetAllPrototypeImagesOfStatusTwoMsg;
+var responseArrayGetAllPrototypeImagesOfStatusTwo2;
+var responseArrayGetAllPrototypeImagesOfStatusTwoMsg2;
+
 var prototypeAllImagesListOfStatusTwo;
 var prototypeAllImagesIdsListOfStatusTwo;
+var prototypeAllImagesListOfStatusTwo2;
+var prototypeAllImagesIdsListOfStatusTwo2;
 
 var pageIndexNotesAndTimeLine;
 
@@ -53,8 +58,11 @@ List<String> uploadedTaskList;
 List<String> uploadedTeamMemberList;
 List<String> uploadedDueDateList;
 
-var responseArrayGetRoadMap;
-var responseArrayGetRoadMapMsg;
+var responseArrayGetRoadNotesMap;
+var responseArrayGetRoadMapNotesMsg;
+
+var responseArrayGetRoadTasksMap;
+var responseArrayGetRoadTasksMsg;
 
 var roadMapImagesList;
 var roadMapNotesList;
@@ -82,3 +90,8 @@ var roadMapNotesList9;
 var roadMapTaskList9;
 var roadMapNotesList10;
 var roadMapTaskList10;
+
+var allPrototypeNotes;
+var allPrototypeTasks;
+var allPrototypeDueDates;
+var allPrototypeNames;

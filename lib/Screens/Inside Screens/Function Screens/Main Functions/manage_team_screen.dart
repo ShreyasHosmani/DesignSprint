@@ -1,11 +1,18 @@
 import 'package:design_sprint/APIs/create_add_team.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/team_data.dart' as team;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+
 
 bool statusDrawer = false;
 
@@ -16,6 +23,124 @@ class ManageTeam extends StatefulWidget {
 
 class _ManageTeamState extends State<ManageTeam> {
   TeamApiProvider teamApiProvider = TeamApiProvider();
+  Future<String> removeTeamMember(context) async {
+
+    String url = globals.urlLogin + "removeteammember.php";
+    http.post(url, body: {
+
+      "teamID" : selectedTeamMemberIdForDeleting.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayRemoveMember = jsonDecode(response.body);
+      print(team.responseArrayRemoveMember);
+
+      team.responseArrayRemoveMemberMsg = team.responseArrayRemoveMember['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayRemoveMemberMsg == "Member Removed Successfully"){
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: "Removing...", backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            teamApiProvider.getTeamMembers(context);
+          });
+        }else{
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: "Error", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
+  Future<String> addTeamMember(context) async {
+
+    String url = globals.urlLogin + "addteammember.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID" : home.sprintID,
+      "teamid" : team.teamID,
+      "membername" : team.memberNameController.text,
+      "memberemail" : team.memberEmailController.text,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayAddTeam = jsonDecode(response.body);
+      print(team.responseArrayAddTeam);
+
+      team.responseArrayAddTeamMsg = team.responseArrayAddTeam['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayAddTeamMsg == "Team Added Successfully"){
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: team.memberAdded, backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            team.memberEmailController.clear();
+            team.memberNameController.clear();
+            getTeamMembers(context);
+            Navigator.of(context).pop();
+          });
+        }else{
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: team.responseArrayAddTeamMsg, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
+  Future<String> getTeamMembers(context) async {
+
+    String url = globals.urlLogin + "getteamstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID" : home.sprintID,
+      "teamID" : team.teamID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayTeamDetails = jsonDecode(response.body);
+      print(team.responseArrayTeamDetails);
+
+      team.responseArrayTeamDetailsMsg = team.responseArrayTeamDetails['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayTeamDetailsMsg == "Profile Found"){
+          setState(() {
+            team.teamMemberIdsList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamID'].toString());
+            team.teamMemberNameList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
+            team.teamMemberEmailList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'].toString());
+          });
+          print(team.teamMemberIdsList.toList());
+          print(team.teamMemberNameList.toList());
+          print(team.teamMemberEmailList.toList());
+        }else{
+          setState(() {
+            team.teamMemberIdsList = null;
+            team.teamMemberNameList = null;
+            team.teamMemberEmailList = null;
+          });
+        }
+      }
+
+    });
+  }
   @override
   void initState() {
     teamApiProvider.getTeamMembers(context);
@@ -28,7 +153,7 @@ class _ManageTeamState extends State<ManageTeam> {
       key: team.scaffoldKey2,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommon(),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -619,7 +744,17 @@ class _ManageTeamState extends State<ManageTeam> {
                     fontSize: 18,
                   ),
                 ),
-                Icon(Icons.close, color: Colors.grey,)
+                IconButton(
+                  icon: Icon(Icons.close, color: Colors.grey,),
+                  onPressed: (){
+                    setState(() {
+                      selectedTeamMemberIdForDeleting = team.teamMemberIdsList[i];
+                    });
+                    removeTeamMember(context).whenComplete((){
+                      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -734,11 +869,7 @@ class _ManageTeamState extends State<ManageTeam> {
       onTap: () async {
         if(team.formKey2.currentState.validate()){
           team.prTeam.show();
-          teamApiProvider.addTeamMember(context).whenComplete((){
-            Future.delayed(const Duration(seconds: 3), () {
-              setState(() {});
-            });
-          });
+          addTeamMember(context);
         }
       },
       child: Card(
@@ -807,3 +938,5 @@ class _ManageTeamState extends State<ManageTeam> {
   }
 
 }
+
+var selectedTeamMemberIdForDeleting;

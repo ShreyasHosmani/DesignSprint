@@ -11,7 +11,7 @@ class EditProfileApiProvider{
 
   Future<String> editProfile(context) async {
 
-    String url = globals.urlSignUp + "edittouchpoint.php";
+    String url = globals.urlSignUp + "editprofile.php";
 
     home.profileBaseImage = base64Encode(home.profileImage.readAsBytesSync());
 
@@ -23,12 +23,12 @@ class EditProfileApiProvider{
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "fullname" : home.profileNameController.text,
-      "email": home.profileEmailController.text,
-      "password" : home.profilePasswordController.text,
-      "phone" : home.profileMobileNumberController.text,
+      "fullname" : home.profileNameController.text.toString() == null || home.profileNameController.text.toString() == "" || home.profileNameController.text.toString() == " " ? profile.name : home.profileNameController.text,
+      "email": home.profileEmailController.text.toString() == null || home.profileEmailController.text.toString() == "" || home.profileEmailController.text.toString() == " " ? profile.email : home.profileEmailController.text,
+      //"password" : home.profilePasswordController.text,
+      "phone" : home.profileMobileNumberController.text.toString() == null || home.profileMobileNumberController.text.toString() == "" || home.profileMobileNumberController.text.toString() == " " ? profile.mobileNo : home.profileMobileNumberController.text,
       "image" : home.profileBaseImage.toString(),
-      "imagename" : home.profileFileName.toString(),
+      "name" : home.profileFileName.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -43,10 +43,12 @@ class EditProfileApiProvider{
       home.responseArrayEditProfileMsg = home.responseArrayEditProfile['message'].toString();
       print(home.responseArrayEditProfileMsg);
       if(statusCode == 200){
-        if(home.responseArrayEditProfileMsg == "Profile Edited Successfully"){
+        if(home.responseArrayEditProfileMsg == "Edited Successfully"){
+          home.prEditProfile.hide();
           Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
             textColor: Colors.white,);
         }else{
+          home.prEditProfile.hide();
           Fluttertoast.showToast(msg: "please check your internet connection", backgroundColor: Colors.black,
             textColor: Colors.white,);
         }

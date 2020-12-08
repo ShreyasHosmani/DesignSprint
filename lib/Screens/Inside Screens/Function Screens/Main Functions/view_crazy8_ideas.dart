@@ -1,4 +1,5 @@
 import 'package:design_sprint/APIs/warehouse_get_pain_points_and_idea_images.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -36,7 +37,7 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: buildProfileDrawer(context),
+      endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

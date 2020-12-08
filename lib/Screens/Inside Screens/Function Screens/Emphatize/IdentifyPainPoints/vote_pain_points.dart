@@ -1,5 +1,8 @@
 import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/APIs/vote_pain_point.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/identify_painpoint_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/select_final_painpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -78,30 +81,40 @@ class _VotePainPointsState extends State<VotePainPoints> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20,),
-            buildName2Widget(context),
-            SizedBox(height: 20,),
-            buildName3Widget(context),
-            SizedBox(height: 20,),
-            buildLevelContainer(context),
-            SizedBox(height: 46,),
-            buildPainPointNumberIndicator(context),
-            SizedBox(height: 46,),
-            buildName4Widget(context),
-            SizedBox(height: 74,),
-            buildName5Widget(context),
-            SizedBox(height: 25,),
-            buildVoteRow(context),
-            SizedBox(height: MediaQuery.of(context).size.height/10,),
-            buildNextButton(context),
-            SizedBox(height: 25,),
-          ],
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
+      body: WillPopScope(
+        onWillPop: ()=> Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20,),
+              buildName2Widget(context),
+              SizedBox(height: 20,),
+              buildName3Widget(context),
+              SizedBox(height: 20,),
+              buildLevelContainer(context),
+              SizedBox(height: 46,),
+              buildPainPointNumberIndicator(context),
+              SizedBox(height: 46,),
+              buildName4Widget(context),
+              SizedBox(height: 74,),
+              buildName5Widget(context),
+              SizedBox(height: 25,),
+              buildVoteRow(context),
+              SizedBox(height: MediaQuery.of(context).size.height/10,),
+              buildNextButton(context),
+              SizedBox(height: 25,),
+            ],
+          ),
         ),
       ),
     );

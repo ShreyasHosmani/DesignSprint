@@ -99,7 +99,7 @@ class TeamApiProvider {
 
   Future<String> addTeamMember(context) async {
 
-    String url = globals.urlLogin + "addteammember";
+    String url = globals.urlLogin + "addteammember.php";
 
     http.post(url, body: {
 
@@ -163,11 +163,14 @@ class TeamApiProvider {
       team.responseArrayTeamDetailsMsg = team.responseArrayTeamDetails['message'].toString();
       if(statusCode == 200){
         if(team.responseArrayTeamDetailsMsg == "Profile Found"){
+          team.teamMemberIdsList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamID'].toString());
           team.teamMemberNameList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
           team.teamMemberEmailList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'].toString());
+          print(team.teamMemberIdsList.toList());
           print(team.teamMemberNameList.toList());
           print(team.teamMemberEmailList.toList());
         }else{
+          team.teamMemberIdsList = null;
           team.teamMemberNameList = null;
           team.teamMemberEmailList = null;
         }

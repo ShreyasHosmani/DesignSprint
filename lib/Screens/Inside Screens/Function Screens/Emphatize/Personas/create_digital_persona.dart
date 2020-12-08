@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:design_sprint/APIs/create_persona.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -110,7 +112,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       key: empathize.scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: empathize.statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: empathize.statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Stack(
           children: [
@@ -715,15 +717,18 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   }
 
   Widget buildEditDpWidget(BuildContext context){
-    return empathize.imageOne == null ? Container(
-      height: 192,
-      width: 192,
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffd4d4d4)),
-        borderRadius: BorderRadius.all(Radius.circular(7))
-      ),
-      child: Center(
-        child: buildAddPhotoWidget(context),
+    return empathize.imageOne == null ? InkWell(
+      onTap: () => _settingModalBottomSheetOne(context),
+      child: Container(
+        height: 192,
+        width: 192,
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xffd4d4d4)),
+          borderRadius: BorderRadius.all(Radius.circular(7))
+        ),
+        child: Center(
+          child: buildAddPhotoWidget(context),
+        ),
       ),
     ) : Container(
       height: 192,

@@ -1,5 +1,8 @@
+import 'package:design_sprint/APIs/delete_sprint.dart';
 import 'package:design_sprint/APIs/input_sprint_goal.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_team_sections_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/sprint_goal_data.dart' as goal;
@@ -17,6 +20,7 @@ class InputSprintGoal extends StatefulWidget {
 
 class _InputSprintGoalState extends State<InputSprintGoal> {
   InputGoalApiProvider inputGoalApiProvider = InputGoalApiProvider();
+  DeleteSprintApiProvider deleteSprintApiProvider = DeleteSprintApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -26,32 +30,42 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 40,),
-                buildNameWidget(context),
-                SizedBox(height: 40,),
-                buildGoalTextField(context),
-                SizedBox(height: 17,),
-                buildToolTipText(context),
-                SizedBox(height: 74,),
-                buildNextButton(context),
-                SizedBox(height: 40,),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: statusBarDrawer(context),
-            ),
-          ],
+      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : ProfileDrawerCommon(),
+      body: WillPopScope(
+        onWillPop: () => Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20,),
+                  buildName2Widget(context),
+                  SizedBox(height: 40,),
+                  buildNameWidget(context),
+                  SizedBox(height: 40,),
+                  buildGoalTextField(context),
+                  SizedBox(height: 17,),
+                  buildToolTipText(context),
+                  SizedBox(height: 74,),
+                  buildNextButton(context),
+                  SizedBox(height: 40,),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: statusBarDrawer(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -84,7 +98,16 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 35, top: 17),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),
@@ -670,6 +693,47 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel",style: GoogleFonts.nunitoSans(),),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue",style: GoogleFonts.nunitoSans(),),
+      onPressed:  () async {
+        deleteSprintApiProvider.deleteSprint(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Warning",
+        style: GoogleFonts.nunitoSans(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      content: Text("If you go back, this sprint will be discarded. Are you sure you want to go back?",
+        style: GoogleFonts.nunitoSans(),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

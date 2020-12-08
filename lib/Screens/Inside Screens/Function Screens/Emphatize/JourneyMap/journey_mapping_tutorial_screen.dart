@@ -1,9 +1,13 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/journey_mapping_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:video_player/video_player.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 
 bool statusDrawer = false;
 
@@ -14,7 +18,28 @@ class JourneyMappingTutorial extends StatefulWidget {
 
 class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/journeymap.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/journeymap.mp4"),
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +47,7 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -37,19 +62,13 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
             SizedBox(height: 40,),
             buildImage1Container(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildInfoText2(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildInfoText3(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildInfoText4(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
-            SizedBox(height: 40,),
-            buildStepText1(context),
-            SizedBox(height: 40,),
-            buildStepText1(context),
-            SizedBox(height: 40,),
-            buildStepText1(context),
+            buildInfoText5(context),
             SizedBox(height: 40,),
             buildNextButton(context),
             SizedBox(height: 40,),
@@ -584,22 +603,14 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 215,
-          color: Color(0xff787CD1).withOpacity(0.95),
-        ),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: 215,
-            child: Image.asset("assets/images/definegoaltutorial-2.png")),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Colors.black.withOpacity(0.45),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: Center(
-            child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
+          child: FlickVideoPlayer(
+            flickManager: flickManager,
+            flickVideoWithControls: FlickVideoWithControls(
+              controls: FlickPortraitControls(),
+            ),
+            flickVideoWithControlsFullscreen: FlickVideoWithControls(
+              controls: FlickLandscapeControls(),
+            ),
           ),
         ),
         statusBarDrawer(context),
@@ -610,8 +621,60 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
   Widget buildInfoText1(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Text("Every sprint has an objective, and the objective needs to be set in the beginning of the sprint so that the team is clear on what the whole process is aimed at.",
+      child: Text("A journey map is useful to understand your customer’s interaction with your product. Each person on the team should select one persona and map out their journey.",
         maxLines: 4,
+        style: GoogleFonts.nunitoSans(
+          textStyle: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+  Widget buildInfoText2(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("- List an objective for your users, mention the first and the last step of the journey and then map all the steps in between.",
+        maxLines: 4,
+        style: GoogleFonts.nunitoSans(
+          textStyle: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+  Widget buildInfoText3(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("- Map down the customer thoughts in every touchpoint and map out their experiences with emojis to understand how they are feeling in each step.",
+        maxLines: 4,
+        style: GoogleFonts.nunitoSans(
+          textStyle: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+  Widget buildInfoText4(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("- Identify the pain points the users are facing and map them down under each touchpoint on the Journey Map",
+        maxLines: 4,
+        style: GoogleFonts.nunitoSans(
+          textStyle: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+  Widget buildInfoText5(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Example: Opens Browser > Searches for Flight Ticket > Opens makemytrip.com > Adds the destinations and dates of travel > compares and chooses a flight > Completes the process and books the ticket",
+        maxLines: 8,
         style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
             fontSize: 16,
@@ -662,7 +725,7 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => JourneyMappingMainScreen(),
@@ -685,6 +748,7 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
           child: Center(
             child: Text("Next",
               style: TextStyle(
+
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
           ),

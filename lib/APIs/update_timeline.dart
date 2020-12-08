@@ -46,7 +46,7 @@ class UpdateTimelineApiProvider{
           });
         }else if(home.responseArrayTimelineMsg == "Timeline updated Successfully. E-Mail Not Verified"){
           home.prCreateSprint.hide();
-          Fluttertoast.showToast(msg: home.timelineSaved, backgroundColor: Colors.black,
+          Fluttertoast.showToast(msg: "Timeline updated Successfully. E-Mail Not Verified", backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
             Navigator.push(
               context,

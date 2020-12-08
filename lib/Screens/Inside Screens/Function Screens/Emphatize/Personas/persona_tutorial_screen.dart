@@ -1,6 +1,10 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:video_player/video_player.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 
 bool statusDrawer = false;
 
@@ -11,7 +15,28 @@ class PersonaTutorial extends StatefulWidget {
 
 class _PersonaTutorialState extends State<PersonaTutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/createuserpersona.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/createuserpersona.mp4"),
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +44,7 @@ class _PersonaTutorialState extends State<PersonaTutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -36,17 +61,17 @@ class _PersonaTutorialState extends State<PersonaTutorial> {
             SizedBox(height: 40,),
             buildStepText1(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildStepText2(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildStepText3(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildStepText4(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildStepText5(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildStepText6(context),
             SizedBox(height: 40,),
-            buildStepText1(context),
+            buildStepText7(context),
             SizedBox(height: 40,),
             buildNextButton(context),
             SizedBox(height: 40,),
@@ -580,22 +605,14 @@ class _PersonaTutorialState extends State<PersonaTutorial> {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 215,
-          color: Color(0xff96C3CB).withOpacity(0.95),
-        ),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: 215,
-            child: Image.asset("assets/images/definegoaltutorial-2.png")),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Colors.black.withOpacity(0.45),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: Center(
-            child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
+          child: FlickVideoPlayer(
+            flickManager: flickManager,
+            flickVideoWithControls: FlickVideoWithControls(
+              controls: FlickPortraitControls(),
+            ),
+            flickVideoWithControlsFullscreen: FlickVideoWithControls(
+              controls: FlickLandscapeControls(),
+            ),
           ),
         ),
         statusBarDrawer(context),
@@ -606,7 +623,7 @@ class _PersonaTutorialState extends State<PersonaTutorial> {
   Widget buildInfoText1(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Text("Every sprint has an objective, and the objective needs to be set in the beginning of the sprint so that the team is clear on what the whole process is aimed at.",
+      child: Text("User personas are really important to understand who your audience is. The persona is a single document of information on your users that is easy to understand. Give each member 10 minutes of time to come up with a sample user persona. A persona should contain the following.",
         maxLines: 4,
         style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
@@ -629,28 +646,87 @@ class _PersonaTutorialState extends State<PersonaTutorial> {
   Widget buildStepText1(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Name :",
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )
-            ),
+      child: Container(
+        child: Text("Name : It could be realistic or taken from an actual customer. Photo: Use stock photos to put a face to the name.",
+          maxLines: 10,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+              )
           ),
-          SizedBox(width: 5,),
-          Text("Step 1: Identify the objective. What is the\nproblem you are trying to solve?",
-            maxLines: 3,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
-            ),
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+  Widget buildStepText2(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Personal quote/motto: Just like a photo, this helps fresh out the persona to make them seem more real.",
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+              fontSize: 16,
+            )
+        ),
+      ),
+    );
+  }
+  Widget buildStepText3(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Bio: Give a little backstory to make the person relate What was their school like? Why did they choose their current profession? What are their hobbies?",
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+              fontSize: 16,
+            )
+        ),
+      ),
+    );
+  }
+  Widget buildStepText4(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Demographics: Age, sex, income, location - what ever attributes are relevant to your industry personality.",
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+              fontSize: 16,
+            )
+        ),
+      ),
+    );
+  }
+  Widget buildStepText5(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Traits: People with low attention spans want faster site designs. Cautious people are most likely to compare and shop. Personality traits are the one of the most useful features of personas, so choose this with care.",
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+              fontSize: 16,
+            )
+        ),
+      ),
+    );
+  }
+  Widget buildStepText6(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Motivation: Like personality traits, this helps you to get inside the customer head and understand hw they think. For Example: would a customer be more likely to buy a product based in their brand?",
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+              fontSize: 16,
+            )
+        ),
+      ),
+    );
+  }
+  Widget buildStepText7(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Goals and Frustrations: This would help you undrstnd the specific goals that need to be accomplished in your software. Preferred brands and influencers. You can tell a lot about a person based on which brands they like and what kind of people influence their decisions. You can also look at those brands marketing strategies to see if their tactics will work you as well.",
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(
+              fontSize: 16,
+            )
+        ),
       ),
     );
   }
@@ -658,7 +734,7 @@ class _PersonaTutorialState extends State<PersonaTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => PersonaMainScreen(),

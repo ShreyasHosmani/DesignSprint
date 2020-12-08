@@ -1,3 +1,5 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_eight_evaluation_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,7 +7,8 @@ import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
-import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:video_player/video_player.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 
 bool statusDrawer = false;
 
@@ -16,6 +19,28 @@ class Crazy8Tutorial extends StatefulWidget {
 
 class _Crazy8TutorialState extends State<Crazy8Tutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/crazy8.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/crazy8.mp4"),
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +48,7 @@ class _Crazy8TutorialState extends State<Crazy8Tutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -573,22 +598,14 @@ class _Crazy8TutorialState extends State<Crazy8Tutorial> {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 215,
-          color: Color(0xffF1A042).withOpacity(0.95),
-        ),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: 215,
-            child: Image.asset("assets/images/definegoaltutorial-2.png")),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Colors.black.withOpacity(0.45),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: Center(
-            child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
+          child: FlickVideoPlayer(
+            flickManager: flickManager,
+            flickVideoWithControls: FlickVideoWithControls(
+              controls: FlickPortraitControls(),
+            ),
+            flickVideoWithControlsFullscreen: FlickVideoWithControls(
+              controls: FlickLandscapeControls(),
+            ),
           ),
         ),
         statusBarDrawer(context),
@@ -599,8 +616,8 @@ class _Crazy8TutorialState extends State<Crazy8Tutorial> {
   Widget buildInfoText1(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Text("Every sprint has an objective, and the objective needs to be set in the beginning of the sprint so that the team is clear on what the whole process is aimed at.",
-        maxLines: 4,
+      child: Text("Each pain point will be displayed one-by-one to you. You are expected to create 8 ideas in 8 minutes for each pain point before you move on to the next idea.",
+        maxLines: 8,
         style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
             fontSize: 16,
@@ -626,12 +643,14 @@ class _Crazy8TutorialState extends State<Crazy8Tutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Step 1: Identify the objective. What is the\nproblem you are trying to solve?",
-            maxLines: 3,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Pace yourself knowing that you need to generate 8 ideas in 8 minutes. Start with your best idea and keep on going. Try thinking of unconventional and creative solutions to tacle your pain points.",
+              maxLines: 10,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],
@@ -664,12 +683,13 @@ class _Crazy8TutorialState extends State<Crazy8Tutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Define the goal for your sprint. Ask\nyourself these questions. What do\nyou expect from solving this\nproblem? What do you want in long\nterm for eg: 6 months or an year?\nHow is your success is to be\nmeasured?",
-            maxLines: 7,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Evaluate all your ideas, showcase them to your peers and nominate 2-3 ideas per pain point.",
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],
@@ -686,35 +706,6 @@ class _Crazy8TutorialState extends State<Crazy8Tutorial> {
     );
   }
 
-  Widget buildStepText3(BuildContext context){
-    return Padding(
-      padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Step 3 :",
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )
-            ),
-          ),
-          SizedBox(width: 5,),
-          Text("Define your guiding questions\nthat will be solved through the\ncourse of sprint. For eg: How\nmight we optimize the app to\nshow what users want? How might\nwe showcase the best selling\nproducts on our app to increase\nsales? How might we extract more\npersonal information from the\nusers to tailor our campaigns?",
-            maxLines: 10,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget buildImage3Container(BuildContext context){
     return Center(
       child: Container(
@@ -727,7 +718,7 @@ class _Crazy8TutorialState extends State<Crazy8Tutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => GetPainPointsOfStatusTwoPageViewBuilder(),

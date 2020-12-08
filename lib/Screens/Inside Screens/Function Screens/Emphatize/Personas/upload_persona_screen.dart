@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'package:design_sprint/APIs/create_persona.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
+import 'package:design_sprint/utils/signup_data.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -42,6 +46,8 @@ class _UploadPersonaState extends State<UploadPersona> {
     createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
+          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+            textColor: Colors.white,);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
       });
@@ -56,6 +62,8 @@ class _UploadPersonaState extends State<UploadPersona> {
     createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
+          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+            textColor: Colors.white,);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
       });
@@ -68,7 +76,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Stack(
           children: [

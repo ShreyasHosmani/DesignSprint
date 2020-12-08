@@ -1,6 +1,9 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/input_sprint_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:video_player/video_player.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 
 bool statusDrawer = false;
 
@@ -11,6 +14,28 @@ class SprintGoalTutorial extends StatefulWidget {
 
 class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/designsprint.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/designsprint.mp4"),
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +43,7 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -575,22 +600,14 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 215,
-          color: Color(0xff787CD1).withOpacity(0.95),
-        ),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: 215,
-            child: Image.asset("assets/images/definegoaltutorial-2.png")),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Colors.black.withOpacity(0.45),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: Center(
-            child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
+          child: FlickVideoPlayer(
+              flickManager: flickManager,
+            flickVideoWithControls: FlickVideoWithControls(
+              controls: FlickPortraitControls(),
+            ),
+            flickVideoWithControlsFullscreen: FlickVideoWithControls(
+              controls: FlickLandscapeControls(),
+            ),
           ),
         ),
         statusBarDrawer(context),
@@ -628,7 +645,7 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Step 1: Identify the objective. What is the\nproblem you are trying to solve?",
+          Text("Step 1: Identify the objective. What is\nthe problem you are trying to\nsolve?",
             maxLines: 3,
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
@@ -729,7 +746,7 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => InputSprintGoal(),

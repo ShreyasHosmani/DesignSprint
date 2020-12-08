@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:design_sprint/APIs/upload_idea_image.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/ideation_inside_sections_screen2.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -97,7 +99,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -771,6 +773,8 @@ class _UploadIdea1State extends State<UploadIdea1> {
                             uploadIdeaApiProvider.uploadIdeaImage(context);
                             Future.delayed(const Duration(seconds: 3), () {
                               uploadIdeaApiProvider.getIdeaImages(context).whenComplete((){
+                                Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                                  textColor: Colors.white,);
                                 Future.delayed(const Duration(seconds: 3), () {setState(() {});});
                               });
                             });

@@ -1,3 +1,5 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Mapping%20Insights/insights_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +24,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -625,12 +627,14 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Step 1: Identify the objective. What is the\nproblem you are trying to solve?",
-            maxLines: 3,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Step 1: Identify the objective. What is the problem you are trying to solve?",
+              maxLines: 3,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],
@@ -663,12 +667,14 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Define the goal for your sprint. Ask\nyourself these questions. What do\nyou expect from solving this\nproblem? What do you want in long\nterm for eg: 6 months or an year?\nHow is your success is to be\nmeasured?",
-            maxLines: 7,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Define the goal for your sprint. Ask yourself these questions. What do you expect from solving this problem? What do you want in long term for eg: 6 months or an year? How is your success is to be measured?",
+              maxLines: 7,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],
@@ -701,12 +707,14 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Define your guiding questions\nthat will be solved through the\ncourse of sprint. For eg: How\nmight we optimize the app to\nshow what users want? How might\nwe showcase the best selling\nproducts on our app to increase\nsales? How might we extract more\npersonal information from the\nusers to tailor our campaigns?",
-            maxLines: 10,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Define your guiding questions that will be solved through the course of sprint. For eg: How might we optimize the app to show what users want? How might we showcase the best selling products on our app to increase sales? How might we extract more personal information from the users to tailor our campaigns?",
+              maxLines: 10,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],

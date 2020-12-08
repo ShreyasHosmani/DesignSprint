@@ -1,3 +1,5 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Prototyping/upload_prototype_idea_screen1.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/select_prototypes_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,7 @@ class _ReIterateTutorialState extends State<ReIterateTutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerUserTesting() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -608,12 +610,13 @@ class _ReIterateTutorialState extends State<ReIterateTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Step 1: Identify the objective. What is the\nproblem you are trying to solve?",
-            maxLines: 3,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Step 1: Identify the objective. What is the problem you are trying to solve?",
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],
@@ -646,12 +649,13 @@ class _ReIterateTutorialState extends State<ReIterateTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Define the goal for your sprint. Ask\nyourself these questions. What do\nyou expect from solving this\nproblem? What do you want in long\nterm for eg: 6 months or an year?\nHow is your success is to be\nmeasured?",
-            maxLines: 7,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Define the goal for your sprint. Ask yourself these questions. What do you expect from solving this problem? What do you want in long term for eg: 6 months or an year? How is your success is to be measured?",
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],

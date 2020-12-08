@@ -1,9 +1,13 @@
+import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/vote_pain_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:video_player/video_player.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 
 bool statusDrawer = false;
 
@@ -14,7 +18,28 @@ class IdentifyPainPointTutorial extends StatefulWidget {
 
 class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/painpoints.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/painpoints.mp4"),
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +47,7 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? buildStatusDrawer(context) : buildProfileDrawer(context),
+      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -37,7 +62,7 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
             SizedBox(height: 40,),
             buildImage1Container(context),
             SizedBox(height: 40,),
-            buildInfoText1(context),
+            buildInfoText2(context),
             SizedBox(height: 40,),
             buildNextButton(context),
             SizedBox(height: 40,),
@@ -572,22 +597,14 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 215,
-          color: Color(0xffFFB8B8).withOpacity(0.95),
-        ),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: 215,
-            child: Image.asset("assets/images/definegoaltutorial-2.png")),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Colors.black.withOpacity(0.45),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: Center(
-            child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
+          child: FlickVideoPlayer(
+            flickManager: flickManager,
+            flickVideoWithControls: FlickVideoWithControls(
+              controls: FlickPortraitControls(),
+            ),
+            flickVideoWithControlsFullscreen: FlickVideoWithControls(
+              controls: FlickLandscapeControls(),
+            ),
           ),
         ),
         statusBarDrawer(context),
@@ -598,8 +615,21 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
   Widget buildInfoText1(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Text("Every sprint has an objective, and the objective needs to be set in the beginning of the sprint so that the team is clear on what the whole process is aimed at. Every sprint has an objective, and the objective needs to be set in the beginning of the sprint so that the team is clear on what the whole process is aimed at.",
-        maxLines: 4,
+      child: Text("Pain points are generally the source of the problem. This is a very important step in your design sprint as it guides you on how to go about solving the problem.",
+        maxLines: 10,
+        style: GoogleFonts.nunitoSans(
+          textStyle: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+  Widget buildInfoText2(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("All the pain points which have been identified by you and your team during the journey map will be showcased here and will be voted upon by each member of the team. The top 10 pain points which have the maximum votes will be showcased to the decision maker to finalise on any 5.",
+        maxLines: 10,
         style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
             fontSize: 16,
@@ -621,7 +651,7 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => VotePageViewBuilder(),
