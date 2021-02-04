@@ -10,7 +10,7 @@ class LogoutApiProvider{
 
   Future<String> Logout(context) async {
 
-    String url = globals.urlLogin + "updatefcmtoken";
+    String url = globals.urlLogin + "updatefcmtoken.php";
 
     http.post(url, body: {
 

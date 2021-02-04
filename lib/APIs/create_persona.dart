@@ -52,7 +52,7 @@ class CreatePersonaApiProvider {
       if(statusCode == 200){
         if(empathize.responseArrayCreatePersonaDigitallyMsg == "Persona Added Successfully"){
           empathize.prDigitalPersona.hide().whenComplete((){
-            clearFields(context);
+            //clearFields(context);
             Fluttertoast.showToast(msg: empathize.personaSaved, backgroundColor: Colors.black,
               textColor: Colors.white,);
           });

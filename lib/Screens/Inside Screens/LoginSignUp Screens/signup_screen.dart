@@ -21,46 +21,81 @@ class _SignUpState extends State<SignUp> {
     signup.prSignUp = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Form(
-          key: signup.formKey,
-          child: Column(
-            children: [
-              buildUpperImage(context),
-              SizedBox(height: MediaQuery.of(context).size.height/17,),
-              Padding(
-                padding: EdgeInsets.only(left: 30),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(signup.signUpHeading,
-                      style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                            fontSize: 32,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w600
-                        ),
-                      ),
-                    )),
+      body: Stack(
+        children: [
+          Positioned(
+              top: -MediaQuery.of(context).size.height/3.6,right: -MediaQuery.of(context).size.width/6,
+              child: buildUpperImage(context)),
+          Positioned(
+            top: -MediaQuery.of(context).size.height/5.6,left: -MediaQuery.of(context).size.width/10,
+            child: Container(
+              height: 280,
+              width: 280,
+              decoration: BoxDecoration(
+                  color: Color(0xff302B70),
+                  borderRadius: BorderRadius.all(Radius.circular(150))
               ),
-              buildNameField(context),
-              SizedBox(height: 5,),
-              buildEmailField(context),
-              SizedBox(height: 5,),
-              buildPasswordField(context),
-              SizedBox(height: MediaQuery.of(context).size.height/17,),
-              buildSignUpButton(context),
-              SizedBox(height: 15,),
-              alreadyAUserLogin(context),
-              SizedBox(height: 30,),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            top: -30,left: 0, right: -MediaQuery.of(context).size.width/3,
+            child: Image.asset("assets/images/signup.png"),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
+            child: SingleChildScrollView(
+              child: Form(
+                key: signup.formKey,
+                child: Column(
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height/45,),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(signup.signUpHeading,
+                            style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                                  fontSize: 32,
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w600
+                              ),
+                            ),
+                          )),
+                    ),
+                    buildNameField(context),
+                    buildEmailField(context),
+                    buildPasswordField(context),
+                    SizedBox(height: MediaQuery.of(context).size.height/17,),
+                    buildSignUpButton(context),
+                    SizedBox(height: 20,),
+                    alreadyAUserLogin(context),
+                    SizedBox(height: 30,),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget buildUpperImage(BuildContext context){
-    return ClipPath(
+    return Container(
+      height: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: Color(0xff787cd1),
+        borderRadius: BorderRadius.all(Radius.circular(500))
+      ),
+    );
+//    return Container(
+//      width: MediaQuery.of(context).size.width,
+//      child: Image.asset("assets/images/signupill.png", fit: BoxFit.fitWidth,),
+//    );
+    /*
+      ClipPath(
         clipper: UpperClipper(),
         child: Stack(
           children: <Widget>[
@@ -95,6 +130,8 @@ class _SignUpState extends State<SignUp> {
             )
           ],
         ));
+
+     */
   }
 
   Widget buildNameField(BuildContext context){
@@ -107,7 +144,7 @@ class _SignUpState extends State<SignUp> {
           decoration: InputDecoration(
             prefixIcon: Padding(
               padding: const EdgeInsets.only(bottom: 5),
-              child: Icon(Icons.perm_identity, color: Colors.grey.shade300,),
+              child: Icon(Icons.person, color: Colors.grey.shade300,),
             ),
             hintText: hint.hintName,
           ),
@@ -184,7 +221,9 @@ class _SignUpState extends State<SignUp> {
               alignment: Alignment.centerRight,
               child: InkWell(
                 onTap: toggle,
-                child: Icon(Icons.remove_red_eye,
+                child: signup.obscureText == true ? Container(
+                    height: 25,
+                    child: Image.asset("assets/images/visibility.png",fit: BoxFit.cover,)) :Icon(Icons.remove_red_eye,
                   color: Colors.grey.shade400,
                 ),
               ),

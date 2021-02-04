@@ -1,5 +1,5 @@
+import 'package:design_sprint/Screens/Initial%20Screen/splash_three.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
-import 'package:design_sprint/Screens/Initial%20Screen/splash_two.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,21 +11,18 @@ class SplashOne extends StatefulWidget {
 class _SplashOneState extends State<SplashOne> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: buildPositionWidget(context),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            buildSkipButton(context),
-            SizedBox(height: MediaQuery.of(context).size.height/15),
-            buildCenterCard(context),
-            buildInfoText(context),
-          ],
-        ),
-      ),
+    return Stack(
+      children: [
+        Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              buildCenterCard(context),
+              buildInfoText(context),
+            ],
+          ),
+        //buildSkipButton(context),
+      ],
     );
   }
 
@@ -44,7 +41,7 @@ class _SplashOneState extends State<SplashOne> {
       child: Align(
         alignment: Alignment.topRight,
         child: Padding(
-          padding: const EdgeInsets.only(top: 68, right: 36),
+          padding: const EdgeInsets.only(top: 50, right: 36),
           child: Text("SKIP",
             style: GoogleFonts.nunitoSans(
               textStyle: TextStyle(
@@ -63,8 +60,8 @@ class _SplashOneState extends State<SplashOne> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        height: 194.1,
-        width: 308,
+        height: MediaQuery.of(context).size.height/3.5,
+        width: MediaQuery.of(context).size.width/1.5,
         child: Image.asset("assets/images/initialscreen1.png"),
       ),
     );
@@ -90,32 +87,6 @@ class _SplashOneState extends State<SplashOne> {
         Text("This is your personal assistant which", style: textStyle(),),
         Text("assists you to run successful design", style: textStyle(),),
         Text("sprints.", style: textStyle(),),
-        SizedBox(height: 24,),
-        /*
-        GestureDetector(
-          onTap: (){
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => SplashTwo(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
-          },
-          child: Container(
-            height: 50, width: 100,
-            child: Center(
-              child: Text("Next",
-                style: GoogleFonts.nunitoSans(
-                  textStyle: TextStyle(fontSize: 18,color: Color(0xff787CD1),letterSpacing: 0),
-                ),
-              ),
-            ),
-          ),
-        ),
-
-         */
       ],
     );
   }

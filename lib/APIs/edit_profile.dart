@@ -13,12 +13,15 @@ class EditProfileApiProvider{
 
     String url = globals.urlSignUp + "editprofile.php";
 
-    home.profileBaseImage = base64Encode(home.profileImage.readAsBytesSync());
+    if(home.profileImage == null){
+      print("image is null...");
+    }else{
+      home.profileBaseImage = base64Encode(home.profileImage.readAsBytesSync());
+      home.profileFileName = home.profileImage.path.split("/").last;
 
-    home.profileFileName = home.profileImage.path.split("/").last;
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('profile_image', home.profileImage.path);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('profile_image', home.profileImage.path);
+    }
 
     http.post(url, body: {
 
@@ -27,8 +30,8 @@ class EditProfileApiProvider{
       "email": home.profileEmailController.text.toString() == null || home.profileEmailController.text.toString() == "" || home.profileEmailController.text.toString() == " " ? profile.email : home.profileEmailController.text,
       //"password" : home.profilePasswordController.text,
       "phone" : home.profileMobileNumberController.text.toString() == null || home.profileMobileNumberController.text.toString() == "" || home.profileMobileNumberController.text.toString() == " " ? profile.mobileNo : home.profileMobileNumberController.text,
-      "image" : home.profileBaseImage.toString(),
-      "name" : home.profileFileName.toString(),
+      "image" : home.profileBaseImage.toString() == null || home.profileBaseImage.toString() == "null" ? "null" : home.profileBaseImage.toString(),
+      "name" : home.profileFileName.toString() == null || home.profileFileName.toString() == "null" ? "null" : home.profileFileName.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -45,8 +48,9 @@ class EditProfileApiProvider{
       if(statusCode == 200){
         if(home.responseArrayEditProfileMsg == "Edited Successfully"){
           home.prEditProfile.hide();
-          Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
+          Fluttertoast.showToast(msg: "✅ saved", backgroundColor: Colors.black,
             textColor: Colors.white,);
+
         }else{
           home.prEditProfile.hide();
           Fluttertoast.showToast(msg: "please check your internet connection", backgroundColor: Colors.black,

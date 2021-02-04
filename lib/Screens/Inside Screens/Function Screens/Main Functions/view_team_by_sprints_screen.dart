@@ -42,10 +42,12 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
   }
   Future<String> removeTeamMember(context) async {
 
+    print(selectedMemberIdSeperate);
+
     String url = globals.urlLogin + "removeteammember.php";
     http.post(url, body: {
 
-      "teamID" : selectedMemberIdSeperate,
+      "teamID" : selectedMemberIdSeperate.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -85,25 +87,17 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 40,),
-                buildTeamNameCardWidget(context),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 10,),
+            buildName2Widget(context),
+            SizedBox(height: 40,),
+            buildTeamNameCardWidget(context),
+          ],
+        ),
       ),
     );
   }
@@ -123,7 +117,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(team.appBarTitle,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -133,7 +127,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -141,10 +135,10 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -641,16 +635,25 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
           print(selectedMemberIdSeperate);
         },
         child: Padding(
-          padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+          padding: const EdgeInsets.only(top: 20, left: 30, right: 30),
           child: Container(
             width: 302,
             height: 57,
             decoration: BoxDecoration(
                 border: Border.all(color: Color(0xff787cd1)),
-                borderRadius: BorderRadius.all(Radius.circular(7))
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
+              padding: const EdgeInsets.only(left: 30, right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -659,12 +662,57 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
                       fontSize: 18,
                     ),
                   ),
-                  IconButton(
-                    onPressed: (){
-                      team.prTeam.show();
-                      removeTeamMember(context);
+                  PopupMenuButton<String>(
+                    onSelected: (val){
+                      if(val == "Delete Team"){
+                        setState(() {
+                          selectedMemberIdSeperate = teamBySprints.teamMemberIdsBySprintsList[i].toString();
+                        });
+                        print(selectedMemberIdSeperate);
+                        showAlertDialogDeleteTeam(context);
+                      }else{
+
+                      }
                     },
-                    icon: Icon(Icons.close, color: Colors.grey,size: 20,),
+                    icon: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(height: 3,width: 3,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.all(Radius.circular(50))
+                          ),
+                        ),
+                        SizedBox(height: 3,),
+                        Container(height: 3,width: 3,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.all(Radius.circular(50))
+                          ),
+                        ),
+                        SizedBox(height: 3,),
+                        Container(height: 3,width: 3,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.all(Radius.circular(50))
+                          ),
+                        ),
+                      ],
+                    ),
+                    color: Colors.white,
+                    itemBuilder: (BuildContext context) {
+                      return {'Delete Team'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          textStyle: GoogleFonts.nunitoSans(
+                            color: Colors.grey.shade700,
+                            fontSize: 16,
+                          ),
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    },
                   ),
                 ],
               ),
@@ -672,6 +720,46 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialogDeleteTeam(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Delete"),
+      onPressed:  () async {
+        Navigator.of(context).pop();
+        Fluttertoast.showToast(msg: "deleting...", backgroundColor: Colors.black,
+          textColor: Colors.white,);
+        team.prTeam.show();
+        removeTeamMember(context);
+      },
+
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Team"),
+      content: Text("Are you sure you want to delete this team? Once deleted, it cannot be recovered!"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

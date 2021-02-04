@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/warehouse_ivsf_and_selected_ideas_data.dart' as ratingsWH;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:url_launcher/url_launcher.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -40,9 +41,9 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 25,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
-            SizedBox(height: 51,),
+            SizedBox(height: 25,),
             buildSelectedIdeasListViewBuilder(context),
           ],
         ),
@@ -62,7 +63,7 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -72,7 +73,7 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -80,10 +81,10 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -305,15 +306,20 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
         itemCount: ratingsWH.ideaAllImagesOfStatusTwo == null ? 0 : ratingsWH.ideaAllImagesOfStatusTwo.length,
         itemBuilder: (context, i) => Padding(
           padding: const EdgeInsets.only(bottom: 45),
-          child: Container(
-            width: 302,
-            height: 175,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
-              border: Border.all(color: Color(0xffEBEBEB)),
-                image: DecorationImage(
-                  image: NetworkImage(globals.urlSignUp+ratingsWH.ideaAllImagesOfStatusTwo[i]),
-                )
+          child: GestureDetector(
+            onTap: (){
+              launch(globals.urlSignUp+ratingsWH.ideaAllImagesOfStatusTwo[i]);
+            },
+            child: Container(
+              width: 302,
+              height: 175,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Color(0xffEBEBEB)),
+                  image: DecorationImage(
+                    image: NetworkImage(globals.urlSignUp+ratingsWH.ideaAllImagesOfStatusTwo[i]),
+                  )
+              ),
             ),
           ),
         ),

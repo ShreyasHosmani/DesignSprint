@@ -11,6 +11,8 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:url_launcher/url_launcher.dart';
+
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ViewPaperPersonaDetails extends StatefulWidget {
@@ -120,14 +122,13 @@ class _ViewPaperPersonaDetailsState extends State<ViewPaperPersonaDetails> {
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
       bottomNavigationBar: buildCommentBottomBar(context),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Stack(
         children: [
-          SizedBox(height: 25,),
-          buildName2Widget(context),
-          SizedBox(height: 100,),
-          buildPaperPersonaImageContainer(context),
+          Positioned(
+            top: 10, left: 0, right: 0,
+            child: buildName2Widget(context),
+          ),
+          Center(child: buildPaperPersonaImageContainer(context)),
         ],
       ),
     );
@@ -145,7 +146,7 @@ class _ViewPaperPersonaDetailsState extends State<ViewPaperPersonaDetails> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -155,7 +156,7 @@ class _ViewPaperPersonaDetailsState extends State<ViewPaperPersonaDetails> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -163,10 +164,10 @@ class _ViewPaperPersonaDetailsState extends State<ViewPaperPersonaDetails> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -458,13 +459,18 @@ class _ViewPaperPersonaDetailsState extends State<ViewPaperPersonaDetails> {
   }
 
   Widget buildPaperPersonaImageContainer(BuildContext context){
-    return Container(
-      height: 261,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Color(0xff787cd1)
+    return GestureDetector(
+      onTap: (){
+        launch(widget.imageLink.toString());
+      },
+      child: Container(
+        height: 261,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: Color(0xff787cd1)
+        ),
+        child: Image.network(widget.imageLink.toString()),
       ),
-      child: Image.network(widget.imageLink.toString()),
     );
   }
 

@@ -37,6 +37,7 @@ class InputPainPointsApiProvider {
           empathize.prInputPainPoint.hide();
           Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
             textColor: Colors.white,);
+          empathize.painPointController.clear();
         }else{
           empathize.prInputPainPoint.hide();
           Fluttertoast.showToast(msg: empathize.responseArrayInputPainPointsMsg, backgroundColor: Colors.black,

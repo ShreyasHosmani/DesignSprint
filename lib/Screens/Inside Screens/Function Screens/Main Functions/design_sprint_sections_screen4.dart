@@ -24,16 +24,20 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: Stack(
         children: [
-          SingleChildScrollView(
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: MediaQuery.of(context).size.height/20,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,15 +75,20 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
                     ),
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height/10,),
-                buildNextButton(context),
-                SizedBox(height: MediaQuery.of(context).size.height/10,),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
+          Positioned(
+            top: 80, right: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: statusBarDrawer(context),
+            ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height/80,
+            left: 0,right: 0,
+            child: buildName2Widget(context),
           ),
         ],
       ),
@@ -101,7 +110,7 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -111,7 +120,7 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -119,10 +128,10 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -325,19 +334,26 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -623,7 +639,16 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
           width: MediaQuery.of(context).size.width/1.5,
           decoration: BoxDecoration(
               border: Border.all(color : Color(0xff7579cb)),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("Emphatize - Day 1",
@@ -654,7 +679,16 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
           width: MediaQuery.of(context).size.width/1.5,
           decoration: BoxDecoration(
               border: Border.all(color : Color(0xff7579cb)),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("Ideation - Day 2",
@@ -685,7 +719,16 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
           width: MediaQuery.of(context).size.width/1.5,
           decoration: BoxDecoration(
               border: Border.all(color : Color(0xff787cd1)),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("Prototyping - Day 3",
@@ -716,7 +759,16 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
           width: MediaQuery.of(context).size.width/1.5,
           decoration: BoxDecoration(
               border: Border.all(color : Color(0xff787cd1)),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("User Testing - Day 4",
@@ -747,7 +799,16 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
           width: MediaQuery.of(context).size.width/1.5,
           decoration: BoxDecoration(
               border: Border.all(color : Colors.grey),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("Re Iterate - Day 5",
@@ -762,8 +823,8 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
 
   Widget buildNonFilledContainer(BuildContext context){
     return Container(
-      height: 25,
-      width: 25,
+      height: 20,
+      width: 20,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.grey,
@@ -775,12 +836,12 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
 
   Widget buildFilledContainer(BuildContext context){
     return Container(
-      height: 25,
-      width: 25,
+      height: 20,
+      width: 20,
       decoration: BoxDecoration(
           border: Border.all(
             color: Color(0xff787CD1),
-            width: 2,
+            width: 1.5,
           ),
           borderRadius: BorderRadius.all(Radius.circular(50))
       ),
@@ -799,7 +860,7 @@ class _EmphatizeSections4State extends State<EmphatizeSections4> {
   Widget buildFilledContainerSeperater(BuildContext context){
     return Container(
       height: MediaQuery.of(context).size.height/13,
-      width: 2,
+      width: 1.5,
       decoration: BoxDecoration(
         color: Color(0xff787cd1),
       ),

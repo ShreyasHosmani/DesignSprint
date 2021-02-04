@@ -11,19 +11,18 @@ class SplashTwo extends StatefulWidget {
 class _SplashTwoState extends State<SplashTwo> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: buildPositionWidget(context),
-      body: SingleChildScrollView(
-        child: Column(
+    return Stack(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            buildSkipButton(context),
-            SizedBox(height: MediaQuery.of(context).size.height/15),
             buildCenterCard(context),
             buildInfoText(context),
           ],
         ),
-      ),
+        //buildSkipButton(context),
+      ],
     );
   }
 
@@ -42,7 +41,7 @@ class _SplashTwoState extends State<SplashTwo> {
       child: Align(
         alignment: Alignment.topRight,
         child: Padding(
-          padding: const EdgeInsets.only(top: 68, right: 36),
+          padding: const EdgeInsets.only(top: 50, right: 36),
           child: Text("SKIP",
             style: GoogleFonts.nunitoSans(
               textStyle: TextStyle(
@@ -61,8 +60,8 @@ class _SplashTwoState extends State<SplashTwo> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        height: 194.1,
-        width: 308,
+        height: MediaQuery.of(context).size.height/3.5,
+        width: MediaQuery.of(context).size.width/1.5,
         child: Image.asset("assets/images/initialscreen2.png"),
       ),
     );
@@ -71,6 +70,7 @@ class _SplashTwoState extends State<SplashTwo> {
   Widget buildInfoText(BuildContext context){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 35,),
         Text("DAILY AGENDA",

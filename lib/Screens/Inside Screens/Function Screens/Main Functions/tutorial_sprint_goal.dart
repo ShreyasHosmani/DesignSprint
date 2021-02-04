@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
@@ -44,34 +45,51 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : ProfileDrawerCommon(),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20,),
-            buildName2Widget(context),
-            SizedBox(height: 20,),
-            buildVideoContainer(context),
-            SizedBox(height: 45,),
-            buildInfoText1(context),
-            SizedBox(height: 25,),
-            buildStepText1(context),
-            SizedBox(height: 40,),
-            buildImage1Container(context),
-            SizedBox(height: 40,),
-            buildStepText2(context),
-            SizedBox(height: 40,),
-            buildImage2Container(context),
-            SizedBox(height: 40,),
-            buildStepText3(context),
-            SizedBox(height: 40,),
-            buildImage3Container(context),
-            SizedBox(height: 40,),
-            buildNextButton(context),
-            SizedBox(height: 40,),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                buildName2Widget(context),
+                SizedBox(height: 20,),
+                buildVideoContainer(context),
+                SizedBox(height: 45,),
+                buildInfoText1(context),
+                SizedBox(height: 25,),
+                buildStepText1(context),
+                SizedBox(height: 40,),
+                buildImage1Container(context),
+                SizedBox(height: 40,),
+                buildStepText2(context),
+                SizedBox(height: 40,),
+                buildImage2Container(context),
+                SizedBox(height: 40,),
+                buildStepText3(context),
+                SizedBox(height: 40,),
+                buildImage3Container(context),
+                SizedBox(height: 40,),
+                buildNextButton(context),
+                SizedBox(height: 40,),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 40, right: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40,),
+                  child: statusBarDrawer(context),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -91,7 +109,7 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text("Design Sprint",
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -101,7 +119,7 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -109,10 +127,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -196,10 +214,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
                     Text("Home",
@@ -213,10 +231,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
                     Text("Design Sprint",
@@ -230,10 +248,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
                     Text("Tips",
@@ -247,10 +265,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
                     Text("Manage Team",
@@ -264,10 +282,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
                     Text("FaQ's",
@@ -281,10 +299,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Icon(Icons.image, color: Colors.grey.shade500,),
                     SizedBox(width: 10,),
                     Text("Legal Policy",
@@ -319,14 +337,21 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15),
               bottomLeft: Radius.circular(15),
-            )
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -347,24 +372,24 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 70,
+                  height: 120,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(home.savedSprintName,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
-                            fontSize: 20,
+                            fontSize: 25,
                           )
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -391,10 +416,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -421,10 +446,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -451,10 +476,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -481,10 +506,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -511,10 +536,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -541,10 +566,10 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -595,23 +620,18 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
   }
 
   Widget buildVideoContainer(BuildContext context){
-    return Stack(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: FlickVideoPlayer(
-              flickManager: flickManager,
-            flickVideoWithControls: FlickVideoWithControls(
-              controls: FlickPortraitControls(),
-            ),
-            flickVideoWithControlsFullscreen: FlickVideoWithControls(
-              controls: FlickLandscapeControls(),
-            ),
-          ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 215,
+      child: FlickVideoPlayer(
+          flickManager: flickManager,
+        flickVideoWithControls: FlickVideoWithControls(
+          controls: FlickPortraitControls(),
         ),
-        statusBarDrawer(context),
-      ],
+        flickVideoWithControlsFullscreen: FlickVideoWithControls(
+          controls: FlickLandscapeControls(),
+        ),
+      ),
     );
   }
 
@@ -645,12 +665,13 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Step 1: Identify the objective. What is\nthe problem you are trying to\nsolve?",
-            maxLines: 3,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Step 1: Identify the objective. What is the problem you are trying to solve?",
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],
@@ -683,12 +704,13 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Define the goal for your sprint. Ask\nyourself these questions. What do\nyou expect from solving this\nproblem? What do you want in long\nterm for eg: 6 months or an year?\nHow is your success is to be\nmeasured?",
-            maxLines: 7,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Define the goal for your sprint. Ask yourself these questions. What do you expect from solving this problem? What do you want in long term for eg: 6 months or an year? How is your success is to be measured?",
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],
@@ -721,12 +743,13 @@ class _SprintGoalTutorialState extends State<SprintGoalTutorial> {
             ),
           ),
           SizedBox(width: 5,),
-          Text("Define your guiding questions\nthat will be solved through the\ncourse of sprint. For eg: How\nmight we optimize the app to\nshow what users want? How might\nwe showcase the best selling\nproducts on our app to increase\nsales? How might we extract more\npersonal information from the\nusers to tailor our campaigns?",
-            maxLines: 10,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 16,
-                )
+          Flexible(
+            child: Text("Define your guiding questions that will be solved through the course of sprint. For eg: How might we optimize the app to show what users want? How might we showcase the best selling products on our app to increase sales? How might we extract more personal information from the users to tailor our campaigns?",
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
             ),
           ),
         ],

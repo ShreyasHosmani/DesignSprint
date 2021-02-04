@@ -1,7 +1,7 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -16,7 +16,7 @@ void main() {
     DeviceOrientation.portraitDown,
   ]);
   runApp(MyApp());
-  initFCM();
+  //initFCM();
 }
 
 class MyApp extends StatelessWidget {
@@ -33,8 +33,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
+/*
 initFCM() async {
 
   mainData.flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
@@ -76,6 +75,8 @@ initFCM() async {
     print("ios settings registered");
   });
 }
+
+ */
 
 
 showOnMessageNotification(var message) async {

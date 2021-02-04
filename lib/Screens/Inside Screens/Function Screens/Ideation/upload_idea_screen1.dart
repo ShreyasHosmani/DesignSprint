@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool statusDrawer = false;
 
@@ -94,20 +96,26 @@ class _UploadIdea1State extends State<UploadIdea1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
-      appBar: buildAppBar(context),
-      endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.white,
+          key: _scaffoldKey,
+          appBar: buildAppBar(context),
+          endDrawerEnableOpenDragGesture: true,
+          endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(bottom: 50),
+            child: Container(
+                height: 50,
+                child: buildNextButton(context)),
+          ),
+          body: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 buildName2Widget(context),
                 SizedBox(height: 68,),
                 buildName3Widget(context),
@@ -121,18 +129,18 @@ class _UploadIdea1State extends State<UploadIdea1> {
                 buildUploadButton(context),
                 SizedBox(height: 23,),
                 buildFileNameWidget(context),
-                SizedBox(height: 118,),
-                buildNextButton(context),
-                SizedBox(height: 52,),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
+        ),
+        Positioned(
+          top: 80, right: 0,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 80),
             child: statusBarDrawer(context),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -151,7 +159,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -161,7 +169,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -169,10 +177,10 @@ class _UploadIdea1State extends State<UploadIdea1> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -375,19 +383,26 @@ class _UploadIdea1State extends State<UploadIdea1> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -671,13 +686,14 @@ class _UploadIdea1State extends State<UploadIdea1> {
   }
 
   Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
+    return Padding(
+      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+      child: Center(
+        child: LinearPercentIndicator(
+          lineHeight: 10,
+          percent: (ideation.pageIndexIdea+1)/ideation.painPointsOfStatus2List.length,
+          backgroundColor: Colors.grey.shade300,
+          progressColor: Color(0xff302B70),
         ),
       ),
     );
@@ -724,14 +740,20 @@ class _UploadIdea1State extends State<UploadIdea1> {
       itemCount: ideation.ideaImagesPainPointWiseList == null ? 0 : ideation.ideaImagesPainPointWiseList.length,
       itemBuilder: (context, i) => Center(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: Text(ideation.ideaImagesPainPointWiseList[i],
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                )
+          padding: const EdgeInsets.only(bottom: 2, left: 35, right: 35),
+          child: InkWell(
+            onTap: (){
+              launch(globals.urlSignUp+ideation.ideaImagesPainPointWiseList[i]);
+            },
+            child: Text(ideation.ideaImagesPainPointWiseList[i],
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  )
+              ),
             ),
           ),
         ),

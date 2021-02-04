@@ -2,6 +2,7 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_team_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,33 +26,38 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
       body: Stack(
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20,),
-              buildName2Widget(context),
-              SizedBox(height: MediaQuery.of(context).size.height/12,),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  buildSoloButton(context),
-                  SizedBox(height: MediaQuery.of(context).size.height/20,),
-                  buildOrText(context),
-                  SizedBox(height: MediaQuery.of(context).size.height/20,),
-                  buildCreateTeamButton(context),
-                  SizedBox(height: MediaQuery.of(context).size.height/20,),
-                  buildOrText(context),
-                  SizedBox(height: MediaQuery.of(context).size.height/20,),
-                  buildManageTeamButton(context),
-                  SizedBox(height: MediaQuery.of(context).size.height/20,),
-                ],
-              )
+              buildSoloButton(context),
+              SizedBox(height: MediaQuery.of(context).size.height/20,),
+              buildOrText(context),
+              SizedBox(height: MediaQuery.of(context).size.height/20,),
+              buildCreateTeamButton(context),
+              SizedBox(height: MediaQuery.of(context).size.height/20,),
+              buildOrText(context),
+              SizedBox(height: MediaQuery.of(context).size.height/20,),
+              buildManageTeamButton(context),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
+          Positioned(
+            top: 40, right: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40,),
+                  child: statusBarDrawer(context),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 10,
+            left: 0,
+            right: 0,
+            child: buildName2Widget(context),
           ),
         ],
       ),
@@ -73,7 +79,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text("Design Sprint",
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -83,7 +89,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -91,10 +97,10 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -296,19 +302,26 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -594,7 +607,15 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
           width: 303,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("Solo",
@@ -625,7 +646,15 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
           width: 303,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("Create Team",
@@ -641,7 +670,14 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
   Widget buildManageTeamButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => TeamDataAndManageTeam(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
       },
       child: Center(
         child: Container(
@@ -649,7 +685,15 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
           width: 303,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(
             child: Text("Manage Team",

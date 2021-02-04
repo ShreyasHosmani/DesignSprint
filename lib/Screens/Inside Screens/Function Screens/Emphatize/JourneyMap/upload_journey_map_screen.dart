@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/APIs/create_journey_map.dart';
 import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/APIs/get_pain_points.dart';
@@ -16,6 +16,7 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool statusDrawer = false;
 bool showSecondStep = false;
@@ -102,13 +103,19 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 buildName2Widget(context),
                 SizedBox(height: 25,),
                 buildName3Widget(context),
@@ -125,12 +132,10 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                 showSecondStep == false && empathize.journeyMapImageNamesList == null ? Container(height: 1, width: 1,) :SizedBox(height: 40,),
                 showSecondStep == false && empathize.journeyMapImageNamesList == null ? Container(height: 1, width: 1,) :buildAddPainPointWidget(context),
                 showSecondStep == false && empathize.journeyMapImageNamesList == null ? SizedBox(height: 162,) : SizedBox(height: 30,),
-                buildNextButton(context),
-                SizedBox(height: 25,),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
             ),
           ],
@@ -154,7 +159,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -164,7 +169,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -172,10 +177,10 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -373,24 +378,31 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   Widget statusBarDrawer(BuildContext context){
     void _openEndDrawer() {
       setState(() {
-        empathize.statusDrawer = true;
+        statusDrawer = true;
       });
-      empathize.scaffoldKey.currentState.openEndDrawer();
+      _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Color(0xffd4d4d4)),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -795,15 +807,25 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       scrollDirection: Axis.vertical,
       itemCount: empathize.journeyMapImageNamesList == null ? 0 : empathize.journeyMapImageNamesList.length,
       itemBuilder: (context, i) => Center(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: Text(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null" ? ("Digital Journey Map"+(i+1).toString()) : empathize.journeyMapImageNamesList[i],
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                )
+        child: InkWell(
+          onTap: (){
+            if(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null"){
+
+            }else{
+              launch(globals.urlSignUp+empathize.journeyMapImageNamesList[i]);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 2, left: 30, right: 30),
+            child: Text(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null" ? ("Digital Journey Map"+(i+1).toString()) : empathize.journeyMapImageNamesList[i],
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  )
+              ),
             ),
           ),
         ),
@@ -868,6 +890,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
               children: [
                 TextFormField(
                   controller: empathize.painPointController,
+                  focusNode: focus,
                   decoration: InputDecoration(
                     hintText: 'Type your painpoint',
                     border: InputBorder.none,
@@ -879,14 +902,20 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text("Cancel",
-                      style: GoogleFonts.nunitoSans(
-                        color: Color(0xff787CD1)
+                    GestureDetector(
+                      onTap: (){
+                        empathize.painPointController.clear();
+                      },
+                      child: Text("Cancel",
+                        style: GoogleFonts.nunitoSans(
+                          color: Color(0xff787CD1)
+                        ),
                       ),
                     ),
                     SizedBox(width: 36,),
                     GestureDetector(
                       onTap: (){
+                        focus.unfocus();
                         setState(() {
                           showPainPoint = true;
                         });
@@ -987,3 +1016,4 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
 }
 
 List<String> ppListStatic;
+FocusNode focus = FocusNode();

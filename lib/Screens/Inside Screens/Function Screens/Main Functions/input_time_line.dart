@@ -30,11 +30,12 @@ class _InputTimelineState extends State<InputTimeline> {
       endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20,),
-            buildName2Widget(context),
             SizedBox(height: 10,),
+            buildName2Widget(context),
+            SizedBox(height: 20,),
             buildTimeLine1Card(context),
             SizedBox(height: 10,),
             buildTimeLine2Card(context),
@@ -48,7 +49,7 @@ class _InputTimelineState extends State<InputTimeline> {
 
   Widget buildAppBar(BuildContext context){
 
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+    Container line = Container(height:1, width:25, color: Colors.black,child: Divider());
     void _openEndDrawer() {
       _scaffoldKey.currentState.openEndDrawer();
     }
@@ -58,7 +59,7 @@ class _InputTimelineState extends State<InputTimeline> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -68,7 +69,7 @@ class _InputTimelineState extends State<InputTimeline> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             //showAlertDialog(context);
@@ -79,10 +80,10 @@ class _InputTimelineState extends State<InputTimeline> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -327,6 +328,7 @@ class _InputTimelineState extends State<InputTimeline> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -338,6 +340,7 @@ class _InputTimelineState extends State<InputTimeline> {
                           textStyle: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -353,6 +356,7 @@ class _InputTimelineState extends State<InputTimeline> {
                         textStyle: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -400,6 +404,7 @@ class _InputTimelineState extends State<InputTimeline> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -411,6 +416,7 @@ class _InputTimelineState extends State<InputTimeline> {
                           textStyle: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -426,6 +432,7 @@ class _InputTimelineState extends State<InputTimeline> {
                         textStyle: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -473,6 +480,7 @@ class _InputTimelineState extends State<InputTimeline> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -484,6 +492,7 @@ class _InputTimelineState extends State<InputTimeline> {
                           textStyle: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -499,6 +508,7 @@ class _InputTimelineState extends State<InputTimeline> {
                         textStyle: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),

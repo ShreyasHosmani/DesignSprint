@@ -4,6 +4,7 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -11,6 +12,8 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
 import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+
+bool enableSave = false;
 
 class CreateDigitalPersona extends StatefulWidget {
   @override
@@ -25,6 +28,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
     var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
     setState(() {
       empathize.imageOne = File(pickedFile.path);
+      enableSave = true;
     });
   }
   Future getImageOneGallery() async {
@@ -32,6 +36,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
     setState(() {
       empathize.imageOne = File(pickedFile.path);
+      enableSave = true;
     });
   }
   void _settingModalBottomSheetOne(context){
@@ -104,6 +109,25 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         }
     );
   }
+  void clearFields(BuildContext context){
+    setState(() {
+      empathize.nameController.clear();
+      empathize.ageController.clear();
+      empathize.locationController.clear();
+      empathize.educationController.clear();
+      empathize.jobController.clear();
+      empathize.bioController.clear();
+      empathize.goalsAndMotivationController.clear();
+      empathize.imageOne = null;
+      enableSave = false;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    enableSave = false;
+  }
   @override
   Widget build(BuildContext context) {
     empathize.prDigitalPersona = ProgressDialog(context);
@@ -121,7 +145,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20,),
+                  SizedBox(height: 10,),
                   buildName2Widget(context),
                   SizedBox(height: 43,),
                   buildEditDpWidget(context),
@@ -155,7 +179,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
             ),
           ],
@@ -179,7 +203,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -189,7 +213,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -197,10 +221,10 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -398,24 +422,31 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   Widget statusBarDrawer(BuildContext context){
     void _openEndDrawer() {
       setState(() {
-        empathize.statusDrawer = true;
+        statusDrawer = true;
       });
       empathize.scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Color(0xffd4d4d4)),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -724,7 +755,16 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         width: 192,
         decoration: BoxDecoration(
           border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
         ),
         child: Center(
           child: buildAddPhotoWidget(context),
@@ -735,11 +775,24 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       width: 192,
       decoration: BoxDecoration(
           border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+        image: DecorationImage(
+          image: FileImage(empathize.imageOne),
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Center(
-        child: Image.file(empathize.imageOne, fit: BoxFit.cover,),
-      ),
+//      child: Center(
+//        child: Image.file(empathize.imageOne, fit: BoxFit.cover,),
+//      ),
     );
   }
 
@@ -748,8 +801,17 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       width: 302,
         height: 47,
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffd4d4d4)),
-        borderRadius: BorderRadius.all(Radius.circular(7))
+        border: empathize.nameController.text.toString() == null || empathize.nameController.text.toString() == "" || empathize.nameController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+        borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
@@ -757,8 +819,14 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           controller: empathize.nameController,
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: hint.hintName
+            hintText: hint.hintName,
           ),
+          style: TextStyle(color: Color(0xff787cd1)),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
           validator: (val){
             if(val.isEmpty){
               return hint.validationName;
@@ -775,17 +843,32 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       width: 302,
       height: 47,
       decoration: BoxDecoration(
-          border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          border: empathize.ageController.text.toString() == null || empathize.ageController.text.toString() == "" || empathize.ageController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.ageController,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintAge
           ),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
           validator: (val){
             if(val.isEmpty){
               return hint.ageValidation;
@@ -802,17 +885,32 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       width: 302,
       height: 47,
       decoration: BoxDecoration(
-          border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          border: empathize.locationController.text.toString() == null || empathize.locationController.text.toString() == "" || empathize.locationController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.locationController,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintLocation
           ),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
           validator: (val){
             if(val.isEmpty){
               return hint.locationValidation;
@@ -829,17 +927,32 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       width: 302,
       height: 47,
       decoration: BoxDecoration(
-          border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          border: empathize.educationController.text.toString() == null || empathize.educationController.text.toString() == "" || empathize.educationController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.educationController,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintEducation
           ),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
           validator: (val){
             if(val.isEmpty){
               return hint.educationValidation;
@@ -856,17 +969,32 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       width: 302,
       height: 47,
       decoration: BoxDecoration(
-          border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          border: empathize.jobController.text.toString() == null || empathize.jobController.text.toString() == "" || empathize.jobController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.jobController,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintJob
           ),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
           validator: (val){
             if(val.isEmpty){
               return hint.jobValidation;
@@ -883,12 +1011,22 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       height: 148,
       width: 302,
       decoration: BoxDecoration(
-          border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          border: empathize.bioController.text.toString() == null || empathize.bioController.text.toString() == "" || empathize.bioController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          style: TextStyle(color: Color(0xff787cd1)),
           autofocus:false ,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
@@ -898,6 +1036,11 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
             hintText: hint.hintBio,
             border: InputBorder.none,
           ),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
           validator: (val){
             if(val.isEmpty){
               return hint.bioValidation;
@@ -914,12 +1057,22 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       height: 148,
       width: 302,
       decoration: BoxDecoration(
-          border: Border.all(color: Color(0xffd4d4d4)),
-          borderRadius: BorderRadius.all(Radius.circular(7))
+          border: empathize.goalsAndMotivationController.text.toString() == null || empathize.goalsAndMotivationController.text.toString() == "" || empathize.goalsAndMotivationController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
+          style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.goalsAndMotivationController,
           autofocus:false ,
           keyboardType: TextInputType.text,
@@ -929,6 +1082,11 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
             hintText: hint.hintGoalsAndMotivation,
             border: InputBorder.none,
           ),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
           validator: (val){
             if(val.isEmpty){
               return hint.goalsAndMotivationValidation;
@@ -943,11 +1101,40 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   Widget saveButton(BuildContext context){
     return InkWell(
       onTap: (){
-        if(empathize.formKey.currentState.validate()){
-          empathize.prDigitalPersona.show();
-          createPersonaApiProvider.createDigitalPersona(context);
+        if(enableSave == true){
+          if(empathize.formKey.currentState.validate()){
+            empathize.prDigitalPersona.show();
+            createPersonaApiProvider.createDigitalPersona(context);
+          }
+        }else{
+          Fluttertoast.showToast(msg: "You've not entered anything", backgroundColor: Colors.black,
+            textColor: Colors.white,);
         }
       },
+      child: Container(
+        height: 35,
+        width: 114,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: enableSave == true ? Color(0xff787cd1) : Color(0xffd4d4d4),
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(50)),
+        ),
+        child: Center(
+          child: Text(empathize.saveButton,
+            style: GoogleFonts.nunitoSans(
+              fontSize: 16,
+              color: enableSave == true ? Color(0xff787cd1) : Colors.grey,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget newPersonaButton(BuildContext context){
+    return InkWell(
+      onTap: () => clearFields(context),
       child: Container(
         height: 35,
         width: 114,
@@ -958,32 +1145,11 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           borderRadius: BorderRadius.all(Radius.circular(50)),
         ),
         child: Center(
-          child: Text(empathize.saveButton,
+          child: Text(empathize.newPersonaButton,
             style: GoogleFonts.nunitoSans(
               fontSize: 16,
               color: Colors.grey,
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget newPersonaButton(BuildContext context){
-    return Container(
-      height: 35,
-      width: 114,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Color(0xffd4d4d4),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-      ),
-      child: Center(
-        child: Text(empathize.newPersonaButton,
-          style: GoogleFonts.nunitoSans(
-            fontSize: 16,
-            color: Colors.grey,
           ),
         ),
       ),

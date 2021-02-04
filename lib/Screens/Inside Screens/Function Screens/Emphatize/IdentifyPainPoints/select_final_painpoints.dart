@@ -8,6 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 bool statusDrawer = false;
 
@@ -20,35 +23,80 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  @override
-  void initState() {
-    super.initState();
-    checkList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
-    getPainPointsApiProvider.getPainPointsAccordingToVotes(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+  Future<String> getPainPointsAccordingToVotes(context) async {
+
+    String url = globals.urlSignUp + "getsprintvote.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetPainPointsAccToVotes = jsonDecode(response.body);
+      print(empathize.responseArrayGetPainPointsAccToVotes);
+
+      empathize.responseArrayGetPainPointsAccToVotesMsg = empathize.responseArrayGetPainPointsAccToVotes['message'].toString();
+      print(empathize.responseArrayGetPainPointsAccToVotesMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayGetPainPointsAccToVotesMsg == "Data Found"){
+          setState(() {
+            empathize.painPointsListAccToVotes = List.generate(empathize.responseArrayGetPainPointsAccToVotes['data'].length, (index) => empathize.responseArrayGetPainPointsAccToVotes['data'][index]['ppName'].toString());
+            empathize.painPointIdsListAccToVotes = List.generate(empathize.responseArrayGetPainPointsAccToVotes['data'].length, (index) => empathize.responseArrayGetPainPointsAccToVotes['data'][index]['ppID'].toString());
+          });
+          print(empathize.painPointsListAccToVotes.toList());
+          print(empathize.painPointIdsListAccToVotes.toList());
+        }else{
+          setState(() {
+            empathize.painPointsListAccToVotes = null;
+          });
+        }
+      }
     });
   }
   @override
+  void initState() {
+    super.initState();
+    empathize.painPointsListAccToVotes = null;
+    checkList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+    getPainPointsAccordingToVotes(context);
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return empathize.painPointsListAccToVotes == null ? Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    ) : Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
             SizedBox(height: 20,),
             buildName3Widget(context),
             SizedBox(height: 35,),
             buildPainPointsList(context),
-            SizedBox(height: 40,),
-            buildNextButton(context),
             SizedBox(height: 40,),
           ],
         ),
@@ -71,7 +119,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -81,7 +129,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -89,10 +137,10 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -295,19 +343,26 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),

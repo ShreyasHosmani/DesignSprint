@@ -83,9 +83,9 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
-            SizedBox(height: 46,),
+            SizedBox(height: 25,),
             buildSprintGoalCard(context),
             SizedBox(height: 21,),
             buildEmpathizeCard(context),
@@ -118,7 +118,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -128,7 +128,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -136,10 +136,10 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -386,6 +386,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -442,6 +443,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -498,6 +500,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -554,6 +557,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -610,6 +614,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -666,6 +671,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -722,6 +728,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),

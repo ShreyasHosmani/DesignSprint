@@ -1,10 +1,47 @@
 PODS:
+  - AppAuth (1.4.0):
+    - AppAuth/Core (= 1.4.0)
+    - AppAuth/ExternalUserAgent (= 1.4.0)
+  - AppAuth/Core (1.4.0)
+  - AppAuth/ExternalUserAgent (1.4.0)
+  - FBSDKCoreKit (5.15.1):
+    - FBSDKCoreKit/Basics (= 5.15.1)
+    - FBSDKCoreKit/Core (= 5.15.1)
+  - FBSDKCoreKit/Basics (5.15.1)
+  - FBSDKCoreKit/Core (5.15.1):
+    - FBSDKCoreKit/Basics
+  - FBSDKLoginKit (5.15.1):
+    - FBSDKLoginKit/Login (= 5.15.1)
+  - FBSDKLoginKit/Login (5.15.1):
+    - FBSDKCoreKit (~> 5.0)
   - Flutter (1.0.0)
   - flutter_email_sender (0.0.1):
     - Flutter
+  - flutter_facebook_login (0.0.1):
+    - FBSDKCoreKit (~> 5.5)
+    - FBSDKLoginKit (~> 5.5)
+    - Flutter
+  - flutter_local_notifications (0.0.1):
+    - Flutter
+  - flutter_webview_plugin (0.0.1):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
-    - Toast
+  - google_sign_in (0.0.1):
+    - Flutter
+    - GoogleSignIn (~> 5.0)
+  - GoogleSignIn (5.0.2):
+    - AppAuth (~> 1.2)
+    - GTMAppAuth (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GTMAppAuth (1.1.0):
+    - AppAuth/Core (~> 1.4)
+    - GTMSessionFetcher (~> 1.4)
+  - GTMSessionFetcher (1.5.0):
+    - GTMSessionFetcher/Full (= 1.5.0)
+  - GTMSessionFetcher/Core (1.5.0)
+  - GTMSessionFetcher/Full (1.5.0):
+    - GTMSessionFetcher/Core (= 1.5.0)
   - image_picker (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -13,31 +50,53 @@ PODS:
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
-  - Toast (4.0.0)
   - url_launcher (0.0.1):
+    - Flutter
+  - video_player (0.0.1):
+    - Flutter
+  - wakelock (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_email_sender (from `.symlinks/plugins/flutter_email_sender/ios`)
+  - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - searchable_dropdown (from `.symlinks/plugins/searchable_dropdown/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
   trunk:
-    - Toast
+    - AppAuth
+    - FBSDKCoreKit
+    - FBSDKLoginKit
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_email_sender:
     :path: ".symlinks/plugins/flutter_email_sender/ios"
+  flutter_facebook_login:
+    :path: ".symlinks/plugins/flutter_facebook_login/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_webview_plugin:
+    :path: ".symlinks/plugins/flutter_webview_plugin/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
+  google_sign_in:
+    :path: ".symlinks/plugins/google_sign_in/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   path_provider:
@@ -48,17 +107,32 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
+  AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df
+  FBSDKLoginKit: f1ea8026a58b52d30c9f2e6a58ca7d813619fb83
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_email_sender: f787522d0e82f50e5766c1213dbffff22fdcf009
-  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
+  flutter_facebook_login: cfb5659f686b1c575ef205c6b6fd20db9679d3c4
+  flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
+  flutter_webview_plugin: ed9e8a6a96baf0c867e90e1bce2673913eeac694
+  fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
+  google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
+  GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
+  GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   searchable_dropdown: 5058be32fdc5e0481d300ff2087129072e71bd62
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
-  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
+  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
+  wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4
 
 PODFILE CHECKSUM: 80a5bea9f6900750909f6d3fad1d3a0f1e560f5a
 

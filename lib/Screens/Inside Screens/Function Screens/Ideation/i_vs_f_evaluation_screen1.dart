@@ -11,6 +11,8 @@ import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool statusDrawer = false;
 
@@ -108,12 +110,12 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
           child: Stack(
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20,),
+                  SizedBox(height: 10,),
                   buildName2Widget(context),
-                  SizedBox(height: 48,),
+                  SizedBox(height: 25,),
                   buildName3Widget(context),
                   SizedBox(height: 20,),
                   buildLevelContainer(context),
@@ -135,7 +137,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40),
+                padding: const EdgeInsets.only(top: 80),
                 child: statusBarDrawer(context),
               ),
             ],
@@ -160,7 +162,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -170,7 +172,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             Navigator.pushReplacement(
@@ -187,10 +189,10 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -398,14 +400,21 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -689,13 +698,14 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   }
 
   Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
+    return Padding(
+      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+      child: Center(
+        child: LinearPercentIndicator(
+          lineHeight: 10,
+          percent: (ideation.pageIndexIvsF+1)/ideation.painPointsOfStatus2List2.length,
+          backgroundColor: Colors.grey.shade300,
+          progressColor: Color(0xff302B70),
         ),
       ),
     );
@@ -730,15 +740,20 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
         borderRadius: BorderRadius.all(Radius.circular(7)),
         border: Border.all(color: Colors.grey),
       ),
-    ) : Container(
-      height: 161,
-      width: 302,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(7)),
-        border: Border.all(color: Colors.grey),
-        image: DecorationImage(
-          image: NetworkImage(globals.urlSignUp + ideation.ideaImagesPainPointWiseList[0]),
-          fit: BoxFit.cover
+    ) : InkWell(
+      onTap: (){
+        launch(globals.urlSignUp+ideation.ideaImagesPainPointWiseList[0]);
+      },
+      child: Container(
+        height: 161,
+        width: 302,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+          border: Border.all(color: Colors.grey),
+          image: DecorationImage(
+            image: NetworkImage(globals.urlSignUp + ideation.ideaImagesPainPointWiseList[0]),
+            fit: BoxFit.cover
+          ),
         ),
       ),
     );

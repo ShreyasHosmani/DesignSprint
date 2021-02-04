@@ -9,8 +9,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 bool statusDrawer = false;
+double percentage = 0;
 
 class VotePageViewBuilder extends StatefulWidget {
   @override
@@ -19,17 +24,56 @@ class VotePageViewBuilder extends StatefulWidget {
 
 class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  Future<String> getPainPoints(context) async {
+
+    String url = globals.urlSignUp + "getpainpoint.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+      "mapID" : "null",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetPainPoints = jsonDecode(response.body);
+      print(empathize.responseArrayGetPainPoints);
+
+      empathize.responseArrayGetPainPointsMsg = empathize.responseArrayGetPainPoints['message'].toString();
+      print(empathize.responseArrayGetPainPointsMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayGetPainPointsMsg == "Painpoint Data Found"){
+          setState(() {
+            empathize.painPointsList = List.generate(empathize.responseArrayGetPainPoints['data'].length, (index) => empathize.responseArrayGetPainPoints['data'][index]['ppName'].toString());
+            empathize.painPointIdsList = List.generate(empathize.responseArrayGetPainPoints['data'].length, (index) => empathize.responseArrayGetPainPoints['data'][index]['ppID'].toString());
+            //percentage = (int.parse(empathize.painPointIdsList[empathize.pageIndex]) / int.parse(empathize.painPointsList.length)).toDouble();
+          });
+          print(empathize.painPointsList.toList());
+          print(empathize.painPointIdsList.toList());
+          print((empathize.pageIndex+1)/empathize.painPointsList.length);
+        }else{
+          setState(() {
+            empathize.painPointsList = "1";
+          });
+        }
+      }
+    });
+  }
   final controller = PageController(viewportFraction: 1);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     empathize.pageIndex = 0;
+    percentage = 0;
     print(empathize.pageIndex);
     empathize.painPointsList = null;
-    getPainPointsApiProvider.getPainPoints(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getPainPoints(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -37,6 +81,25 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
       backgroundColor: Colors.white,
       body: empathize.painPointsList == null ? Center(
         child: CircularProgressIndicator(),
+      ) : empathize.painPointsList == "1" ? Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.warning,
+              size: 60,
+              color: Color(0xff787cd1),
+            ),
+            Text("You have not uploaded any pain points, please go back and upload the pain points!",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunitoSans(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ) : PageView.builder(
         physics:new NeverScrollableScrollPhysics(),
         itemCount: empathize.painPointsList == null ? 0 : empathize.painPointsList.length,
@@ -82,40 +145,47 @@ class _VotePainPointsState extends State<VotePainPoints> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      body: WillPopScope(
-        onWillPop: ()=> Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
+      body: Stack(
+        children: [
+          WillPopScope(
+            onWillPop: ()=> Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                buildName3Widget(context),
+                SizedBox(height: 20,),
+                buildLevelContainer(context),
+                SizedBox(height: 46,),
+                buildPainPointNumberIndicator(context),
+                SizedBox(height: 46,),
+                buildName4Widget(context),
+                SizedBox(height: 74,),
+                buildName5Widget(context),
+                SizedBox(height: 25,),
+                buildVoteRow(context),
+                SizedBox(height: MediaQuery.of(context).size.height/10,),
+              ],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20,),
-              buildName2Widget(context),
-              SizedBox(height: 20,),
-              buildName3Widget(context),
-              SizedBox(height: 20,),
-              buildLevelContainer(context),
-              SizedBox(height: 46,),
-              buildPainPointNumberIndicator(context),
-              SizedBox(height: 46,),
-              buildName4Widget(context),
-              SizedBox(height: 74,),
-              buildName5Widget(context),
-              SizedBox(height: 25,),
-              buildVoteRow(context),
-              SizedBox(height: MediaQuery.of(context).size.height/10,),
-              buildNextButton(context),
-              SizedBox(height: 25,),
-            ],
+          Positioned(
+            top: 10, left: 0, right: 0,
+            child: buildName2Widget(context),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -135,7 +205,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -145,7 +215,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             widget.controller.animateToPage(empathize.pageIndex - 1, duration: Duration(seconds: 1), curve: Curves.easeIn);
@@ -155,10 +225,10 @@ class _VotePainPointsState extends State<VotePainPoints> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -657,13 +727,14 @@ class _VotePainPointsState extends State<VotePainPoints> {
   }
 
   Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-          color: Color(0xff302B70),
-          borderRadius: BorderRadius.all(Radius.circular(5))
+    return Padding(
+      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+      child: Center(
+        child: LinearPercentIndicator(
+          lineHeight: 10,
+          percent: (empathize.pageIndex+1)/empathize.painPointsList.length,
+          backgroundColor: Colors.grey.shade300,
+          progressColor: Color(0xff302B70),
         ),
       ),
     );

@@ -1,14 +1,17 @@
 import 'package:design_sprint/APIs/create_add_team.dart';
-import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_manage_team.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen_seperate.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/team_data.dart' as team;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/hint_texts.dart' as hint;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
 
 bool statusDrawer = false;
 
@@ -19,46 +22,149 @@ class TeamDataAndManageTeam extends StatefulWidget {
 
 class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
   TeamApiProvider teamApiProvider = TeamApiProvider();
+  Future<String> getTeamNames(context) async {
+
+    String url = globals.urlLogin + "getteamname.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayTeamNames = jsonDecode(response.body);
+      print(team.responseArrayTeamNames);
+
+      team.responseArrayTeamNamesMsg = team.responseArrayTeamNames['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayTeamNamesMsg == "Profile Found"){
+
+          setState(() {
+            team.teamNamesList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnName'].toString());
+            team.teamNamesIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnID'].toString());
+          });
+
+          print(team.teamNamesList.toList());
+          print(team.teamNamesIdsList.toList());
+
+        }else{
+
+          setState(() {
+            team.teamNamesList = "1";
+            team.teamNamesIdsList = "1";
+          });
+
+        }
+      }
+
+    });
+  }
+  Future<String> deleteTeam(context) async {
+
+    String url = globals.urlSignUp + "deleteteam.php";
+
+    http.post(url, body: {
+
+      "teamID" : selectedTeamIdForDeleting.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayDeleteTeam = jsonDecode(response.body);
+      print(responseArrayDeleteTeam);
+
+      var msg = responseArrayDeleteTeam['message'].toString();
+      if(statusCode == 200){
+        if(msg == "Team deleted"){
+          Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+              getTeamNames(context);
+          });
+        }else{
+          Fluttertoast.showToast(msg: "error deleting team", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     team.teamNamesList = null;
-    teamApiProvider.getTeamNames(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    selectedTeamIdForDeleting = null;
+    getTeamNames(context);
   }
   @override
   Widget build(BuildContext context) {
     team.prTeam = ProgressDialog(context);
-    return Scaffold(
+    return team.teamNamesList == null ? Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    ) : Scaffold(
       backgroundColor: Colors.white,
       key: team.scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommon(),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 40,),
-                buildTeamNameCardWidget(context),
-                SizedBox(height: 40,),
-                buildAddTeamWidget(context),
-                SizedBox(height: 40,),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
-          ),
-        ],
+      endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommonManageTeam(),
+      body:
+//      team.teamNamesList.length < 5 ? Stack(
+//        children: [
+//          Column(
+//            mainAxisAlignment: MainAxisAlignment.center,
+//            crossAxisAlignment: CrossAxisAlignment.center,
+//            children: [
+//              buildTeamNameCardWidget(context),
+//              SizedBox(height: 40,),
+//              buildAddTeamWidget(context),
+//              SizedBox(height: 40,),
+//            ],
+//          ),
+//          Positioned(
+//            top: 10,left: 0,right: 0,
+//            child: buildName2Widget(context),
+//          ),
+//          Positioned(
+//            top: 40, right: 0,
+//            child: Container(
+//              width: MediaQuery.of(context).size.width,
+//              child: Align(
+//                alignment: Alignment.topRight,
+//                child: Padding(
+//                  padding: EdgeInsets.only(top: 40,),
+//                  child: statusBarDrawer(context),
+//                ),
+//              ),
+//            ),
+//          ),
+//        ],
+//      ) :
+      SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 10,),
+            buildName2Widget(context),
+            SizedBox(height: 20,),
+            buildTeamNameCardWidget(context),
+            SizedBox(height: 40,),
+            buildAddTeamWidget(context),
+            SizedBox(height: 40,),
+          ],
+        ),
       ),
     );
   }
@@ -78,7 +184,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(team.appBarTitle,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -88,7 +194,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -96,10 +202,10 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -302,19 +408,26 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
       team.scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -583,7 +696,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
   }
 
   Widget buildTeamNameCardWidget(BuildContext context){
-    return team.teamNamesList == null ? Container() : ListView.builder(
+    return team.teamNamesList == null || team.teamNamesList == "1" ? Container() : ListView.builder(
       physics: ScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
@@ -602,21 +715,83 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
         child: Padding(
           padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
           child: Container(
-            width: 302,
-            height: 57,
-            decoration: BoxDecoration(
-                border: Border.all(color: Color(0xff787cd1)),
-                borderRadius: BorderRadius.all(Radius.circular(7))
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: Center(
-                child: Text(team.teamNamesList[i],
-                  style: GoogleFonts.nunitoSans(
-                    fontSize: 18,
+            height: 65,
+            child: Stack(
+              children: [
+                Center(
+                  child: Container(
+                    width: 302,
+                    height: 57,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xff787cd1)),
+                        borderRadius: BorderRadius.all(Radius.circular(7))
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Center(
+                        child: Text(team.teamNamesList[i],
+                          style: GoogleFonts.nunitoSans(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, bottom: 0),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                      child: PopupMenuButton<String>(
+                        onSelected: (val){
+                          setState(() {
+                            selectedTeamIdForDeleting = team.teamNamesIdsList[i];
+                          });
+                          print(selectedTeamIdForDeleting);
+                          showAlertDialogDeleteTeam(context);
+                        },
+                        icon: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(height: 3,width: 3,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(50))
+                              ),
+                            ),
+                            SizedBox(height: 3,),
+                            Container(height: 3,width: 3,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.all(Radius.circular(50))
+                              ),
+                            ),
+                            SizedBox(height: 3,),
+                            Container(height: 3,width: 3,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.all(Radius.circular(50))
+                              ),
+                            ),
+                          ],
+                        ),
+                        color: Colors.white,
+                        itemBuilder: (BuildContext context) {
+                          return {'Delete Team'}.map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              textStyle: GoogleFonts.nunitoSans(
+                                color: Colors.grey.shade700,
+                                fontSize: 16,
+                              ),
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                      ),
+                ),),
+              ],
             ),
           ),
         ),
@@ -667,7 +842,8 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
           child: TextFormField(
             controller: team.teamNameController,
             decoration: InputDecoration(
-                hintText: ''
+                hintText: 'Enter team name',
+              hintStyle: GoogleFonts.nunitoSans(letterSpacing: 0.5)
             ),
             validator: (value){
               if(value.isEmpty){
@@ -756,4 +932,45 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
     );
   }
 
+  showAlertDialogDeleteTeam(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Delete"),
+      onPressed:  () async {
+        Navigator.of(context).pop();
+        Fluttertoast.showToast(msg: "deleting...", backgroundColor: Colors.black,
+          textColor: Colors.white,);
+        deleteTeam(context);
+      },
+
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Team"),
+      content: Text("Are you sure you want to delete this team? Once deleted, it cannot be recovered!"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }
+
+var selectedTeamIdForDeleting;

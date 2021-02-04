@@ -24,62 +24,64 @@ class _CongratulationsState extends State<Congratulations> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      endDrawerEnableOpenDragGesture: true,
-      appBar: buildAppBar(context),
-      endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
-      body: WillPopScope(
-        onWillPop: () => showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Exit App!'),
-            content: new Text('Are you sure you want to exit the app?'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text("No"),
-                ),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => exit(0),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text("Yes"),
-                ),
-              ),
-            ],
+    return Stack(
+      children: [
+        Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.white,
+          endDrawerEnableOpenDragGesture: true,
+          appBar: buildAppBar(context),
+          endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(bottom: 50),
+            child: Container(height:50,child: buildNextButton(context)),
           ),
-        ),
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  buildImage(context),
-                  SizedBox(height: 60,),
-                  buildText(context),
-                  SizedBox(height: 26,),
-                  buildInfoText(context),
-                  SizedBox(height: 70,),
-                  buildNextButton(context),
-                  SizedBox(height: 40,),
+          body: WillPopScope(
+            onWillPop: () => showDialog(
+              context: context,
+              builder: (context) => new AlertDialog(
+                title: new Text('Exit App!'),
+                content: new Text('Are you sure you want to exit the app?'),
+                actions: <Widget>[
+                  new GestureDetector(
+                    onTap: () => Navigator.of(context).pop(false),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("No"),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  new GestureDetector(
+                    onTap: () => exit(0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("Yes"),
+                    ),
+                  ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 80),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                buildImage(context),
+                SizedBox(height: 60,),
+                buildText(context),
+                SizedBox(height: 26,),
+                buildInfoText(context),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+            top: 40,right: 0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 100),
               child: statusBarDrawer(context),
             ),
-          ],
-        ),
-      ),
+          ),
+      ],
     );
   }
 
@@ -99,10 +101,10 @@ class _CongratulationsState extends State<Congratulations> {
       centerTitle: true,
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -305,19 +307,26 @@ class _CongratulationsState extends State<Congratulations> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),

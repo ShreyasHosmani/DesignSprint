@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/ReusableWidgets/countdown_timer_widget.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
@@ -12,6 +11,11 @@ import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 bool statusDrawer = false;
 Timer _timer;
@@ -25,14 +29,51 @@ class GetPainPointsOfStatusTwoPageViewBuilder extends StatefulWidget {
 class _GetPainPointsOfStatusTwoPageViewBuilderState extends State<GetPainPointsOfStatusTwoPageViewBuilder> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   final controller = PageController(viewportFraction: 1);
+  Future<String> getPainPointsOfStatusTwo(context) async {
+
+    String url = globals.urlSignUp + "getpainpointpriority.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetPainPointsOfStatusTwo = jsonDecode(response.body);
+      print(ideation.responseArrayGetPainPointsOfStatusTwo);
+
+      ideation.responseArrayGetPainPointsOfStatusTwoMsg = ideation.responseArrayGetPainPointsOfStatusTwo['message'].toString();
+      print(ideation.responseArrayGetPainPointsOfStatusTwoMsg);
+      if(statusCode == 200){
+        if(ideation.responseArrayGetPainPointsOfStatusTwoMsg == "Data Found"){
+          setState(() {
+            ideation.painPointsOfStatus2List = List.generate(ideation.responseArrayGetPainPointsOfStatusTwo['data'].length, (index) => ideation.responseArrayGetPainPointsOfStatusTwo['data'][index]['ppName'].toString());
+            ideation.painPointsIdsOfStatus2List = List.generate(ideation.responseArrayGetPainPointsOfStatusTwo['data'].length, (index) => ideation.responseArrayGetPainPointsOfStatusTwo['data'][index]['ppID'].toString());
+          });
+          print(ideation.painPointsOfStatus2List.toList());
+          print(ideation.painPointsIdsOfStatus2List.toList());
+          print((ideation.pageIndex+1)/ideation.painPointsOfStatus2List.length);
+        }else{
+          setState(() {
+            ideation.painPointsOfStatus2List = null;
+          });
+        }
+      }
+    });
+  }
   @override
   void initState() {
     super.initState();
     ideation.pageIndex = 0;
+    ideation.painPointsOfStatus2List = null;
     print(ideation.pageIndex);
-    getPainPointsApiProvider.getPainPointsOfStatusTwo(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getPainPointsOfStatusTwo(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -103,6 +144,12 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: WillPopScope(
         onWillPop: () => Navigator.pushReplacement(
           context,
@@ -112,40 +159,29 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
             transitionDuration: Duration(milliseconds: 300),
           ),
         ),
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20,),
-                  buildName2Widget(context),
-                  SizedBox(height: 68,),
-                  buildName3Widget(context),
-                  SizedBox(height: 35,),
-                  buildLevelContainer(context),
-                  SizedBox(height: 72,),
-                  buildNumberIndicator(context),
-                  SizedBox(height: 35,),
-                  buildName4Widget(context),
-                  SizedBox(height: 50,),
-                  buildTimerWidget(context),
-                  SizedBox(height: 42,),
-                  saveButton(context),
-                  SizedBox(height: 20,),
-                  buildName5Widget(context),
-                  SizedBox(height: 52,),
-                  buildNextButton(context),
-                  SizedBox(height: 52,),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: statusBarDrawer(context),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10,),
+              buildName2Widget(context),
+              SizedBox(height: 68,),
+              buildName3Widget(context),
+              SizedBox(height: 35,),
+              buildLevelContainer(context),
+              SizedBox(height: 72,),
+              buildNumberIndicator(context),
+              SizedBox(height: 35,),
+              buildName4Widget(context),
+              SizedBox(height: 50,),
+              buildTimerWidget(context),
+              SizedBox(height: 42,),
+              saveButton(context),
+              SizedBox(height: 20,),
+              buildName5Widget(context),
+            ],
+          ),
         ),
       ),
     );
@@ -166,7 +202,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -176,7 +212,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             Navigator.pushReplacement(
@@ -193,10 +229,10 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -399,19 +435,26 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -695,13 +738,14 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   }
 
   Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
+    return Padding(
+      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+      child: Center(
+        child: LinearPercentIndicator(
+          lineHeight: 10,
+          percent: (ideation.pageIndex+1)/ideation.painPointsOfStatus2List.length,
+          backgroundColor: Colors.grey.shade300,
+          progressColor: Color(0xff302B70),
         ),
       ),
     );
@@ -741,15 +785,16 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   }
 
   Widget buildTimerWidget(BuildContext context){
-    return Center(
-      child: Text("$_start",
-        style: TextStyle(
-          color: ideation.timer < 120 ? Colors.red : Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 29,
-        ),
-      ),
-      /*
+    return
+//      Center(
+//      child: Text("$_start",
+//        style: TextStyle(
+//          color: ideation.timer < 120 ? Colors.red : Colors.black,
+//          fontWeight: FontWeight.w700,
+//          fontSize: 29,
+//        ),
+//      ),
+
       CountDownTimer(
         secondsRemaining: ideation.timer,
         whenTimeExpires: () {
@@ -760,10 +805,8 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
           fontWeight: FontWeight.w700,
           fontSize: 29,
         ),
-      ),
-
-       */
-    );
+      );
+    //);
   }
 
   Widget saveButton(BuildContext context){

@@ -20,7 +20,6 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     home.prCreateSprint = ProgressDialog(context);
@@ -34,7 +33,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
             SizedBox(height: 25,),
             buildDesignSprintCard(context),
@@ -59,7 +58,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -69,18 +68,18 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
-        child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
+        padding: const EdgeInsets.only(left: 15, top: 0),
+        child: GestureDetector(
+          onTap: (){Navigator.of(context).pop();},
+          child: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -144,6 +143,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -155,6 +155,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -214,6 +215,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -225,6 +227,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -544,23 +547,25 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
           SizedBox(height: 10,),
           Text(home.popUp1, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
           Text(home.popUp2,style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
-          //SizedBox(height: 10,)
+          SizedBox(height: 10,)
         ],
       ),
       content: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: MediaQuery.of(context).size.height/4.5,
           width: MediaQuery.of(context).size.width,
           child: Form(
             key: home.formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                textField,
-                SizedBox(height: 5,),
-                buildSaveButton,
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  textField,
+                  SizedBox(height: 25,),
+                  buildSaveButton,
+                  SizedBox(height: 25,),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Shadowing/shadowing_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Testing%20Screens/user_testing_inside_sections3.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,9 +33,9 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 buildName2Widget(context),
-                SizedBox(height: 40,),
+                SizedBox(height: 25,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,7 +71,7 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
             ),
           ],
@@ -94,7 +95,7 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(userTesting.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -104,7 +105,7 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -112,10 +113,10 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -318,19 +319,26 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -638,6 +646,7 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
                         textStyle: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -698,6 +707,7 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
                         textStyle: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -758,6 +768,7 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
                         textStyle: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -823,7 +834,7 @@ class _UserTestingInsideSections2State extends State<UserTestingInsideSections2>
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => UserTestingInsideSections3(),
+            pageBuilder: (c, a1, a2) => ShadowingTutorial(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),

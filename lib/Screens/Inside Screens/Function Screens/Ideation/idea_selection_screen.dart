@@ -10,6 +10,11 @@ import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:url_launcher/url_launcher.dart';
 
 bool statusDrawer = false;
 
@@ -22,17 +27,87 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
+  Future<String> getPainPointsByIvsFPriority(context) async {
+
+    String url = globals.urlSignUp + "getimpactfeasibilityvote.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetIvsFByPriority = jsonDecode(response.body);
+      print(ideation.responseArrayGetIvsFByPriority);
+
+      ideation.responseArrayGetIvsFByPriorityMsg = ideation.responseArrayGetIvsFByPriority['message'].toString();
+      print(ideation.responseArrayGetIvsFByPriorityMsg);
+      if(statusCode == 200){
+        if(ideation.responseArrayGetIvsFByPriorityMsg == "Data Found"){
+          setState(() {
+            ideation.painPointsByIvsFPriorityList = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppName'].toString());
+            ideation.painPointIdsByIvsFPriorityList = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppID'].toString());
+          });
+          print(ideation.painPointsByIvsFPriorityList.toList());
+          print(ideation.painPointIdsByIvsFPriorityList.toList());
+        }else{
+
+        }
+      }
+    });
+  }
+  Future<String> getAllIdeaImages(context) async {
+
+    String url = globals.urlSignUp + "getideaimagespainpointwise.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImages);
+
+      ideation.responseArrayGetAllIdeaImagesMsg = ideation.responseArrayGetAllIdeaImages['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesMsg == "Painpoint Data Found"){
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+        });
+
+        print(ideation.ideaAllImagesPainPointWiseList.toList());
+
+      }else{
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = null;
+        });
+
+      }
+
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     ideation.ideaAllImagesPainPointWiseList = null;
-    getPainPointsApiProvider.getPainPointsByIvsFPriority(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
-    uploadIdeaApiProvider.getAllIdeaImages(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getPainPointsByIvsFPriority(context);
+    getAllIdeaImages(context);
     boolSelectedList = [false,false,false,false,false,false,false,false,false,false,];
     counter = 0;
     textColorList = [Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), ];
@@ -46,6 +121,12 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
@@ -53,9 +134,9 @@ class _IdeaSelectionState extends State<IdeaSelection> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 buildName2Widget(context),
-                SizedBox(height: 48,),
+                SizedBox(height: 35,),
                 buildName3Widget(context),
                 SizedBox(height: 25,),
                 buildSelectIdeasList(context),
@@ -65,7 +146,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
             ),
           ],
@@ -89,7 +170,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -99,7 +180,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -107,10 +188,10 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -318,14 +399,21 @@ class _IdeaSelectionState extends State<IdeaSelection> {
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -629,15 +717,20 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     borderRadius: BorderRadius.all(Radius.circular(7)),
                     border: Border.all(color: Colors.grey),
                   ),
-                ) : Container(
-                  height: 161,
-                  width: 302,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    border: Border.all(color: Colors.grey),
-                    image: DecorationImage(
-                        image: NetworkImage(globals.urlSignUp+ideation.ideaAllImagesPainPointWiseList[i]),
-                        fit: BoxFit.cover
+                ) : GestureDetector(
+                  onTap: (){
+                    launch(globals.urlSignUp+ideation.ideaAllImagesPainPointWiseList[i]);
+                  },
+                  child: Container(
+                    height: 161,
+                    width: 302,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      border: Border.all(color: Colors.grey),
+                      image: DecorationImage(
+                          image: NetworkImage(globals.urlSignUp+ideation.ideaAllImagesPainPointWiseList[i]),
+                          fit: BoxFit.cover
+                      ),
                     ),
                   ),
                 ),

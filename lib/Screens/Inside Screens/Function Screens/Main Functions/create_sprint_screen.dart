@@ -1,11 +1,14 @@
+import 'package:design_sprint/APIs/create_sprint.dart';
 import 'package:design_sprint/APIs/get_profile.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_home_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_inside_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:progress_dialog/progress_dialog.dart';
 import 'edit_profile_screen.dart';
 
 class CreateSprint extends StatefulWidget {
@@ -16,28 +19,45 @@ class CreateSprint extends StatefulWidget {
 class _CreateSprintState extends State<CreateSprint> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
+  CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    createSprintApiProvider.getSprints(context);
+  }
   @override
   Widget build(BuildContext context) {
+    home.prCreateSprint = ProgressDialog(context);
     return Scaffold(
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       backgroundColor: Colors.white,
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: ProfileDrawerCommon(),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 20,),
-            buildName2Widget(context),
-            SizedBox(height: 30,),
-            buildNameWidget(context),
-            SizedBox(height: 25,),
-            buildDesignSprintCard(context),
-            SizedBox(height: 25,),
-            buildSprintGraphicCard(context),
-          ],
-        ),
+      endDrawer: ProfileDrawerHomeScreen(),
+      body: Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10,),
+                  buildName2Widget(context),
+                  SizedBox(height: 20,),
+                  buildNameWidget(context),
+                  SizedBox(height: 25,),
+                  buildDesignSprintCard(context),
+                  SizedBox(height: 25,),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+              left: 0,right: 0, bottom: -35,
+              child: buildSprintGraphicCard(context)),
+        ],
       ),
     );
   }
@@ -54,7 +74,7 @@ class _CreateSprintState extends State<CreateSprint> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -64,7 +84,7 @@ class _CreateSprintState extends State<CreateSprint> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -72,10 +92,10 @@ class _CreateSprintState extends State<CreateSprint> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -137,14 +157,18 @@ class _CreateSprintState extends State<CreateSprint> {
         ),
         child: InkWell(
           onTap: (){
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => DesignSprintInside(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
+            if(home.sprintIdsList == null){
+              showAlertDialog(context);
+            }else{
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => DesignSprintInside(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }
           },
           child: Stack(
             children: [
@@ -159,6 +183,7 @@ class _CreateSprintState extends State<CreateSprint> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -170,6 +195,7 @@ class _CreateSprintState extends State<CreateSprint> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -431,6 +457,102 @@ class _CreateSprintState extends State<CreateSprint> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    Widget textField = Theme(
+        data: ThemeData(
+          primaryColor: Color(0xff787CD1),
+        ),
+        child: TextFormField(
+          controller: home.sprintNameController,
+          decoration: InputDecoration(
+              hintText: home.popUpHintTextField
+          ),
+          validator: (value){
+            if(value.isEmpty){
+              return home.sprintNameValidation;
+            }
+            return null;
+          },
+        ));
+
+    GestureDetector buildSaveButton = GestureDetector(
+      onTap: (){
+        if(home.formKey.currentState.validate()){
+          home.prCreateSprint.show();
+          createSprintApiProvider.createSprint(context);
+        }
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 10,
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 2.4,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(12))
+          ),
+          child: Center(
+            child: Text(home.popUpButton,
+                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
+            ),
+          ),
+        ),
+      ),
+    );
+
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+          SizedBox(height: 10,),
+          Text(home.popUp1, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text(home.popUp2,style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          SizedBox(height: 10,)
+        ],
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Form(
+            key: home.formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  textField,
+                  SizedBox(height: 25,),
+                  buildSaveButton,
+                  SizedBox(height: 25,),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

@@ -35,6 +35,8 @@ class CreateSprintApiProvider{
 
           home.sprintID = home.responseArrayCreateSprint['data'].toString();
           print(home.sprintID);
+          home.savedSprintName = home.responseArrayCreateSprint['data1'].toString();
+          print(home.savedSprintName);
 
           Fluttertoast.showToast(msg: home.sprintNameSaved, backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){

@@ -22,15 +22,8 @@ class _InitialScreenState extends State<InitialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff302b70),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildLogo(context),
-          SizedBox(
-            height: MediaQuery.of(context).size.height/15,
-          ),
-          buildProgressIndicator(context),
-        ],
+      body: Center(
+        child: buildLogo(context),
       ),
     );
   }

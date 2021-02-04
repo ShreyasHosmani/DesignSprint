@@ -57,7 +57,7 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 200,
+                    height: 180,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -68,94 +68,109 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                         ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            image: DecorationImage(
-                              image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
-                              fit: BoxFit.cover,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          profile.profilePicImage == null || profile.profilePicImage == "null" ? Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Icon(Icons.person, size: 35, color: Color(0xff787cd1),),
+                          ) : Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              image: DecorationImage(
+                                image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 15,),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Hi, " + profile.name + "!",
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  )
+                          SizedBox(width: 15,),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Hi, " + profile.name + "!",
+                                style: GoogleFonts.nunitoSans(
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    )
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 5,),
-                            Text(profile.email,
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                  )
+                              SizedBox(height: 5,),
+                              Text(profile.email,
+                                style: GoogleFonts.nunitoSans(
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                    )
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 5,),
-                            Container(
-                              height: 20,
-                              child: RaisedButton(
-                                color: Colors.white,
-                                onPressed: (){
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (c, a1, a2) => EditProfile(),
-                                      transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                                      transitionDuration: Duration(milliseconds: 300),
-                                    ),
-                                  ).whenComplete((){
-                                    profileApiProvider.getSideBarProfile();
-                                    profileApiProvider.getProfile(context).whenComplete((){
-                                      Future.delayed(const Duration(seconds: 4), () {
-                                        setState(() {
+                              SizedBox(height: 5,),
+                              Container(
+                                height: 20,
+                                child: RaisedButton(
+                                  color: Colors.white,
+                                  onPressed: (){
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (c, a1, a2) => EditProfile(),
+                                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                        transitionDuration: Duration(milliseconds: 300),
+                                      ),
+                                    ).whenComplete((){
+                                      profileApiProvider.getSideBarProfile();
+                                      profileApiProvider.getProfile(context).whenComplete((){
+                                        Future.delayed(const Duration(seconds: 4), () {
+                                          setState(() {
 
+                                          });
                                         });
                                       });
                                     });
-                                  });
-                                },
-                                child: Center(
-                                  child: Text("Edit profile",
-                                    style: TextStyle(
-                                      color: Color(0xff787cd1),
-                                      fontSize: 12,
+                                  },
+                                  child: Center(
+                                    child: Text("Edit profile",
+                                      style: TextStyle(
+                                        color: Color(0xff787cd1),
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 35,),
                 InkWell(
                   onTap: (){
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
+                      SizedBox(width: 45,),
+                      Container(
+                        height: 25,
+                        width: 25,
+                        child: Image.asset("assets/images/home.png"),
+                      ),
+                      SizedBox(width: 15,),
                       Text(home.sideBarHeadingHome,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
@@ -168,7 +183,7 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
                     Navigator.push(
@@ -182,9 +197,13 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
+                      SizedBox(width: 45,),
+                      Container(
+                        height: 25,
+                        width: 25,
+                        child: Image.asset("assets/images/sprint.png"),
+                      ),
+                      SizedBox(width: 15,),
                       Text(home.sideBarHeadingDesignSprint,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
@@ -197,7 +216,7 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
                     Navigator.push(
@@ -211,9 +230,13 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
+                      SizedBox(width: 45,),
+                      Container(
+                        height: 25,
+                        width: 25,
+                        child: Image.asset("assets/images/tips.png"),
+                      ),
+                      SizedBox(width: 15,),
                       Text(home.sideBarHeadingTips,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
@@ -226,7 +249,7 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
                     Navigator.push(
@@ -240,9 +263,13 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
+                      SizedBox(width: 45,),
+                      Container(
+                        height: 25,
+                        width: 25,
+                        child: Image.asset("assets/images/manage_team.png"),
+                      ),
+                      SizedBox(width: 15,),
                       Text(home.sideBarHeadingManageTeam,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
@@ -255,12 +282,16 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 45,),
+                    Container(
+                      height: 25,
+                      width: 25,
+                      child: Image.asset("assets/images/faq.png"),
+                    ),
+                    SizedBox(width: 15,),
                     Text(home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
@@ -272,12 +303,16 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 45,),
+                    Container(
+                      height: 25,
+                      width: 25,
+                      child: Image.asset("assets/images/legal.png"),
+                    ),
+                    SizedBox(width: 15,),
                     Text(home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
@@ -289,7 +324,7 @@ class _ProfileDrawerCommonState extends State<ProfileDrawerCommon> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
               ],
             ),
           ),

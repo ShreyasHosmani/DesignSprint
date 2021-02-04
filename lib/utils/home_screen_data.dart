@@ -42,6 +42,7 @@ final formKey = GlobalKey<FormState>();
 ProgressDialog prCreateSprint;
 
 var sprintID;
+var savedSprintName;
 
 String timelineSaved = "Timeline saved";
 

@@ -49,10 +49,10 @@ class LoginApiProvider {
 
             print(profile.userID);
 
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => Load(),
+                pageBuilder: (c, a1, a2) => Home(),
                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                 transitionDuration: Duration(milliseconds: 300),
               ),

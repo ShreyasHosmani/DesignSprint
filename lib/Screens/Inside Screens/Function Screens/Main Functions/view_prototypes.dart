@@ -7,6 +7,7 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/prototyping_data.dart' as prototype;
+import 'package:url_launcher/url_launcher.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -45,9 +46,9 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 25,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
-            SizedBox(height: 51,),
+            SizedBox(height: 25,),
             buildPrototypesListViewBuilder(context),
           ],
         ),
@@ -67,7 +68,7 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(prototype.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -77,7 +78,7 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -85,10 +86,10 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -309,15 +310,20 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
         itemCount: prototype.prototypeImagesPPWiseList == null ? 0 : prototype.prototypeImagesPPWiseList.length,
         itemBuilder: (context, i) => Padding(
           padding: const EdgeInsets.only(bottom: 45),
-          child: Container(
-            width: 302,
-            height: 175,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
-              border: Border.all(color: Color(0xffEBEBEB)),
-                image: DecorationImage(
-                  image: NetworkImage(globals.urlSignUp+prototype.prototypeImagesPPWiseList[i]),
-                )
+          child: GestureDetector(
+            onTap: (){
+              launch(globals.urlSignUp+prototype.prototypeImagesPPWiseList[i]);
+            },
+            child: Container(
+              width: 302,
+              height: 175,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Color(0xffEBEBEB)),
+                  image: DecorationImage(
+                    image: NetworkImage(globals.urlSignUp+prototype.prototypeImagesPPWiseList[i]),
+                  )
+              ),
             ),
           ),
         ),

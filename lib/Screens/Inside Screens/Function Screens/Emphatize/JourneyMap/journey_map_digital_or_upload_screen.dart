@@ -44,7 +44,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 buildName2Widget(context),
                 SizedBox(height: 25,),
                 buildDownloadTemplateCard(context),
@@ -54,7 +54,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
             ),
           ],
@@ -78,7 +78,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -88,7 +88,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -96,10 +96,10 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -302,19 +302,26 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -611,6 +618,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -622,6 +630,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -681,6 +690,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -692,6 +702,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -733,7 +744,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
               InkWell(
                 onTap: () async {
                   //await dio.download("https://onetouchhosting.tk/appdata/personatemplate/template.pdf", "/sdcard/download/template.pdf");
-                  await launch("https://onetouchhosting.tk/appdata/personatemplate/template.pdf");
+                  await launch("https://dezyit.ml/mobileapp/appdata/personatemplate/template.pdf");
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

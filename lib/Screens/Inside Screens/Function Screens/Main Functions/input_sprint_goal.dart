@@ -1,9 +1,17 @@
 import 'package:design_sprint/APIs/delete_sprint.dart';
 import 'package:design_sprint/APIs/input_sprint_goal.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/ideation_inside_sections_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_team_sections_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen3.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen4.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen5.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_team_by_sprints_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Testing%20Screens/user_testing_inside_sections1.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/sprint_goal_data.dart' as goal;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -31,6 +39,13 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 40),
+        child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: buildNextButton(context)),
+      ),
       body: WillPopScope(
         onWillPop: () => Navigator.pushReplacement(
           context,
@@ -44,25 +59,32 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
           child: Stack(
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20,),
+                  SizedBox(height: 10),
                   buildName2Widget(context),
-                  SizedBox(height: 40,),
+                  SizedBox(height: MediaQuery.of(context).size.height/50,),
                   buildNameWidget(context),
                   SizedBox(height: 40,),
                   buildGoalTextField(context),
-                  SizedBox(height: 17,),
+                  SizedBox(height: 30,),
                   buildToolTipText(context),
                   SizedBox(height: 74,),
-                  buildNextButton(context),
-                  SizedBox(height: 40,),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: statusBarDrawer(context),
+              Positioned(
+                top: 40, right: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40,),
+                      child: statusBarDrawer(context),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -86,7 +108,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(home.designSprint,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -96,7 +118,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             Navigator.pushReplacement(
@@ -113,10 +135,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -200,7 +222,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
                     SizedBox(width: 62,),
@@ -217,7 +239,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
                     SizedBox(width: 62,),
@@ -234,7 +256,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
                     SizedBox(width: 62,),
@@ -251,7 +273,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
                     SizedBox(width: 62,),
@@ -268,7 +290,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
                     SizedBox(width: 62,),
@@ -285,7 +307,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
                     SizedBox(width: 62,),
@@ -302,7 +324,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
               ],
             ),
           ),
@@ -324,14 +346,21 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -352,24 +381,24 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 70,
+                  height: 120,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(home.savedSprintName,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
-                            fontSize: 20,
+                            fontSize: 25,
                           )
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -396,10 +425,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -426,10 +455,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -456,10 +485,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -486,10 +515,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -516,10 +545,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -546,10 +575,10 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(height: 25,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(width: 25,),
                     Container(
                       height: 8,
                       width: 8,
@@ -638,7 +667,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
         child: Form(
           key: goal.formKey,
           child: TextFormField(
-            maxLines: 20,
+            maxLines: (MediaQuery.of(context).size.height/50).toInt(),
             controller: goal.goalController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
@@ -657,13 +686,17 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
 
   Widget buildToolTipText(BuildContext context){
     return Center(
-      child: Text(goal.hintText,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w500
-            )
+      child: Padding(
+        padding: const EdgeInsets.only(left: 36, right: 36),
+        child: Text(goal.hintText,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500
+              )
+          ),
         ),
       ),
     );

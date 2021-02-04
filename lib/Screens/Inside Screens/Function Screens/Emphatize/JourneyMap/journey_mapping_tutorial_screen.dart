@@ -48,32 +48,49 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20,),
-            buildName2Widget(context),
-            SizedBox(height: 20,),
-            buildVideoContainer(context),
-            SizedBox(height: 45,),
-            buildInfoText1(context),
-            SizedBox(height: 40,),
-            buildImage1Container(context),
-            SizedBox(height: 40,),
-            buildInfoText2(context),
-            SizedBox(height: 40,),
-            buildInfoText3(context),
-            SizedBox(height: 40,),
-            buildInfoText4(context),
-            SizedBox(height: 40,),
-            buildInfoText5(context),
-            SizedBox(height: 40,),
-            buildNextButton(context),
-            SizedBox(height: 40,),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10,),
+                buildName2Widget(context),
+                SizedBox(height: 20,),
+                buildVideoContainer(context),
+                SizedBox(height: 45,),
+                buildInfoText1(context),
+                SizedBox(height: 40,),
+                buildImage1Container(context),
+                SizedBox(height: 40,),
+                buildInfoText2(context),
+                SizedBox(height: 40,),
+                buildInfoText3(context),
+                SizedBox(height: 40,),
+                buildInfoText4(context),
+                SizedBox(height: 40,),
+                buildInfoText5(context),
+                SizedBox(height: 40,),
+                buildNextButton(context),
+                SizedBox(height: 40,),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 40, right: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40,),
+                  child: statusBarDrawer(context),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -93,7 +110,7 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -103,7 +120,7 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -111,10 +128,10 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -317,19 +334,26 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -598,23 +622,18 @@ class _JourneyMappingTutorialState extends State<JourneyMappingTutorial> {
   }
 
   Widget buildVideoContainer(BuildContext context){
-    return Stack(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: FlickVideoPlayer(
-            flickManager: flickManager,
-            flickVideoWithControls: FlickVideoWithControls(
-              controls: FlickPortraitControls(),
-            ),
-            flickVideoWithControlsFullscreen: FlickVideoWithControls(
-              controls: FlickLandscapeControls(),
-            ),
-          ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 215,
+      child: FlickVideoPlayer(
+        flickManager: flickManager,
+        flickVideoWithControls: FlickVideoWithControls(
+          controls: FlickPortraitControls(),
         ),
-        statusBarDrawer(context),
-      ],
+        flickVideoWithControlsFullscreen: FlickVideoWithControls(
+          controls: FlickLandscapeControls(),
+        ),
+      ),
     );
   }
 

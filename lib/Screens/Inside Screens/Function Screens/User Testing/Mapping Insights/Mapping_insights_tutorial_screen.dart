@@ -25,26 +25,43 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20,),
-            buildName2Widget(context),
-            SizedBox(height: 20,),
-            buildVideoContainer(context),
-            SizedBox(height: 45,),
-            buildInfoText1(context),
-            SizedBox(height: 25,),
-            buildStepText1(context),
-            SizedBox(height: 40,),
-            buildStepText2(context),
-            SizedBox(height: 40,),
-            buildNextButton(context),
-            SizedBox(height: 40,),
-          ],
-        ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10,),
+                buildVideoContainer(context),
+                SizedBox(height: 45,),
+                buildInfoText1(context),
+                SizedBox(height: 30,),
+                buildImage1Container(context),
+                SizedBox(height: 35,),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 40, right: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40,),
+                  child: statusBarDrawer(context),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -64,7 +81,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(userTesting.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -74,7 +91,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -82,10 +99,10 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -293,14 +310,21 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15),
               bottomLeft: Radius.circular(15),
-            )
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -592,7 +616,6 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
             child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
           ),
         ),
-        statusBarDrawer(context),
       ],
     );
   }
@@ -600,8 +623,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
   Widget buildInfoText1(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Text("Every sprint has an objective, and the objective needs to be set in the beginning of the sprint so that the team is clear on what the whole process is aimed at.",
-        maxLines: 4,
+      child: Text("Mapping Insights can take place in person or via video conferencing. In a design sprint, they are usually 30-45-minute casual conversations. In the interview room, the user is introduced to the prototype and is allowed to interact with it while their reactions are monitored.",
         style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
             fontSize: 16,
@@ -647,7 +669,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       child: Container(
           width: 233.56,
           height: 151.28,
-          child: Image.asset("assets/images/definegoaltutorial-1.png")),
+          child: Image.asset("assets/images/mitut.png")),
     );
   }
 

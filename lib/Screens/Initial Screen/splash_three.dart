@@ -10,19 +10,18 @@ class SplashThree extends StatefulWidget {
 class _SplashThreeState extends State<SplashThree> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: buildPositionWidget(context),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            buildSkipButton(context),
-            SizedBox(height: MediaQuery.of(context).size.height/15),
-            buildCenterCard(context),
-            buildInfoText(context),
-          ],
-        ),
-      ),
+    return Stack(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              buildCenterCard(context),
+              buildInfoText(context),
+            ],
+          ),
+        buildSkipButton(context),
+      ],
     );
   }
 
@@ -48,8 +47,8 @@ class _SplashThreeState extends State<SplashThree> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        height: 194.1,
-        width: 308,
+        height: MediaQuery.of(context).size.height/3.5,
+        width: MediaQuery.of(context).size.width/1.5,
         child: Image.asset("assets/images/initialscreen3.png"),
       ),
     );
@@ -58,6 +57,7 @@ class _SplashThreeState extends State<SplashThree> {
   Widget buildInfoText(BuildContext context){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 35,),
         Text("USEFUL TIPS",
@@ -73,7 +73,6 @@ class _SplashThreeState extends State<SplashThree> {
         SizedBox(height: 15,),
         Text("Provides useful tips by assisting", style: textStyle(),),
         Text("you to right direction of sprints", style: textStyle(),),
-        SizedBox(height: 30,),
         GestureDetector(
           onTap: (){
             Navigator.pushReplacement(

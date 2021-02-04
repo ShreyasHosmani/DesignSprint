@@ -18,6 +18,7 @@ bool imagePicked = false;
 var focusName = FocusNode();
 var focusEmail = FocusNode();
 var focusMobileNo = FocusNode();
+bool saveButton = false;
 
 class EditProfile extends StatefulWidget {
   @override
@@ -34,6 +35,7 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       home.profileImage = File(pickedFile.path);
       imagePicked = true;
+      saveButton = true;
     });
     print(imagePicked);
   }
@@ -43,6 +45,7 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       home.profileImage = File(pickedFile.path);
       imagePicked = true;
+      saveButton = true;
     });
     print(imagePicked);
   }
@@ -57,17 +60,29 @@ class _EditProfileState extends State<EditProfile> {
     home.profileEmailController.clear();
     home.profilePasswordController.clear();
     home.profileMobileNumberController.clear();
-
+    saveButton = false;
+    home.profileBaseImage = null;
+    home.profileFileName = null;
     home.profileNameController = TextEditingController(text: profile.name);
     home.profileEmailController = TextEditingController(text: profile.email);
-    home.profileMobileNumberController = TextEditingController(text: profile.mobileNo);
+    if(profile.mobileNo == null || profile.mobileNo == "null"){
+
+    }else{
+      home.profileMobileNumberController = TextEditingController(text: profile.mobileNo);
+    }
   }
   @override
   Widget build(BuildContext context) {
     home.prEditProfile = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: buildAppBar(context),
+      //appBar: buildAppBar(context),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 30),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -76,8 +91,6 @@ class _EditProfileState extends State<EditProfile> {
             buildProfilePictureStack(context),
             buildForm(context),
             SizedBox(height: 20,),
-            buildNextButton(context),
-            SizedBox(height: 40,),
           ],
         ),
       ),
@@ -89,11 +102,11 @@ class _EditProfileState extends State<EditProfile> {
     Container line = Container(height:1,color: Colors.black,child: Divider());
 
     return AppBar(
-      backgroundColor: Color(0xff787cd1),
+      backgroundColor: Colors.transparent,
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text("Profile",
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -103,7 +116,7 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 15, color: Colors.white,),
@@ -115,14 +128,16 @@ class _EditProfileState extends State<EditProfile> {
   Widget buildProfilePictureStack(BuildContext context){
     return Stack(
       children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 130,
-          color: Color(0xff787cd1),
-          //child: Image.asset("assets/images/profilebg.png", fit: BoxFit.fitWidth,),
+        Positioned(
+          top: -30,left: 0, right: 0,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            //height: 130,
+            child: Image.asset("assets/images/ep_banner.png", fit: BoxFit.fitWidth,),
+          ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 30),
+          padding: const EdgeInsets.only(top: 90),
           child: Center(
             child: Stack(
               children: [
@@ -151,6 +166,7 @@ class _EditProfileState extends State<EditProfile> {
                       color: Color(0xff787cd1),
                       borderRadius: BorderRadius.all(Radius.circular(100)),
                     ),
+                    child: Icon(Icons.person, color: Colors.white, size: 50,),
                   ),
                  ) : imagePicked == true ? Container(
                   width: 150,
@@ -296,6 +312,7 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ),
         ),
+        buildAppBar(context),
       ],
     );
   }
@@ -309,7 +326,7 @@ class _EditProfileState extends State<EditProfile> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 80,),
+            SizedBox(height: 40,),
             Theme(
               data: ThemeData(primaryColor: Color(0xff302b6f)),
               child: Stack(
@@ -325,6 +342,11 @@ class _EditProfileState extends State<EditProfile> {
                     },
                     onEditingComplete: (){
                       focusName.unfocus();
+                    },
+                    onChanged: (val){
+                      setState(() {
+                        saveButton = true;
+                      });
                     },
                   ),
                   Padding(
@@ -359,6 +381,11 @@ class _EditProfileState extends State<EditProfile> {
                     onEditingComplete: (){
                       focusEmail.unfocus();
                     },
+                    onChanged: (val){
+                      setState(() {
+                        saveButton = true;
+                      });
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 17.0, right: 5),
@@ -379,44 +406,6 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(height: 35,),
-            /*
-            Theme(
-              data: ThemeData(primaryColor: Color(0xff302b6f)),
-              child: Stack(
-                children: [
-                  TextFormField(
-                    controller: home.profilePasswordController,
-                    decoration: InputDecoration(
-                      hintText: "Change  Password",
-                    ),
-                    validator: (value) {
-                      if (value.length == 0) {
-                        return hint.validationPasswordCompulsary;
-                      } else if (value.length < 6) {
-                        return hint.validationPasswordLength;
-                      }
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 17.0, right: 5),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                        onTap: (){},
-                        child: Icon(Icons.edit,
-                          color: Colors.grey.shade400,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 35,),
-
-             */
             Theme(
               data: ThemeData(primaryColor: Color(0xff302b6f)),
               child: Stack(
@@ -424,14 +413,24 @@ class _EditProfileState extends State<EditProfile> {
                   TextFormField(
                     focusNode: focusMobileNo,
                     controller: home.profileMobileNumberController,
+                    decoration: InputDecoration(
+                      hintText: profile.mobileNo == null || profile.mobileNo == "null" ? 'Contact no.' : '',
+                    ),
                     validator: (val){
                       if(val.isEmpty){
                         return 'Contact cannot be empty';
+                      }else if(val.length < 10 || val.length  > 10){
+                        return 'Contact no. must be 10 digits';
                       }
                       return null;
                     },
                     onEditingComplete: (){
                       focusMobileNo.unfocus();
+                    },
+                    onChanged: (val){
+                      setState(() {
+                        saveButton = true;
+                      });
                     },
                   ),
                   Padding(
@@ -452,27 +451,6 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               ),
             ),
-            SizedBox(height: 40,),
-            InkWell(
-              onTap: (){
-                showAlertDialogLogout(context);
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(home.logout,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 17,
-                        )
-                    ),
-                  ),
-                  Divider(thickness: 0.7,color: Colors.grey.shade600,),
-                ],
-              ),
-            ),
             SizedBox(height: 35,),
           ],
         ),
@@ -481,12 +459,12 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
+    return saveButton == true ? GestureDetector(
       onTap: (){
-        //if(home.formKeyProfile.currentState.validate()){
+        if(home.formKeyProfile.currentState.validate()){
           home.prEditProfile.show();
           editProfileApiProvider.editProfile(context);
-        //}
+        }
       },
       child: Center(
         child: Container(
@@ -503,6 +481,29 @@ class _EditProfileState extends State<EditProfile> {
             child: Text("Save",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    ) : GestureDetector(
+      onTap: (){
+
+      },
+      child: Center(
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 2.0,
+          decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Save",
+              style: TextStyle(
+                  color: Colors.black, letterSpacing: 1, fontSize: 16),
             ),
           ),
         ),

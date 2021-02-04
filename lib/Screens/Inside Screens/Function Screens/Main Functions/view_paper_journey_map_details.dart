@@ -17,6 +17,8 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:url_launcher/url_launcher.dart';
+
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ViewPaperJourneyMapDetails extends StatefulWidget {
@@ -133,17 +135,26 @@ class _ViewPaperJourneyMapDetailsState extends State<ViewPaperJourneyMapDetails>
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
       bottomNavigationBar: buildCommentBottomBar(context),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 25,),
-            buildName2Widget(context),
-            SizedBox(height: 20,),
-            buildJourneyMapImageContainer(context),
-          ],
-        ),
+      body: Stack(
+        children: [
+//          SingleChildScrollView(
+//            child: Column(
+//              mainAxisAlignment: MainAxisAlignment.start,
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              children: [
+//                SizedBox(height: 10,),
+//                buildName2Widget(context),
+//                SizedBox(height: 20,),
+//                buildJourneyMapImageContainer(context),
+//              ],
+//            ),
+//          ),
+          Positioned(
+            top: 10, left: 0, right: 0,
+            child: buildName2Widget(context),
+          ),
+          Center(child: buildJourneyMapImageContainer(context)),
+        ],
       ),
     );
   }
@@ -160,7 +171,7 @@ class _ViewPaperJourneyMapDetailsState extends State<ViewPaperJourneyMapDetails>
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -170,7 +181,7 @@ class _ViewPaperJourneyMapDetailsState extends State<ViewPaperJourneyMapDetails>
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -178,10 +189,10 @@ class _ViewPaperJourneyMapDetailsState extends State<ViewPaperJourneyMapDetails>
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -472,13 +483,18 @@ class _ViewPaperJourneyMapDetailsState extends State<ViewPaperJourneyMapDetails>
   }
 
   Widget buildJourneyMapImageContainer(BuildContext context){
-    return Container(
-      height: 261,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Color(0xff787cd1),
+    return GestureDetector(
+      onTap: (){
+        launch(globals.urlSignUp+widget.imageLink);
+      },
+      child: Container(
+        height: 261,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: Color(0xff787cd1),
+        ),
+        child: Image.network(globals.urlSignUp+widget.imageLink),
       ),
-      child: Image.network(globals.urlSignUp+widget.imageLink),
     );
   }
 

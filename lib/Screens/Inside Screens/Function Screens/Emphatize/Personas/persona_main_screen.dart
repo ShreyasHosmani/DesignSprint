@@ -41,7 +41,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20,),
+                  SizedBox(height: 10,),
                   buildName2Widget(context),
                   SizedBox(height: 25,),
                   buildCreateDigitallyCard(context),
@@ -51,7 +51,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40),
+                padding: const EdgeInsets.only(top: 80),
                 child: statusBarDrawer(context),
               ),
             ],
@@ -76,7 +76,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -86,7 +86,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             Navigator.pushReplacement(
@@ -103,10 +103,10 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -309,19 +309,26 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -625,6 +632,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -636,6 +644,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -695,6 +704,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),
@@ -706,6 +716,7 @@ class _PersonaMainScreenState extends State<PersonaMainScreen> {
                           textStyle: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           )
                       ),
                     ),

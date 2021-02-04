@@ -110,14 +110,57 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
       }
     });
   }
+  Future getJourneyMapWareHouseData(context) async {
+
+    String url = globals.urlSignUp + "getjourneymap.php";
+
+    http.post(url, body: {
+
+      "userID" : "0",//profile.userID.toString(),
+      "sprintID" : home.selectedSprintId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      journeyMapWH.responseArrayGetWareHouseJourneyMapData = jsonDecode(response.body);
+      print(journeyMapWH.responseArrayGetWareHouseJourneyMapData.toString());
+
+      journeyMapWH.responseArrayGetWareHouseJourneyMapDataMsg = journeyMapWH.responseArrayGetWareHouseJourneyMapData['message'].toString();
+      print(journeyMapWH.responseArrayGetWareHouseJourneyMapDataMsg);
+
+      if(journeyMapWH.responseArrayGetWareHouseJourneyMapDataMsg == "Data Found"){
+
+        setState(() {
+          journeyMapWH.journeyMapWareHouseIdsList = List.generate(journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'].length, (i) => journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['jpID'].toString());
+          journeyMapWH.journeyMapWareHouseUserNameList = List.generate(journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'].length, (i) => journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['userFullname'].toString());
+          journeyMapWH.journeyMapWareHouseImagesList = List.generate(journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'].length, (i) => journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['jpdocImage'] == null ? "null" : journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['jpdocImage'].toString());
+        });
+
+        print(journeyMapWH.journeyMapWareHouseIdsList.toList());
+        print(journeyMapWH.journeyMapWareHouseUserNameList.toList());
+        print(journeyMapWH.journeyMapWareHouseImagesList.toList());
+
+      }else{
+
+        setState(() {
+          journeyMapWH.journeyMapWareHouseIdsList = null;
+        });
+
+      }
+
+    });
+
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     journeyMapWH.journeyMapWareHouseIdsList = null;
-    getWareHouseJourneyMapDataApiProvider.getJourneyMapWareHouseData(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getJourneyMapWareHouseData(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -133,9 +176,9 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 25,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
-            SizedBox(height: 51,),
+            SizedBox(height: 25,),
             buildJourneyMapsListViewBuilder(context),
           ],
         ),
@@ -155,7 +198,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -165,7 +208,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -173,10 +216,10 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -486,7 +529,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
               Navigator.push(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ViewDigitalJourneyMapDetails(),
+                  pageBuilder: (c, a1, a2) => ViewDigitalJourneyMapDetails(journeyMapWH.journeyMapWareHouseIdsList[i]),
                   transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                   transitionDuration: Duration(milliseconds: 300),
                 ),

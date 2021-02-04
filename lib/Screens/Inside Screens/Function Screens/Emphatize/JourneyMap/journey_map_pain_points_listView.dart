@@ -4,12 +4,14 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree3.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 
 int counter = 6;
+int i =0;
 
 class JourneyMapPainPointsListView extends StatefulWidget {
   @override
@@ -87,37 +89,73 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
-                  SizedBox(height: 20,),
+                  SizedBox(height: 10,),
                   Container(
                       width: MediaQuery.of(context).size.width,
                       child: Center(child: buildName2Widget(context))),
                   SizedBox(height: 40,),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 35, right: 0),
-                          child: buildTouchPointRow(context),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 35, right: 0),
+                              child: buildTouchPointRow(context),
+                            ),
+                            SizedBox(height: 30,),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 35, right: 0),
+                              child: buildCustomerThoughtsRow(context),
+                            ),
+                            SizedBox(height: 30,),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 35, right: 0),
+                              child: buildCustomerExperienceRow(context),
+                            ),
+                            SizedBox(height: 30,),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 35, right: 0),
+                              child: buildPainPointsRow(context),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 30,),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 35, right: 0),
-                          child: buildCustomerThoughtsRow(context),
+                        InkWell(
+                          onTap: (){
+                            setState(() {
+                              counter++;
+                            });
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff787cd1),
+                                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                                ),
+                                child: Center(
+                                  child: Icon(Icons.add, color: Colors.white,size: 20,),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text("Add",
+                                style: GoogleFonts.nunitoSans(
+                                  fontSize: 16,
+                                )
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 30,),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 35, right: 0),
-                          child: buildCustomerExperienceRow(context),
-                        ),
-                        SizedBox(height: 30,),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 35, right: 0),
-                          child: buildPainPointsRow(context),
-                        ),
+                        SizedBox(width: 20),
                       ],
                     ),
                   ),
@@ -141,14 +179,11 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                 ],
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 40,),
-                  child: statusBarDrawer(context),
-                ),
+            Positioned(
+              top: 80, right: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: statusBarDrawer(context),
               ),
             ),
           ],
@@ -172,7 +207,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -182,7 +217,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             //Navigator.of(context).pop();
@@ -193,10 +228,10 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -399,19 +434,26 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -727,31 +769,6 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   ),
                 ),
               ),
-            ) : i == (counter-1) ? Padding(
-              padding: const EdgeInsets.only(right: 50),
-              child: InkWell(
-                onTap: (){
-                  setState(() {
-                    counter++;
-                  });
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Color(0xff787cd1),
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: Center(
-                        child: Icon(Icons.add, color: Colors.white,size: 20,),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ) : Padding(
               padding: const EdgeInsets.only(right: 25),
               child: Container(
@@ -844,24 +861,6 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   ),
                 ),
               ),
-            ),
-          ) : i == (counter-1) ? Padding(
-            padding: const EdgeInsets.only(right: 50),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xff787cd1),
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                  ),
-                  child: Center(
-                    child: Icon(Icons.add, color: Colors.white,size: 20,),
-                  ),
-                ),
-              ],
             ),
           ) : Padding(
             padding: const EdgeInsets.only(right: 25),
@@ -956,25 +955,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                 ),
               ),
             ),
-          ) : i == (counter-1) ? Padding(
-            padding: const EdgeInsets.only(right: 50),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xff787cd1),
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                  ),
-                  child: Center(
-                    child: Icon(Icons.add, color: Colors.white,size: 20,),
-                  ),
-                ),
-              ],
-            ),
-          ) : Padding(
+          )  : Padding(
             padding: const EdgeInsets.only(right: 25),
             child: Container(
               height: 95,
@@ -8551,24 +8532,6 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                 ),
               ),
             ),
-          ) : i == (counter-1) ? Padding(
-            padding: const EdgeInsets.only(right: 50),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xff787cd1),
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                  ),
-                  child: Center(
-                    child: Icon(Icons.add, color: Colors.white,size: 20,),
-                  ),
-                ),
-              ],
-            ),
           ) : Padding(
             padding: const EdgeInsets.only(right: 25),
             child: Container(
@@ -8632,7 +8595,15 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   Widget saveButton(BuildContext context){
     return InkWell(
       onTap: (){
-
+        if(_controllerListTouchPoints[0].text.toString() == " " || _controllerListCustomerThoughts[0].text.toString() == " " || _controllerListPainPoints[0].text.toString() == " " ||
+            _controllerListTouchPoints[1].text.toString() == " " || _controllerListCustomerThoughts[1].text.toString() == " " || _controllerListPainPoints[1].text.toString() == " " ||
+            _controllerListTouchPoints[2].text.toString() == " " || _controllerListCustomerThoughts[2].text.toString() == " " || _controllerListPainPoints[2].text.toString() == " "){
+          Fluttertoast.showToast(msg: "Some fields are empty", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }else{
+          Fluttertoast.showToast(msg: "Saved", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
       },
       child: Container(
         height: 35,

@@ -8,6 +8,7 @@ import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/warehouse_pain_points_data.dart' as painPointsWH;
+import 'package:url_launcher/url_launcher.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -43,9 +44,9 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 25,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
-            SizedBox(height: 51,),
+            SizedBox(height: 25,),
             buildIdeaImagesListViewBuilder(context),
           ],
         ),
@@ -65,7 +66,7 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -75,7 +76,7 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -83,10 +84,10 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -308,15 +309,20 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
         itemCount: painPointsWH.wareHouseIdeaImagesList == null ? 0 : painPointsWH.wareHouseIdeaImagesList.length,
         itemBuilder: (context, i) => Padding(
           padding: const EdgeInsets.only(bottom: 25),
-          child: Container(
-            width: 302,
-            height: 175,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
-              border: Border.all(color: Color(0xffEBEBEB)),
-                image: DecorationImage(
-                  image: NetworkImage(globals.urlSignUp+painPointsWH.wareHouseIdeaImagesList[i]),
-                )
+          child: GestureDetector(
+            onTap: (){
+              launch(globals.urlSignUp+painPointsWH.wareHouseIdeaImagesList[i]);
+            },
+            child: Container(
+              width: 302,
+              height: 175,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Color(0xffEBEBEB)),
+                  image: DecorationImage(
+                    image: NetworkImage(globals.urlSignUp+painPointsWH.wareHouseIdeaImagesList[i]),
+                  )
+              ),
             ),
           ),
         ),

@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:design_sprint/APIs/login.dart';
-import 'package:design_sprint/ReusableWidgets/facebook_custom_web_view.dart';
 import 'package:design_sprint/ReusableWidgets/upper_curve_clipper.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/forgot_password_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/signup_screen.dart';
@@ -86,53 +86,94 @@ class _LoginState extends State<Login> {
     login.prLogin = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Form(
-          key: login.formKey,
-          child: Column(
-            children: [
-              buildUpperImage(context),
-              Padding(
-                padding: EdgeInsets.only(left: 30),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(login.loginHeading,
-                      style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                            fontSize: 32,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w600
-                        ),
+      body: Stack(
+        children: [
+          Positioned(
+              top: -MediaQuery.of(context).size.height/10,left: 0,right: 0,
+              child: buildUpperImage(context)),
+          Positioned(
+            top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
+            child: WillPopScope(
+              onWillPop: () => showDialog(
+                context: context,
+                builder: (context) => new AlertDialog(
+                  title: new Text('Are you sure?'),
+                  content: new Text('Do you want to exit the App'),
+                  actions: <Widget>[
+                    new GestureDetector(
+                      onTap: () => Navigator.of(context).pop(false),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text("No"),
                       ),
-                    )),
+                    ),
+                    SizedBox(height: 16),
+                    new GestureDetector(
+                      onTap: () => exit(0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text("Yes"),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              buildEmailField(context),
-              SizedBox(height: 5,),
-              buildPasswordField(context),
-              forgotPassword(context),
-              SizedBox(height: MediaQuery.of(context).size.height/17,),
-              buildLoginButton(context),
-              SizedBox(height: 15,),
-              newUserSignUp(context),
-              SizedBox(height: 20,),
-              signInWith(context),
-              SizedBox(height: 30,),
-              buildSocialLogins(context),
-              SizedBox(height: 40,),
-            ],
+              child: SingleChildScrollView(
+                child: Form(
+                  key: login.formKey,
+                  child: Column(
+                    children: [
+                      //buildUpperImage(context),
+                      SizedBox(height: 50),
+                      Padding(
+                        padding: EdgeInsets.only(left: 30),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(login.loginHeading,
+                              style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                    fontSize: 32,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w600
+                                ),
+                              ),
+                            )),
+                      ),
+                      buildEmailField(context),
+                      buildPasswordField(context),
+                      forgotPassword(context),
+                      SizedBox(height: MediaQuery.of(context).size.height/30,),
+                      buildLoginButton(context),
+                      SizedBox(height: MediaQuery.of(context).size.height/50,),
+                      newUserSignUp(context),
+                      SizedBox(height: MediaQuery.of(context).size.height/20,),
+                      signInWith(context),
+                      SizedBox(height: MediaQuery.of(context).size.height/40,),
+                      buildSocialLogins(context),
+                      //SizedBox(height: 40,),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
   Widget buildUpperImage(BuildContext context){
-    return ClipPath(
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Image.asset("assets/images/loginill.png", fit: BoxFit.cover,),
+    );
+    /*
+      ClipPath(
         clipper: UpperClipper(),
         child: Stack(
           children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height / 2.8,
+              height: MediaQuery.of(context).size.height / 3.4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(30),
@@ -144,11 +185,11 @@ class _LoginState extends State<Login> {
             Align(
               alignment: Alignment.centerRight,
               child: Container(
-                height: MediaQuery.of(context).size.height / 3.5,
+                height: MediaQuery.of(context).size.height / 3.7,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(200),
-                      bottomRight: Radius.circular(80)),
+                      bottomRight: Radius.circular(140)),
                   color: Color(0xff302b6f),
                 ),
                 width: MediaQuery.of(context).size.width / 1.26,
@@ -159,7 +200,7 @@ class _LoginState extends State<Login> {
               child: Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: MediaQuery.of(context).size.height / 4.0,
+                  height: MediaQuery.of(context).size.height / 4.4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(200)),
                     color: Color(0xff96C3CB),
@@ -171,6 +212,8 @@ class _LoginState extends State<Login> {
             ),
           ],
         ));
+
+     */
   }
 
   Widget buildEmailField(BuildContext context){
@@ -235,7 +278,9 @@ class _LoginState extends State<Login> {
               alignment: Alignment.centerRight,
               child: InkWell(
                 onTap: toggle,
-                child: Icon(Icons.remove_red_eye,
+                child: login.obscureText == true ? Container(
+                    height: 25,
+                    child: Image.asset("assets/images/visibility.png",fit: BoxFit.cover,)) : Icon(Icons.remove_red_eye,
                   color: Colors.grey.shade400,
                 ),
               ),

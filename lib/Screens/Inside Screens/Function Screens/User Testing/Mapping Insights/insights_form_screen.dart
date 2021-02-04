@@ -13,6 +13,7 @@ bool statusDrawer = false;
 bool showSecondStep = false;
 bool showPainPoint = false;
 TextEditingController painPointController = new TextEditingController();
+FocusNode focus = FocusNode();
 
 class InsightsForm extends StatefulWidget {
   @override
@@ -39,27 +40,33 @@ class _InsightsFormState extends State<InsightsForm> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(height:50,child: buildNextButton(context)),
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 buildName2Widget(context),
-                SizedBox(height: 51,),
+                SizedBox(height: 25,),
                 buildInsightsListViewBuilder(context),
                 SizedBox(height: 51,),
+                userTesting.uploadedInsightsList == null ?
+                Positioned(
+                    top: 0,left: 0,right: 0,bottom: 0,
+                    child: buildInsightTextFieldContainer(context)) :
                 buildInsightTextFieldContainer(context),
                 SizedBox(height: 35,),
                 buildAddInsightButton(context),
                 SizedBox(height: 35,),
-                buildNextButton(context),
-                SizedBox(height: 35,),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
             ),
           ],
@@ -83,7 +90,7 @@ class _InsightsFormState extends State<InsightsForm> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(userTesting.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -93,7 +100,7 @@ class _InsightsFormState extends State<InsightsForm> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -101,10 +108,10 @@ class _InsightsFormState extends State<InsightsForm> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -307,19 +314,26 @@ class _InsightsFormState extends State<InsightsForm> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -627,6 +641,7 @@ class _InsightsFormState extends State<InsightsForm> {
               children: [
                 TextFormField(
                   controller: userTesting.painPointController,
+                  focusNode: focus,
                   decoration: InputDecoration(
                     hintText: userTesting.insightFormHint,
                     border: InputBorder.none,
@@ -641,10 +656,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          painPointController.clear();
-                        });
-                        setState(() {
-
+                          userTesting.painPointController.clear();
                         });
                       },
                       child: Text(userTesting.cancel,
@@ -656,9 +668,7 @@ class _InsightsFormState extends State<InsightsForm> {
                     SizedBox(width: 36,),
                     GestureDetector(
                       onTap: (){
-                        setState(() {
-
-                        });
+                        focus.unfocus();
                       },
                       child: Text(userTesting.done,
                         style: GoogleFonts.nunitoSans(
@@ -683,6 +693,8 @@ class _InsightsFormState extends State<InsightsForm> {
           Fluttertoast.showToast(msg: "Insight cannot be empty!", backgroundColor: Colors.black,
             textColor: Colors.white,);
         }else{
+          Fluttertoast.showToast(msg: "Adding insight...", backgroundColor: Colors.black,
+            textColor: Colors.white,);
           insightsApiProvider.addInsights(context).then((value){
             Future.delayed(Duration(seconds: 3), () {
               setState(() {

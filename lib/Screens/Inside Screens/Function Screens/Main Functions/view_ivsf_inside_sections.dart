@@ -37,7 +37,7 @@ class _ViewIvsFInsideSectionsState extends State<ViewIvsFInsideSections> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 70,),
+            SizedBox(height: 35,),
             buildRatingsCard(context),
             SizedBox(height: 25,),
             buildSelectedIdeasCard(context),
@@ -60,7 +60,7 @@ class _ViewIvsFInsideSectionsState extends State<ViewIvsFInsideSections> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -70,7 +70,7 @@ class _ViewIvsFInsideSectionsState extends State<ViewIvsFInsideSections> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -78,10 +78,10 @@ class _ViewIvsFInsideSectionsState extends State<ViewIvsFInsideSections> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -313,6 +313,7 @@ class _ViewIvsFInsideSectionsState extends State<ViewIvsFInsideSections> {
                             textStyle: TextStyle(
                               fontSize: 30,
                               color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             )
                         ),
                       ),
@@ -324,6 +325,7 @@ class _ViewIvsFInsideSectionsState extends State<ViewIvsFInsideSections> {
                             textStyle: TextStyle(
                               fontSize: 30,
                               color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             )
                         ),
                       ),
@@ -385,6 +387,7 @@ class _ViewIvsFInsideSectionsState extends State<ViewIvsFInsideSections> {
                             textStyle: TextStyle(
                               fontSize: 30,
                               color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             )
                         ),
                       ),

@@ -17,7 +17,14 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+var touchPointsList;
+var customerThoughtsList;
+var customerExperiencesList;
+var painPointsList;
+
 class ViewDigitalJourneyMapDetails extends StatefulWidget {
+  final mapId;
+  ViewDigitalJourneyMapDetails(this.mapId) : super();
   @override
   _ViewDigitalJourneyMapDetailsState createState() => _ViewDigitalJourneyMapDetailsState();
 }
@@ -111,11 +118,166 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       }
     });
   }
+  Future<String> getTouchPoints(context) async {
+
+    String url = globals.urlSignUp + "gettouchpointbymapid.php";
+
+    http.post(url, body: {
+
+      "mapID": widget.mapId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetTouchPoints = jsonDecode(response.body);
+      print(responseArrayGetTouchPoints);
+
+      var responseArrayGetTouchPointsMsg = responseArrayGetTouchPoints['message'].toString();
+      print(responseArrayGetTouchPointsMsg);
+      if(statusCode == 200){
+        if(responseArrayGetTouchPointsMsg == "Touch Point Data Found"){
+
+          setState(() {
+            touchPointsList = List.generate(responseArrayGetTouchPoints['data'].length, (i) => responseArrayGetTouchPoints['data'][i]['tpText'].toString());
+          });
+          print(touchPointsList.toList());
+
+        }else{
+
+          setState(() {
+            touchPointsList = null;
+          });
+
+        }
+      }
+    });
+  }
+  Future<String> getCustomerThoughts(context) async {
+
+    String url = globals.urlSignUp + "getcustomerthoughtsbymapid.php";
+
+    http.post(url, body: {
+
+      "mapID": widget.mapId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetCustomerThoughts = jsonDecode(response.body);
+      print(responseArrayGetCustomerThoughts);
+
+      var responseArrayGetCustomerThoughtsMsg = responseArrayGetCustomerThoughts['message'].toString();
+      print(responseArrayGetCustomerThoughtsMsg);
+      if(statusCode == 200){
+        if(responseArrayGetCustomerThoughtsMsg == "Touch Point Data Found"){
+
+          setState(() {
+            customerThoughtsList = List.generate(responseArrayGetCustomerThoughts['data'].length, (i) => responseArrayGetCustomerThoughts['data'][i]['ctText'].toString());
+          });
+          print(customerThoughtsList.toList());
+
+        }else{
+
+          setState(() {
+            customerThoughtsList = null;
+          });
+
+        }
+      }
+    });
+  }
+  Future<String> getCustomerExperiences(context) async {
+
+    String url = globals.urlSignUp + "getcustomerexperiencebymapid.php";
+
+    http.post(url, body: {
+
+      "mapID": widget.mapId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetCustomerExperience = jsonDecode(response.body);
+      print(responseArrayGetCustomerExperience);
+
+      var responseArrayGetCustomerExperienceMsg = responseArrayGetCustomerExperience['message'].toString();
+      print(responseArrayGetCustomerExperienceMsg);
+      if(statusCode == 200){
+        if(responseArrayGetCustomerExperienceMsg == "Touch Point Data Found"){
+
+          setState(() {
+            customerExperiencesList = List.generate(responseArrayGetCustomerExperience['data'].length, (i) => responseArrayGetCustomerExperience['data'][i]['cxText'].toString());
+          });
+          print(customerExperiencesList.toList());
+
+        }else{
+
+          setState(() {
+            customerExperiencesList = null;
+          });
+
+        }
+      }
+    });
+  }
+  Future<String> getPainPointsDJM(context) async {
+
+    String url = globals.urlSignUp + "getpainpointbymapid.php";
+
+    http.post(url, body: {
+
+      "mapID": widget.mapId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetPainPointDJM = jsonDecode(response.body);
+      print(responseArrayGetPainPointDJM);
+
+      var responseArrayGetPainPointDJMMsg = responseArrayGetPainPointDJM['message'].toString();
+      print(responseArrayGetPainPointDJMMsg);
+      if(statusCode == 200){
+        if(responseArrayGetPainPointDJMMsg == "Touch Point Data Found"){
+
+          setState(() {
+            painPointsList = List.generate(responseArrayGetPainPointDJM['data'].length, (i) => responseArrayGetPainPointDJM['data'][i]['ppName'].toString());
+          });
+          print(painPointsList.toList());
+
+        }else{
+
+          setState(() {
+            painPointsList = null;
+          });
+
+        }
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getWareHouseJourneyMapDataApiProvider.getJourneyMapWareHouseDataMapIdWise(context);
+    getTouchPoints(context);
+    getCustomerThoughts(context);
+    getCustomerExperiences(context);
+    getPainPointsDJM(context);
     touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x'];
     customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x'];
     customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x'];
@@ -141,10 +303,19 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
     focusEnableCustomerExperience = [false,false,false,false,false];
     focusNodesPainPoint = List.generate(5, (i) => FocusNode());
     focusEnablePainPoint = [false,false,false,false,false];
+    touchPointsList = null;
+    customerThoughtsList = null;
+    customerExperiencesList = null;
+    painPointsList = null;
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return touchPointsList == null || customerThoughtsList == null || customerExperiencesList == null || painPointsList == null ? Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    ) : Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
@@ -152,41 +323,71 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       endDrawer: statusDrawer == true ? buildStatusDrawer(context) : ProfileDrawerCommon(),
       bottomNavigationBar: buildCommentBottomBar(context),
       body: SingleChildScrollView(
-        child: Stack(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 40,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35, right: 0),
-                  child: buildTouchPointRow(context),
-                ),
-                SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35, right: 0),
-                  child: buildCustomerThoughtsRow(context),
-                ),
-                SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35, right: 0),
-                  child: buildCustomerExperienceRow(context),
-                ),
-                SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35, right: 0),
-                  child: buildPainPointsRow(context),
-                ),
-                SizedBox(height: 40,),
-              ],
+            SizedBox(height: 10,),
+            Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(child: buildName2Widget(context))),
+            SizedBox(height: 35,),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 35, right: 0),
+                        child: buildTouchPointRow(context),
+                      ),
+                      SizedBox(height: 30,),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 35, right: 0),
+                        child: buildCustomerThoughtsRow(context),
+                      ),
+                      SizedBox(height: 30,),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 35, right: 0),
+                        child: buildCustomerExperienceRow(context),
+                      ),
+                      SizedBox(height: 30,),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 35, right: 0),
+                        child: buildPainPointsRow(context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: statusBarDrawer(context),
-            ),
+//            Padding(
+//              padding: const EdgeInsets.only(left: 35, right: 0),
+//              child: buildTouchPointRow(context),
+//            ),
+//            SizedBox(height: 30,),
+//            Padding(
+//              padding: const EdgeInsets.only(left: 35, right: 0),
+//              child: buildCustomerThoughtsRow(context),
+//            ),
+//            SizedBox(height: 30,),
+//            Padding(
+//              padding: const EdgeInsets.only(left: 35, right: 0),
+//              child: buildCustomerExperienceRow(context),
+//            ),
+//            SizedBox(height: 30,),
+//            Padding(
+//              padding: const EdgeInsets.only(left: 35, right: 0),
+//              child: buildPainPointsRow(context),
+//            ),
+            SizedBox(height: 40,),
           ],
         ),
       ),
@@ -208,7 +409,7 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -218,7 +419,7 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){
             Navigator.of(context).pop();
@@ -228,10 +429,10 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -816,46 +1017,54 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       child: Container(
         height: 95,
         width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          physics: ScrollPhysics(),
-          shrinkWrap: true,
+        child: ListView(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (context, i) => i == 0 ? Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 127,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(empathize.touchPoints,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        color: Color(0xff787cd1),
-                        fontSize: 20,
-                      )
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Container(
+                height: 95,
+                width: 127,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Text(empathize.touchPoints,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          color: Color(0xff787cd1),
+                          fontSize: 20,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ) : Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 254,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(i == 1 ? journeyMapWH.journeyMapWareHouseTouchPointsList[0] :i == 2 ? journeyMapWH.journeyMapWareHouseTouchPointsList[1] : i == 3 ? journeyMapWH.journeyMapWareHouseTouchPointsList[2] : journeyMapWH.journeyMapWareHouseTouchPointsList[3]),
+            Expanded(
+              child: ListView.builder(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: touchPointsList == null ? 0 : touchPointsList.length,
+                itemBuilder: (context, i) => Padding(
+                  padding: const EdgeInsets.only(right: 25),
+                  child: Container(
+                    height: 95,
+                    width: 254,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Center(
+                      child: Text(touchPointsList[i]),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -867,46 +1076,54 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       child: Container(
         height: 95,
         width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          physics: ScrollPhysics(),
-          shrinkWrap: true,
+        child: ListView(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (context, i) => i == 0 ? Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 127,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(empathize.customerThoughts,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        color: Color(0xff787cd1),
-                        fontSize: 20,
-                      )
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Container(
+                height: 95,
+                width: 127,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Text(empathize.customerThoughts,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          color: Color(0xff787cd1),
+                          fontSize: 20,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ) : Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 254,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(i == 1 ? journeyMapWH.journeyMapWareHouseCustomerThoughtsList[0] :i == 2 ? journeyMapWH.journeyMapWareHouseCustomerThoughtsList[1] : i == 3 ? journeyMapWH.journeyMapWareHouseCustomerThoughtsList[2] : journeyMapWH.journeyMapWareHouseCustomerThoughtsList[3]),
+            Expanded(
+              child: ListView.builder(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: customerThoughtsList == null ? 0 : customerThoughtsList.length,
+                itemBuilder: (context, i) => Padding(
+                  padding: const EdgeInsets.only(right: 25),
+                  child: Container(
+                    height: 95,
+                    width: 254,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Center(
+                      child: Text(customerThoughtsList[i]),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -918,47 +1135,55 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       child: Container(
         height: 95,
         width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          physics: AlwaysScrollableScrollPhysics(),
-          shrinkWrap: true,
+        child: ListView(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (context, i) => i == 0 ? Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 127,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(empathize.customerExperience,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        color: Color(0xff787cd1),
-                        fontSize: 20,
-                      )
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Container(
+                height: 95,
+                width: 127,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Text(empathize.customerExperience,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          color: Color(0xff787cd1),
+                          fontSize: 20,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ) : Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 254,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(i == 1 ? journeyMapWH.journeyMapWareHouseCustomerExperiencesList[0] :i == 2 ? journeyMapWH.journeyMapWareHouseCustomerExperiencesList[1] : i == 3 ? journeyMapWH.journeyMapWareHouseCustomerExperiencesList[2] : journeyMapWH.journeyMapWareHouseCustomerExperiencesList[3]),
-              ),
-            ),
-          ),
+            Expanded(
+              child: ListView.builder(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: customerExperiencesList == null ? 0 : customerExperiencesList.length,
+                itemBuilder: (context, i) => Padding(
+                  padding: const EdgeInsets.only(right: 25),
+                  child: Container(
+                    height: 95,
+                    width: 254,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Center(
+                      child: Text(customerExperiencesList[i]),
+                    ),
+                  ),
+                ),
       ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -969,46 +1194,54 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       child: Container(
         height: 95,
         width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          physics: ScrollPhysics(),
-          shrinkWrap: true,
+        child: ListView(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (context, i) => i == 0 ? Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 127,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(empathize.painPoints,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.nunitoSans(
-                      textStyle: TextStyle(
-                        color: Color(0xff787cd1),
-                        fontSize: 20,
-                      )
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Container(
+                height: 95,
+                width: 127,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Text(empathize.painPoints,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                          color: Color(0xff787cd1),
+                          fontSize: 20,
+                        )
+                    ),
                   ),
                 ),
               ),
             ),
-          ) : Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Container(
-              height: 95,
-              width: 254,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: Text(i == 1 ? journeyMapWH.journeyMapWareHousePainPointsList[0] :i == 2 ? journeyMapWH.journeyMapWareHousePainPointsList[1] : i == 3 ? journeyMapWH.journeyMapWareHousePainPointsList[2] : journeyMapWH.journeyMapWareHousePainPointsList[3]),
+            Expanded(
+              child: ListView.builder(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: painPointsList == null ? 0 : painPointsList.length,
+                itemBuilder: (context, i) => Padding(
+                  padding: const EdgeInsets.only(right: 25),
+                  child: Container(
+                    height: 95,
+                    width: 254,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Center(
+                      child: Text(painPointsList[i]),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

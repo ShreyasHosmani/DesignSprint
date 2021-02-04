@@ -14,6 +14,8 @@ import 'package:design_sprint/utils/prototyping_data.dart' as prototyping;
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool statusDrawer = false;
 bool showImages = false;
@@ -109,11 +111,17 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerIdeation() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 52,),
@@ -128,15 +136,15 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                 buildUploadButton(context),
                 SizedBox(height: 23,),
                 buildFileNameWidget(context),
-                SizedBox(height: 70,),
-                buildNextButton(context),
-                SizedBox(height: 52,),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: statusBarDrawer(context),
+          Positioned(
+            right: 0, top: 40,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 80),
+              child: statusBarDrawer(context),
+            ),
           ),
         ],
       ),
@@ -158,7 +166,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(prototyping.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -168,7 +176,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -176,10 +184,10 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -382,19 +390,26 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -663,13 +678,14 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   }
 
   Widget buildLevelContainer(BuildContext context){
-    return Center(
-      child: Container(
-        width: 286,
-        height: 10,
-        decoration: BoxDecoration(
-            color: Color(0xff302B70),
-            borderRadius: BorderRadius.all(Radius.circular(5))
+    return Padding(
+      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+      child: Center(
+        child: LinearPercentIndicator(
+          lineHeight: 10,
+          percent: (prototyping.pageIndex+1)/prototyping.painPointsForPrototypingList.length,
+          backgroundColor: Colors.grey.shade300,
+          progressColor: Color(0xff302B70),
         ),
       ),
     );
@@ -718,15 +734,20 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
             borderRadius: BorderRadius.all(Radius.circular(7)),
             border: Border.all(color: Colors.grey),
           ),
-        ) : Container(
-          height: 161,
-          width: 302,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            border: Border.all(color: Colors.grey),
-            image: DecorationImage(
-                image: NetworkImage(globals.urlSignUp+ideation.ideaAllImagesOfStatusTwo[prototyping.pageIndex]),
-                fit: BoxFit.cover
+        ) : GestureDetector(
+          onTap: (){
+            launch(globals.urlSignUp+ideation.ideaAllImagesOfStatusTwo[prototyping.pageIndex]);
+          },
+          child: Container(
+            height: 161,
+            width: 302,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
+              image: DecorationImage(
+                  image: NetworkImage(globals.urlSignUp+ideation.ideaAllImagesOfStatusTwo[prototyping.pageIndex]),
+                  fit: BoxFit.cover
+              ),
             ),
           ),
         ),
@@ -746,15 +767,20 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       itemCount: prototyping.prototypeImagesPPWiseList == null ? 0 : prototyping.prototypeImagesPPWiseList.length,
       itemBuilder: (context, i) => Center(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: Text(prototyping.prototypeImagesPPWiseList[i],
-            textAlign: TextAlign.center,
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                )
+          padding: const EdgeInsets.only(bottom: 2, left: 35, right: 35),
+          child: InkWell(
+            onTap: (){
+              launch(globals.urlSignUp+prototyping.prototypeImagesPPWiseList[i]);
+            },
+            child: Text(prototyping.prototypeImagesPPWiseList[i],
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  )
+              ),
             ),
           ),
         ),

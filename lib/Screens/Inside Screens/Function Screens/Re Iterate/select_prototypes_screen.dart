@@ -33,19 +33,23 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerUserTesting() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             buildName2Widget(context),
-            SizedBox(height: 50,),
+            SizedBox(height: 25,),
             buildName3Widget(context),
             SizedBox(height: 30,),
             buildPrototypeListViewBuilder(context),
-            SizedBox(height: 30,),
-            buildNextButton(context),
             SizedBox(height: 30,),
           ],
         ),
@@ -68,7 +72,7 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(reiterate.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -78,7 +82,7 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -86,10 +90,10 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(

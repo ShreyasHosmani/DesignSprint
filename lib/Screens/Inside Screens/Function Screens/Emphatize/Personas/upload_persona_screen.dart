@@ -11,6 +11,8 @@ import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
 
 bool statusDrawer = false;
 bool showSecondStep = false;
@@ -77,13 +79,19 @@ class _UploadPersonaState extends State<UploadPersona> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Container(
+            height: 50,
+            child: buildNextButton(context)),
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 buildName2Widget(context),
                 SizedBox(height: 25,),
                 buildName3Widget(context),
@@ -93,13 +101,10 @@ class _UploadPersonaState extends State<UploadPersona> {
                 buildFileNameWidget(context),
                 showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
                 showSecondStep == false ? Container(height: 1, width: 1,) :buildName4Widget(context),
-                SizedBox(height: 162,),
-                buildNextButton(context),
-                SizedBox(height: 25,),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
             ),
           ],
@@ -123,7 +128,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -133,7 +138,7 @@ class _UploadPersonaState extends State<UploadPersona> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -141,10 +146,10 @@ class _UploadPersonaState extends State<UploadPersona> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -342,24 +347,31 @@ class _UploadPersonaState extends State<UploadPersona> {
   Widget statusBarDrawer(BuildContext context){
     void _openEndDrawer() {
       setState(() {
-        empathize.statusDrawer = true;
+        statusDrawer = true;
       });
-      empathize.scaffoldKey.currentState.openEndDrawer();
+      _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Color(0xffd4d4d4)),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -764,15 +776,25 @@ class _UploadPersonaState extends State<UploadPersona> {
       scrollDirection: Axis.vertical,
       itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
       itemBuilder: (context, i) => Center(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
-            style: GoogleFonts.nunitoSans(
-                textStyle: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                )
+        child: InkWell(
+          onTap: (){
+            if(empathize.paperPersonaImageNamesList[i] == null || empathize.paperPersonaImageNamesList[i] == "null"){
+
+            }else{
+              launch(globals.urlSignUp+empathize.paperPersonaImageNamesList[i]);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 2, left: 30, right: 30),
+            child: Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  )
+              ),
             ),
           ),
         ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:design_sprint/APIs/create_sprint.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_home_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_tips.dart';
@@ -6,11 +7,9 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/APIs/get_profile.dart';
 import 'package:design_sprint/APIs/logout.dart';
 import 'package:design_sprint/Screens/Initial%20Screen/initial_screen.dart';
-import 'package:design_sprint/Screens/Initial%20Screen/initial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_sprint_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/edit_profile_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
 import 'package:design_sprint/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +17,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'design_sprint_inside_screen.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -28,9 +30,60 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   LogoutApiProvider logoutApiProvider = LogoutApiProvider();
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
+  CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
+  Future<String> getProfile(context) async {
+    String url = globals.urlLogin + "getprofile.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      profile.responseArrayProfile = jsonDecode(response.body);
+      print(profile.responseArrayProfile);
+
+      setState(() {
+        profile.email = profile.responseArrayProfile['data']['userEmail'].toString();
+        profile.name = profile.responseArrayProfile['data']['userFullname'].toString();
+        profile.mobileNo = profile.responseArrayProfile['data']['userPhoneno'].toString();
+        profile.profilePicImage = profile.responseArrayProfile['data']['userProfilepic'].toString();
+        profile.nameList = profile.name.split(' ');
+      });
+
+      print(profile.email);
+      print(profile.mobileNo);
+      print(profile.profilePicImage);
+      print(profile.nameList.toList());
+
+    });
+  }
+  getSideBarProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    profile.userID = prefs.getString("userID").toString();
+    print(profile.userID);
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    createSprintApiProvider.getSprints(context);
+    getProfile(context);
+    getSideBarProfile();
+    profile.email = null;
+    profile.mobileNo = null;
+    profile.nameList = null;
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return profile.nameList == null ? Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator(),)) : Scaffold(
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       backgroundColor: Colors.white,
@@ -65,7 +118,7 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 40,),
+              SizedBox(height: 10,),
               buildNameWidget(context),
               SizedBox(height: 25,),
               buildDesignSprintCard(context),
@@ -81,7 +134,7 @@ class _HomeState extends State<Home> {
 
   Widget buildAppBar(BuildContext context){
 
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+    Container line = Container(height:1, width:25, color: Colors.black,child: Divider());
     void _openEndDrawer() {
       _scaffoldKey.currentState.openEndDrawer();
     }
@@ -92,7 +145,7 @@ class _HomeState extends State<Home> {
       centerTitle: true,
       leading: Container(),
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(home.home,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -103,10 +156,10 @@ class _HomeState extends State<Home> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -132,7 +185,7 @@ class _HomeState extends State<Home> {
       style: GoogleFonts.nunitoSans(
         textStyle: TextStyle(
           color: Color(0xff707070),
-          fontSize: 40,
+          fontSize: 30,
           fontWeight: FontWeight.w200
         )
       ),
@@ -141,14 +194,14 @@ class _HomeState extends State<Home> {
       style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
             color: Color(0xff707070),
-            fontSize: 40,
+            fontSize: 30,
               fontWeight: FontWeight.w500
           )
       ),
     );
 
     return Padding(
-      padding: const EdgeInsets.only(left: 35),
+      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/7),
       child: Row(
         children: [
           hello,
@@ -161,14 +214,25 @@ class _HomeState extends State<Home> {
   Widget buildDesignSprintCard(BuildContext context){
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => CreateSprint(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(home.sprintTitlesList == null){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => CreateSprint(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => DesignSprintInside(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }
       },
       child: Container(
         width: 302,
@@ -190,6 +254,7 @@ class _HomeState extends State<Home> {
                       textStyle: TextStyle(
                         fontSize: 30,
                         color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       )
                     ),
                   ),
@@ -199,7 +264,7 @@ class _HomeState extends State<Home> {
                   child: Text(home.designSprintHint,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.white,
                         )
                     ),
@@ -255,6 +320,7 @@ class _HomeState extends State<Home> {
                         textStyle: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -264,7 +330,7 @@ class _HomeState extends State<Home> {
                   child: Text(home.manageTeamHint,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.white,
                         )
                     ),

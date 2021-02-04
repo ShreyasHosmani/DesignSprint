@@ -31,9 +31,7 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20,),
-                buildName2Widget(context),
-                SizedBox(height: 40,),
+                SizedBox(height: 55,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,8 +67,13 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 80),
               child: statusBarDrawer(context),
+            ),
+            Positioned(
+              top: 10,
+              left: 0,right: 0,
+              child: buildName2Widget(context),
             ),
           ],
         ),
@@ -93,7 +96,7 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
       elevation: 0,
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 0),
         child: Text(empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
@@ -103,7 +106,7 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
         ),
       ),
       leading: Padding(
-        padding: const EdgeInsets.only(left: 35, top: 17),
+        padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: (){Navigator.of(context).pop();},
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
@@ -111,10 +114,10 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 35, top: 20),
-          child: IconButton(
-            onPressed: _openEndDrawer,
-            icon: Container(
+          padding: const EdgeInsets.only(right: 25, top: 18),
+          child: InkWell(
+            onTap: _openEndDrawer,
+            child: Container(
               height: 50,
               width: 25,
               child: Column(
@@ -317,19 +320,26 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
       _scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -645,6 +655,7 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -705,6 +716,7 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -765,6 +777,7 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
                         textStyle: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         )
                     ),
                   ),
@@ -779,8 +792,8 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
 
   Widget buildNonFilledContainer(BuildContext context){
     return Container(
-      height: 25,
-      width: 25,
+      height: 20,
+      width: 20,
       decoration: BoxDecoration(
           border: Border.all(
             color: Colors.grey,
@@ -792,12 +805,12 @@ class _EmphatizeInsideSectionsState extends State<EmphatizeInsideSections> {
 
   Widget buildFilledContainer(BuildContext context){
     return Container(
-      height: 25,
-      width: 25,
+      height: 20,
+      width: 20,
       decoration: BoxDecoration(
           border: Border.all(
             color: Color(0xff787CD1),
-            width: 2,
+            width: 1.5,
           ),
           borderRadius: BorderRadius.all(Radius.circular(50))
       ),
