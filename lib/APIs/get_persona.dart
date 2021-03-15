@@ -38,7 +38,7 @@ class GetPersonaAPIProvider{
           empathize.personaJobList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaJob'].toString());
           empathize.personaBioList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaBio'].toString());
           empathize.personaGoalsList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaGoals'].toString());
-          empathize.personaImagesList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => responseArrayGetPersonaPast['data'][i]['personaImage'] == null || responseArrayGetPersonaPast['data'][i]['personaImage'] == "null" ?  globals.urlSignUp+empathize.responseArrayGetPersonaPast['data'][i]['personadocImage'].toString() : globals.urlImage+empathize.responseArrayGetPersonaPast['data'][i]['personaImage'].toString());
+          empathize.personaImagesList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => responseArrayGetPersonaPast['data'][i]['personaImage'] == null || responseArrayGetPersonaPast['data'][i]['personaImage'] == "null" ?  globals.urlSignUp+empathize.responseArrayGetPersonaPast['data'][i]['personadocImage'].toString() : globals.urlImage+empathize.responseArrayGetPersonaPast['data'][i]['personaImage'].toString().substring(6));
 
           print(empathize.personaNameList.toList());
           print(empathize.personaAgeList.toList());

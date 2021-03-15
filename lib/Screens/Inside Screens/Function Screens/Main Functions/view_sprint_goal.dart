@@ -4,9 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:design_sprint/utils/sprint_goal_data.dart' as goal;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+var goalIdForEdit;
+TextEditingController goalEditController = TextEditingController();
 
 class ViewSprintGoal extends StatefulWidget {
   final sprintid;
@@ -17,6 +25,44 @@ class ViewSprintGoal extends StatefulWidget {
 
 class _ViewSprintGoalState extends State<ViewSprintGoal> {
   GetSprintGoalApiProvider getSprintGoalApiProvider = GetSprintGoalApiProvider();
+  Future<String> editSprintGoal(context) async {
+
+    String url = globals.urlLogin + "editsprintgoal.php";
+
+    http.post(url, body: {
+
+      "sprintID" : widget.sprintid,
+      "text" : goalEditController.text.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayEditGoal = jsonDecode(response.body);
+      print(responseArrayEditGoal);
+
+      var responseArrayEditGoalMsg = responseArrayEditGoal['message'].toString();
+
+      if(statusCode == 200){
+        if(responseArrayEditGoalMsg == "Goal Edited Successfully"){
+
+          goal.prInputGoal.hide();
+          Fluttertoast.showToast(msg: goal.goalSaved, backgroundColor: Colors.black,
+            textColor: Colors.white,);
+
+        }else{
+
+          goal.prInputGoal.hide();
+          Fluttertoast.showToast(msg: 'Please check your network connection!', backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -25,11 +71,15 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
     home.selectedSprintId = widget.sprintid;
     print(home.selectedSprintId);
     getSprintGoalApiProvider.getSprintGoal(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {});
+        goalEditController = TextEditingController(text: home.sprintGoalList);
+      });
     });
   }
   @override
   Widget build(BuildContext context) {
+    goal.prInputGoal = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -333,13 +383,21 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
                   )
               ),
             ),
-          ) : Text(home.sprintGoalList == null ? "You have not added any goal for this sprint or else please check your internet connection!" : home.sprintGoalList,
-            style: GoogleFonts.nunitoSans(
-              textStyle: TextStyle(
-                color: Color(0xff707070),
-                fontSize: 16,
-              )
+          ) : TextFormField(
+            maxLines: (MediaQuery.of(context).size.height/50).toInt(),
+            controller: goalEditController,
+            decoration: InputDecoration(
+              border: InputBorder.none,
             ),
+            validator: (value){
+              if(value.isEmpty){
+                return 'Goal cannot be empty!';
+              }
+              return null;
+            },
+            onChanged: (val){
+              editSprintGoal(context);
+            },
           ),
         ),
       ),

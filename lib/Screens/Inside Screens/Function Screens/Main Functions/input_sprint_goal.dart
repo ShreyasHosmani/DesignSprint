@@ -1,23 +1,18 @@
 import 'package:design_sprint/APIs/delete_sprint.dart';
 import 'package:design_sprint/APIs/input_sprint_goal.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/ideation_inside_sections_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_team_sections_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen3.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen4.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen5.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_team_by_sprints_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Testing%20Screens/user_testing_inside_sections1.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/sprint_goal_data.dart' as goal;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 bool statusDrawer = false;
 
@@ -30,6 +25,11 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
   InputGoalApiProvider inputGoalApiProvider = InputGoalApiProvider();
   DeleteSprintApiProvider deleteSprintApiProvider = DeleteSprintApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     goal.prInputGoal = ProgressDialog(context);
@@ -55,38 +55,41 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
             transitionDuration: Duration(milliseconds: 300),
           ),
         ),
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10),
-                  buildName2Widget(context),
-                  SizedBox(height: MediaQuery.of(context).size.height/50,),
-                  buildNameWidget(context),
-                  SizedBox(height: 40,),
-                  buildGoalTextField(context),
-                  SizedBox(height: 30,),
-                  buildToolTipText(context),
-                  SizedBox(height: 74,),
-                ],
-              ),
-              Positioned(
-                top: 40, right: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40,),
-                      child: statusBarDrawer(context),
+        child: GestureDetector(
+          onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 10),
+                    buildName2Widget(context),
+                    SizedBox(height: MediaQuery.of(context).size.height/50,),
+                    buildNameWidget(context),
+                    SizedBox(height: 40,),
+                    buildGoalTextField(context),
+                    SizedBox(height: 30,),
+                    buildToolTipText(context),
+                    SizedBox(height: 74,),
+                  ],
+                ),
+                Positioned(
+                  top: 40, right: 0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 40,),
+                        child: statusBarDrawer(context),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1,10 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:design_sprint/APIs/login.dart';
 import 'package:design_sprint/ReusableWidgets/upper_curve_clipper.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/forgot_password_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/signup_screen.dart';
+import 'package:design_sprint/main.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/login_data.dart' as login;
@@ -12,6 +18,14 @@ import 'dart:convert' as JSON;
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+
+
+var appleEmailStudent;
+var appleFullNameStudent;
 
 class Login extends StatefulWidget {
   @override
@@ -22,16 +36,6 @@ class _LoginState extends State<Login> {
   LoginApiProvider apiProviderLogin = LoginApiProvider();
   String your_client_id = "963311327761537";
   String your_redirect_url = "https://www.facebook.com/connect/login_success.html";
-//  loginWithFacebook() async{
-//    String result = await Navigator.push(
-//      context,
-//      MaterialPageRoute(
-//          builder: (context) => CustomWebView(
-//            selectedUrl:
-//            'https://www.facebook.com/dialog/oauth?client_id=$your_client_id&redirect_uri=$your_redirect_url&response_type=token&scope=email,public_profile,',
-//          ),
-//          maintainState: true),
-//    );}
   loginWithFacebook() async{
     final result = await login.facebookLogin.logIn(['email']);
 
@@ -81,6 +85,116 @@ class _LoginState extends State<Login> {
     }
   }
   Future<void> _handleSignOut() => login.googleSignIn.disconnect();
+
+  Future<FirebaseUser> signInWithApple({List<Scope> scopes = const [Scope.email, Scope.fullName]}) async {
+    final _firebaseAuth = FirebaseAuth.instance;
+    // 1. perform the sign-in request
+    final result = await AppleSignIn.performRequests(
+        [AppleIdRequest(requestedScopes: scopes)]);
+    // 2. check the result
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        final appleIdCredential = result.credential;
+        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
+        final credential = oAuthProvider.getCredential(
+          idToken: String.fromCharCodes(appleIdCredential.identityToken),
+          accessToken:
+          String.fromCharCodes(appleIdCredential.authorizationCode),
+        );
+        final authResult = await _firebaseAuth.signInWithCredential(credential);
+        final firebaseUser = authResult.user;
+        if (scopes.contains(Scope.fullName)) {
+          final updateUser = UserUpdateInfo();
+          updateUser.displayName =
+          '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
+          await firebaseUser.updateProfile(updateUser);
+
+          setState(() {
+            appleEmailStudent = firebaseUser.email;
+            appleFullNameStudent = firebaseUser.displayName;
+          });
+
+          print(firebaseUser.email);
+          print(firebaseUser.displayName);
+
+          String url = globals.urlSignUp + "socialregister.php";
+
+          http.post(url, body: {
+
+            "fullname" : firebaseUser.displayName.toString(),
+            "email" : firebaseUser.email.toString(),
+            "password" : "",
+            "fcmtoken" : userToken.toString(),
+            "authtype" : "Apple",
+
+          }).then((http.Response response) async {
+            final int statusCode = response.statusCode;
+
+            if (statusCode < 200 || statusCode > 400 || json == null) {
+              throw new Exception("Error fetching data");
+            }
+
+            login.responseArrayLogin = jsonDecode(response.body);
+            print(login.responseArrayLogin);
+            var msg = login.responseArrayLogin['message'];
+            if(msg == "Register Successfull" || msg == "Login Successfull"){
+              login.prLogin.hide().whenComplete(() async {
+                Fluttertoast.showToast(msg: "Logged in successfully", backgroundColor: Colors.black,
+                  textColor: Colors.white,);
+
+                profile.userID = login.responseArrayLogin['data']['userID'].toString();
+
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setString("userID", profile.userID);
+
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (c, a1, a2) => Load(),
+                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                    transitionDuration: Duration(milliseconds: 300),
+                  ),
+                );
+              });
+            }else{
+              login.googleSignIn.disconnect();
+              Fluttertoast.showToast(msg: 'You have already used this email for sign up!', backgroundColor: Colors.black,
+                textColor: Colors.white,);
+              login.prLogin.hide();
+            }
+
+          });
+
+        }
+        return firebaseUser;
+      case AuthorizationStatus.error:
+        print(result.error.toString());
+        login.prLogin.hide();
+        throw PlatformException(
+          code: 'ERROR_AUTHORIZATION_DENIED',
+          message: result.error.toString(),
+        );
+
+      case AuthorizationStatus.cancelled:
+        login.prLogin.hide();
+        throw PlatformException(
+          code: 'ERROR_ABORTED_BY_USER',
+          message: 'Sign in aborted by user',
+        );
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AppleSignIn.onCredentialRevoked.listen((_) {
+      print("Credentials revoked");
+    });
+    FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     login.prLogin = ProgressDialog(context);
@@ -149,7 +263,8 @@ class _LoginState extends State<Login> {
                       SizedBox(height: MediaQuery.of(context).size.height/20,),
                       signInWith(context),
                       SizedBox(height: MediaQuery.of(context).size.height/40,),
-                      buildSocialLogins(context),
+                      Platform.isAndroid ? buildSocialLogins(context) :
+                      buildSocialLoginsRow(context),
                       //SizedBox(height: 40,),
                     ],
                   ),
@@ -351,7 +466,7 @@ class _LoginState extends State<Login> {
   Widget newUserSignUp(BuildContext context){
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => SignUp(),
@@ -392,6 +507,75 @@ class _LoginState extends State<Login> {
             color: Colors.grey.shade600,
         ),
       ),
+    );
+  }
+
+  buildSocialLoginsRow(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: (){
+            login.prLogin.show();
+            loginWithFacebook();
+          },
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              image: DecorationImage(
+                image: AssetImage("assets/images/faceb.png"),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 25,),
+        InkWell(
+          onTap: (){
+            login.prLogin.show();
+            _handleSignIn();
+          },
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              border: Border.all(color: Colors.blue),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(7.0),
+              child: Container(
+                height: 20,
+                width: 20,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/search.png"),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 25,),
+        InkWell(
+          onTap: (){
+            login.prLogin.show();
+            signInWithApple();
+          },
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              image: DecorationImage(
+                image: AssetImage("assets/images/apple.png"),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

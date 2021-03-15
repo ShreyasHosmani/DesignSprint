@@ -11,12 +11,12 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'edit_profile_screen.dart';
 
-class CreateSprint extends StatefulWidget {
+class CreateSprintTwo extends StatefulWidget {
   @override
-  _CreateSprintState createState() => _CreateSprintState();
+  _CreateSprintTwoState createState() => _CreateSprintTwoState();
 }
 
-class _CreateSprintState extends State<CreateSprint> {
+class _CreateSprintTwoState extends State<CreateSprintTwo> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
@@ -31,7 +31,6 @@ class _CreateSprintState extends State<CreateSprint> {
     home.prCreateSprint = ProgressDialog(context);
     return Scaffold(
       key: _scaffoldKey,
-      appBar: buildAppBar(context),
       backgroundColor: Colors.white,
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerHomeScreen(),
@@ -43,9 +42,6 @@ class _CreateSprintState extends State<CreateSprint> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10,),
-                  buildName2Widget(context),
-                  SizedBox(height: 20,),
                   buildNameWidget(context),
                   SizedBox(height: 25,),
                   buildDesignSprintCard(context),
@@ -55,7 +51,7 @@ class _CreateSprintState extends State<CreateSprint> {
             ),
           ),
           Positioned(
-              left: 0,right: 0, bottom: -30,
+              left: 0,right: 0, bottom: MediaQuery.of(context).size.height/5,
               child: buildSprintGraphicCard(context)),
         ],
       ),

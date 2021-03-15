@@ -1,5 +1,6 @@
 import 'package:design_sprint/APIs/signup.dart';
 import 'package:design_sprint/ReusableWidgets/upper_curve_clipper.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,62 +22,74 @@ class _SignUpState extends State<SignUp> {
     signup.prSignUp = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned(
-              top: -MediaQuery.of(context).size.height/3.6,right: -MediaQuery.of(context).size.width/6,
-              child: buildUpperImage(context)),
-          Positioned(
-            top: -MediaQuery.of(context).size.height/5.6,left: -MediaQuery.of(context).size.width/10,
-            child: Container(
-              height: 280,
-              width: 280,
-              decoration: BoxDecoration(
-                  color: Color(0xff302B70),
-                  borderRadius: BorderRadius.all(Radius.circular(150))
-              ),
+      body: WillPopScope(
+        onWillPop: (){
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => Login(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
             ),
-          ),
-          Positioned(
-            top: -30,left: 0, right: -MediaQuery.of(context).size.width/3,
-            child: Image.asset("assets/images/signup.png"),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
-            child: SingleChildScrollView(
-              child: Form(
-                key: signup.formKey,
-                child: Column(
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.height/45,),
-                    Padding(
-                      padding: EdgeInsets.only(left: 30),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(signup.signUpHeading,
-                            style: GoogleFonts.nunitoSans(
-                              textStyle: TextStyle(
-                                  fontSize: 32,
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          )),
-                    ),
-                    buildNameField(context),
-                    buildEmailField(context),
-                    buildPasswordField(context),
-                    SizedBox(height: MediaQuery.of(context).size.height/17,),
-                    buildSignUpButton(context),
-                    SizedBox(height: 20,),
-                    alreadyAUserLogin(context),
-                    SizedBox(height: 30,),
-                  ],
+          );
+        },
+        child: Stack(
+          children: [
+            Positioned(
+                top: -MediaQuery.of(context).size.height/3.6,right: -MediaQuery.of(context).size.width/6,
+                child: buildUpperImage(context)),
+            Positioned(
+              top: -MediaQuery.of(context).size.height/5.6,left: -MediaQuery.of(context).size.width/10,
+              child: Container(
+                height: 280,
+                width: 280,
+                decoration: BoxDecoration(
+                    color: Color(0xff302B70),
+                    borderRadius: BorderRadius.all(Radius.circular(150))
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              top: -30,left: 0, right: -MediaQuery.of(context).size.width/3,
+              child: Image.asset("assets/images/signup.png"),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
+              child: SingleChildScrollView(
+                child: Form(
+                  key: signup.formKey,
+                  child: Column(
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height/45,),
+                      Padding(
+                        padding: EdgeInsets.only(left: 30),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(signup.signUpHeading,
+                              style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                    fontSize: 32,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w600
+                                ),
+                              ),
+                            )),
+                      ),
+                      buildNameField(context),
+                      buildEmailField(context),
+                      buildPasswordField(context),
+                      SizedBox(height: MediaQuery.of(context).size.height/17,),
+                      buildSignUpButton(context),
+                      SizedBox(height: 20,),
+                      alreadyAUserLogin(context),
+                      SizedBox(height: 30,),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -140,6 +153,7 @@ class _SignUpState extends State<SignUp> {
       child: Theme(
         data: ThemeData(primaryColor: Color(0xff302b6f)),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           controller: signup.nameController,
           decoration: InputDecoration(
             prefixIcon: Padding(
@@ -266,7 +280,17 @@ class _SignUpState extends State<SignUp> {
 
   Widget alreadyAUserLogin(BuildContext context){
     return GestureDetector(
-      onTap: (){Navigator.of(context).pop();},
+      onTap: (){
+        //Navigator.of(context).pop();
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => Login(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+        },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -775,9 +775,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
           transitionDuration: Duration(milliseconds: 400),
           context: context,
           pageBuilder: (context, anim1, anim2) {
-            return Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Align(
+            return Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 195,
@@ -851,8 +849,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
                     ),
                   ),
                 ),
-              ),
-            );
+              );
           },
           transitionBuilder: (context, anim1, anim2, child) {
             return SlideTransition(

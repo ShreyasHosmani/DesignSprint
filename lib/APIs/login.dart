@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
+import 'package:design_sprint/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,7 +10,6 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/login_data.dart' as login;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
-import 'package:design_sprint/utils/main_data.dart' as mainData;
 
 class LoginApiProvider {
 
@@ -20,7 +21,7 @@ class LoginApiProvider {
 
       "email" : login.emailController.text,
       "password" : login.passwordController.text,
-      "fcmtoken" : mainData.userToken.toString(),
+      "fcmtoken" : userToken.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -77,7 +78,7 @@ class LoginApiProvider {
       "fullname" : login.googleName.toString(),
       "email" : login.googleEmail.toString(),
       "password" : "",
-      "fcmtoken" : mainData.userToken.toString(),
+      "fcmtoken" : userToken.toString(),
       "authtype" : "Google",
 
     }).then((http.Response response) async {
@@ -101,7 +102,7 @@ class LoginApiProvider {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("userID", profile.userID);
 
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             PageRouteBuilder(
               pageBuilder: (c, a1, a2) => Load(),
@@ -112,7 +113,7 @@ class LoginApiProvider {
         });
       }else{
         login.googleSignIn.disconnect();
-        Fluttertoast.showToast(msg: msg, backgroundColor: Colors.black,
+        Fluttertoast.showToast(msg: 'You have already used this email for sign up!', backgroundColor: Colors.black,
           textColor: Colors.white,);
         login.prLogin.hide();
       }
@@ -122,15 +123,15 @@ class LoginApiProvider {
 
   Future<String> LoginUsingFacebook(context) async {
 
-    String url = globals.url + "socialregister.php";
+    String url = globals.urlSignUp + "socialregister.php";
 
     http.post(url, body: {
 
       "fullname" : login.facebookName.toString(),
       "email" : login.facebookEmail.toString(),
       "password" : "",
-      "fcmtoken" : mainData.userToken.toString(),
-      "authtype" : "Facebbok",
+      "fcmtoken" : userToken.toString(),
+      "authtype" : "Facebook",
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -153,7 +154,7 @@ class LoginApiProvider {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("userID", profile.userID);
 
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             PageRouteBuilder(
               pageBuilder: (c, a1, a2) => Load(),
@@ -164,13 +165,69 @@ class LoginApiProvider {
         });
       }else{
         login.facebookLogin.logOut();
-        Fluttertoast.showToast(msg: msg, backgroundColor: Colors.black,
+        Fluttertoast.showToast(msg: 'You have already used this email for sign up!', backgroundColor: Colors.black,
           textColor: Colors.white,);
         login.prLogin.hide();
       }
 
     });
   }
+
+  Future<String> LoginUsingApple(context,appleEmailStudent,appleFullNameStudent ) async {
+
+    print("NameeeeeeApppllleeee:"+appleFullNameStudent);
+    print("EmailllApppllleeee"+appleEmailStudent);
+
+    String url = globals.urlSignUp + "socialregister.php";
+
+    http.post(url, body: {
+
+      "fullname" : appleFullNameStudent.toString(),
+      "email" : appleEmailStudent.toString(),
+      "password" : "",
+      "fcmtoken" : userToken.toString(),
+      "authtype" : "Apple",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      login.responseArrayLogin = jsonDecode(response.body);
+      print(login.responseArrayLogin);
+      var msg = login.responseArrayLogin['message'];
+      if(msg == "Register Successfull" || msg == "Login Successfull"){
+        login.prLogin.hide().whenComplete(() async {
+          Fluttertoast.showToast(msg: "Logged in successfully", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+          clearFields(context);
+
+          profile.userID = login.responseArrayLogin['data']['userID'].toString();
+
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString("userID", profile.userID);
+
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => Load(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        });
+      }else{
+        login.googleSignIn.disconnect();
+        Fluttertoast.showToast(msg: 'You have already used this email for sign up!', backgroundColor: Colors.black,
+          textColor: Colors.white,);
+        login.prLogin.hide();
+      }
+
+    });
+  }
+
   /*
   Future<String> LoginUsingApple(context, appleEmail, appleFullName) async {
 

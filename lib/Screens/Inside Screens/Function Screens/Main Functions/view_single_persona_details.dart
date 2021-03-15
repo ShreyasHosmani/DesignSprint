@@ -11,6 +11,8 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:url_launcher/url_launcher.dart';
+
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ViewSinglePersonaDetails extends StatefulWidget {
@@ -476,13 +478,20 @@ class _ViewSinglePersonaDetailsState extends State<ViewSinglePersonaDetails> {
   }
 
   Widget buildProfileImageCard(BuildContext context){
-    return Center(child: Container(
-      width: 192,
-      height: 192,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(7)),
-        image: DecorationImage(
-          image: NetworkImage(widget.image),
+    return Center(child: InkWell(
+      onTap: (){
+        launch(widget.image);
+      },
+      child: Container(
+        width: 192,
+        height: 192,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+          image: DecorationImage(
+            image: NetworkImage(widget.image),
+            //fit: BoxFit.fill,
+          ),
         ),
       ),
     ));

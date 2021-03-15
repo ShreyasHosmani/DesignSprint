@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 int counter = 6;
 int i =0;
@@ -22,11 +23,23 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   InputPainPointsApiProvider inputPainPointsApiProvider = InputPainPointsApiProvider();
   CreateJourneyApiProvider createJourneyApiProvider = CreateJourneyApiProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
+  int _keyboardVisibilitySubscriberId;
+  bool _keyboardState;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     counter = 6;
+//    _keyboardState = _keyboardVisibility.isKeyboardVisible;
+//    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
+//      onChange: (bool visible) {
+//        setState(() {
+//          _keyboardState = visible;
+//        });
+//        print(_keyboardState);
+//      },
+//    );
     touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
     customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
     customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
@@ -73,6 +86,10 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
     focusNodesPainPoint = List.generate(15, (i) => FocusNode());
     focusEnablePainPoint = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
   }
+//  @override
+//  void dispose() {
+//    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
+//  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,110 +100,109 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       body: WillPopScope(
         onWillPop: () => showAlertDialog(context),
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  SizedBox(height: 10,),
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(child: buildName2Widget(context))),
-                  SizedBox(height: 40,),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 35, right: 0),
-                              child: buildTouchPointRow(context),
+        child: GestureDetector(
+          onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    SizedBox(height: 10,),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(child: buildName2Widget(context))),
+                    SizedBox(height: 40,),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 35),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                buildTouchPointRow(context),
+                                SizedBox(height: 30,),
+                                buildCustomerThoughtsRow(context),
+                                SizedBox(height: 30,),
+                                buildCustomerExperienceRow(context),
+                                SizedBox(height: 30,),
+                                buildPainPointsRow(context),
+                              ],
                             ),
-                            SizedBox(height: 30,),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 35, right: 0),
-                              child: buildCustomerThoughtsRow(context),
-                            ),
-                            SizedBox(height: 30,),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 35, right: 0),
-                              child: buildCustomerExperienceRow(context),
-                            ),
-                            SizedBox(height: 30,),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 35, right: 0),
-                              child: buildPainPointsRow(context),
-                            ),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: (){
-                            setState(() {
-                              counter++;
-                            });
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: Color(0xff787cd1),
-                                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                                ),
-                                child: Center(
-                                  child: Icon(Icons.add, color: Colors.white,size: 20,),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Text("Add",
-                                style: GoogleFonts.nunitoSans(
-                                  fontSize: 16,
-                                )
-                              ),
-                            ],
                           ),
-                        ),
-                        SizedBox(width: 20),
-                      ],
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                counter++;
+                              });
+                            },
+                            child: Container(
+                              width: 45,
+                              height: 465,
+                              decoration: BoxDecoration(
+                                //color: Color(0xff787cd1),
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 1), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: RotatedBox(
+                                    quarterTurns: 3,
+                                    child: Text("Add Column",
+                                      style: GoogleFonts.nunitoSans(
+                                        fontSize: 16,
+                                        color: Color(0xff787cd1),
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 40,),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        saveButton(context),
-                        newPersonaButton(context),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 40,),
-                  Container(
+                    SizedBox(height: 40,),
+                    Container(
                       width: MediaQuery.of(context).size.width,
-                      child: Center(child: buildNextButton(context))),
-                  SizedBox(height: 40,),
-                ],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          saveButton(context),
+                          newPersonaButton(context),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 40,),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(child: buildNextButton(context))),
+                    SizedBox(height: 40,),
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-              top: 80, right: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: statusBarDrawer(context),
+              Positioned(
+                top: 80, right: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: statusBarDrawer(context),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -739,88 +755,86 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   Widget buildTouchPointRow(BuildContext context){
     return Container(
       height: 95,
-      child: Container(
-        height: 95,
-        //width: MediaQuery.of(context).size.width,
-        child: Expanded(
-          child: ListView.builder(
-            physics: ClampingScrollPhysics(),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: counter,
-            itemBuilder: (context, i) => i == 0 ? Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Container(
-                height: 95,
-                width: 127,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Center(
-                  child: Text(empathize.touchPoints,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          color: Color(0xff787cd1),
-                          fontSize: 20,
-                        )
-                    ),
-                  ),
+      child: ListView.builder(
+        physics: ClampingScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: counter,
+        itemBuilder: (context, i) => i == 0 ? Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 127,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Center(
+              child: Text(empathize.touchPoints,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunitoSans(
+                    textStyle: TextStyle(
+                      color: Color(0xff787cd1),
+                      fontSize: 20,
+                    )
                 ),
               ),
-            ) : Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Container(
-                height: 95,
-                width: 254,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: TextFormField(
-                      maxLines: 2,
-                      focusNode: focusNodesTouchPoints[i],
-                      textInputAction: TextInputAction.done,
-                      controller: _controllerListTouchPoints[i],
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Receives an introductory set of emails and connect request on linkedIn"
-                      ),
-                      validator: (val){
-                        if(val.isEmpty){
-                          return 'Touch Point cannot be empty!';
-                        }
-                        return null;
-                      },
-                      onEditingComplete: (){
-                        focusNodesTouchPoints[i].unfocus();
-                        setState(() {
-                          empathize.selectedTouchPointController = _controllerListTouchPoints[i].text.toString();
-                        });
-                        print(empathize.selectedTouchPointController);
-                        if(touchPointIdListStorage[i] == "x"){
-                          inputPainPointsApiProvider.uploadTouchPoints(context).whenComplete((){
-                            Future.delayed(const Duration(seconds: 3), () {
-                              touchPointIdListStorage.insert(i, empathize.receivedTouchPointIdSingle);
-                              print(touchPointIdListStorage.toList());
-                            });
-                          });
-                        }else{
-                          setState(() {
-                            empathize.selectedTouchPointId = touchPointIdListStorage[i].toString();
-                          });
-                          print(empathize.selectedTouchPointId);
-                          inputPainPointsApiProvider.updateTouchPoints(context).whenComplete((){
-
-                          });
-                        }
-                      },
-                    ),
+            ),
+          ),
+        ) : Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 254,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  maxLines: 2,
+                  focusNode: focusNodesTouchPoints[i],
+                  textInputAction: TextInputAction.done,
+                  controller: _controllerListTouchPoints[i],
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Receives an introductory set of emails and connect request on linkedIn"
                   ),
+                  validator: (val){
+                    if(val.isEmpty){
+                      return 'Touch Point cannot be empty!';
+                    }
+                    return null;
+                  },
+                  onChanged: (val){
+                    //focusNodesTouchPoints[i].unfocus();
+                    if(_controllerListTouchPoints[i].text.toString() == null || _controllerListTouchPoints[i].text.toString() == "" || _controllerListTouchPoints[i].text.toString() == " "){
+
+                    }else{
+                      setState(() {
+                        empathize.selectedTouchPointController = _controllerListTouchPoints[i].text.toString();
+                      });
+                      print(empathize.selectedTouchPointController);
+                      if(touchPointIdListStorage[i] == "x"){
+                        inputPainPointsApiProvider.uploadTouchPoints(context).whenComplete((){
+                          Future.delayed(const Duration(seconds: 0), () {
+                            touchPointIdListStorage.insert(i, empathize.receivedTouchPointIdSingle);
+                            print(touchPointIdListStorage.toList());
+                          });
+                        });
+                      }else{
+                        setState(() {
+                          empathize.selectedTouchPointId = touchPointIdListStorage[i].toString();
+                        });
+                        print(empathize.selectedTouchPointId);
+                        inputPainPointsApiProvider.updateTouchPoints(context).whenComplete((){
+
+                        });
+                      }
+                    }
+                  },
                 ),
               ),
             ),
@@ -889,28 +903,32 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                       }
                       return null;
                     },
-                    onEditingComplete: (){
-                      focusNodesCustomerThoughts[i].unfocus();
-                      setState(() {
-                        empathize.selectedCustomerThoughtController = _controllerListCustomerThoughts[i].text.toString();
-                        empathize.selectedTouchPointId = touchPointIdListStorage[i];
-                      });
-                      print(empathize.selectedCustomerThoughtController);
-                      if(customerThoughtIdListStorage[i] == "x"){
-                        inputPainPointsApiProvider.uploadCustomerThoughts(context).whenComplete((){
-                          Future.delayed(const Duration(seconds: 3), () {
-                            customerThoughtIdListStorage.insert(i, empathize.receivedCustomerThoughtIdSingle);
-                            print(customerThoughtIdListStorage.toList());
-                          });
-                        });
+                    onChanged: (val){
+                      //focusNodesCustomerThoughts[i].unfocus();
+                      if(_controllerListCustomerThoughts[i].text.toString() == null || _controllerListCustomerThoughts[i].text.toString() == "" || _controllerListCustomerThoughts[i].text.toString() == " "){
+
                       }else{
                         setState(() {
-                          empathize.selectedTouchPointId = customerThoughtIdListStorage[i].toString();
+                          empathize.selectedCustomerThoughtController = _controllerListCustomerThoughts[i].text.toString();
+                          empathize.selectedTouchPointId = touchPointIdListStorage[i];
                         });
-                        print(empathize.selectedTouchPointId);
-                        inputPainPointsApiProvider.updateCustomerThoughts(context).whenComplete((){
+                        print(empathize.selectedCustomerThoughtController);
+                        if(customerThoughtIdListStorage[i] == "x"){
+                          inputPainPointsApiProvider.uploadCustomerThoughts(context).whenComplete((){
+                            Future.delayed(const Duration(seconds: 3), () {
+                              customerThoughtIdListStorage.insert(i, empathize.receivedCustomerThoughtIdSingle);
+                              print(customerThoughtIdListStorage.toList());
+                            });
+                          });
+                        }else{
+                          setState(() {
+                            empathize.selectedTouchPointId = customerThoughtIdListStorage[i].toString();
+                          });
+                          print(empathize.selectedTouchPointId);
+                          inputPainPointsApiProvider.updateCustomerThoughts(context).whenComplete((){
 
-                        });
+                          });
+                        }
                       }
                     },
                   ),
@@ -8547,6 +8565,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   child: TextFormField(
                     maxLines: 2,
                     focusNode: focusNodesPainPoint[i],
+                    keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.done,
                     controller: _controllerListPainPoints[i],
                     decoration: InputDecoration(
@@ -8559,29 +8578,61 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                       }
                       return null;
                     },
-                    onEditingComplete: (){
-                      focusNodesPainPoint[i].unfocus();
-                      setState(() {
-                        empathize.selectedPainPointController = _controllerListPainPoints[i].text.toString();
-                        empathize.selectedTouchPointId = touchPointIdListStorage[i];
-                      });
-                      print(empathize.selectedPainPointController);
-                      if(painPointIdListStorage[i] == "x"){
-                        inputPainPointsApiProvider.inputPainPointsFromDigitalJourneyMap(context).whenComplete((){
-                          Future.delayed(const Duration(seconds: 3), () {
-                            painPointIdListStorage.insert(i, empathize.receivedPainPointIdSingle);
-                            print(painPointIdListStorage.toList());
-                          });
-                        });
+                    //onSaved: (val){print("onsaved called");},
+                    onChanged: (val){
+                      //focusNodesPainPoint[i].unfocus();
+                      if(_controllerListPainPoints[i].text.toString() == null || _controllerListPainPoints[i].text.toString() == "" || _controllerListPainPoints[i].text.toString() == " "){
+
                       }else{
                         setState(() {
-                          empathize.selectedTouchPointId = painPointIdListStorage[i];
+                          empathize.selectedPainPointController = _controllerListPainPoints[i].text.toString();
+                          empathize.selectedTouchPointId = touchPointIdListStorage[i];
                         });
-                        inputPainPointsApiProvider.updatePainPointsFromDigitalJourneyMap(context).whenComplete((){
+                        print(empathize.selectedPainPointController);
+                        if(painPointIdListStorage[i] == "x"){
+                          inputPainPointsApiProvider.inputPainPointsFromDigitalJourneyMap(context).whenComplete((){
+                            Future.delayed(const Duration(seconds: 3), () {
+                              painPointIdListStorage.insert(i, empathize.receivedPainPointIdSingle);
+                              print(painPointIdListStorage.toList());
+                            });
+                          });
+                        }else{
+                          setState(() {
+                            empathize.selectedTouchPointId = painPointIdListStorage[i];
+                          });
+                          inputPainPointsApiProvider.updatePainPointsFromDigitalJourneyMap(context).whenComplete((){
 
-                        });
+                          });
+                        }
                       }
                     },
+//                    onEditingComplete: (){
+//                      focusNodesPainPoint[i].unfocus();
+//                      if(_controllerListPainPoints[i].text.toString() == null || _controllerListPainPoints[i].text.toString() == "" || _controllerListPainPoints[i].text.toString() == " "){
+//
+//                      }else{
+//                        setState(() {
+//                          empathize.selectedPainPointController = _controllerListPainPoints[i].text.toString();
+//                          empathize.selectedTouchPointId = touchPointIdListStorage[i];
+//                        });
+//                        print(empathize.selectedPainPointController);
+//                        if(painPointIdListStorage[i] == "x"){
+//                          inputPainPointsApiProvider.inputPainPointsFromDigitalJourneyMap(context).whenComplete((){
+//                            Future.delayed(const Duration(seconds: 3), () {
+//                              painPointIdListStorage.insert(i, empathize.receivedPainPointIdSingle);
+//                              print(painPointIdListStorage.toList());
+//                            });
+//                          });
+//                        }else{
+//                          setState(() {
+//                            empathize.selectedTouchPointId = painPointIdListStorage[i];
+//                          });
+//                          inputPainPointsApiProvider.updatePainPointsFromDigitalJourneyMap(context).whenComplete((){
+//
+//                          });
+//                        }
+//                      }
+//                    },
                   ),
                 ),
               ),
@@ -8595,10 +8646,10 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   Widget saveButton(BuildContext context){
     return InkWell(
       onTap: (){
-        if(_controllerListTouchPoints[0].text.toString() == " " || _controllerListCustomerThoughts[0].text.toString() == " " || _controllerListPainPoints[0].text.toString() == " " ||
-            _controllerListTouchPoints[1].text.toString() == " " || _controllerListCustomerThoughts[1].text.toString() == " " || _controllerListPainPoints[1].text.toString() == " " ||
-            _controllerListTouchPoints[2].text.toString() == " " || _controllerListCustomerThoughts[2].text.toString() == " " || _controllerListPainPoints[2].text.toString() == " "){
-          Fluttertoast.showToast(msg: "Some fields are empty", backgroundColor: Colors.black,
+        if(_controllerListTouchPoints[0].text.toString() == "" || _controllerListCustomerThoughts[0].text.toString() == "" || _controllerListPainPoints[0].text.toString() == "" ||
+            _controllerListTouchPoints[1].text.toString() == "" || _controllerListCustomerThoughts[1].text.toString() == "" || _controllerListPainPoints[1].text.toString() == "" ||
+            _controllerListTouchPoints[2].text.toString() == "" || _controllerListCustomerThoughts[2].text.toString() == "" || _controllerListPainPoints[2].text.toString() == ""){
+          Fluttertoast.showToast(msg: "Please fill atleast 3 column of fields", backgroundColor: Colors.black,
             textColor: Colors.white,);
         }else{
           Fluttertoast.showToast(msg: "Saved", backgroundColor: Colors.black,

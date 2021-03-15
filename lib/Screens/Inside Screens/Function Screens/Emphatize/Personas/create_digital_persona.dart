@@ -817,6 +817,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         padding: const EdgeInsets.only(left: 35, right: 35),
         child: TextFormField(
           controller: empathize.nameController,
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hint.hintName,
@@ -860,6 +861,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         child: TextFormField(
           style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.ageController,
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintAge
@@ -902,6 +904,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         child: TextFormField(
           style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.locationController,
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintLocation
@@ -944,6 +947,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         child: TextFormField(
           style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.educationController,
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintEducation
@@ -986,6 +990,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         child: TextFormField(
           style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.jobController,
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hint.hintJob
@@ -1029,6 +1034,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           style: TextStyle(color: Color(0xff787cd1)),
           autofocus:false ,
           keyboardType: TextInputType.text,
+          textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.done,
           maxLines: 4,
           controller: empathize.bioController,
@@ -1074,6 +1080,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         child: TextFormField(
           style: TextStyle(color: Color(0xff787cd1)),
           controller: empathize.goalsAndMotivationController,
+          textCapitalization: TextCapitalization.sentences,
           autofocus:false ,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,

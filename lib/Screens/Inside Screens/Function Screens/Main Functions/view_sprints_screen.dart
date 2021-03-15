@@ -1,6 +1,8 @@
 import 'package:design_sprint/APIs/create_sprint.dart';
 import 'package:design_sprint/APIs/delete_sprint.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_sprint_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_sprint_screen_two.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_inside_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -8,6 +10,12 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -19,14 +27,59 @@ class ViewSprints extends StatefulWidget {
 class _ViewSprintsState extends State<ViewSprints> {
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
   DeleteSprintApiProvider deleteSprintApiProvider = DeleteSprintApiProvider();
+  Future<String> getSprints(context) async {
+
+    String url = globals.urlLogin + "getsprint.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      home.responseArrayGetSprints = jsonDecode(response.body);
+      print(home.responseArrayGetSprints);
+
+      home.responseArrayGetSprintsMsg = home.responseArrayGetSprints['message'].toString();
+      if(statusCode == 200){
+        if(home.responseArrayGetSprintsMsg == "Data Found"){
+
+          setState(() {
+            home.sprintIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintID'].toString());
+            home.sprintTitlesList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintName'].toString());
+            home.sprintStatusList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintStatus'].toString());
+          });
+
+          print(home.sprintIdsList.toList());
+          print(home.sprintTitlesList.toList());
+          print(home.sprintStatusList.toList());
+
+        }else{
+
+          setState(() {
+            home.sprintIdsList = null;
+            home.sprintTitlesList = null;
+            home.sprintStatusList = null;
+          });
+
+        }
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     home.sprintTitlesList = "1";
-    createSprintApiProvider.getSprints(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getSprints(context);
+//    createSprintApiProvider.getSprints(context).whenComplete((){
+//      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+//    });
   }
   @override
   Widget build(BuildContext context) {
@@ -322,7 +375,9 @@ class _ViewSprintsState extends State<ViewSprints> {
             ),
           ),
         ),
-      ) :ListView.builder(
+      ) : home.sprintIdsList == null ? Container(
+          height: MediaQuery.of(context).size.height,
+          child: CreateSprintTwo() ) : ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
@@ -405,15 +460,7 @@ class _ViewSprintsState extends State<ViewSprints> {
                           home.selectedSprintIdForDeleting = home.sprintIdsList.reversed.toList()[i];
                         });
                         print(home.selectedSprintIdForDeleting);
-                        deleteSprintApiProvider.deleteSprintFromSprints(context).whenComplete((){
-                          Future.delayed(const Duration(seconds: 3), () {
-                            createSprintApiProvider.getSprints(context).whenComplete((){
-                              Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
-                                textColor: Colors.white,);
-                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-                            });
-                          });
-                        });
+                        showAlertDialogDelete(context);
                       },
                     ),
                   ),
@@ -423,6 +470,51 @@ class _ViewSprintsState extends State<ViewSprints> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialogDelete(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed:  () async {
+        Navigator.of(context).pop();
+        deleteSprintApiProvider.deleteSprintFromSprints(context).whenComplete((){
+          Future.delayed(const Duration(seconds: 3), () {
+            createSprintApiProvider.getSprints(context).whenComplete((){
+              Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
+                textColor: Colors.white,);
+              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+            });
+          });
+        });
+      },
+
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete"),
+      content: Text("Are you sure you want to delete this sprint?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

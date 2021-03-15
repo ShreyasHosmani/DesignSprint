@@ -1,10 +1,9 @@
-import 'package:design_sprint/main.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'dart:convert';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/main_data.dart' as mainData;
+import 'package:design_sprint/utils/login_data.dart' as login;
 
 class LogoutApiProvider{
 
@@ -31,7 +30,8 @@ class LogoutApiProvider{
 
       if(statusCode == 200){
         if(mainData.responseArrayDeleteFcmTokenMsg == "FCM updated Successfully"){
-
+          login.googleSignIn.disconnect();
+          login.facebookLogin.logOut();
         }else{
 
         }

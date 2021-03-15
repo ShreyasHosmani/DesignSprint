@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>193105011728-f3f1oig2hhrfko94hqqmhfjpve34j1lo.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.193105011728-f3f1oig2hhrfko94hqqmhfjpve34j1lo</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>193105011728-8qclacknftrn57qf18vu3e89ivc0dbga.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDmp71LlZ2nIpLdxqYLXR5RbY3HLU1SwEg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>193105011728</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>design.sprint.designSprint</string>
+	<key>PROJECT_ID</key>
+	<string>dezyit</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dezyit.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:193105011728:ios:5c7176984287af8cb71695</string>
+	<key>DATABASE_URL</key>
+	<string>https://dezyit.firebaseio.com</string>
+</dict>
+</plist>

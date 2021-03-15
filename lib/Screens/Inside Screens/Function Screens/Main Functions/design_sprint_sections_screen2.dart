@@ -6,8 +6,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/time_line_data.dart' as timeLine;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
+var selectedTimeLine;
 
 class EmphatizeSections2 extends StatefulWidget {
   @override
@@ -16,6 +22,50 @@ class EmphatizeSections2 extends StatefulWidget {
 
 class _EmphatizeSections2State extends State<EmphatizeSections2> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Future<String> getTimeLine(context) async {
+
+    String url = globals.urlLogin + "getselectedtimeline.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetTimeLine = jsonDecode(response.body);
+      print(responseArrayGetTimeLine);
+
+      var responseArrayGetTimeLineMsg = responseArrayGetTimeLine['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetTimeLineMsg == "Data Found"){
+
+          setState(() {
+            selectedTimeLine = responseArrayGetTimeLine['data']['sprintTimeline'].toString();
+          });
+          print(selectedTimeLine);
+
+        }else{
+
+          setState(() {
+            selectedTimeLine = null;
+          });
+
+        }
+      }
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedTimeLine = null;
+    getTimeLine(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -691,9 +741,9 @@ class _EmphatizeSections2State extends State<EmphatizeSections2> {
             ],
           ),
           child: Center(
-            child: Text(timeLine.ideation,
+            child: Text(selectedTimeLine == "5" ? "Ideation - Day 2" : selectedTimeLine == "14" ? "Ideation - Day 3" : selectedTimeLine == "30" ? "Ideation - Day 7" : "loading...",
               style: TextStyle(
-                  color: Color(0xff787CD1), letterSpacing: 1, fontSize: 16),
+                  color: Colors.black, letterSpacing: 1, fontSize: 16),
             ),
           ),
         ),
@@ -731,7 +781,7 @@ class _EmphatizeSections2State extends State<EmphatizeSections2> {
             ],
           ),
           child: Center(
-            child: Text(timeLine.prototyping,
+            child: Text(selectedTimeLine == "5" ? "Prototyping - Day 3" : selectedTimeLine == "14" ? "Prototyping - Day 5" : selectedTimeLine == "30" ? "Prototyping - Day 13" : "loading...",
               style: TextStyle(
                   color: Colors.black, letterSpacing: 1, fontSize: 16),
             ),
@@ -771,7 +821,7 @@ class _EmphatizeSections2State extends State<EmphatizeSections2> {
             ],
           ),
           child: Center(
-            child: Text(timeLine.userTesting,
+            child: Text(selectedTimeLine == "5" ? "User Testing - Day 4" : selectedTimeLine == "14" ? "User Testing - Day 9" : selectedTimeLine == "30" ? "User Testing - Day 19"  : "loading...",
               style: TextStyle(
                   color: Colors.black, letterSpacing: 1, fontSize: 16),
             ),
@@ -811,7 +861,7 @@ class _EmphatizeSections2State extends State<EmphatizeSections2> {
             ],
           ),
           child: Center(
-            child: Text(timeLine.reIterate,
+            child: Text(selectedTimeLine == "5" ? "Re Iterate - Day 5" : selectedTimeLine == "14" ? "Re Iterate - Day 12" : selectedTimeLine == "30" ? "Re Iterate - Day 25" : "loading...",
               style: TextStyle(
                   color: Colors.black, letterSpacing: 1, fontSize: 16),
             ),

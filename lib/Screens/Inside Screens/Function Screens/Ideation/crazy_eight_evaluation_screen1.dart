@@ -14,12 +14,12 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 bool statusDrawer = false;
 Timer _timer;
 int _start = 480;
+bool startTimings = false;
 
 class GetPainPointsOfStatusTwoPageViewBuilder extends StatefulWidget {
   @override
@@ -134,6 +134,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    startTimings = false;
     _start = 480;
   }
   @override
@@ -794,13 +795,18 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
 //          fontSize: 29,
 //        ),
 //      ),
-
-      CountDownTimer(
+      startTimings == true ? CountDownTimer(
         secondsRemaining: ideation.timer,
         whenTimeExpires: () {
           showAlertDialog(context);
         },
         countDownTimerStyle: TextStyle(
+          color: ideation.timer < 120 ? Colors.red : Colors.black,
+          fontWeight: FontWeight.w700,
+          fontSize: 29,
+        ),
+      ) : Text("08:00",
+        style: TextStyle(
           color: ideation.timer < 120 ? Colors.red : Colors.black,
           fontWeight: FontWeight.w700,
           fontSize: 29,
@@ -813,7 +819,10 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     return GestureDetector(
       onTap: (){
         //showAlertDialog(context);
-        startTimer();
+        //startTimer();
+        setState(() {
+          startTimings = true;
+        });
       },
       child: Container(
         height: 35,

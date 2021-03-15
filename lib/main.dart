@@ -1,12 +1,16 @@
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
-//import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'Screens/Initial Screen/initial_screen.dart';
 import 'utils/main_data.dart' as mainData;
+
+final FirebaseMessaging messaging = FirebaseMessaging();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+final FirebaseMessaging fcm = FirebaseMessaging();
+var userToken;
 
 void main() {
   //SharedPreferences.setMockInitialValues({});
@@ -15,8 +19,11 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color(0xff302b70)
+  ));
   runApp(MyApp());
-  //initFCM();
+  initFCM();
 }
 
 class MyApp extends StatelessWidget {
@@ -33,25 +40,25 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-/*
+
 initFCM() async {
 
-  mainData.flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 
   var android = new AndroidInitializationSettings('app_icon');
   var iOS = new IOSInitializationSettings();
 
   var initSettings = new InitializationSettings(android, iOS);
 
-  mainData.flutterLocalNotificationsPlugin.initialize(initSettings,
+  flutterLocalNotificationsPlugin.initialize(initSettings,
       onSelectNotification: onSelectNotification);
 
-  mainData.userToken = await mainData.messaging.getToken();
-  print(mainData.userToken.toString());
+  userToken = await messaging.getToken();
+  print(userToken.toString());
 
   //sendToken(context);
 
-  mainData.fcm.configure(
+  fcm.configure(
     onMessage: (Map<String, dynamic> message) async {
       showOnMessageNotification(message);
       print("onMessage.....: $message");
@@ -64,20 +71,17 @@ initFCM() async {
       print("onResume: $message");
     },
   );
-  mainData.fcm.requestNotificationPermissions(
+  fcm.requestNotificationPermissions(
       const IosNotificationSettings(
         sound: true,
         alert: true,
         badge: true,
       )
   );
-  mainData.fcm.onIosSettingsRegistered.listen((IosNotificationSettings setting){
+  fcm.onIosSettingsRegistered.listen((IosNotificationSettings setting){
     print("ios settings registered");
   });
 }
-
- */
-
 
 showOnMessageNotification(var message) async {
 
@@ -90,7 +94,7 @@ showOnMessageNotification(var message) async {
   );
   var iOS = new IOSNotificationDetails();
   var platform = new NotificationDetails(android, iOS);
-  await mainData.flutterLocalNotificationsPlugin.show(
+  await flutterLocalNotificationsPlugin.show(
       1, message['notification']['title'].toString(), message['notification']['body'].toString(), platform,
       payload: '');
 
