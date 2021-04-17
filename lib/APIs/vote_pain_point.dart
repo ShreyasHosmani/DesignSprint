@@ -7,8 +7,73 @@ import 'dart:convert';
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 class VotePainPointsApiProvider {
+
+  Future<String> updateStep5(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "5",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
+  Future<String> updateStep8(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "8",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
 
   Future<String> votePainPoints(context) async {
 
@@ -76,6 +141,7 @@ class VotePainPointsApiProvider {
         if(empathize.responseArrayVitePainPointsMsg == "priority updated Successfully"){
           Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
             textColor: Colors.white,);
+          updateStep5(context);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayVitePainPointsMsg, backgroundColor: Colors.black,
             textColor: Colors.white,);
@@ -115,7 +181,8 @@ class VotePainPointsApiProvider {
       if(statusCode == 200){
         if(ideation.responseArrayVoteImpactFeasibilityMsg == "Vote Saved Successfully"){
           Fluttertoast.showToast(msg: empathize.voteSaved, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,).then((value){
+          });
         }else{
           Fluttertoast.showToast(msg: ideation.responseArrayVoteImpactFeasibilityMsg, backgroundColor: Colors.black,
             textColor: Colors.white,);
@@ -153,6 +220,7 @@ class VotePainPointsApiProvider {
           if(ideation.selectedPainPointForPrototypingStatus == "2"){
             Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
               textColor: Colors.white,);
+            updateStep8(context);
           }else{
 
           }

@@ -396,6 +396,9 @@ PODS:
   - GTMSessionFetcher/Core (1.5.0)
   - GTMSessionFetcher/Full (1.5.0):
     - GTMSessionFetcher/Core (= 1.5.0)
+  - image_cropper (0.0.3):
+    - Flutter
+    - TOCropViewController (~> 2.5.4)
   - image_picker (0.0.1):
     - Flutter
   - keyboard_visibility (0.5.0):
@@ -416,6 +419,7 @@ PODS:
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
+  - TOCropViewController (2.5.5)
   - url_launcher (0.0.1):
     - Flutter
   - video_player (0.0.1):
@@ -436,6 +440,7 @@ DEPENDENCIES:
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
+  - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - keyboard_visibility (from `.symlinks/plugins/keyboard_visibility/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -474,6 +479,7 @@ SPEC REPOS:
     - PromisesObjC
     - Protobuf
     - Reachability
+    - TOCropViewController
 
 EXTERNAL SOURCES:
   apple_sign_in:
@@ -500,6 +506,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
+  image_cropper:
+    :path: ".symlinks/plugins/image_cropper/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   keyboard_visibility:
@@ -552,6 +560,7 @@ SPEC CHECKSUMS:
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
+  image_cropper: c8f9b4157933c7bb965a66d1c5e6c8fd408c6eb4
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   keyboard_visibility: 96a24de806fe6823c3ad956c01ba2ec6d056616f
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
@@ -562,6 +571,7 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   searchable_dropdown: 5058be32fdc5e0481d300ff2087129072e71bd62
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
   url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4

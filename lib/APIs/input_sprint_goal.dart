@@ -37,6 +37,7 @@ class InputGoalApiProvider {
           goal.prInputGoal.hide();
           Fluttertoast.showToast(msg: goal.goalSaved, backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
+            print("###############");
             Navigator.push(
               context,
               PageRouteBuilder(
@@ -45,19 +46,22 @@ class InputGoalApiProvider {
                 transitionDuration: Duration(milliseconds: 300),
               ),
             );
+            //updateStep1(context);
           });
         }else if(goal.responseArrayCreateGoalMsg == "Goal Added Successfully, E-Mail Not Verified"){
           goal.prInputGoal.hide();
           Fluttertoast.showToast(msg: "Goal Added Successfully, E-Mail Not Verified", backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => CreateTeamSections(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
+              print("###############");
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => CreateTeamSections(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            //updateStep1(context);
           });
         }else{
           goal.prInputGoal.hide();

@@ -35,8 +35,8 @@ class _GetPainPointsOfStatusTwoPageViewBuilderState extends State<GetPainPointsO
 
     http.post(url, body: {
 
-      "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      //"userID" : "2",
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

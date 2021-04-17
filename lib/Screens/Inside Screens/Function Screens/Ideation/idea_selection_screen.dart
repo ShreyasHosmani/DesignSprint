@@ -4,7 +4,9 @@ import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen3.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_inside_sections.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/globals.dart' as globals;
@@ -17,6 +19,7 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
 bool statusDrawer = false;
+var ppiiStatus;
 
 class IdeaSelection extends StatefulWidget {
   @override
@@ -33,8 +36,8 @@ class _IdeaSelectionState extends State<IdeaSelection> {
 
     http.post(url, body: {
 
-      "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      //"userID" : profile.userID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -53,9 +56,11 @@ class _IdeaSelectionState extends State<IdeaSelection> {
           setState(() {
             ideation.painPointsByIvsFPriorityList = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppName'].toString());
             ideation.painPointIdsByIvsFPriorityList = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppID'].toString());
+            ppiiStatus = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppImagestatus'].toString());
           });
           print(ideation.painPointsByIvsFPriorityList.toList());
           print(ideation.painPointIdsByIvsFPriorityList.toList());
+          print(ppiiStatus.toList());
         }else{
 
         }
@@ -68,7 +73,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -101,6 +106,37 @@ class _IdeaSelectionState extends State<IdeaSelection> {
 
     });
   }
+  Future<String> updateStep7(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "7",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -108,6 +144,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
     ideation.ideaAllImagesPainPointWiseList = null;
     getPainPointsByIvsFPriority(context);
     getAllIdeaImages(context);
+    updateStep7(context);
     boolSelectedList = [false,false,false,false,false,false,false,false,false,false,];
     counter = 0;
     textColorList = [Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), ];
@@ -140,8 +177,6 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                 buildName3Widget(context),
                 SizedBox(height: 25,),
                 buildSelectIdeasList(context),
-                SizedBox(height: 40,),
-                buildNextButton(context),
                 SizedBox(height: 40,),
               ],
             ),
@@ -758,28 +793,42 @@ class _IdeaSelectionState extends State<IdeaSelection> {
             SizedBox(height: 20,),
             GestureDetector(
               onTap: (){
-                setState(() {
-                  boolSelectedList[i] = !boolSelectedList[i];
-                  if(boolSelectedList[i] == false){
-                    setState(() {
-                      counter--;
-                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
-                      ideation.selectedPainPointForPrototypingStatus = "0";
-                    });
-                    print(ideation.selectedPainPointIdForPrototyping);
-                    print(ideation.selectedPainPointForPrototypingStatus);
-                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context);
-                  }else{
-                    setState(() {
-                      counter++;
-                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
-                      ideation.selectedPainPointForPrototypingStatus = "2";
-                    });
-                    print(ideation.selectedPainPointIdForPrototyping);
-                    print(ideation.selectedPainPointForPrototypingStatus);
-                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context);
-                  }
-                });
+                //if(dmIDd == profile.userID){
+                  setState(() {
+                    boolSelectedList[i] = !boolSelectedList[i];
+                    if(boolSelectedList[i] == false){
+                      setState(() {
+                        counter--;
+                        ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                        ideation.selectedPainPointForPrototypingStatus = "0";
+                      });
+                      print(ideation.selectedPainPointIdForPrototyping);
+                      print(ideation.selectedPainPointForPrototypingStatus);
+                      votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                        Future.delayed(Duration(seconds: 2), () async {
+                          getPainPointsByIvsFPriority(context);
+                        });
+                      });
+                    }else{
+                      setState(() {
+                        counter++;
+                        ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                        ideation.selectedPainPointForPrototypingStatus = "2";
+                      });
+                      print(ideation.selectedPainPointIdForPrototyping);
+                      print(ideation.selectedPainPointForPrototypingStatus);
+                      votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                        Future.delayed(Duration(seconds: 2), () async {
+                          getPainPointsByIvsFPriority(context);
+                        });
+                      });
+                    }
+                  });
+//                }else{
+//                  Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
+//                    backgroundColor: Colors.black, textColor: Colors.white,
+//                  );
+//                }
               },
               child: Container(
                 width: 102,
@@ -809,14 +858,62 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        print(boolSelectedList.toList());
+        if(boolSelectedList.toList().contains(true)){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          Fluttertoast.showToast(msg: 'Please select atleast one Idea Image to Proceed!',backgroundColor: Colors.black, textColor: Colors.white);
+        }
+//        if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+//          if(ppiiStatus.contains('2')){
+//            print("contains 2");
+//            if(dmIDd == profile.userID){
+//              print("i am a decision maker");
+//              Navigator.push(
+//                context,
+//                PageRouteBuilder(
+//                  pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+//                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//                  transitionDuration: Duration(milliseconds: 300),
+//                ),
+//              );
+//            }else{
+//              print("i am not a decision maker");
+//              Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
+//                backgroundColor: Colors.black, textColor: Colors.white,
+//              );
+//            }
+//          }else{
+//            print("doesnt contain 2");
+//            if(dmIDd == profile.userID){
+//              print("i am a decision maker");
+//              Fluttertoast.showToast(msg: 'Please select atleast one of the ideas!',
+//                backgroundColor: Colors.black, textColor: Colors.white,
+//              );
+//            }else{
+//              print("i am not a decision maker");
+//              Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
+//                backgroundColor: Colors.black, textColor: Colors.white,
+//              );
+//            }
+//          }
+//        }else{
+//          Navigator.push(
+//            context,
+//            PageRouteBuilder(
+//              pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+//              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//              transitionDuration: Duration(milliseconds: 300),
+//            ),
+//          );
+//        }
       },
       child: Center(
         child: Container(

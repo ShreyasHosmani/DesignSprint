@@ -1,5 +1,6 @@
 import 'package:design_sprint/APIs/get_sprint_goal.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_tutorial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -18,7 +19,8 @@ TextEditingController goalEditController = TextEditingController();
 
 class ViewSprintGoal extends StatefulWidget {
   final sprintid;
-  ViewSprintGoal(this.sprintid) : super();
+  final dmID;
+  ViewSprintGoal(this.sprintid, this.dmID) : super();
   @override
   _ViewSprintGoalState createState() => _ViewSprintGoalState();
 }
@@ -63,13 +65,46 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
 
     });
   }
+  Future<String> updateStep1(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "1",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    updateStep1(context);
     home.sprintGoalList = "1";
     home.selectedSprintId = widget.sprintid;
     print(home.selectedSprintId);
+    print(widget.dmID + "---" + profile.userID);
     getSprintGoalApiProvider.getSprintGoal(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {});
@@ -96,6 +131,8 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
             buildName3Widget(context),
             SizedBox(height: 40,),
             buildGoalTextField(context),
+            SizedBox(height: 40,),
+            buildNextButton(context),
           ],
         ),
       ),
@@ -383,7 +420,7 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
                   )
               ),
             ),
-          ) : TextFormField(
+          ) : widget.dmID == profile.userID ? TextFormField(
             maxLines: (MediaQuery.of(context).size.height/50).toInt(),
             controller: goalEditController,
             decoration: InputDecoration(
@@ -398,6 +435,44 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
             onChanged: (val){
               editSprintGoal(context);
             },
+          ) : Text(home.sprintGoalList,
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  color: Color(0xff707070),
+                  fontSize: 16,
+                )
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildNextButton(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => PersonaTutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Center(
+        child: Container(
+          height: 45,
+          width: 146,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Next",
+              style: TextStyle(
+                  color: Colors.white, letterSpacing: 1, fontSize: 16),
+            ),
           ),
         ),
       ),

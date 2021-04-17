@@ -4,17 +4,26 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Screens/Initial Screen/initial_screen.dart';
 import 'utils/main_data.dart' as mainData;
+
+var tempID;
 
 final FirebaseMessaging messaging = FirebaseMessaging();
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 final FirebaseMessaging fcm = FirebaseMessaging();
 var userToken;
 
+getStrings() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  tempID = prefs.getString("userID"); //setString("userID", profile.userID);
+  print(tempID);
+}
+
 void main() {
-  //SharedPreferences.setMockInitialValues({});
   WidgetsFlutterBinding.ensureInitialized();
+  //getStrings();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -26,7 +35,12 @@ void main() {
   initFCM();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -92,6 +106,7 @@ showOnMessageNotification(var message) async {
       'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
       priority: Priority.High,importance: Importance.Max
   );
+
   var iOS = new IOSNotificationDetails();
   var platform = new NotificationDetails(android, iOS);
   await flutterLocalNotificationsPlugin.show(

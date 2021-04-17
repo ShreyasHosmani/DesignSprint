@@ -1,5 +1,6 @@
 import 'package:design_sprint/APIs/get_warehouse_journeymap_data.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/journey_mapping_main_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_digital_journey_map_details.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_paper_journey_map_details.dart';
 import 'package:flutter/material.dart';
@@ -170,7 +171,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
-      //bottomNavigationBar: buildCommentBottomBar(context),
+      bottomNavigationBar: buildCommentBottomBar(context),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -242,77 +243,24 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
   Widget buildCommentBottomBar(BuildContext context){
     return InkWell(
       onTap: (){
-        showGeneralDialog(
-          barrierLabel: "Label",
-          barrierDismissible: true,
-          barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: Duration(milliseconds: 400),
-          context: context,
-          pageBuilder: (context, anim1, anim2) {
-            Future<String> getComments2(context) async {
-
-              //Status : 0-digital persona; 1-paper persona; 2-digital journey maps; 3-paper journey maps
-
-              String url = globals.urlSignUp + "getcomments.php";
-
-              http.post(url, body: {
-
-                "sprintID": home.selectedSprintId,
-                "statuses" : "1",
-
-              }).then((http.Response response) async {
-                final int statusCode = response.statusCode;
-
-                if (statusCode < 200 || statusCode > 400 || json == null) {
-                  throw new Exception("Error fetching data");
-                }
-
-                comments.responseArrayGetComments1 = jsonDecode(response.body);
-                print(comments.responseArrayGetComments1);
-
-                comments.responseArrayGetComments1Msg = comments.responseArrayGetComments1['message'].toString();
-                print(comments.responseArrayGetComments1Msg);
-                if(statusCode == 200){
-                  if(comments.responseArrayGetComments1Msg == "Comment Data Found"){
-
-                    setState(() {
-                      comments.commentsPaperPersonaList = List.generate(comments.responseArrayGetComments1['data'].length, (i) => comments.responseArrayGetComments1['data'][i]['commentText'].toString());
-                      comments.commentsUserNamePaperPersonaList = List.generate(comments.responseArrayGetComments1['data'].length, (i) => comments.responseArrayGetComments1['data'][i]['userFullname'].toString());
-                      comments.commentsProfilePicPaperPersonaList = List.generate(comments.responseArrayGetComments1['data'].length, (i) => comments.responseArrayGetComments1['data'][i]['userProfilepic'].toString());
-                    });
-                    print(comments.commentsPaperPersonaList.toList());
-                    print(comments.commentsUserNamePaperPersonaList.toList());
-                    print(comments.commentsProfilePicPaperPersonaList.toList());
-
-                  }else{
-
-                    setState(() {
-                      comments.commentsPaperPersonaList = null;
-                    });
-
-                  }
-                }
-              });
-            }
-            return CommentsPage2();
-          },
-          transitionBuilder: (context, anim1, anim2, child) {
-            return SlideTransition(
-              position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-              child: child,
-            );
-          },
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => JourneyMappingMainScreen(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
         );
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 50,
-        color: Colors.grey.shade300,
+        color: Color(0xff787cd1),
         child: Center(
-          child: Text("Comments",
+          child: Text("Add Journey Map",
             style: GoogleFonts.nunitoSans(
               fontSize: 18,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),

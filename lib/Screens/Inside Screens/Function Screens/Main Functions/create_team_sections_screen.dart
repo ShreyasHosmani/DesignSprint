@@ -2,6 +2,7 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_team_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/select_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,10 +35,10 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
               buildOrText(context),
               SizedBox(height: MediaQuery.of(context).size.height/20,),
               buildCreateTeamButton(context),
-              SizedBox(height: MediaQuery.of(context).size.height/20,),
-              buildOrText(context),
-              SizedBox(height: MediaQuery.of(context).size.height/20,),
-              buildManageTeamButton(context),
+              //SizedBox(height: MediaQuery.of(context).size.height/20,),
+//              buildOrText(context),
+//              SizedBox(height: MediaQuery.of(context).size.height/20,),
+//              buildManageTeamButton(context),
             ],
           ),
           Positioned(
@@ -634,7 +635,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => CreateTeam(),
+            pageBuilder: (c, a1, a2) => SelectTeam(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -657,7 +658,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
             ],
           ),
           child: Center(
-            child: Text("Create Team",
+            child: Text("Select Team",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),

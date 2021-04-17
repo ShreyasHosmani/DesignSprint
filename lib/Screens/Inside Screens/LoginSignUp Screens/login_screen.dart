@@ -23,7 +23,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 
-
 var appleEmailStudent;
 var appleFullNameStudent;
 
@@ -33,9 +32,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
   LoginApiProvider apiProviderLogin = LoginApiProvider();
   String your_client_id = "963311327761537";
   String your_redirect_url = "https://www.facebook.com/connect/login_success.html";
+
   loginWithFacebook() async{
     final result = await login.facebookLogin.logIn(['email']);
 
@@ -67,6 +68,7 @@ class _LoginState extends State<Login> {
     }
 
   }
+
   Future<void> _handleSignIn() async {
     try {
       await login.googleSignIn.signIn().then((value) {
@@ -84,6 +86,7 @@ class _LoginState extends State<Login> {
       _handleSignOut();
     }
   }
+
   Future<void> _handleSignOut() => login.googleSignIn.disconnect();
 
   Future<FirebaseUser> signInWithApple({List<Scope> scopes = const [Scope.email, Scope.fullName]}) async {

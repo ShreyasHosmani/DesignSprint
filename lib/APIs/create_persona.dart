@@ -10,6 +10,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePersonaApiProvider {
 
+  Future<String> updateStep2(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "2",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
   Future<String> createDigitalPersona(context) async {
 
     String url = globals.urlSignUp + "createpersonadigitally.php";
@@ -24,7 +56,7 @@ class CreatePersonaApiProvider {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "emapathizeid" : "null",
       "image" : empathize.baseImage.toString(),
       "imagename" : empathize.fileName.toString(),
@@ -53,6 +85,7 @@ class CreatePersonaApiProvider {
         if(empathize.responseArrayCreatePersonaDigitallyMsg == "Persona Added Successfully"){
           empathize.prDigitalPersona.hide().whenComplete((){
             //clearFields(context);
+            updateStep2(context);
             Fluttertoast.showToast(msg: empathize.personaSaved, backgroundColor: Colors.black,
               textColor: Colors.white,);
           });
@@ -85,7 +118,7 @@ class CreatePersonaApiProvider {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "emapathizeid" : "null",
       "image" : empathize.baseImagePaperPersona.toString(),
       "name" : empathize.fileNamePaperPersona.toString(),
@@ -104,6 +137,7 @@ class CreatePersonaApiProvider {
       print(empathize.responseArrayUploadPaperPersonaMsg);
       if(statusCode == 200){
         if(empathize.responseArrayUploadPaperPersonaMsg == "Persona Added Successfully"){
+          updateStep2(context);
           Fluttertoast.showToast(msg: empathize.personaUploaded, backgroundColor: Colors.black,
             textColor: Colors.white,);
         }else{
@@ -121,7 +155,7 @@ class CreatePersonaApiProvider {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

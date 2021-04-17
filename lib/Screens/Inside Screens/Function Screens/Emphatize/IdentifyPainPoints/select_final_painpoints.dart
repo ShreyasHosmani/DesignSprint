@@ -3,7 +3,9 @@ import 'package:design_sprint/APIs/vote_pain_point.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen2.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_inside_sections.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -13,6 +15,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 bool statusDrawer = false;
+var ppStatus;
 
 class SelectFinalPainPoints extends StatefulWidget {
   @override
@@ -29,8 +32,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
 
     http.post(url, body: {
 
-      "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -49,9 +51,11 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
           setState(() {
             empathize.painPointsListAccToVotes = List.generate(empathize.responseArrayGetPainPointsAccToVotes['data'].length, (index) => empathize.responseArrayGetPainPointsAccToVotes['data'][index]['ppName'].toString());
             empathize.painPointIdsListAccToVotes = List.generate(empathize.responseArrayGetPainPointsAccToVotes['data'].length, (index) => empathize.responseArrayGetPainPointsAccToVotes['data'][index]['ppID'].toString());
+            ppStatus = List.generate(empathize.responseArrayGetPainPointsAccToVotes['data'].length, (index) => empathize.responseArrayGetPainPointsAccToVotes['data'][index]['ppStatus'].toString());
           });
           print(empathize.painPointsListAccToVotes.toList());
           print(empathize.painPointIdsListAccToVotes.toList());
+          print(ppStatus.toList());
         }else{
           setState(() {
             empathize.painPointsListAccToVotes = null;
@@ -60,9 +64,41 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       }
     });
   }
+  Future<String> updateStep4(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "4",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
   @override
   void initState() {
     super.initState();
+    updateStep4(context);
     empathize.painPointsListAccToVotes = null;
     checkList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
     getPainPointsAccordingToVotes(context);
@@ -681,18 +717,22 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
               SizedBox(width: MediaQuery.of(context).size.width/50,),
               GestureDetector(
                 onTap: (){
-                  setState(() {
-                    checkList[i] = !checkList[i];
-                    empathize.selectedFinalPainPointId = empathize.painPointIdsListAccToVotes[i].toString();
-                    if(checkList[i] == true){
-                      empathize.painPointStatus ="2";
-                    }else{
-                      empathize.painPointStatus ="1";
-                    }
-                  });
-                  print(empathize.selectedFinalPainPointId);
-                  print(empathize.painPointStatus);
-                  votePainPointsApiProvider.selectFinalPainPoints(context);
+                      setState(() {
+                        checkList[i] = !checkList[i];
+                        empathize.selectedFinalPainPointId = empathize.painPointIdsListAccToVotes[i].toString();
+                        if(checkList[i] == true){
+                          empathize.painPointStatus ="2";
+                        }else{
+                          empathize.painPointStatus ="1";
+                        }
+                      });
+                      print(empathize.selectedFinalPainPointId);
+                      print(empathize.painPointStatus);
+                      votePainPointsApiProvider.selectFinalPainPoints(context).whenComplete((){
+                        Future.delayed(Duration(seconds: 2), () async {
+                          getPainPointsAccordingToVotes(context);
+                        });
+                      });
                 },
                 child: Container(
                   height: 20,
@@ -715,14 +755,49 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeSections2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          if(ppStatus.contains('2')){
+            print("contains 2");
+            if(dmIDd == profile.userID){
+              print("i am a decision maker");
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }else{
+              print("i am not a decision maker");
+              Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final pain points!',
+                backgroundColor: Colors.black, textColor: Colors.white,
+              );
+            }
+          }else{
+            print("doesnt contain 2");
+            if(dmIDd == profile.userID){
+              print("i am a decision maker");
+              Fluttertoast.showToast(msg: 'Please select atleast one pain point!',
+                backgroundColor: Colors.black, textColor: Colors.white,
+              );
+            }else{
+              print("i am not a decision maker");
+              Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final pain points!',
+                backgroundColor: Colors.black, textColor: Colors.white,
+              );
+            }
+          }
+        }
       },
       child: Center(
         child: Container(

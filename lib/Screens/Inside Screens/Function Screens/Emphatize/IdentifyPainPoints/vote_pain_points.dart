@@ -26,13 +26,13 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   Future<String> getPainPoints(context) async {
 
+    print(home.selectedSprintId);
     String url = globals.urlSignUp + "getpainpoint.php";
 
     http.post(url, body: {
 
-      "userID" : profile.userID,
-      "sprintID": home.sprintID,
-      "mapID" : "null",
+      //"userID" : "37",//profile.userID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -128,6 +128,46 @@ class VotePainPoints extends StatefulWidget {
 
 class _VotePainPointsState extends State<VotePainPoints> {
   VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
+  Future<String> updateStep4(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "4",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => SelectFinalPainPoints(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -865,14 +905,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
       onTap: (){
         if(empathize.painPointIdsList.last == empathize.selectedPainPointId){
           print("Last index reached, You are a great man ever!");
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => SelectFinalPainPoints(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
+          updateStep4(context);
         }else{
           print("You are a loser bro, try again!");
           widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);

@@ -326,8 +326,7 @@ class LoginApiProvider {
 
    */
 
-  void clearFields(BuildContext context){
-    login.passwordController.clear();
-  }
+  void clearFields(BuildContext){
 
+  }
 }

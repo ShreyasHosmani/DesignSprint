@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 bool enableSave = false;
+bool lastStep = false;
 
 class CreateDigitalPersona extends StatefulWidget {
   @override
@@ -64,8 +65,8 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                         getImageOne();
                       },
                       child: Row(
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(right: 20),
@@ -75,7 +76,11 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                           ),
                           Container(
                               width: 150,
-                              child: Text("Open using camera"))
+                              child: Text("Open using camera",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
                         ],
                       ),
                     ),
@@ -88,6 +93,8 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                         getImageOneGallery();
                       },
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(right: 20),
@@ -97,7 +104,11 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
                           ),
                           Container(
                               width: 150,
-                              child: Text("Open using gallery"))
+                              child: Text("Open using gallery",
+                                style: GoogleFonts.nunitoSans(
+                                  letterSpacing: 0.5
+                                ),
+                              ))
                         ],
                       ),
                     ),
@@ -127,6 +138,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
     // TODO: implement initState
     super.initState();
     enableSave = false;
+    lastStep = false;
   }
   @override
   Widget build(BuildContext context) {
@@ -1092,6 +1104,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           onChanged: (val){
             setState(() {
               enableSave = true;
+              lastStep = true;
             });
           },
           validator: (val){
@@ -1147,7 +1160,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         width: 114,
         decoration: BoxDecoration(
           border: Border.all(
-            color: Color(0xffd4d4d4),
+            color: lastStep == true ? Color(0xff787cd1) : Color(0xffd4d4d4),
           ),
           borderRadius: BorderRadius.all(Radius.circular(50)),
         ),
@@ -1155,7 +1168,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           child: Text(empathize.newPersonaButton,
             style: GoogleFonts.nunitoSans(
               fontSize: 16,
-              color: Colors.grey,
+              color: lastStep == true ? Color(0xff787cd1) : Colors.grey,
             ),
           ),
         ),
@@ -1166,31 +1179,36 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeInsideSections2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(lastStep == true){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeInsideSections2(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+
+        }
       },
       child: Center(
         child: Container(
           height: 45,
           width: 146,
           decoration: BoxDecoration(
-              color: Color(0xff7579cb),
+              color: lastStep == true ? Color(0xff787cd1) : Color(0xffd4d4d4),
               borderRadius: BorderRadius.all(Radius.circular(7))
           ),
           child: Center(
             child: Text("Next",
               style: TextStyle(
-                  color: Colors.white, letterSpacing: 1, fontSize: 16),
+                color: lastStep == true ? Colors.white : Colors.grey,
             ),
           ),
         ),
       ),
+    ),
     );
   }
 

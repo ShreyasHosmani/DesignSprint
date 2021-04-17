@@ -28,7 +28,7 @@ class _EmphatizeSections3State extends State<EmphatizeSections3> {
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

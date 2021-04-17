@@ -2,6 +2,7 @@ import 'package:design_sprint/APIs/create_add_team.dart';
 import 'package:design_sprint/APIs/get_team_by_sprints.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen_seperate.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_inside_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/team_data.dart' as team;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -669,7 +670,13 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
                           selectedMemberIdSeperate = teamBySprints.teamMemberIdsBySprintsList[i].toString();
                         });
                         print(selectedMemberIdSeperate);
-                        showAlertDialogDeleteTeam(context);
+                        if(dmIDd == profile.userID){
+                          showAlertDialogDeleteTeam(context);
+                        }else{
+                          Fluttertoast.showToast(msg: 'Only decision makers are allowed to edit the team',
+                            backgroundColor: Colors.black, textColor: Colors.white
+                          );
+                        }
                       }else{
 
                       }

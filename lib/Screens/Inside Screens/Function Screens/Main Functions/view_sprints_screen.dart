@@ -18,6 +18,8 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+var decisionMakerIdsList;
+var decisionMakerEmailsList;
 
 class ViewSprints extends StatefulWidget {
   @override
@@ -29,11 +31,13 @@ class _ViewSprintsState extends State<ViewSprints> {
   DeleteSprintApiProvider deleteSprintApiProvider = DeleteSprintApiProvider();
   Future<String> getSprints(context) async {
 
-    String url = globals.urlLogin + "getsprint.php";
+    print(profile.email.toString());
+    String url = globals.urlLogin + "getsprintbyuserid.php";
 
     http.post(url, body: {
 
-      "userID" : profile.userID,
+      //"userID" : profile.userID,
+      "userEmail" : profile.email.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -53,11 +57,15 @@ class _ViewSprintsState extends State<ViewSprints> {
             home.sprintIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintID'].toString());
             home.sprintTitlesList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintName'].toString());
             home.sprintStatusList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintStatus'].toString());
+            decisionMakerIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintUserid'].toString());
+            decisionMakerEmailsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['userEmail'].toString());
           });
 
           print(home.sprintIdsList.toList());
           print(home.sprintTitlesList.toList());
           print(home.sprintStatusList.toList());
+          print(decisionMakerIdsList.toList());
+          print(decisionMakerEmailsList.toList());
 
         }else{
 
@@ -75,7 +83,11 @@ class _ViewSprintsState extends State<ViewSprints> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    home.sprintTitlesList = "1";
+    setState(() {
+      home.selectedSprintId = null;
+      home.sprintID = null;
+      home.sprintTitlesList = "1";
+    });
     getSprints(context);
 //    createSprintApiProvider.getSprints(context).whenComplete((){
 //      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
@@ -387,7 +399,7 @@ class _ViewSprintsState extends State<ViewSprints> {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(home.sprintIdsList.reversed.toList()[i]),
+                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(home.sprintIdsList.reversed.toList()[i],decisionMakerIdsList.reversed.toList()[i], decisionMakerEmailsList.reversed.toList()[i]),
                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                 transitionDuration: Duration(milliseconds: 300),
               ),
@@ -449,13 +461,18 @@ class _ViewSprintsState extends State<ViewSprints> {
                     ),
                   ),
                 ),
-                Padding(
+                decisionMakerIdsList[i] == profile.userID ? Padding(
                   padding: const EdgeInsets.only(right: 20),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       icon: Icon(Icons.close, color: Colors.white,size: 20,),
                       onPressed: (){
+                        if(decisionMakerIdsList[i] == profile.userID){
+                          print("i am a decision maker");
+                        }else{
+                          print("i am not a decision maker");
+                        }
                         setState(() {
                           home.selectedSprintIdForDeleting = home.sprintIdsList.reversed.toList()[i];
                         });
@@ -464,7 +481,7 @@ class _ViewSprintsState extends State<ViewSprints> {
                       },
                     ),
                   ),
-                ),
+                ) : Container(),
               ],
             ),
           ),
@@ -501,8 +518,8 @@ class _ViewSprintsState extends State<ViewSprints> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Delete"),
-      content: Text("Are you sure you want to delete this sprint?"),
+      title: Text("Delete Sprint"),
+      content: Text("Are you sure that you want to delete this sprint? By pressing delete you will delete this sprint."),
       actions: [
         cancelButton,
         continueButton,

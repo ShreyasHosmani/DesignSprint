@@ -11,6 +11,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateJourneyApiProvider{
 
+  Future<String> updateStep3(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "3",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
   Future<String> createJourneyMapName(context) async {
 
     String url = globals.urlLogin + "createjourneymap.php";
@@ -18,7 +50,7 @@ class CreateJourneyApiProvider{
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "journeymapname" : empathize.journeyNameController.text,
 
     }).then((http.Response response) async {
@@ -40,6 +72,7 @@ class CreateJourneyApiProvider{
             Navigator.of(context).pop();
             Fluttertoast.showToast(msg: empathize.journeyMapSaved, backgroundColor: Colors.black,
               textColor: Colors.white,);
+            updateStep3(context);
             Navigator.push(
               context,
               PageRouteBuilder(
@@ -74,7 +107,7 @@ class CreateJourneyApiProvider{
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "image" : empathize.baseImagePaperJourneyMap.toString(),
       "name" : empathize.fileNamePaperJourneyMap.toString(),
 
@@ -94,6 +127,7 @@ class CreateJourneyApiProvider{
         if(empathize.responseArrayUploadPaperJourneyMapMsg == "Journeymap Added Successfully"){
           Fluttertoast.showToast(msg: empathize.personaUploaded, backgroundColor: Colors.black,
             textColor: Colors.white,);
+          updateStep3(context);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayUploadPaperJourneyMapMsg, backgroundColor: Colors.black,
             textColor: Colors.white,);
@@ -108,8 +142,7 @@ class CreateJourneyApiProvider{
 
     http.post(url, body: {
 
-      "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -178,7 +211,7 @@ class CreateJourneyApiProvider{
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "journeymapname" : empathize.journeyNameController.text,
 
     }).then((http.Response response) async {

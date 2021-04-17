@@ -11,7 +11,8 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ViewEmpathizeInsideSections extends StatefulWidget {
   final sprintid;
-  ViewEmpathizeInsideSections(this.sprintid) : super();
+  final dmID;
+  ViewEmpathizeInsideSections(this.sprintid, this.dmID) : super();
   @override
   _ViewEmpathizeInsideSectionsState createState() => _ViewEmpathizeInsideSectionsState();
 }
@@ -283,7 +284,7 @@ class _ViewEmpathizeInsideSectionsState extends State<ViewEmpathizeInsideSection
           Navigator.push(
             context,
             PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => ViewPersonas(),
+              pageBuilder: (c, a1, a2) => ViewPersonas(widget.dmID),
               transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
               transitionDuration: Duration(milliseconds: 300),
             ),

@@ -1,192 +1,222 @@
-import 'dart:io';
-import 'package:design_sprint/APIs/create_persona.dart';
-import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
-import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
-import 'package:design_sprint/utils/signup_data.dart';
+import 'package:design_sprint/APIs/create_add_team.dart';
+import 'package:design_sprint/ReusableWidgets/profile_drawer_manage_team.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen_seperate.dart';
 import 'package:flutter/material.dart';
+import 'package:design_sprint/utils/team_data.dart' as team;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:design_sprint/utils/profile_data.dart' as profile;
-import 'package:design_sprint/utils/home_screen_data.dart' as home;
-import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+
+import 'design_sprint_sections_screen.dart';
 
 bool statusDrawer = false;
-bool showSecondStep = false;
-bool showPainPoint = false;
-TextEditingController painPointController = new TextEditingController();
+var selectedTeam;
+ProgressDialog prSelect;
 
-class UploadPersona extends StatefulWidget {
+class SelectTeam extends StatefulWidget {
   @override
-  _UploadPersonaState createState() => _UploadPersonaState();
+  _SelectTeamState createState() => _SelectTeamState();
 }
 
-class _UploadPersonaState extends State<UploadPersona> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
-  void _settingModalBottomSheetOne(context){
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (BuildContext bc){
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: Wrap(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: InkWell(
-                      onTap: (){
-                        getImageOne();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Container(
-                              //width: 100,
-                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
-                          ),
-                          Container(
-                              width: 150,
-                              child: Text("Open using camera",
-                                style: GoogleFonts.nunitoSans(
-                                    letterSpacing: 0.5
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 20),
-                    child: InkWell(
-                      onTap: (){
-                        getImageOneGallery();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Container(
-                              //width: 100,
-                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
-                          ),
-                          Container(
-                              width: 150,
-                              child: Text("Open using gallery",
-                                style: GoogleFonts.nunitoSans(
-                                    letterSpacing: 0.5
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+class _SelectTeamState extends State<SelectTeam> {
+  TeamApiProvider teamApiProvider = TeamApiProvider();
+  Future<String> getTeamNames(context) async {
+
+    String url = globals.urlLogin + "getteamname.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      team.responseArrayTeamNames = jsonDecode(response.body);
+      print(team.responseArrayTeamNames);
+
+      team.responseArrayTeamNamesMsg = team.responseArrayTeamNames['message'].toString();
+      if(statusCode == 200){
+        if(team.responseArrayTeamNamesMsg == "Profile Found"){
+
+          setState(() {
+            team.teamNamesList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnName'].toString());
+            team.teamNamesIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnID'].toString());
+          });
+
+          print(team.teamNamesList.toList());
+          print(team.teamNamesIdsList.toList());
+
+        }else{
+
+          setState(() {
+            team.teamNamesList = "1";
+            team.teamNamesIdsList = "1";
+          });
+
         }
-    );
+      }
+
+    });
+  }
+  Future<String> deleteTeam(context) async {
+
+    String url = globals.urlSignUp + "deleteteam.php";
+
+    http.post(url, body: {
+
+      "teamID" : selectedTeamIdForDeleting.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayDeleteTeam = jsonDecode(response.body);
+      print(responseArrayDeleteTeam);
+
+      var msg = responseArrayDeleteTeam['message'].toString();
+      if(statusCode == 200){
+        if(msg == "Team deleted"){
+          Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+              getTeamNames(context);
+          });
+        }else{
+          Fluttertoast.showToast(msg: "error deleting team", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
+  Future<String> selectTeam(context) async {
+
+    String url = globals.urlSignUp + "selectteam.php";
+
+    http.post(url, body: {
+
+      "teamID" : selectedTeam.toString(),
+      "sprintID" : home.sprintID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayDeleteTeam = jsonDecode(response.body);
+      print(responseArrayDeleteTeam);
+
+      var msg = responseArrayDeleteTeam['message'].toString();
+      if(statusCode == 200){
+        if(msg == "Edited Successfully"){
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeSections(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          });
+        }else{
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: "error deleting team", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
   }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    createPersonaApiProvider.getPersonaDetails(context);
-    empathize.imagePaperPersona = null;
-    empathize.fileNamePaperPersona = "";
-    statusDrawer = false;
-    showSecondStep = false;
-    showPainPoint = false;
-  }
-  final picker = ImagePicker();
-  Future getImageOne() async {
-    Navigator.of(context).pop();
-    var pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
-    setState(() {
-      empathize.imagePaperPersona = File(pickedFile.path);
-    });
-    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {
-        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-        });
-      });
-    });
-  }
-  Future getImageOneGallery() async {
-    Navigator.of(context).pop();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
-    setState(() {
-      empathize.imagePaperPersona = File(pickedFile.path);
-    });
-    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {
-        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-        });
-      });
-    });
+    team.teamNamesList = null;
+    selectedTeam = null;
+    selectedTeamIdForDeleting = null;
+    getTeamNames(context);
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    team.prTeam = ProgressDialog(context);
+    return team.teamNamesList == null ? Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    ) : Scaffold(
+      backgroundColor: Colors.white,
+      key: team.scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
+      endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommonManageTeam(),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 50),
+        padding: const EdgeInsets.only(bottom: 30),
         child: Container(
             height: 50,
             child: buildNextButton(context)),
       ),
-      body: SingleChildScrollView(
-        child: Stack(
+      body:
+//      team.teamNamesList.length < 5 ? Stack(
+//        children: [
+//          Column(
+//            mainAxisAlignment: MainAxisAlignment.center,
+//            crossAxisAlignment: CrossAxisAlignment.center,
+//            children: [
+//              buildTeamNameCardWidget(context),
+//              SizedBox(height: 40,),
+//              buildAddTeamWidget(context),
+//              SizedBox(height: 40,),
+//            ],
+//          ),
+//          Positioned(
+//            top: 10,left: 0,right: 0,
+//            child: buildName2Widget(context),
+//          ),
+//          Positioned(
+//            top: 40, right: 0,
+//            child: Container(
+//              width: MediaQuery.of(context).size.width,
+//              child: Align(
+//                alignment: Alignment.topRight,
+//                child: Padding(
+//                  padding: EdgeInsets.only(top: 40,),
+//                  child: statusBarDrawer(context),
+//                ),
+//              ),
+//            ),
+//          ),
+//        ],
+//      ) :
+      SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 10,),
-                buildName2Widget(context),
-                SizedBox(height: 25,),
-                buildName3Widget(context),
-                SizedBox(height: 43,),
-                buildUploadButton(context),
-                SizedBox(height: 25,),
-                buildFileNameWidget(context),
-                showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
-                showSecondStep == false ? Container(height: 1, width: 1,) :buildName4Widget(context),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 80),
-              child: statusBarDrawer(context),
-            ),
+            SizedBox(height: 10,),
+            buildName2Widget(context),
+            SizedBox(height: 20,),
+            buildTeamNameCardWidget(context),
+            SizedBox(height: 40,),
+            buildAddTeamWidget(context),
+            SizedBox(height: 40,),
           ],
         ),
       ),
@@ -198,9 +228,9 @@ class _UploadPersonaState extends State<UploadPersona> {
     Container line = Container(height:1,color: Colors.black,child: Divider());
     void _openEndDrawer() {
       setState(() {
-        empathize.statusDrawer = false;
+        statusDrawer = false;
       });
-      empathize.scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -209,7 +239,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(empathize.empathize,
+        child: Text("Select Team",
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -429,7 +459,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       setState(() {
         statusDrawer = true;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      team.scaffoldKey.currentState.openEndDrawer();
     }
     return Align(
       alignment: Alignment.centerRight,
@@ -502,7 +532,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Sprint Goal",
@@ -525,14 +555,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Empathize",
@@ -555,14 +585,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Ideation",
@@ -585,14 +615,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Prototype",
@@ -615,14 +645,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("User Testing",
@@ -645,14 +675,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Re - Iterate",
@@ -675,14 +705,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Team",
@@ -707,7 +737,7 @@ class _UploadPersonaState extends State<UploadPersona> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(empathize.paperPersona,
+      child: Text(home.home,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -719,166 +749,121 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
-    return Center(
-      child: Text(empathize.paperPersonaHint1,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildUploadButton(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        _settingModalBottomSheetOne(context);
-        /*
-        showGeneralDialog(
-          barrierLabel: "Label",
-          barrierDismissible: true,
-          barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: Duration(milliseconds: 400),
-          context: context,
-          pageBuilder: (context, anim1, anim2) {
-            return Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 195,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          getImageOneGallery();
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 44,
-                                height: 44,
-                                child: Image.asset("assets/images/photo.png")),
-                            SizedBox(height: 8.97,),
-                            Text(empathize.gallery,
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          getImageOne();
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 44,
-                                height: 44,
-                                child: Image.asset("assets/images/folder.png")),
-                            SizedBox(height: 8.97,),
-                            Text(empathize.fileManager,
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                      color: Colors.white,
-                                  ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xff707070),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-          transitionBuilder: (context, anim1, anim2, child) {
-            return SlideTransition(
-              position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-              child: child,
-            );
-          },
-        );
-
-         */
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => PersonaMainScreen(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
-      },
-      child: Center(
-        child: Container(
-          height: 37,
-          width: 166,
-          decoration: BoxDecoration(
-              border: Border.all(color :Color(0xff302B70),width: 2),
-              borderRadius: BorderRadius.all(Radius.circular(19))
-          ),
-          child: Center(
-            child: Text(empathize.upload,
-              style: TextStyle(
-                  color: Color(0xff302B70), letterSpacing: 1, fontSize: 16),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildFileNameWidget(BuildContext context){
-    return ListView.builder(
+  Widget buildTeamNameCardWidget(BuildContext context){
+    return team.teamNamesList == null || team.teamNamesList == "1" ? Container() : ListView.builder(
       physics: ScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
-      itemBuilder: (context, i) => Center(
-        child: InkWell(
-          onTap: (){
-            if(empathize.paperPersonaImageNamesList[i] == null || empathize.paperPersonaImageNamesList[i] == "null"){
-
-            }else{
-              launch(globals.urlSignUp+empathize.paperPersonaImageNamesList[i]);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 2, left: 30, right: 30),
-            child: Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunitoSans(
-                  textStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  )
-              ),
+      itemCount: team.teamNamesList == null ? 0 : team.teamNamesList.length,
+      itemBuilder: (context, i) => InkWell(
+        onTap: (){
+          if(selectedTeam == team.teamNamesIdsList[i]){
+            Fluttertoast.showToast(msg: 'You have already selected the team!', backgroundColor: Colors.black, textColor: Colors.white);
+          }else{
+            print("select team called");
+            setState(() {
+              selectedTeamIdForDeleting = team.teamNamesIdsList[i];
+              selectedTeam = team.teamNamesIdsList[i];
+            });
+            print(selectedTeamIdForDeleting);
+            print(selectedTeam);
+            team.prTeam.show();
+            selectTeam(context);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+          child: Container(
+            height: 65,
+            child: Stack(
+              children: [
+                Center(
+                  child: Container(
+                    width: 302,
+                    height: 57,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xff787cd1)),
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                      color: selectedTeam == team.teamNamesIdsList[i] ? Color(0xff787cd1) : Colors.white
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Center(
+                        child: Text(team.teamNamesList[i],
+                          style: GoogleFonts.nunitoSans(
+                            fontSize: 18,
+                            color: selectedTeam == team.teamNamesIdsList[i] ? Colors.white : Colors.black
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, bottom: 0),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                      child: PopupMenuButton<String>(
+                        onSelected: (val){
+                          if(val == "Edit Team"){
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (c, a1, a2) => ManageTeamSeperate(team.teamNamesIdsList[i], team.teamNamesList[i]),
+                                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                transitionDuration: Duration(milliseconds: 300),
+                              ),
+                            );
+                          }else{
+                            setState(() {
+                              selectedTeamIdForDeleting = team.teamNamesIdsList[i];
+                            });
+                            print(selectedTeamIdForDeleting);
+                            showAlertDialogDeleteTeam(context);
+                          }
+                        },
+                        icon: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(height: 3,width: 3,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(50))
+                              ),
+                            ),
+                            SizedBox(height: 3,),
+                            Container(height: 3,width: 3,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.all(Radius.circular(50))
+                              ),
+                            ),
+                            SizedBox(height: 3,),
+                            Container(height: 3,width: 3,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.all(Radius.circular(50))
+                              ),
+                            ),
+                          ],
+                        ),
+                        color: Colors.white,
+                        itemBuilder: (BuildContext context) {
+                          return {'Edit Team','Delete Team'}.map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              textStyle: GoogleFonts.nunitoSans(
+                                color: Colors.grey.shade700,
+                                fontSize: 16,
+                              ),
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                      ),
+                ),),
+              ],
             ),
           ),
         ),
@@ -886,17 +871,176 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget buildName4Widget(BuildContext context){
-    return Center(
-        child: Text(empathize.paperPersonaHint2,
-          style: GoogleFonts.nunitoSans(
-              textStyle: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500
-              )
+  Widget buildAddTeamWidget(BuildContext context){
+    return GestureDetector(
+      onTap: (){
+        showAlertDialog(context);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              color: Color(0xff787CD1),
+            ),
+            child: Icon(Icons.add, color: Colors.white,),
+          ),
+          SizedBox(height: 10,),
+          Text("Create Team",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  color: Color(0xff787CD1),
+                  fontSize: 14,
+                )
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    Widget textField = Theme(
+        data: ThemeData(
+          primaryColor: Color(0xff787CD1),
+        ),
+        child: Form(
+          key: team.formKey,
+          child: TextFormField(
+            controller: team.teamNameController,
+            decoration: InputDecoration(
+                hintText: 'Enter team name',
+              hintStyle: GoogleFonts.nunitoSans(letterSpacing: 0.5)
+            ),
+            validator: (value){
+              if(value.isEmpty){
+                return team.teamEmpty;
+              }
+              return null;
+            },
+          ),
+        ));
+
+    GestureDetector buildSaveButton = GestureDetector(
+      onTap: (){
+        if(team.formKey.currentState.validate()){
+          team.prTeam.show();
+          teamApiProvider.createTeamName2(context).whenComplete((){
+            Future.delayed(const Duration(seconds: 2), () {
+              teamApiProvider.getTeamNames(context).whenComplete((){
+                Future.delayed(const Duration(seconds: 2), () {
+                  setState(() {});
+                });
+              });
+            });
+          });
+        }
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 10,
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 2.4,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(12))
+          ),
+          child: Center(
+            child: Text("Next",
+                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
+            ),
           ),
         ),
-      );
+      ),
+    );
+
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      title: Column(
+        children: [
+          Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+          //SizedBox(height: 10,),
+          Text("What would you like to name", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text("your Team?",style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          //SizedBox(height: 10,)
+        ],
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Container(
+          height: MediaQuery.of(context).size.height/4,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              textField,
+              buildSaveButton,
+            ],
+          ),
+        ),
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showAlertDialogDeleteTeam(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Delete"),
+      onPressed:  () async {
+        Navigator.of(context).pop();
+        Fluttertoast.showToast(msg: "deleting...", backgroundColor: Colors.black,
+          textColor: Colors.white,);
+        deleteTeam(context);
+      },
+
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Team"),
+      content: Text("Are you sure you want to delete this team? Once deleted, it cannot be recovered!"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Widget buildNextButton(BuildContext context) {
@@ -905,7 +1049,7 @@ class _UploadPersonaState extends State<UploadPersona> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeInsideSections2(),
+            pageBuilder: (c, a1, a2) => EmphatizeSections(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -934,3 +1078,5 @@ class _UploadPersonaState extends State<UploadPersona> {
   }
 
 }
+
+var selectedTeamIdForDeleting;

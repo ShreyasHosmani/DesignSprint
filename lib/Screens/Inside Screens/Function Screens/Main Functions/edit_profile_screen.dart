@@ -13,6 +13,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:image_cropper/image_cropper.dart';
 
 bool imagePicked = false;
 var focusName = FocusNode();
@@ -29,6 +30,42 @@ class _EditProfileState extends State<EditProfile> {
   EditProfileApiProvider editProfileApiProvider = EditProfileApiProvider();
   LogoutApiProvider logoutApiProvider = LogoutApiProvider();
   final picker = ImagePicker();
+  Future<Null> _cropImage() async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: home.profileImage.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+    if (croppedFile != null) {
+      setState(() {
+        home.profileImage = croppedFile;
+      });
+    }
+  }
   Future getImageOne() async {
     Navigator.of(context).pop();
     var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
@@ -37,6 +74,7 @@ class _EditProfileState extends State<EditProfile> {
       imagePicked = true;
       saveButton = true;
     });
+    _cropImage();
     print(imagePicked);
   }
   Future getImageOneGallery() async {
@@ -47,6 +85,7 @@ class _EditProfileState extends State<EditProfile> {
       imagePicked = true;
       saveButton = true;
     });
+    _cropImage();
     print(imagePicked);
   }
   @override
@@ -83,15 +122,18 @@ class _EditProfileState extends State<EditProfile> {
             height: 50,
             child: buildNextButton(context)),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            buildProfilePictureStack(context),
-            buildForm(context),
-            SizedBox(height: 20,),
-          ],
+      body: GestureDetector(
+        onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              buildProfilePictureStack(context),
+              buildForm(context),
+              SizedBox(height: 20,),
+            ],
+          ),
         ),
       ),
     );
@@ -141,54 +183,422 @@ class _EditProfileState extends State<EditProfile> {
           child: Center(
             child: Stack(
               children: [
-                profile.profilePicImage.toString().substring(0,2) == ".." && imagePicked == false ? Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      color: Color(0xff787cd1),
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      image: DecorationImage(
-                        image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
-                        fit: BoxFit.cover,
-                      )
-                  ),
-                ) : home.profileImage == null ? Container(
-                  width: 155,
-                  height: 155,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                  ),
+                profile.profilePicImage.toString().substring(0,2) == ".." && imagePicked == false ? InkWell(
+                  onTap: (){
+                    print(profile.profilePicImage);
+                    print(home.profileImage);
+                    showGeneralDialog(
+                      barrierLabel: "Label",
+                      barrierDismissible: true,
+                      barrierColor: Colors.black.withOpacity(0.5),
+                      transitionDuration: Duration(milliseconds: 400),
+                      context: context,
+                      pageBuilder: (context, anim1, anim2) {
+                        return Scaffold(
+                          backgroundColor: Colors.transparent,
+                          body: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: 195,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: (){
+                                      //Navigator.of(context).pop();
+//                          setState(() {
+//                            showImages = true;
+//                          });
+                                      getImageOneGallery().then((value){
+
+                                      });
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            width: 44,
+                                            height: 44,
+                                            child: Image.asset("assets/images/photo.png")),
+                                        SizedBox(height: 8.97,),
+                                        Text("Gallery",
+                                          style: GoogleFonts.nunitoSans(
+                                            textStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: 44,
+                                          height: 44,
+                                          child: Image.asset("assets/images/folder.png")),
+                                      SizedBox(height: 8.97,),
+                                      Text("File Manager",
+                                        style: GoogleFonts.nunitoSans(
+                                          textStyle: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xff707070),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      transitionBuilder: (context, anim1, anim2, child) {
+                        return SlideTransition(
+                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+                          child: child,
+                        );
+                      },
+                    );
+                  },
                   child: Container(
                     width: 150,
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Color(0xff787cd1),
+                        color: Color(0xff787cd1),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        image: DecorationImage(
+                          image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
+                          fit: BoxFit.cover,
+                        )
+                    ),
+                  ),
+                ) : home.profileImage == null ? InkWell(
+                  onTap: (){
+                    print(profile.profilePicImage);
+                    print(home.profileImage);
+                    showGeneralDialog(
+                      barrierLabel: "Label",
+                      barrierDismissible: true,
+                      barrierColor: Colors.black.withOpacity(0.5),
+                      transitionDuration: Duration(milliseconds: 400),
+                      context: context,
+                      pageBuilder: (context, anim1, anim2) {
+                        return Scaffold(
+                          backgroundColor: Colors.transparent,
+                          body: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: 195,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: (){
+                                      //Navigator.of(context).pop();
+//                          setState(() {
+//                            showImages = true;
+//                          });
+                                      getImageOneGallery().then((value){
+
+                                      });
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            width: 44,
+                                            height: 44,
+                                            child: Image.asset("assets/images/photo.png")),
+                                        SizedBox(height: 8.97,),
+                                        Text("Gallery",
+                                          style: GoogleFonts.nunitoSans(
+                                            textStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: 44,
+                                          height: 44,
+                                          child: Image.asset("assets/images/folder.png")),
+                                      SizedBox(height: 8.97,),
+                                      Text("File Manager",
+                                        style: GoogleFonts.nunitoSans(
+                                          textStyle: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xff707070),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      transitionBuilder: (context, anim1, anim2, child) {
+                        return SlideTransition(
+                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+                          child: child,
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    width: 155,
+                    height: 155,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.all(Radius.circular(100)),
                     ),
-                    child: Icon(Icons.person, color: Colors.white, size: 50,),
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Color(0xff787cd1),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                      ),
+                      child: Icon(Icons.person, color: Colors.white, size: 50,),
+                    ),
+                   ),
+                ) : imagePicked == true ? InkWell(
+                  onTap: (){
+                    print(profile.profilePicImage);
+                    print(home.profileImage);
+                    showGeneralDialog(
+                      barrierLabel: "Label",
+                      barrierDismissible: true,
+                      barrierColor: Colors.black.withOpacity(0.5),
+                      transitionDuration: Duration(milliseconds: 400),
+                      context: context,
+                      pageBuilder: (context, anim1, anim2) {
+                        return Scaffold(
+                          backgroundColor: Colors.transparent,
+                          body: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: 195,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: (){
+                                      //Navigator.of(context).pop();
+//                          setState(() {
+//                            showImages = true;
+//                          });
+                                      getImageOneGallery().then((value){
+
+                                      });
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            width: 44,
+                                            height: 44,
+                                            child: Image.asset("assets/images/photo.png")),
+                                        SizedBox(height: 8.97,),
+                                        Text("Gallery",
+                                          style: GoogleFonts.nunitoSans(
+                                            textStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: 44,
+                                          height: 44,
+                                          child: Image.asset("assets/images/folder.png")),
+                                      SizedBox(height: 8.97,),
+                                      Text("File Manager",
+                                        style: GoogleFonts.nunitoSans(
+                                          textStyle: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xff707070),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      transitionBuilder: (context, anim1, anim2, child) {
+                        return SlideTransition(
+                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+                          child: child,
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                        color: Color(0xff787cd1),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        image: DecorationImage(
+                          image: FileImage(home.profileImage),
+                          fit: BoxFit.cover,
+                        )
+                    ),
                   ),
-                 ) : imagePicked == true ? Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      color: Color(0xff787cd1),
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      image: DecorationImage(
-                        image: FileImage(home.profileImage),
-                        fit: BoxFit.cover,
-                      )
-                  ),
-                ) : Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      color: Color(0xff787cd1),
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      image: DecorationImage(
-                        image: FileImage(home.profileImage),
-                        fit: BoxFit.cover,
-                      )
+                ) : InkWell(
+                  onTap: (){
+                    print(profile.profilePicImage);
+                    print(home.profileImage);
+                    showGeneralDialog(
+                      barrierLabel: "Label",
+                      barrierDismissible: true,
+                      barrierColor: Colors.black.withOpacity(0.5),
+                      transitionDuration: Duration(milliseconds: 400),
+                      context: context,
+                      pageBuilder: (context, anim1, anim2) {
+                        return Scaffold(
+                          backgroundColor: Colors.transparent,
+                          body: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: 195,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: (){
+                                      //Navigator.of(context).pop();
+//                          setState(() {
+//                            showImages = true;
+//                          });
+                                      getImageOneGallery().then((value){
+
+                                      });
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            width: 44,
+                                            height: 44,
+                                            child: Image.asset("assets/images/photo.png")),
+                                        SizedBox(height: 8.97,),
+                                        Text("Gallery",
+                                          style: GoogleFonts.nunitoSans(
+                                            textStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: 44,
+                                          height: 44,
+                                          child: Image.asset("assets/images/folder.png")),
+                                      SizedBox(height: 8.97,),
+                                      Text("File Manager",
+                                        style: GoogleFonts.nunitoSans(
+                                          textStyle: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xff707070),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      transitionBuilder: (context, anim1, anim2, child) {
+                        return SlideTransition(
+                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+                          child: child,
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                        color: Color(0xff787cd1),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        image: DecorationImage(
+                          image: FileImage(home.profileImage),
+                          fit: BoxFit.cover,
+                        )
+                    ),
                   ),
                 ),
 //                    : Container(
@@ -417,9 +827,7 @@ class _EditProfileState extends State<EditProfile> {
                       hintText: profile.mobileNo == null || profile.mobileNo == "null" ? 'Contact no.' : '',
                     ),
                     validator: (val){
-                      if(val.isEmpty){
-                        return 'Contact cannot be empty';
-                      }else if(val.length < 10 || val.length  > 10){
+                      if((val.length < 10 || val.length  > 10)&&val.length > 1){
                         return 'Contact no. must be 10 digits';
                       }
                       return null;

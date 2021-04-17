@@ -29,7 +29,7 @@ class _EmphatizeSectionsState extends State<EmphatizeSections> {
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -60,12 +60,44 @@ class _EmphatizeSectionsState extends State<EmphatizeSections> {
       }
     });
   }
+  Future<String> updateStep1(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "1",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     selectedTimeLine = null;
     getTimeLine(context);
+    updateStep1(context);
   }
   @override
   Widget build(BuildContext context) {

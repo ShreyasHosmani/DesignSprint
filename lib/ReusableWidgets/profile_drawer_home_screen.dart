@@ -14,8 +14,12 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import '../main.dart';
+import 'package:design_sprint/utils/login_data.dart' as login;
+
+TextEditingController bugController = TextEditingController();
 
 class ProfileDrawerHomeScreen extends StatefulWidget {
   @override
@@ -54,6 +58,26 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
       print(profile.mobileNo);
       print(profile.profilePicImage);
       print(profile.nameList.toList());
+
+    });
+  }
+  Future<String> reportBug(context) async {
+    String url = globals.urlLogin + "savebugs.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "usertext" : bugController.text.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayReport = jsonDecode(response.body);
+      print(responseArrayReport);
 
     });
   }
@@ -104,7 +128,7 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -135,6 +159,7 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Hi, " + profile.name + "!",
+                                    overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.nunitoSans(
                                         textStyle: TextStyle(
                                           color: Colors.white,
@@ -144,6 +169,7 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
                                   ),
                                   SizedBox(height: 5,),
                                   Text(profile.email,
+                                    overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.nunitoSans(
                                         textStyle: TextStyle(
                                           color: Colors.white,
@@ -171,6 +197,7 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
                                       },
                                       child: Center(
                                         child: Text("Edit profile",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: Color(0xff787cd1),
                                             fontSize: 12,
@@ -189,8 +216,7 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
                     SizedBox(height: 35,),
                     InkWell(
                       onTap: (){
-                        Fluttertoast.showToast(msg: "You're on the homepage", backgroundColor: Colors.black,
-                          textColor: Colors.white,);
+                        Navigator.pop(context);
                       },
                       child: Row(
                         children: [
@@ -334,27 +360,57 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
                       ],
                     ),
                     SizedBox(height: 25,),
-                    Row(
-                      children: [
-                        SizedBox(width: 45,),
-                        Container(
-                          height: 25,
-                          width: 25,
-                          child: Image.asset("assets/images/legal.png"),
-                        ),
-                        SizedBox(width: 15,),
-                        Text(home.sideBarHeadingLegalPolicy,
-                          style: GoogleFonts.nunitoSans(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
-                              )
+                    InkWell(
+                      onTap: (){
+                        launch("https://dezyit.com/privacypolicy");
+                      },
+                      child: Row(
+                        children: [
+                          SizedBox(width: 45,),
+                          Container(
+                            height: 25,
+                            width: 25,
+                            child: Image.asset("assets/images/legal.png"),
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 15,),
+                          Text(home.sideBarHeadingLegalPolicy,
+                            style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                )
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 25,),
+                    InkWell(
+                      onTap: (){
+                        showAlertDialogReportBug(context);
+                      },
+                      child: Row(
+                        children: [
+                          SizedBox(width: 45,),
+                          Container(
+                            height: 25,
+                            width: 25,
+                            child: Icon(Icons.bug_report_outlined),//Image.asset("assets/images/legal.png"),
+                          ),
+                          SizedBox(width: 15,),
+                          Text("Report a Bug",
+                            style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                )
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 Positioned(
@@ -408,6 +464,8 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         Navigator.of(context).pop();
+        login.googleSignIn.disconnect();
+        login.facebookLogin.logOut();
         Future.delayed(const Duration(seconds: 1), () {
           main();
           Navigator.pushReplacement(
@@ -439,6 +497,102 @@ class _ProfileDrawerHomeScreenState extends State<ProfileDrawerHomeScreen> {
     );
 
     // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showAlertDialogReportBug(BuildContext context) {
+
+    Widget textField = Theme(
+        data: ThemeData(
+          primaryColor: Color(0xff787CD1),
+        ),
+        child: TextFormField(
+          controller: bugController,
+          decoration: InputDecoration(
+              hintText: 'Type here...'
+          ),
+          validator: (value){
+            if(value.isEmpty){
+              return home.sprintNameValidation;
+            }
+            return null;
+          },
+        ));
+
+    GestureDetector buildSaveButton = GestureDetector(
+      onTap: (){
+        Navigator.pop(context);
+        Fluttertoast.showToast(msg: 'Your problem has been successfully reported!',backgroundColor: Colors.black, textColor: Colors.white).whenComplete((){
+          reportBug(context);
+        });
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 10,
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 2.4,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(12))
+          ),
+          child: Center(
+            child: Text("Report",
+                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
+            ),
+          ),
+        ),
+      ),
+    );
+
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+          SizedBox(height: 10,),
+          Text("Report a bug ?", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          //Text(home.popUp2,style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 12, letterSpacing: 1),)),
+          SizedBox(height: 10,)
+        ],
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Form(
+            key: home.formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  textField,
+                  SizedBox(height: 25,),
+                  buildSaveButton,
+                  SizedBox(height: 25,),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
     showDialog(
       context: context,
       builder: (BuildContext context) {

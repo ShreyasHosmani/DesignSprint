@@ -12,7 +12,7 @@ class GetWareHouseInsightsApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.selectedSprintId,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

@@ -17,6 +17,7 @@ class CreateSprintApiProvider{
 
       "userID" : profile.userID,
       "sprintname" : home.sprintNameController.text,
+      "useremail" : profile.email.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

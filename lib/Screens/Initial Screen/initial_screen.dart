@@ -1,6 +1,7 @@
 import 'package:design_sprint/APIs/get_profile.dart';
 import 'package:design_sprint/Screens/Initial%20Screen/splash_page_view_builder.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
+import 'package:design_sprint/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,7 +52,7 @@ class _InitialScreenState extends State<InitialScreen> {
 
   Future<void> jumpScreen(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var tempID = await prefs.getString("userID"); //setString("userID", profile.userID);
+    tempID = prefs.getString("userID"); //setString("userID", profile.userID);
     print(tempID);
     profileApiProvider.getProfile(context);
     Future.delayed(const Duration(seconds: 2), () {

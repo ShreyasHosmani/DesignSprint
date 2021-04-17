@@ -10,15 +10,16 @@ import 'package:design_sprint/utils/team_data.dart' as team;
 
 class TeamApiProvider {
 
-  Future<String> createTeamName(context) async {
+  Future<String> createTeamNamekk(context) async {
 
     String url = globals.urlLogin + "createteam.php";
 
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? "null" : home.sprintID,
       "teamname" : team.teamNameController.text,
+      "useremail" : profile.email.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -66,6 +67,7 @@ class TeamApiProvider {
 
       "userID" : profile.userID,
       "teamname" : team.teamNameController.text,
+      "useremail" : profile.email.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -86,6 +88,14 @@ class TeamApiProvider {
           Fluttertoast.showToast(msg: team.teamSaved, backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
             Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => ManageTeam(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
           });
         }else{
           team.prTeam.hide();
@@ -104,7 +114,7 @@ class TeamApiProvider {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      "sprintID" : "0",//home.sprintID,
       "teamid" : team.teamID,
       "membername" : team.memberNameController.text,
       "memberemail" : team.memberEmailController.text,
@@ -147,7 +157,7 @@ class TeamApiProvider {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      //"sprintID" : home.sprintID,
       "teamID" : team.teamID,
 
     }).then((http.Response response) async {

@@ -1,5 +1,6 @@
 import 'package:design_sprint/APIs/get_warehouse_insights.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen4.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -36,6 +37,7 @@ class _ViewUserTestingInsightsState extends State<ViewUserTestingInsights> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
+      bottomNavigationBar: buildCommentBottomBar(context),
       endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
@@ -298,7 +300,11 @@ class _ViewUserTestingInsightsState extends State<ViewUserTestingInsights> {
   Widget buildInsightsListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: userTesting.wareHouseInsightsList == null ? Container() :
+      child: userTesting.wareHouseInsightsList == null || userTesting.wareHouseInsightsList.isEmpty ? Text("No insights found!",
+        style: GoogleFonts.nunitoSans(
+          fontSize: 18,
+        ),
+      ) :
       ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
@@ -324,6 +330,34 @@ class _ViewUserTestingInsightsState extends State<ViewUserTestingInsights> {
                   style: GoogleFonts.nunitoSans(),
                 ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCommentBottomBar(BuildContext context){
+    return InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        color: Color(0xff787cd1),
+        child: Center(
+          child: Text("Add Insights",
+            style: GoogleFonts.nunitoSans(
+              fontSize: 18,
+              color: Colors.white,
             ),
           ),
         ),

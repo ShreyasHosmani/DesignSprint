@@ -2,12 +2,14 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Mapping%20Insights/insights_form_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Testing%20Screens/user_testing_inside_sections3.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/time_line_data.dart' as timeLine;
 import 'package:design_sprint/utils/user_testing_data.dart' as userTesting;
+import 'package:video_player/video_player.dart';
 
 bool statusDrawer = false;
 
@@ -18,6 +20,28 @@ class ShadowingTutorial extends StatefulWidget {
 
 class _ShadowingTutorialState extends State<ShadowingTutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/createuserpersona.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/createuserpersona.mp4"),
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -594,30 +618,18 @@ class _ShadowingTutorialState extends State<ShadowingTutorial> {
   }
 
   Widget buildVideoContainer(BuildContext context){
-    return Stack(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Color(0xffFFC1C7).withOpacity(0.95),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 215,
+      child: FlickVideoPlayer(
+        flickManager: flickManager,
+        flickVideoWithControls: FlickVideoWithControls(
+          controls: FlickPortraitControls(),
         ),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: 215,
-            child: Image.asset("assets/images/definegoaltutorial-2.png")),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Colors.black.withOpacity(0.45),
+        flickVideoWithControlsFullscreen: FlickVideoWithControls(
+          controls: FlickLandscapeControls(),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: Center(
-            child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
-          ),
-        ),
-      ],
+      ),
     );
   }
 

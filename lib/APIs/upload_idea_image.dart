@@ -11,6 +11,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadIdeaApiProvider {
 
+  Future<String> updateStep6(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "6",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
   Future<String> uploadIdeaImage(context) async {
 
     String url = globals.urlSignUp + "uploadideaimage.php";
@@ -42,6 +74,7 @@ class UploadIdeaApiProvider {
       if(ideation.responseArrayUploadIdeaImageMsg == "Persona Added Successfully"){
         Fluttertoast.showToast(msg: "Image uploaded", backgroundColor: Colors.black,
           textColor: Colors.white,);
+        updateStep6(context);
       }else{
         Fluttertoast.showToast(msg: "Please check your internet connection", backgroundColor: Colors.black,
           textColor: Colors.white,);
@@ -129,7 +162,7 @@ class UploadIdeaApiProvider {
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "status" : "2",
 
     }).then((http.Response response) async {

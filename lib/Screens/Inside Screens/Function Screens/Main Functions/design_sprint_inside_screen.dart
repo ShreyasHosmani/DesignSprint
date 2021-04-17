@@ -149,7 +149,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 35),
+                    padding: const EdgeInsets.only(top: 0, left: 35),
                     child: Text(home.designSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
@@ -221,7 +221,7 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 35),
+                    padding: const EdgeInsets.only(top: 0, left: 35),
                     child: Text(home.designSprints,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(

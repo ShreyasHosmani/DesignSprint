@@ -64,7 +64,7 @@ class _ManageTeamState extends State<ManageTeam> {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      "sprintID" : "1",
       "teamid" : team.teamID,
       "membername" : team.memberNameController.text,
       "memberemail" : team.memberEmailController.text,
@@ -106,7 +106,7 @@ class _ManageTeamState extends State<ManageTeam> {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      //"sprintID" : home.sprintID,
       "teamID" : team.teamID,
 
     }).then((http.Response response) async {

@@ -1,23 +1,17 @@
-import 'dart:io';
 import 'package:design_sprint/APIs/get_profile.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/identify_painpoint_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/JourneyMap/journey_mapping_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_8_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/i_vs_f_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/edit_profile_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Prototyping/prototyping_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/reiterate_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Mapping%20Insights/Mapping_insights_tutorial_screen.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/User%20Interview/user_interview_tutorial_screen.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/crazy_8_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/i_vs_f_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/identify_painpoint_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/journey_mapping_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/persona_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/prototyping_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/reiterate_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/shadowing_tutorial_screen_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/tutorial_sprint_goal_2.dart';
+import 'package:design_sprint/Screens/Tool%20Tip%20Screens/Tool%20Tip%20Tutorials/user_interview_tutorial_screen_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/globals.dart' as globals;
-import 'package:design_sprint/utils/profile_data.dart' as profile;
-import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 class ViewTips extends StatefulWidget {
   @override
@@ -27,6 +21,11 @@ class ViewTips extends StatefulWidget {
 class _ViewTipsState extends State<ViewTips> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,7 +104,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => SprintGoalTutorial(),
+            pageBuilder: (c, a1, a2) => SprintGoalTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -136,7 +135,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => PersonaTutorial(),
+            pageBuilder: (c, a1, a2) => PersonaTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -167,7 +166,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => JourneyMappingTutorial(),
+            pageBuilder: (c, a1, a2) => JourneyMappingTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -198,7 +197,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
+            pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -229,7 +228,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => Crazy8Tutorial(),
+            pageBuilder: (c, a1, a2) => Crazy8Tutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -260,7 +259,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => IvsFTutorial(),
+            pageBuilder: (c, a1, a2) => IvsFTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -291,7 +290,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => PrototypingTutorial(),
+            pageBuilder: (c, a1, a2) => PrototypingTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -322,7 +321,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => UserInterviewTutorial(),
+            pageBuilder: (c, a1, a2) => UserInterviewTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
@@ -350,7 +349,14 @@ class _ViewTipsState extends State<ViewTips> {
   Widget buildTip9(BuildContext context){
     return InkWell(
       onTap: (){
-
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ShadowingTutorial2(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
@@ -408,7 +414,7 @@ class _ViewTipsState extends State<ViewTips> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => ReIterateTutorial(),
+            pageBuilder: (c, a1, a2) => ReIterateTutorial2(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),

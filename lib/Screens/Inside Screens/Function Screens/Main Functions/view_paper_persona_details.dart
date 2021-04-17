@@ -601,12 +601,12 @@ class _CommentsPage1State extends State<CommentsPage1> {
                     itemCount: comments.commentsPaperPersonaList == null ? 0 : comments.commentsPaperPersonaList.length,
                     itemBuilder: (context, i) => Padding(
                       padding: const EdgeInsets.all(5.0),
-                      child: Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: Container(
                               width: 35,
                               height: 35,
                               decoration: BoxDecoration(
@@ -617,38 +617,38 @@ class _CommentsPage1State extends State<CommentsPage1> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 20,),
-                            Flexible(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(comments.commentsUserNamePaperPersonaList[i],
-                                    style: GoogleFonts.nunitoSans(
-                                        textStyle: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                        )
-                                    ),
+                          ),
+                          SizedBox(width: 20,),
+                          Flexible(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(comments.commentsUserNamePaperPersonaList[i],
+                                  style: GoogleFonts.nunitoSans(
+                                      textStyle: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      )
                                   ),
-                                  SizedBox(height: 0,),
-                                  Text(comments.commentsPaperPersonaList[i],
-                                    maxLines: 10,
-                                    style: GoogleFonts.nunitoSans(
-                                        textStyle: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey,
-                                        )
-                                    ),
+                                ),
+                                SizedBox(height: 0,),
+                                Text(comments.commentsPaperPersonaList[i],
+                                  maxLines: 10,
+                                  style: GoogleFonts.nunitoSans(
+                                      textStyle: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      )
                                   ),
-                                  SizedBox(height: 5,),
-                                ],
-                              ),
+                                ),
+                                SizedBox(height: 5,),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

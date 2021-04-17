@@ -14,7 +14,8 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ViewIdeationInsideSections extends StatefulWidget {
   final sprintid;
-  ViewIdeationInsideSections(this.sprintid) : super();
+  final dmID;
+  ViewIdeationInsideSections(this.sprintid, this.dmID) : super();
   @override
   _ViewIdeationInsideSectionsState createState() => _ViewIdeationInsideSectionsState();
 }

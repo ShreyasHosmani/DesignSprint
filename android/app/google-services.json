@@ -15,11 +15,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "193105011728-16c32898qvkp31sgkc7bvp048bu4ajf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dezy.it.design.sprint.design_sprint",
+            "certificate_hash": "f502346f788b0287219587ec9dec87324d777389"
+          }
+        },
+        {
           "client_id": "193105011728-8qclacknftrn57qf18vu3e89ivc0dbga.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dezy.it.design.sprint.design_sprint",
             "certificate_hash": "f3e62fead3c4ca0749bc2c26719967892a9099d8"
+          }
+        },
+        {
+          "client_id": "193105011728-eajk5i4272qe4v2v4uqk3soapktn471u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dezy.it.design.sprint.design_sprint",
+            "certificate_hash": "3f183e229df4d911c9a4cbffaf67df0aa30d6aef"
           }
         },
         {
@@ -38,6 +54,13 @@
             {
               "client_id": "193105011728-7r0e46gmieatdbajf4nenn1etsvlg6pu.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "193105011728-f3f1oig2hhrfko94hqqmhfjpve34j1lo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "design.sprint.designSprint"
+              }
             }
           ]
         }

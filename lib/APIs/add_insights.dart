@@ -7,6 +7,38 @@ import 'package:design_sprint/utils/user_testing_data.dart' as userTesting;
 
 class InsightsApiProvider{
 
+  Future<String> updateStep10(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "10",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
   Future<String> addInsights(context) async {
 
     String url = globals.urlSignUp + "createinsight.php";
@@ -14,7 +46,7 @@ class InsightsApiProvider{
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "text" : userTesting.painPointController.text,
 
     }).then((http.Response response) async {
@@ -35,6 +67,7 @@ class InsightsApiProvider{
           userTesting.uploadedInsightsList.add(userTesting.painPointController.text);
           print(userTesting.uploadedInsightsList.toList());
           userTesting.painPointController.clear();
+          updateStep10(context);
         }else{
           print("error");
         }

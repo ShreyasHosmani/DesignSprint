@@ -521,8 +521,8 @@ class _CreateSprintState extends State<CreateSprint> {
               alignment: Alignment.centerRight,
               child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
           SizedBox(height: 10,),
-          Text(home.popUp1, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
-          Text(home.popUp2,style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text(home.popUp1, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 12, letterSpacing: 1),)),
+          Text(home.popUp2,style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 12, letterSpacing: 1),)),
           SizedBox(height: 10,)
         ],
       ),

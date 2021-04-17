@@ -1,5 +1,6 @@
 import 'package:design_sprint/APIs/get_warehouse_prototypes.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Prototyping/prototyping_tutorial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
@@ -41,6 +42,7 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
+      bottomNavigationBar: buildCommentBottomBar(context),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -302,7 +304,12 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
   Widget buildPrototypesListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: prototype.prototypeImagesPPWiseList == null ? Container() :
+      child: prototype.prototypeImagesPPWiseList == null ? Center(child: Text(
+        "No prototypes found!",
+        style: GoogleFonts.nunitoSans(
+          fontSize: 18,
+        ),
+      )) :
       ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
@@ -324,6 +331,34 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
                     image: NetworkImage(globals.urlSignUp+prototype.prototypeImagesPPWiseList[i]),
                   )
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCommentBottomBar(BuildContext context){
+    return InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => PrototypingTutorial(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        color: Color(0xff787cd1),
+        child: Center(
+          child: Text("Upload Prototypes",
+            style: GoogleFonts.nunitoSans(
+              fontSize: 18,
+              color: Colors.white,
             ),
           ),
         ),

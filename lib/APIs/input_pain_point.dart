@@ -16,7 +16,7 @@ class InputPainPointsApiProvider {
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID": home.sprintID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "mapID" : "null",
       "painpointname": empathize.painPointController.text,
 

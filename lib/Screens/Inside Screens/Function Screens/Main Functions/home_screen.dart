@@ -31,6 +31,54 @@ class _HomeState extends State<Home> {
   LogoutApiProvider logoutApiProvider = LogoutApiProvider();
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
+  Future<String> getSprints(context) async {
+
+    print(profile.email.toString());
+    String url = globals.urlLogin + "getsprintbyuserid.php";
+
+    http.post(url, body: {
+
+      //"userID" : profile.userID,
+      "userEmail" : profile.email.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      home.responseArrayGetSprints = jsonDecode(response.body);
+      print(home.responseArrayGetSprints);
+
+      home.responseArrayGetSprintsMsg = home.responseArrayGetSprints['message'].toString();
+      if(statusCode == 200){
+        if(home.responseArrayGetSprintsMsg == "Data Found"){
+
+          setState(() {
+            home.sprintIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintID'].toString());
+            home.sprintTitlesList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintName'].toString());
+            home.sprintStatusList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintStatus'].toString());
+            decisionMakerIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintUserid'].toString());
+          });
+
+          print(home.sprintIdsList.toList());
+          print(home.sprintTitlesList.toList());
+          print(home.sprintStatusList.toList());
+          print(decisionMakerIdsList.toList());
+
+        }else{
+
+          setState(() {
+            home.sprintIdsList = null;
+            home.sprintTitlesList = null;
+            home.sprintStatusList = null;
+          });
+
+        }
+      }
+    });
+  }
   Future<String> getProfile(context) async {
     String url = globals.urlLogin + "getprofile.php";
 
@@ -60,6 +108,7 @@ class _HomeState extends State<Home> {
       print(profile.mobileNo);
       print(profile.profilePicImage);
       print(profile.nameList.toList());
+      getSprints(context);
 
     });
   }
@@ -72,7 +121,6 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    createSprintApiProvider.getSprints(context);
     getProfile(context);
     getSideBarProfile();
     profile.email = null;
@@ -90,7 +138,7 @@ class _HomeState extends State<Home> {
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerHomeScreen(),
       body: WillPopScope(
-        onWillPop: () => showDialog(
+        onWillPop: () => _scaffoldKey.currentState.isEndDrawerOpen ? {Navigator.pop(context)} : showDialog(
           context: context,
           builder: (context) => new AlertDialog(
             title: new Text('Are you sure?'),

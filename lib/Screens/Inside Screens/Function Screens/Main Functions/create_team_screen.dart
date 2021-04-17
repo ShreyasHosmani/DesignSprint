@@ -654,7 +654,7 @@ class _CreateTeamState extends State<CreateTeam> {
       onTap: (){
         if(team.formKey.currentState.validate()){
           team.prTeam.show();
-          teamApiProvider.createTeamName(context);
+          teamApiProvider.createTeamName2(context);
         }
       },
       child: Card(

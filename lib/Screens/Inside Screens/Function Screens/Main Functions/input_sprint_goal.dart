@@ -670,7 +670,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
         child: Form(
           key: goal.formKey,
           child: TextFormField(
-            maxLines: (MediaQuery.of(context).size.height/50).toInt(),
+            maxLines: (MediaQuery.of(context).size.height/60).toInt(),
             controller: goal.goalController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),

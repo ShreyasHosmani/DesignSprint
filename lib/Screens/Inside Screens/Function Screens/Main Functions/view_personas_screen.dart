@@ -1,13 +1,17 @@
 import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/APIs/get_persona.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_digital_or_upload_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/Personas/persona_main_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_paper_persona_details.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_single_persona_details.dart';
 import 'package:flutter/material.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:design_sprint/utils/comments_data.dart' as comments;
 import 'package:design_sprint/utils/globals.dart' as globals;
@@ -16,10 +20,14 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
+var selectedPersonaId;
+var personaIds;
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+ProgressDialog prDelete;
 
 class ViewPersonas extends StatefulWidget {
+  final dmID;
+  ViewPersonas(this.dmID) : super();
   @override
   _ViewPersonasState createState() => _ViewPersonasState();
 }
@@ -110,24 +118,113 @@ class _ViewPersonasState extends State<ViewPersonas> {
       }
     });
   }
+  Future<String> getPersonas(context) async {
+
+    String url = globals.urlLogin + "getpersona.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId,
+      //"userID" : widget.dmID,//profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetPersonaPast = jsonDecode(response.body);
+      print(empathize.responseArrayGetPersonaPast);
+
+      empathize.responseArrayGetPersonaPastMsg = empathize.responseArrayGetPersonaPast['message'].toString();
+      if(statusCode == 200){
+        if(empathize.responseArrayGetPersonaPastMsg == "Profile Found"){
+
+          setState(() {
+            personaIds = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaID'].toString());
+            empathize.personaNameList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaName'].toString());
+            empathize.personaAgeList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaAge'].toString());
+            empathize.personaLocationList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaLocation'].toString());
+            empathize.personaEducationList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaEducation'].toString());
+            empathize.personaJobList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaJob'].toString());
+            empathize.personaBioList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaBio'].toString());
+            empathize.personaGoalsList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaGoals'].toString());
+            empathize.personaImagesList = List.generate(empathize.responseArrayGetPersonaPast['data'].length, (i) => empathize.responseArrayGetPersonaPast['data'][i]['personaImage'] == null || empathize.responseArrayGetPersonaPast['data'][i]['personaImage'] == "null" ?  globals.urlSignUp+empathize.responseArrayGetPersonaPast['data'][i]['personadocImage'].toString() : globals.urlImage+empathize.responseArrayGetPersonaPast['data'][i]['personaImage'].toString().substring(6));
+          });
+
+          print(personaIds.toList());
+          print(empathize.personaNameList.toList());
+          print(empathize.personaAgeList.toList());
+          print(empathize.personaLocationList.toList());
+          print(empathize.personaEducationList.toList());
+          print(empathize.personaJobList.toList());
+          print(empathize.personaBioList.toList());
+          print(empathize.personaGoalsList.toList());
+          print(empathize.personaImagesList.toList());
+
+        }else{
+
+          setState(() {
+            empathize.personaNameList = null;
+          });
+
+        }
+      }
+    });
+  }
+  Future<String> deletePersona(context) async {
+
+    String url = globals.urlLogin + "deletepersona.php";
+
+    http.post(url, body: {
+
+      "personaID" : selectedPersonaId.toString(),
+      //"userID" : widget.dmID,//profile.userID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayDelete = jsonDecode(response.body);
+      print(responseArrayDelete);
+
+      var responseArrayDeleteMsg = responseArrayDelete['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayDeleteMsg == "Team deleted"){
+          prDelete.hide().whenComplete((){
+            Fluttertoast.showToast(msg: 'Persona deleted!',backgroundColor: Colors.black, textColor: Colors.white);
+            getPersonas(context);
+          });
+        }else{
+          prDelete.hide().whenComplete((){
+            Fluttertoast.showToast(msg: 'Please check your network connection!',backgroundColor: Colors.black, textColor: Colors.white);
+          });
+        }
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     empathize.personaNameList = "1";
-    getPersonaAPIProvider.getPersonas(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    selectedPersonaId = null;
+    getPersonas(context);
   }
   @override
   Widget build(BuildContext context) {
+    prDelete = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
-      //bottomNavigationBar: buildCommentBottomBar(context),
+      bottomNavigationBar: buildCommentBottomBar(context),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -199,77 +296,24 @@ class _ViewPersonasState extends State<ViewPersonas> {
   Widget buildCommentBottomBar(BuildContext context){
     return InkWell(
       onTap: (){
-        showGeneralDialog(
-          barrierLabel: "Label",
-          barrierDismissible: true,
-          barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: Duration(milliseconds: 400),
-          context: context,
-          pageBuilder: (context, anim1, anim2) {
-            Future<String> getComments2(context) async {
-
-              //Status : 0-digital persona; 1-paper persona; 2-digital journey maps; 3-paper journey maps
-
-              String url = globals.urlSignUp + "getcomments.php";
-
-              http.post(url, body: {
-
-                "sprintID": home.selectedSprintId,
-                "statuses" : "1",
-
-              }).then((http.Response response) async {
-                final int statusCode = response.statusCode;
-
-                if (statusCode < 200 || statusCode > 400 || json == null) {
-                  throw new Exception("Error fetching data");
-                }
-
-                comments.responseArrayGetComments1 = jsonDecode(response.body);
-                print(comments.responseArrayGetComments1);
-
-                comments.responseArrayGetComments1Msg = comments.responseArrayGetComments1['message'].toString();
-                print(comments.responseArrayGetComments1Msg);
-                if(statusCode == 200){
-                  if(comments.responseArrayGetComments1Msg == "Comment Data Found"){
-
-                    setState(() {
-                      comments.commentsPaperPersonaList = List.generate(comments.responseArrayGetComments1['data'].length, (i) => comments.responseArrayGetComments1['data'][i]['commentText'].toString());
-                      comments.commentsUserNamePaperPersonaList = List.generate(comments.responseArrayGetComments1['data'].length, (i) => comments.responseArrayGetComments1['data'][i]['userFullname'].toString());
-                      comments.commentsProfilePicPaperPersonaList = List.generate(comments.responseArrayGetComments1['data'].length, (i) => comments.responseArrayGetComments1['data'][i]['userProfilepic'].toString());
-                    });
-                    print(comments.commentsPaperPersonaList.toList());
-                    print(comments.commentsUserNamePaperPersonaList.toList());
-                    print(comments.commentsProfilePicPaperPersonaList.toList());
-
-                  }else{
-
-                    setState(() {
-                      comments.commentsPaperPersonaList = null;
-                    });
-
-                  }
-                }
-              });
-            }
-            return CommentsPage0();
-          },
-          transitionBuilder: (context, anim1, anim2, child) {
-            return SlideTransition(
-              position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-              child: child,
-            );
-          },
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => PersonaMainScreen(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
         );
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 50,
-        color: Colors.grey.shade300,
+        color: Color(0xff787cd1),
         child: Center(
-          child: Text("Comments",
+          child: Text("Add Persona",
             style: GoogleFonts.nunitoSans(
               fontSize: 18,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
@@ -527,331 +571,172 @@ class _ViewPersonasState extends State<ViewPersonas> {
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 25),
-            child: Container(
-              width: 303,
-              height: 130,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Color(0xffEBEBEB)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 132,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
-                        bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
-                      ),
-                      border: Border.all(color: Color(0xffEBEBEB)),
-                      color: Color(0xff787cd1),
-                      image: DecorationImage(
-                        image: NetworkImage(empathize.personaImagesList[i]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+            child: Stack(
+              children: [
+                Container(
+                  //width: 303,
+                  height: 130,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    border: Border.all(color: Color(0xffEBEBEB)),
                   ),
-                  SizedBox(width: 20,),
-                  Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 180,
-                          child: Text(empathize.personaNameList[i] == "null" ? "Paper persona" : empathize.personaNameList[i],
-                            maxLines: 2,
-                            //textScaleFactor: 0.7,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.nunitoSans(
-                              textStyle: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              )
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 7,),
-                        Container(
-                          width: 180,
-                          child: Text(empathize.personaJobList[i] == "null" ? "Paper persona : click to view" : "Working as a " + empathize.personaJobList[i],
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            //textScaleFactor: 0.7,
-                            style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xff929292),
-                                )
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-}
-
-class CommentsPage0 extends StatefulWidget {
-  @override
-  _CommentsPage0State createState() => _CommentsPage0State();
-}
-
-class _CommentsPage0State extends State<CommentsPage0> {
-  Future<String> addComments(context) async {
-
-    //Status : 0-digital persona; 1-paper persona; 2-digital journey maps; 3-paper journey maps
-
-    String url = globals.urlSignUp + "addcomments.php";
-
-    http.post(url, body: {
-
-      "userID" : profile.userID,
-      "sprintID": home.selectedSprintId,
-      "text" : comments.commentController0.text,
-      "statuses" : "0",
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      comments.responseArrayAddComments0 = jsonDecode(response.body);
-      print(comments.responseArrayAddComments0);
-
-      comments.responseArrayAddComments0Msg = comments.responseArrayAddComments0['message'].toString();
-      print(comments.responseArrayAddComments0Msg);
-      if(statusCode == 200){
-        if(comments.responseArrayAddComments0Msg == "Added Data"){
-
-          comments.commentController0.clear();
-          getComments(context);
-
-        }else{
-
-
-
-        }
-      }
-    });
-  }
-  Future<String> getComments(context) async {
-
-    //Status : 0-digital persona; 1-paper persona; 2-digital journey maps; 3-paper journey maps
-
-    String url = globals.urlSignUp + "getcomments.php";
-
-    http.post(url, body: {
-
-      "sprintID": home.selectedSprintId,
-      "statuses" : "0",
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      comments.responseArrayGetComments0 = jsonDecode(response.body);
-      print(comments.responseArrayGetComments0);
-
-      comments.responseArrayGetComments0Msg = comments.responseArrayGetComments0['message'].toString();
-      print(comments.responseArrayGetComments0Msg);
-      if(statusCode == 200){
-        if(comments.responseArrayGetComments0Msg == "Comment Data Found"){
-
-          setState(() {
-            comments.commentsDigitalPersonaList = List.generate(comments.responseArrayGetComments0['data'].length, (i) => comments.responseArrayGetComments0['data'][i]['commentText'].toString());
-            comments.commentsUserNameDigitalPersonaList = List.generate(comments.responseArrayGetComments0['data'].length, (i) => comments.responseArrayGetComments0['data'][i]['userFullname'].toString());
-            comments.commentsProfilePicDigitlPersonaList = List.generate(comments.responseArrayGetComments0['data'].length, (i) => comments.responseArrayGetComments0['data'][i]['userProfilepic'].toString());
-          });
-          print(comments.commentsDigitalPersonaList.toList());
-          print(comments.commentsUserNameDigitalPersonaList.toList());
-          print(comments.commentsProfilePicDigitlPersonaList.toList());
-
-        }else{
-
-          setState(() {
-            comments.commentsDigitalPersonaList = null;
-          });
-
-        }
-      }
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/3),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(40.0),
-          child: AppBar(
-            backgroundColor: Colors.grey.shade200,
-            centerTitle: true,
-            leading: null,
-            title: Text("Comments",
-              style: GoogleFonts.nunitoSans(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        body: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: ListView.builder(
-                    physics: ScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: comments.commentsPaperPersonaList == null ? 0 : comments.commentsPaperPersonaList.length,
-                    itemBuilder: (context, i) => Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(50)),
-                                image: DecorationImage(
-                                  image: NetworkImage(globals.urlSignUp+comments.commentsProfilePicDigitlPersonaList[i]),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 20,),
-                            Flexible(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(comments.commentsUserNameDigitalPersonaList[i],
-                                    style: GoogleFonts.nunitoSans(
-                                        textStyle: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                        )
-                                    ),
-                                  ),
-                                  SizedBox(height: 0,),
-                                  Text(comments.commentsDigitalPersonaList[i],
-                                    maxLines: 10,
-                                    style: GoogleFonts.nunitoSans(
-                                        textStyle: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey,
-                                        )
-                                    ),
-                                  ),
-                                  SizedBox(height: 5,),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: Container(
-                height: 55,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.grey.shade200,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      profile.profilePicImage == null || profile.profilePicImage == "null" ? Container(
-                        width: 35,
-                        height: 35,
+                      Container(
+                        width: 132,
+                        height: 130,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(0), topLeft: Radius.circular(7),
+                            bottomLeft: Radius.circular(7), bottomRight: Radius.circular(0),
+                          ),
+                          border: Border.all(color: Color(0xffEBEBEB)),
                           color: Color(0xff787cd1),
-                        ),
-                      ) : Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(50)),
                           image: DecorationImage(
-                            image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
+                            image: NetworkImage(empathize.personaImagesList[i]),
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                       SizedBox(width: 20,),
-                      Container(
-                        height: 45,
-                        width: 250,
-                        child: Theme(
-                          data: ThemeData(
-                            primaryColor: Color(0xff787cd1),
-                          ),
-                          child: TextFormField(
-                            controller: comments.commentController0,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                              hintText: 'Enter comment',
+                      Flexible(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 180,
+                              child: Text(empathize.personaNameList[i] == "null" ? "Paper persona" : empathize.personaNameList[i],
+                                maxLines: 2,
+                                //textScaleFactor: 0.7,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 35,
-                        height: 35,
-                        child: IconButton(
-                          onPressed: (){
-                            addComments(context).whenComplete((){
-                              Future.delayed(const Duration(seconds: 3), () {
-                                getComments(context);
-                              });
-                            });
-                          },
-                          icon: Icon(Icons.send),
+                            SizedBox(height: 7,),
+                            Container(
+                              width: 180,
+                              child: Text(empathize.personaJobList[i] == "null" ? "Paper persona : click to view" : "Working as a " + empathize.personaJobList[i],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                //textScaleFactor: 0.7,
+                                style: GoogleFonts.nunitoSans(
+                                    textStyle: TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xff929292),
+                                    )
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 0, bottom: 0),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: PopupMenuButton<String>(
+                      onSelected: (val){
+                        setState(() {
+                          selectedPersonaId = personaIds[i].toString();
+                        });
+                        print(selectedPersonaId);
+                        showAlertDialogDelete(context);
+                      },
+                      icon: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(height: 3,width: 3,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(50))
+                            ),
+                          ),
+                          SizedBox(height: 3,),
+                          Container(height: 3,width: 3,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(50))
+                            ),
+                          ),
+                          SizedBox(height: 3,),
+                          Container(height: 3,width: 3,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(50))
+                            ),
+                          ),
+                        ],
+                      ),
+                      color: Colors.white,
+                      itemBuilder: (BuildContext context) {
+                        return {'Delete Persona'}.map((String choice) {
+                          return PopupMenuItem<String>(
+                            value: choice,
+                            textStyle: GoogleFonts.nunitoSans(
+                              color: Colors.grey.shade700,
+                              fontSize: 16,
+                            ),
+                            child: Text(choice),
+                          );
+                        }).toList();
+                      },
+                    ),
+                  ),),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
+
+  showAlertDialogDelete(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed:  () async {
+        Navigator.pop(context);
+        prDelete.show();
+        deletePersona(context);
+      },
+
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Persona"),
+      content: Text("Are you sure that you want to delete this persona? By pressing delete you will delete this persona."),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }

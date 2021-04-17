@@ -1,155 +1,45 @@
-import 'dart:io';
-import 'package:design_sprint/APIs/create_persona.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
-import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
-import 'package:design_sprint/utils/signup_data.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/crazy_eight_evaluation_screen1.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
-import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:video_player/video_player.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 
 bool statusDrawer = false;
-bool showSecondStep = false;
-bool showPainPoint = false;
-TextEditingController painPointController = new TextEditingController();
 
-class UploadPersona extends StatefulWidget {
+class Crazy8Tutorial2 extends StatefulWidget {
   @override
-  _UploadPersonaState createState() => _UploadPersonaState();
+  _Crazy8Tutorial2State createState() => _Crazy8Tutorial2State();
 }
 
-class _UploadPersonaState extends State<UploadPersona> {
+class _Crazy8Tutorial2State extends State<Crazy8Tutorial2> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
-  void _settingModalBottomSheetOne(context){
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (BuildContext bc){
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: Wrap(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: InkWell(
-                      onTap: (){
-                        getImageOne();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Container(
-                              //width: 100,
-                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
-                          ),
-                          Container(
-                              width: 150,
-                              child: Text("Open using camera",
-                                style: GoogleFonts.nunitoSans(
-                                    letterSpacing: 0.5
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 20),
-                    child: InkWell(
-                      onTap: (){
-                        getImageOneGallery();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Container(
-                              //width: 100,
-                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
-                          ),
-                          Container(
-                              width: 150,
-                              child: Text("Open using gallery",
-                                style: GoogleFonts.nunitoSans(
-                                    letterSpacing: 0.5
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/crazy8.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/crazy8.mp4"),
     );
   }
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    createPersonaApiProvider.getPersonaDetails(context);
-    empathize.imagePaperPersona = null;
-    empathize.fileNamePaperPersona = "";
-    statusDrawer = false;
-    showSecondStep = false;
-    showPainPoint = false;
-  }
-  final picker = ImagePicker();
-  Future getImageOne() async {
-    Navigator.of(context).pop();
-    var pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
-    setState(() {
-      empathize.imagePaperPersona = File(pickedFile.path);
-    });
-    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {
-        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-        });
-      });
-    });
-  }
-  Future getImageOneGallery() async {
-    Navigator.of(context).pop();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
-    setState(() {
-      empathize.imagePaperPersona = File(pickedFile.path);
-    });
-    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {
-        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-        });
-      });
-    });
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -158,35 +48,25 @@ class _UploadPersonaState extends State<UploadPersona> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 50),
-        child: Container(
-            height: 50,
-            child: buildNextButton(context)),
-      ),
+      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
       body: SingleChildScrollView(
-        child: Stack(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 10,),
-                buildName2Widget(context),
-                SizedBox(height: 25,),
-                buildName3Widget(context),
-                SizedBox(height: 43,),
-                buildUploadButton(context),
-                SizedBox(height: 25,),
-                buildFileNameWidget(context),
-                showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
-                showSecondStep == false ? Container(height: 1, width: 1,) :buildName4Widget(context),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 80),
-              child: statusBarDrawer(context),
-            ),
+            SizedBox(height: 10,),
+            buildName2Widget(context),
+            SizedBox(height: 20,),
+            buildVideoContainer(context),
+            SizedBox(height: 45,),
+            buildInfoText1(context),
+            SizedBox(height: 25,),
+            buildImage1Container(context),
+            SizedBox(height: 35,),
+            buildStepText1(context),
+            SizedBox(height: 40,),
+            buildStepText2(context),
+            SizedBox(height: 40,),
           ],
         ),
       ),
@@ -198,9 +78,9 @@ class _UploadPersonaState extends State<UploadPersona> {
     Container line = Container(height:1,color: Colors.black,child: Divider());
     void _openEndDrawer() {
       setState(() {
-        empathize.statusDrawer = false;
+        statusDrawer = false;
       });
-      empathize.scaffoldKey.currentState.openEndDrawer();
+      _scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -209,7 +89,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(empathize.empathize,
+        child: Text(ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -437,7 +317,7 @@ class _UploadPersonaState extends State<UploadPersona> {
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 40,
+          width: 37,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -495,14 +375,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.black,
+                        border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Sprint Goal",
@@ -525,14 +405,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Empathize",
@@ -555,14 +435,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Ideation",
@@ -585,14 +465,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Prototype",
@@ -615,14 +495,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("User Testing",
@@ -645,14 +525,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Re - Iterate",
@@ -675,14 +555,14 @@ class _UploadPersonaState extends State<UploadPersona> {
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
+                          border: Border.all(color: Colors.grey)
                       ),
                     ),
                     SizedBox(width: 5,),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(color: Colors.grey,),
                     ),
                     SizedBox(width: 10,),
                     Text("Team",
@@ -707,7 +587,7 @@ class _UploadPersonaState extends State<UploadPersona> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(empathize.paperPersona,
+      child: Text(ideation.card1,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -719,193 +599,131 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
-    return Center(
-      child: Text(empathize.paperPersonaHint1,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
+  Widget buildVideoContainer(BuildContext context){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 215,
+      child: FlickVideoPlayer(
+        flickManager: flickManager,
+        flickVideoWithControls: FlickVideoWithControls(
+          controls: FlickPortraitControls(),
+        ),
+        flickVideoWithControlsFullscreen: FlickVideoWithControls(
+          controls: FlickLandscapeControls(),
         ),
       ),
     );
   }
 
-  Widget buildUploadButton(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        _settingModalBottomSheetOne(context);
-        /*
-        showGeneralDialog(
-          barrierLabel: "Label",
-          barrierDismissible: true,
-          barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: Duration(milliseconds: 400),
-          context: context,
-          pageBuilder: (context, anim1, anim2) {
-            return Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 195,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          getImageOneGallery();
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 44,
-                                height: 44,
-                                child: Image.asset("assets/images/photo.png")),
-                            SizedBox(height: 8.97,),
-                            Text(empathize.gallery,
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          getImageOne();
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 44,
-                                height: 44,
-                                child: Image.asset("assets/images/folder.png")),
-                            SizedBox(height: 8.97,),
-                            Text(empathize.fileManager,
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                      color: Colors.white,
-                                  ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xff707070),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-          transitionBuilder: (context, anim1, anim2, child) {
-            return SlideTransition(
-              position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-              child: child,
-            );
-          },
-        );
-
-         */
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => PersonaMainScreen(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
-      },
-      child: Center(
-        child: Container(
-          height: 37,
-          width: 166,
-          decoration: BoxDecoration(
-              border: Border.all(color :Color(0xff302B70),width: 2),
-              borderRadius: BorderRadius.all(Radius.circular(19))
+  Widget buildInfoText1(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Text("Each pain point will be displayed one-by-one to you. You are expected to create 8 ideas in 8 minutes for each pain point before you move on to the next idea.",
+        maxLines: 8,
+        style: GoogleFonts.nunitoSans(
+          textStyle: TextStyle(
+            fontSize: 16,
           ),
-          child: Center(
-            child: Text(empathize.upload,
-              style: TextStyle(
-                  color: Color(0xff302B70), letterSpacing: 1, fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget buildStepText1(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Step 1 :",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                )
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildFileNameWidget(BuildContext context){
-    return ListView.builder(
-      physics: ScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
-      itemBuilder: (context, i) => Center(
-        child: InkWell(
-          onTap: (){
-            if(empathize.paperPersonaImageNamesList[i] == null || empathize.paperPersonaImageNamesList[i] == "null"){
-
-            }else{
-              launch(globals.urlSignUp+empathize.paperPersonaImageNamesList[i]);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 2, left: 30, right: 30),
-            child: Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
-              textAlign: TextAlign.center,
+          SizedBox(width: 5,),
+          Flexible(
+            child: Text("Pace yourself knowing that you need to generate 8 ideas in 8 minutes. Start with your best idea and keep on going. Try thinking of unconventional and creative solutions to tacle your pain points.",
+              maxLines: 10,
               style: GoogleFonts.nunitoSans(
                   textStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
+                    fontSize: 16,
                   )
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget buildName4Widget(BuildContext context){
+  Widget buildImage1Container(BuildContext context){
     return Center(
-        child: Text(empathize.paperPersonaHint2,
-          style: GoogleFonts.nunitoSans(
-              textStyle: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500
-              )
+      child: Container(
+          width: 233.56,
+          height: 151.28,
+          child: Image.asset("assets/images/cr8tut.png")),
+    );
+  }
+
+  Widget buildStepText2(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 36, right: 36),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Step 2 :",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                )
+            ),
           ),
-        ),
-      );
+          SizedBox(width: 5,),
+          Flexible(
+            child: Text("Evaluate all your ideas, showcase them to your peers and nominate 2-3 ideas per pain point.",
+              style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                  )
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildImage2Container(BuildContext context){
+    return Center(
+      child: Container(
+          width: 233.56,
+          height: 151.28,
+          child: Image.asset("assets/images/definegoaltutorial-2.png")),
+    );
+  }
+
+  Widget buildImage3Container(BuildContext context){
+    return Center(
+      child: Container(
+          width: 233.56,
+          height: 151.28,
+          child: Image.asset("assets/images/definegoaltutorial-3.png")),
+    );
   }
 
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeInsideSections2(),
+            pageBuilder: (c, a1, a2) => GetPainPointsOfStatusTwoPageViewBuilder(),
             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
