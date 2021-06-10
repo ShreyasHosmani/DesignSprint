@@ -11,7 +11,9 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%2
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/edit_profile_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:design_sprint/main.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
@@ -27,7 +29,46 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  void initDynamicLinks() async {
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null && deepLink.toString() == "https://dezy.page.link/toSprints") {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (c, a1, a2) => ViewSprints(),
+          transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          transitionDuration: Duration(milliseconds: 300),
+        ),
+      );
+    }
+
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          final Uri deepLink = dynamicLink?.link;
+
+          if (deepLink != null && deepLink.toString() == "https://dezy.page.link/toSprints") {
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => ViewSprints(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+        },
+        onError: (OnLinkErrorException e) async {
+          print('onLinkError');
+          print(e.message);
+        }
+    );
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   LogoutApiProvider logoutApiProvider = LogoutApiProvider();
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
@@ -117,10 +158,103 @@ class _HomeState extends State<Home> {
     profile.userID = prefs.getString("userID").toString();
     print(profile.userID);
   }
+  showOnMessageNotification(var message) async {
+
+    //message = message['notification']['title'].toString() + "\n" + message['notification']['body'].toString();
+    //title = message['notification']['title'].toString();
+
+    var android = new AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+        priority: Priority.High,importance: Importance.Max
+    );
+
+    var iOS = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android, iOS);
+    await flutterLocalNotificationsPlugin.show(
+        1, message['notification']['title'].toString(), message['notification']['body'].toString(), platform,
+        payload: '');
+
+//    showDialog<bool>(
+//      context: context,
+//      builder: (_) => AlertDialog(
+//        content: Text(message['notification']['title'].toString()+"\n"+message['notification']['body'].toString()),
+//        actions: <Widget>[
+//          FlatButton(
+//            child: const Text('CLOSE'),
+//            onPressed: () {
+//              Navigator.pop(context, false);
+//            },
+//          ),
+//          FlatButton(
+//            child: const Text('SHOW'),
+//            onPressed: () {
+//              Navigator.pop(context, true);
+//            },
+//          ),
+//        ],
+//      ),
+//    );
+
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    this.initDynamicLinks();
+    fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        //showOnMessageNotification(message);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              leading: Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/dezylogo.png")
+                  )
+                ),
+              ),
+              title: Text(message['notification']['title'],
+                style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              subtitle: Text(message['notification']['body'],
+                style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff787cd1),
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok',
+                  style: GoogleFonts.nunito(
+                    color: Colors.grey[700],
+                  ),
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+        print("onMessage.....: $message");
+
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        showOnMessageNotification(message);
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        showOnMessageNotification(message);
+        print("onResume: $message");
+      },
+    );
     getProfile(context);
     getSideBarProfile();
     profile.email = null;
@@ -262,25 +396,33 @@ class _HomeState extends State<Home> {
   Widget buildDesignSprintCard(BuildContext context){
     return GestureDetector(
       onTap: (){
-        if(home.sprintTitlesList == null){
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => CreateSprint(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
-        }else{
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => DesignSprintInside(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
-        }
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => DesignSprintInside(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+//        if(home.sprintTitlesList == null){
+//          Navigator.push(
+//            context,
+//            PageRouteBuilder(
+//              pageBuilder: (c, a1, a2) => CreateSprint(),
+//              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//              transitionDuration: Duration(milliseconds: 300),
+//            ),
+//          );
+//        }else{
+//          Navigator.push(
+//            context,
+//            PageRouteBuilder(
+//              pageBuilder: (c, a1, a2) => DesignSprintInside(),
+//              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//              transitionDuration: Duration(milliseconds: 300),
+//            ),
+//          );
+//        }
       },
       child: Container(
         width: 302,

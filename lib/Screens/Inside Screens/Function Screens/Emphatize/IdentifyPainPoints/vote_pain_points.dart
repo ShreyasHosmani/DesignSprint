@@ -79,28 +79,57 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: empathize.painPointsList == null ? Center(
+      body:
+      empathize.painPointsList == null ? Center(
         child: CircularProgressIndicator(),
-      ) : empathize.painPointsList == "1" ? Padding(
-        padding: const EdgeInsets.all(15.0),
+      ) : empathize.painPointsList == "1" ?
+      Padding(
+        padding: const EdgeInsets.all(25.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(Icons.warning,
-              size: 60,
+              size: 100,
               color: Color(0xff787cd1),
             ),
+            SizedBox(height: 20,),
             Text("You have not uploaded any pain points, please go back and upload the pain points!",
               textAlign: TextAlign.center,
               style: GoogleFonts.nunitoSans(
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 20,),
+            GestureDetector(
+              onTap: (){
+                Navigator.of(context).pop();
+              },
+              child: Center(
+                child: Container(
+                  height: 45,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width / 2.5,
+                  decoration: BoxDecoration(
+                      color: Color(0xff7579cb),
+                      borderRadius: BorderRadius.all(Radius.circular(7))
+                  ),
+                  child: Center(
+                    child: Text("Okay",
+                      style: TextStyle(
+                          color: Colors.white, letterSpacing: 1, fontSize: 16),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
         ),
-      ) : PageView.builder(
+      )
+          : PageView.builder(
         physics:new NeverScrollableScrollPhysics(),
         itemCount: empathize.painPointsList == null ? 0 : empathize.painPointsList.length,
         controller: controller,

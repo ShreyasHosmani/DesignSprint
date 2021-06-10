@@ -14,11 +14,27 @@ import 'package:http/http.dart' as http;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'dart:convert';
 
+import 'package:progress_dialog/progress_dialog.dart';
+
 bool statusDrawer = false;
 var selectedMemberId;
 
 var memberNameControllerEdit = new TextEditingController();
 var memberEmailControllerEdit = new TextEditingController();
+
+var teamCreatorID;
+
+var selectedMemberEmail;
+
+var teamMemberStatuses;
+var allTeamMemberStatuses;
+
+var teamMemberUserIds;
+
+var sprintAdmins;
+var sprintAdminsName;
+
+//ScrollController controller = ScrollController();
 
 class ManageTeamSeperate extends StatefulWidget {
   final teamid;
@@ -32,7 +48,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
   Future<String> getTeamMembers(context) async {
     String url = globals.urlLogin + "getteamstatusbyid.php";
     http.post(url, body: {
-      "userID" : profile.userID,
+      //"userID" : profile.userID,
       "teamID" : widget.teamid,
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -48,16 +64,22 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       if(statusCode == 200){
         if(team.responseArrayTeamDetailsMsg == "Profile Found"){
           setState(() {
+            teamCreatorID = team.responseArrayTeamDetails['data'][0]['teamUserid'].toString();
+            //teamMemberUserIds = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
             team.teamMemberNameList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
             team.teamMemberEmailList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'].toString());
             team.teamMemberIdsList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamID'].toString());
+            teamMemberStatuses = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'] == profile.email.toString() ? team.responseArrayTeamDetails['data'][i]['teamStatus'].toString() : "null");
+            allTeamMemberStatuses = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamStatus'].toString());
           });
+          print("teamCreatorID ::: "+teamCreatorID.toString());
           print(team.teamMemberNameList.toList());
           print(team.teamMemberEmailList.toList());
           print(team.teamMemberIdsList.toList());
+          print(teamMemberStatuses.toList());print(allTeamMemberStatuses.toList());
         }else{
           setState(() {
-            team.teamMemberNameList = null;
+            team.teamMemberNameList = "1";
             team.teamMemberEmailList = null;
             team.teamMemberIdsList = null;
           });
@@ -178,22 +200,108 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     });
   }
-  TeamApiProvider teamApiProvider = TeamApiProvider();
+
+  Future<String> giveAdminAccess(context) async {
+
+    String url = globals.urlLogin + "updateteamstatus.php";
+    http.post(url, body: {
+
+      "teamname" : widget.teamName.toString(),
+      "useremail" : selectedMemberEmail.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var giveAdminAccessResponseArray = jsonDecode(response.body);
+      print(giveAdminAccessResponseArray);
+
+      var giveAdminAccessResponseArrayMsg = giveAdminAccessResponseArray['message'].toString();
+      print(giveAdminAccessResponseArrayMsg);
+
+      if(statusCode == 200){
+        if(giveAdminAccessResponseArrayMsg == "Team Right Updated Successfully"){
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: "Admin access granted to : "+selectedMemberEmail.toString(), backgroundColor: Colors.black,
+            textColor: Colors.white,).whenComplete((){
+            getTeamMembers(context);
+          });
+        }else{
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: "Please check your network connection!", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
+
+  Future<String> getSprintAdmins(context) async {
+    String url = globals.urlLogin + "getsprintbyrights.php";
+
+    http.post(url, body: {
+
+      "teamName" : widget.teamName.toString(),//home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintAdmins = jsonDecode(response.body);
+      print(responseArrayGetSprintAdmins);
+
+      var responseArrayGetSprintAdminsMsg = responseArrayGetSprintAdmins['message'].toString();
+      print(responseArrayGetSprintAdminsMsg);
+
+      if(statusCode == 200){
+        if(responseArrayGetSprintAdminsMsg == "Data Found"){
+
+          setState(() {
+            sprintAdmins = responseArrayGetSprintAdmins['data']['userEmail'].toString();
+            sprintAdminsName = responseArrayGetSprintAdmins['data']['userFullname'].toString();
+          });
+
+          print("*********");
+          print(sprintAdmins.toString());
+          print(sprintAdminsName.toString());
+          print("*********");
+
+        }else{
+
+          setState(() {
+            sprintAdmins = null;
+          });
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     getTeamMembers(context);
+    getSprintAdmins(context);
     super.initState();
     team.teamMemberNameList = null;
   }
   @override
   Widget build(BuildContext context) {
+    team.prTeam = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: team.scaffoldKey2,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommon(),
-      body: Stack(
+      body: team.teamMemberNameList == null ? Center(
+        child: CircularProgressIndicator(),
+      ) : Stack(
         children: [
           SingleChildScrollView(
             child: Column(
@@ -772,8 +880,9 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
   }
 
   Widget buildMemberCardWidget(BuildContext context){
-    return team.teamMemberNameList == null ? Container() : ListView.builder(
+    return team.teamMemberNameList == "1" ? Container() : ListView.builder(
       physics: ScrollPhysics(),
+      //controller: controller,
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       itemCount: team.teamMemberNameList == null ? 0 : team.teamMemberNameList.length,
@@ -784,7 +893,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
             Center(
               child: Container(
                 width: 302,
-                height: 57,
+                height: 57,//sprintAdmins.toString() == team.teamMemberEmailList[i] ? 75 : 57,
                 decoration: BoxDecoration(
                     border: Border.all(color: Color(0xff787cd1)),
                     borderRadius: BorderRadius.all(Radius.circular(7))
@@ -793,35 +902,78 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                   padding: const EdgeInsets.only(left: 30, right: 30),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(team.teamMemberNameList[i],
-                      style: GoogleFonts.nunitoSans(
-                        fontSize: 18,
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //team.teamMemberNameList[i].toString() == "You" ?
+                        SizedBox(height: 5,),
+                        Text(team.teamMemberNameList[i].toString() == "You" ? sprintAdminsName.toString() : team.teamMemberNameList[i].toString(),
+                          maxLines: 1, overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.nunitoSans(
+                            fontSize: 16,
+                            color: sprintAdmins.toString() == team.teamMemberEmailList[i] ? Color(0xff787cd1) : Colors.black,
+                            fontWeight: sprintAdmins.toString() == team.teamMemberEmailList[i] ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                        Text(team.teamMemberEmailList[i],
+                          maxLines: 1, overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.nunitoSans(
+                            fontSize: 16,
+                          ),
+                        ),
+//                            : Text(team.teamMemberEmailList[i].toString() == profile.email.toString() ? "You ("+profile.name+")" : team.teamMemberNameList[i],
+//                          style: GoogleFonts.nunitoSans(
+//                            fontSize: 18,
+//                          ),
+//                        ),
+//                        sprintAdmins.toString() == team.teamMemberEmailList[i] ? Text("Decision Maker",
+//                          style: GoogleFonts.nunitoSans(
+//                            fontSize: 14,color: Color(0xff787cd1),fontWeight: FontWeight.bold,
+//                          ),
+//                        ) : Container(),
+                        SizedBox(height: 5,),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
+            sprintAdmins.toString() == team.teamMemberEmailList[i] ?
             Padding(
               padding: const EdgeInsets.only(right: 20, top: 5),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: PopupMenuButton<String>(
                   onSelected: (val){
-                    if(val == "Delete Member"){
-                      setState(() {
-                        selectedMemberId = team.teamMemberIdsList[i].toString();
-                      });
-                      print(selectedMemberId);
-                      showAlertDialogDeleteTeam(context);
-                    }else if(val == "Edit Details"){
-                      setState(() {
-                        selectedMemberId = team.teamMemberIdsList[i].toString();
-                        memberNameControllerEdit.text = team.teamMemberNameList[i].toString();
-                        memberEmailControllerEdit.text = team.teamMemberEmailList[i].toString();
-                      });
-                      print(selectedMemberId);
-                      showAlertDialogEditTeamMember(context);
+                    if(sprintAdmins.toString() == team.teamMemberEmailList[i]){
+                      if(val == "Make Decision Maker"){
+                          setState(() {
+                            selectedMemberEmail = team.teamMemberEmailList[i].toString();
+                          });
+                          print(selectedMemberEmail);
+                          team.prTeam.show();
+                          giveAdminAccess(context);
+                      }else if(val == "Delete Member"){
+                        setState(() {
+                          selectedMemberId = team.teamMemberIdsList[i].toString();
+                        });
+                        print(selectedMemberId);
+                        showAlertDialogDeleteTeam(context);
+                      }else if(val == "Edit Details"){
+                        setState(() {
+                          selectedMemberId = team.teamMemberIdsList[i].toString();
+                          memberNameControllerEdit.text = team.teamMemberNameList[i].toString();
+                          memberEmailControllerEdit.text = team.teamMemberEmailList[i].toString();
+                        });
+                        print(selectedMemberId);
+                        showAlertDialogEditTeamMember(context);
+                      }
+                    }else{
+                      Fluttertoast.showToast(msg: 'Only the decision maker can make changes!',
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white,
+                      );
                     }
                   },
                   icon: Column(
@@ -852,7 +1004,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                   ),
                   color: Colors.white,
                   itemBuilder: (BuildContext context) {
-                    return {'Delete Member', 'Edit Details'}.map((String choice) {
+                    return {'Delete Member', 'Edit Details', 'Make Decision Maker'}.map((String choice) {
                       return PopupMenuItem<String>(
                         value: choice,
                         textStyle: GoogleFonts.nunitoSans(
@@ -864,7 +1016,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                     }).toList();
                   },
                 ),
-              ),),
+              ),) : Container(),
           ],
         ),
       ),

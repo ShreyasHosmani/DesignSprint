@@ -1,12 +1,13 @@
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Prototyping/upload_prototype_idea_screen1.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/select_prototypes_screen.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
+import 'package:video_player/video_player.dart';
 
 bool statusDrawer = false;
 
@@ -17,6 +18,30 @@ class ReIterateTutorial2 extends StatefulWidget {
 
 class _ReIterateTutorial2State extends State<ReIterateTutorial2> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  VideoPlayerController _controller;
+  FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/reiterate.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/reiterate.mp4"),
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    flickManager.dispose();
+    _controller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -555,31 +580,18 @@ class _ReIterateTutorial2State extends State<ReIterateTutorial2> {
   }
 
   Widget buildVideoContainer(BuildContext context){
-    return Stack(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Color(0xffFFB8B8).withOpacity(0.95),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 215,
+      child: FlickVideoPlayer(
+        flickManager: flickManager,
+        flickVideoWithControls: FlickVideoWithControls(
+          controls: FlickPortraitControls(),
         ),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: 215,
-            child: Image.asset("assets/images/definegoaltutorial-2.png")),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          color: Colors.black.withOpacity(0.45),
+        flickVideoWithControlsFullscreen: FlickVideoWithControls(
+          controls: FlickLandscapeControls(),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 215,
-          child: Center(
-            child: Icon(Icons.play_arrow, color: Colors.white, size: 60,),
-          ),
-        ),
-        statusBarDrawer(context),
-      ],
+      ),
     );
   }
 

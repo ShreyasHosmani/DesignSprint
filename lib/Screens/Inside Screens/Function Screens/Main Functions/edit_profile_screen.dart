@@ -30,6 +30,7 @@ class _EditProfileState extends State<EditProfile> {
   EditProfileApiProvider editProfileApiProvider = EditProfileApiProvider();
   LogoutApiProvider logoutApiProvider = LogoutApiProvider();
   final picker = ImagePicker();
+
   Future<Null> _cropImage() async {
     File croppedFile = await ImageCropper.cropImage(
         sourcePath: home.profileImage.path,
@@ -66,6 +67,7 @@ class _EditProfileState extends State<EditProfile> {
       });
     }
   }
+
   Future getImageOne() async {
     Navigator.of(context).pop();
     var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
@@ -88,6 +90,88 @@ class _EditProfileState extends State<EditProfile> {
     _cropImage();
     print(imagePicked);
   }
+
+  void _settingModalBottomSheetOne(context){
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc){
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOne();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using camera",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOneGallery();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using gallery",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -187,92 +271,7 @@ class _EditProfileState extends State<EditProfile> {
                   onTap: (){
                     print(profile.profilePicImage);
                     print(home.profileImage);
-                    showGeneralDialog(
-                      barrierLabel: "Label",
-                      barrierDismissible: true,
-                      barrierColor: Colors.black.withOpacity(0.5),
-                      transitionDuration: Duration(milliseconds: 400),
-                      context: context,
-                      pageBuilder: (context, anim1, anim2) {
-                        return Scaffold(
-                          backgroundColor: Colors.transparent,
-                          body: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 195,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      //Navigator.of(context).pop();
-//                          setState(() {
-//                            showImages = true;
-//                          });
-                                      getImageOneGallery().then((value){
-
-                                      });
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: 44,
-                                            height: 44,
-                                            child: Image.asset("assets/images/photo.png")),
-                                        SizedBox(height: 8.97,),
-                                        Text("Gallery",
-                                          style: GoogleFonts.nunitoSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 44,
-                                          height: 44,
-                                          child: Image.asset("assets/images/folder.png")),
-                                      SizedBox(height: 8.97,),
-                                      Text("File Manager",
-                                        style: GoogleFonts.nunitoSans(
-                                          textStyle: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff707070),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      transitionBuilder: (context, anim1, anim2, child) {
-                        return SlideTransition(
-                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-                          child: child,
-                        );
-                      },
-                    );
+                    _settingModalBottomSheetOne(context);
                   },
                   child: Container(
                     width: 150,
@@ -290,92 +289,7 @@ class _EditProfileState extends State<EditProfile> {
                   onTap: (){
                     print(profile.profilePicImage);
                     print(home.profileImage);
-                    showGeneralDialog(
-                      barrierLabel: "Label",
-                      barrierDismissible: true,
-                      barrierColor: Colors.black.withOpacity(0.5),
-                      transitionDuration: Duration(milliseconds: 400),
-                      context: context,
-                      pageBuilder: (context, anim1, anim2) {
-                        return Scaffold(
-                          backgroundColor: Colors.transparent,
-                          body: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 195,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      //Navigator.of(context).pop();
-//                          setState(() {
-//                            showImages = true;
-//                          });
-                                      getImageOneGallery().then((value){
-
-                                      });
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: 44,
-                                            height: 44,
-                                            child: Image.asset("assets/images/photo.png")),
-                                        SizedBox(height: 8.97,),
-                                        Text("Gallery",
-                                          style: GoogleFonts.nunitoSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 44,
-                                          height: 44,
-                                          child: Image.asset("assets/images/folder.png")),
-                                      SizedBox(height: 8.97,),
-                                      Text("File Manager",
-                                        style: GoogleFonts.nunitoSans(
-                                          textStyle: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff707070),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      transitionBuilder: (context, anim1, anim2, child) {
-                        return SlideTransition(
-                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-                          child: child,
-                        );
-                      },
-                    );
+                    _settingModalBottomSheetOne(context);
                   },
                   child: Container(
                     width: 155,
@@ -398,92 +312,7 @@ class _EditProfileState extends State<EditProfile> {
                   onTap: (){
                     print(profile.profilePicImage);
                     print(home.profileImage);
-                    showGeneralDialog(
-                      barrierLabel: "Label",
-                      barrierDismissible: true,
-                      barrierColor: Colors.black.withOpacity(0.5),
-                      transitionDuration: Duration(milliseconds: 400),
-                      context: context,
-                      pageBuilder: (context, anim1, anim2) {
-                        return Scaffold(
-                          backgroundColor: Colors.transparent,
-                          body: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 195,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      //Navigator.of(context).pop();
-//                          setState(() {
-//                            showImages = true;
-//                          });
-                                      getImageOneGallery().then((value){
-
-                                      });
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: 44,
-                                            height: 44,
-                                            child: Image.asset("assets/images/photo.png")),
-                                        SizedBox(height: 8.97,),
-                                        Text("Gallery",
-                                          style: GoogleFonts.nunitoSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 44,
-                                          height: 44,
-                                          child: Image.asset("assets/images/folder.png")),
-                                      SizedBox(height: 8.97,),
-                                      Text("File Manager",
-                                        style: GoogleFonts.nunitoSans(
-                                          textStyle: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff707070),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      transitionBuilder: (context, anim1, anim2, child) {
-                        return SlideTransition(
-                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-                          child: child,
-                        );
-                      },
-                    );
+                    _settingModalBottomSheetOne(context);
                   },
                   child: Container(
                     width: 150,
@@ -501,92 +330,7 @@ class _EditProfileState extends State<EditProfile> {
                   onTap: (){
                     print(profile.profilePicImage);
                     print(home.profileImage);
-                    showGeneralDialog(
-                      barrierLabel: "Label",
-                      barrierDismissible: true,
-                      barrierColor: Colors.black.withOpacity(0.5),
-                      transitionDuration: Duration(milliseconds: 400),
-                      context: context,
-                      pageBuilder: (context, anim1, anim2) {
-                        return Scaffold(
-                          backgroundColor: Colors.transparent,
-                          body: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 195,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      //Navigator.of(context).pop();
-//                          setState(() {
-//                            showImages = true;
-//                          });
-                                      getImageOneGallery().then((value){
-
-                                      });
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: 44,
-                                            height: 44,
-                                            child: Image.asset("assets/images/photo.png")),
-                                        SizedBox(height: 8.97,),
-                                        Text("Gallery",
-                                          style: GoogleFonts.nunitoSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 44,
-                                          height: 44,
-                                          child: Image.asset("assets/images/folder.png")),
-                                      SizedBox(height: 8.97,),
-                                      Text("File Manager",
-                                        style: GoogleFonts.nunitoSans(
-                                          textStyle: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff707070),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      transitionBuilder: (context, anim1, anim2, child) {
-                        return SlideTransition(
-                          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-                          child: child,
-                        );
-                      },
-                    );
+                    _settingModalBottomSheetOne(context);
                   },
                   child: Container(
                     width: 150,

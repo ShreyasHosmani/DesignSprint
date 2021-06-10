@@ -31,9 +31,11 @@ class GetTeamBySprintApiProvider{
 
           teamBySprints.teamMemberIdsBySprintsList = List.generate(teamBySprints.responseArrayGetTeamBySprints['data'].length, (i) => teamBySprints.responseArrayGetTeamBySprints['data'][i]['teamID'].toString());
           teamBySprints.teamMemberNamesBySprintsList = List.generate(teamBySprints.responseArrayGetTeamBySprints['data'].length, (i) => teamBySprints.responseArrayGetTeamBySprints['data'][i]['teamMemberName'].toString());
+          teamBySprints.teamMemberEmailsBySprintsList = List.generate(teamBySprints.responseArrayGetTeamBySprints['data'].length, (i) => teamBySprints.responseArrayGetTeamBySprints['data'][i]['teamMemberEmail'].toString());
 
           print(teamBySprints.teamMemberIdsBySprintsList.toList());
           print(teamBySprints.teamMemberNamesBySprintsList.toList());
+          print(teamBySprints.teamMemberEmailsBySprintsList.toList());
 
         }else{
 

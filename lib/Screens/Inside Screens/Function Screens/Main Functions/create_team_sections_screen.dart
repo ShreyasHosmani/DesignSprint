@@ -6,6 +6,12 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%2
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 
@@ -16,6 +22,81 @@ class CreateTeamSections extends StatefulWidget {
 
 class _CreateTeamSectionsState extends State<CreateTeamSections> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<String> updateStep1(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "1",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
+  Future<String> addSprintStatus(context) async {
+
+    print(profile.email.toString());
+    String url = globals.urlLogin + "addsprintstatus.php";
+
+    http.post(url, body: {
+
+      //"userID" : profile.userID,
+      "useremail" : profile.email.toString(),
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      home.responseArrayGetSprints = jsonDecode(response.body);
+      print(home.responseArrayGetSprints);
+
+      home.responseArrayGetSprintsMsg = home.responseArrayGetSprints['message'].toString();
+      if(statusCode == 200){
+        if(home.responseArrayGetSprintsMsg == "Goal Added Successfully, E-Mail Not Verified"){
+
+          print("done....");
+          updateStep1(context);
+
+        }else{
+
+
+        }
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -593,6 +674,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
   Widget buildSoloButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        addSprintStatus(context);
         Navigator.push(
           context,
           PageRouteBuilder(

@@ -21,6 +21,11 @@ import 'package:url_launcher/url_launcher.dart';
 bool statusDrawer = false;
 var ppiiStatus;
 
+var teamMemberStatuses;
+var sprintCreatorId;
+
+var sprintAdmins;
+
 class IdeaSelection extends StatefulWidget {
   @override
   _IdeaSelectionState createState() => _IdeaSelectionState();
@@ -137,10 +142,96 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       }
     });
   }
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep7'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+            teamMemberStatuses = ['1'];
+            sprintCreatorId = profile.userID.toString();
+          });
+
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintAdmins(context) async {
+    String url = globals.urlLogin + "getsprintbyrights.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintAdmins = jsonDecode(response.body);
+      print(responseArrayGetSprintAdmins);
+
+      var responseArrayGetSprintAdminsMsg = responseArrayGetSprintAdmins['message'].toString();
+      print(responseArrayGetSprintAdminsMsg);
+
+      if(statusCode == 200){
+        if(responseArrayGetSprintAdminsMsg == "Data Found"){
+
+          setState(() {
+            sprintAdmins = List.generate(responseArrayGetSprintAdmins['data'].length, (index) => responseArrayGetSprintAdmins['data'][index]['teamMemberEmail'].toString() == profile.email.toString() ? responseArrayGetSprintAdmins['data'][index]['teamStatus'].toString() : "null");
+          });
+
+          print("sprintAdmins : "+sprintAdmins.toList().toString());
+
+        }else{
+
+          setState(() {
+            sprintAdmins = ["0"];
+          });
+
+        }
+      }
+    });
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getSprintAdmins(context);
+    getSprintsStatusesOfTeam(context);
     ideation.ideaAllImagesPainPointWiseList = null;
     getPainPointsByIvsFPriority(context);
     getAllIdeaImages(context);
@@ -152,13 +243,14 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    getSprintsStatusesOfTeam(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
-      bottomNavigationBar: Padding(
+      endDrawer: ProfileDrawerCommon(),
+      bottomNavigationBar: teamMemberStatuses.toList().contains("0") ? null : Padding(
         padding: const EdgeInsets.only(bottom: 50),
         child: Container(
             height: 50,
@@ -791,12 +883,15 @@ class _IdeaSelectionState extends State<IdeaSelection> {
               ],
             ),
             SizedBox(height: 20,),
-            GestureDetector(
+            teamMemberStatuses.toList().contains("0") ? Container() : GestureDetector(
               onTap: (){
-                //if(dmIDd == profile.userID){
+                print(sprintAdmins);
+                if(dmIDd == profile.userID){
+                if(profile.userID == sprintCreatorId || sprintAdmins.toList().contains('1')){
                   setState(() {
                     boolSelectedList[i] = !boolSelectedList[i];
                     if(boolSelectedList[i] == false){
+                      print("1111111");
                       setState(() {
                         counter--;
                         ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
@@ -810,6 +905,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                         });
                       });
                     }else{
+                      print("222222");
                       setState(() {
                         counter++;
                         ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
@@ -824,12 +920,23 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                       });
                     }
                   });
+                }else{
+                  Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final ideas!',
+                    backgroundColor: Colors.black, textColor: Colors.white,
+                  );
+                }
+
 //                }else{
 //                  Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
 //                    backgroundColor: Colors.black, textColor: Colors.white,
 //                  );
 //                }
-              },
+              }else{
+                  Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final ideas!',
+                    backgroundColor: Colors.black, textColor: Colors.white,
+                  );
+                }
+                },
               child: Container(
                 width: 102,
                 height: 37,
@@ -848,7 +955,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            teamMemberStatuses.toList().contains("0") ? Container() : SizedBox(height: 20,),
           ],
         ),
       ),
@@ -859,6 +966,9 @@ class _IdeaSelectionState extends State<IdeaSelection> {
     return GestureDetector(
       onTap: (){
         print(boolSelectedList.toList());
+
+
+
         if(boolSelectedList.toList().contains(true)){
           Navigator.push(
             context,

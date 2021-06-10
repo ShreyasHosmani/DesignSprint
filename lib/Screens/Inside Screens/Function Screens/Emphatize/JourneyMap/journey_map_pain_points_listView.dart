@@ -10,9 +10,27 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-int counter = 6;
+import 'package:progress_dialog/progress_dialog.dart';
+
+int counter = 4;
 int i =0;
+
+var teamMemberStatuses;
+var sprintCreatorId;
+
+var storeTp = [];
+var storeCt = [];
+var storeCe = [];
+var storePp = [];
+
+bool showSaveButton = false;
+
+ProgressDialog prJpHorizontal;
 
 class JourneyMapPainPointsListView extends StatefulWidget {
   @override
@@ -20,17 +38,322 @@ class JourneyMapPainPointsListView extends StatefulWidget {
 }
 
 class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListView> {
-  InputPainPointsApiProvider inputPainPointsApiProvider = InputPainPointsApiProvider();
+
   CreateJourneyApiProvider createJourneyApiProvider = CreateJourneyApiProvider();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
   int _keyboardVisibilitySubscriberId;
   bool _keyboardState;
+
+  Future<String> uploadTouchPoints(context,saveTouchPointControllerText) async {
+
+    String url = globals.urlSignUp + "createtouchpoint.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+      "mapID" : empathize.journeyMapId,
+      "text": saveTouchPointControllerText.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayUploadTouchPoints = jsonDecode(response.body);
+      print(empathize.responseArrayUploadTouchPoints);
+
+      empathize.responseArrayUploadTouchPointsMsg = empathize.responseArrayUploadTouchPoints['message'].toString();
+      print(empathize.responseArrayUploadTouchPointsMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayUploadTouchPointsMsg == "Touch Point Added Successfully"){
+          empathize.receivedTouchPointIdSingle = empathize.responseArrayUploadTouchPoints['data'].toString();
+          print(empathize.receivedTouchPointIdSingle);
+//          Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
+//            textColor: Colors.white,);
+        }else{
+          Fluttertoast.showToast(msg: "please check your internet connection", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+    });
+  }
+
+  Future<String> uploadCustomerThoughts(context,saveCustomerThoughtsText) async {
+
+    String url = globals.urlSignUp + "createcustomerthoughts.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+      "mapID" : empathize.journeyMapId,
+      "text": saveCustomerThoughtsText.toString(),
+      "touchpointID" : "0",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayUploadCustomerThoughts = jsonDecode(response.body);
+      print(empathize.responseArrayUploadCustomerThoughts);
+
+      empathize.responseArrayUploadCustomerThoughtsMsg = empathize.responseArrayUploadCustomerThoughts['message'].toString();
+      print(empathize.responseArrayUploadCustomerThoughtsMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayUploadCustomerThoughtsMsg == "Customer Thoughts Added Successfully"){
+          empathize.receivedCustomerThoughtIdSingle = empathize.responseArrayUploadCustomerThoughts['data'].toString();
+          print(empathize.receivedCustomerThoughtIdSingle);
+//          Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
+//            textColor: Colors.white,);
+        }else{
+          Fluttertoast.showToast(msg: "please check your internet connection", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+    });
+  }
+
+  Future<String> uploadCustomerExperiences(context,saveCustomerExperienceText) async {
+
+    String url = globals.urlSignUp + "createcustomerexperience.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+      "mapID" : empathize.journeyMapId,
+      "text": saveCustomerExperienceText,
+      "touchpointID" : "0",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayUploadCustomerExperiences = jsonDecode(response.body);
+      print(empathize.responseArrayUploadCustomerExperiences);
+
+      empathize.responseArrayUploadCustomerExperiencesMsg = empathize.responseArrayUploadCustomerExperiences['message'].toString();
+      print(empathize.responseArrayUploadCustomerExperiencesMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayUploadCustomerExperiencesMsg == "Customer Experience Added Successfully"){
+          empathize.receivedCustomerExperienceIdSingle = empathize.responseArrayUploadCustomerExperiences['data'].toString();
+          print(empathize.receivedCustomerExperienceIdSingle);
+          Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }else{
+          Fluttertoast.showToast(msg: "please check your internet connection", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+    });
+  }
+
+  Future<String> inputPainPointsFromDigitalJourneyMap(context,savePainPointText) async {
+
+    String url = globals.urlSignUp + "createpainpointbytouchpoint.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID,
+      "mapID" : empathize.journeyMapId,
+      "painpointname": savePainPointText.toString(),
+      "touchpointID" : "0",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayInputPainPoints = jsonDecode(response.body);
+      print(empathize.responseArrayInputPainPoints);
+
+      empathize.responseArrayInputPainPointsMsg = empathize.responseArrayInputPainPoints['message'].toString();
+      print(empathize.responseArrayInputPainPointsMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayInputPainPointsMsg == "Painpoint Added Successfully"){
+          empathize.receivedPainPointIdSingle = empathize.responseArrayInputPainPoints['data'].toString();
+          print(empathize.receivedPainPointIdSingle);
+          Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }else{
+          Fluttertoast.showToast(msg: "please check your internet connection", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+
+          });
+
+        }
+      }
+    });
+  }
+  Future<String> getSprintsStatusesOfTeam2(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          prJpHorizontal.hide();
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          if(teamMemberStatuses.toList().contains('0')){
+            Fluttertoast.showToast(msg: 'Please wait until rest of the team uploads the pain points!',
+              backgroundColor: Colors.black, textColor: Colors.white,
+            );
+          }else{
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          prJpHorizontal.hide();
+          setState(() {
+
+          });
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    counter = 6;
+    getSprintsStatusesOfTeam(context);
+    setState(() {
+      ppListStatic = [];
+      counter = 4;
+      showSaveButton = false;
+      storeTp = [];
+      storeCt = [];
+      storeCe = [];
+      storePp = [];
+      touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+      customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+      customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+      painPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+      _controllerListTouchPoints = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+      _controllerListCustomerThoughts = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+      _controllerListPainPoints = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+      emojiList1 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList2 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList3 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList4 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList5 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList6 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList7 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList8 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList9 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList10 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList11 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList12 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList13 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList14 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      emojiList15 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+      boolEmojis1 = [false,false,false,false,false,false,false,false,];
+      boolEmojis2 = [false,false,false,false,false,false,false,false,];
+      boolEmojis3 = [false,false,false,false,false,false,false,false,];
+      boolEmojis4 = [false,false,false,false,false,false,false,false,];
+      boolEmojis5 = [false,false,false,false,false,false,false,false,];
+      boolEmojis6 = [false,false,false,false,false,false,false,false,];
+      boolEmojis7 = [false,false,false,false,false,false,false,false,];
+      boolEmojis8 = [false,false,false,false,false,false,false,false,];
+      boolEmojis9 = [false,false,false,false,false,false,false,false,];
+      boolEmojis10 = [false,false,false,false,false,false,false,false,];
+      boolEmojis11 = [false,false,false,false,false,false,false,false,];
+      boolEmojis12 = [false,false,false,false,false,false,false,false,];
+      boolEmojis13 = [false,false,false,false,false,false,false,false,];
+      boolEmojis14 = [false,false,false,false,false,false,false,false,];
+      boolEmojis15 = [false,false,false,false,false,false,false,false,];
+      focusNodesTouchPoints = List.generate(15, (i) => FocusNode());
+      focusEnableTouchPoints = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+      focusNodesCustomerThoughts = List.generate(15, (i) => FocusNode());
+      focusEnableCustomerThoughts = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+      focusNodesCustomerExperience = List.generate(15, (i) => FocusNode());
+      focusEnableCustomerExperience = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+      focusNodesPainPoint = List.generate(15, (i) => FocusNode());
+      focusEnablePainPoint = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+    });
 //    _keyboardState = _keyboardVisibility.isKeyboardVisible;
 //    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
 //      onChange: (bool visible) {
@@ -40,51 +363,6 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
 //        print(_keyboardState);
 //      },
 //    );
-    touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
-    customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
-    customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
-    painPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
-    _controllerListTouchPoints = List.generate(15, (i) => TextEditingController());
-    _controllerListCustomerThoughts = List.generate(15, (i) => TextEditingController());
-    _controllerListPainPoints = List.generate(15, (i) => TextEditingController());
-    emojiList1 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList2 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList3 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList4 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList5 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList6 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList7 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList8 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList9 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList10 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList11 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList12 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList13 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList14 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    emojiList15 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
-    boolEmojis1 = [false,false,false,false,false,false,false,false,];
-    boolEmojis2 = [false,false,false,false,false,false,false,false,];
-    boolEmojis3 = [false,false,false,false,false,false,false,false,];
-    boolEmojis4 = [false,false,false,false,false,false,false,false,];
-    boolEmojis5 = [false,false,false,false,false,false,false,false,];
-    boolEmojis6 = [false,false,false,false,false,false,false,false,];
-    boolEmojis7 = [false,false,false,false,false,false,false,false,];
-    boolEmojis8 = [false,false,false,false,false,false,false,false,];
-    boolEmojis9 = [false,false,false,false,false,false,false,false,];
-    boolEmojis10 = [false,false,false,false,false,false,false,false,];
-    boolEmojis11 = [false,false,false,false,false,false,false,false,];
-    boolEmojis12 = [false,false,false,false,false,false,false,false,];
-    boolEmojis13 = [false,false,false,false,false,false,false,false,];
-    boolEmojis14 = [false,false,false,false,false,false,false,false,];
-    boolEmojis15 = [false,false,false,false,false,false,false,false,];
-    focusNodesTouchPoints = List.generate(15, (i) => FocusNode());
-    focusEnableTouchPoints = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
-    focusNodesCustomerThoughts = List.generate(15, (i) => FocusNode());
-    focusEnableCustomerThoughts = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
-    focusNodesCustomerExperience = List.generate(15, (i) => FocusNode());
-    focusEnableCustomerExperience = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
-    focusNodesPainPoint = List.generate(15, (i) => FocusNode());
-    focusEnablePainPoint = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
   }
 //  @override
 //  void dispose() {
@@ -92,6 +370,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
 //  }
   @override
   Widget build(BuildContext context) {
+    prJpHorizontal = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -140,6 +419,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                             onTap: (){
                               setState(() {
                                 counter++;
+                                showSaveButton = false;
                               });
                             },
                             child: Container(
@@ -753,6 +1033,9 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   }
 
   Widget buildTouchPointRow(BuildContext context){
+
+    int currentTextLength = 0;
+
     return Container(
       height: 95,
       child: ListView.builder(
@@ -794,9 +1077,8 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: TextFormField(
-                  maxLines: 2,
                   focusNode: focusNodesTouchPoints[i],
-                  textInputAction: TextInputAction.done,
+                  textInputAction: TextInputAction.newline,
                   controller: _controllerListTouchPoints[i],
                   decoration: InputDecoration(
                       border: InputBorder.none,
@@ -808,33 +1090,49 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                     }
                     return null;
                   },
-                  onChanged: (val){
-                    //focusNodesTouchPoints[i].unfocus();
-                    if(_controllerListTouchPoints[i].text.toString() == null || _controllerListTouchPoints[i].text.toString() == "" || _controllerListTouchPoints[i].text.toString() == " "){
-
-                    }else{
-                      setState(() {
-                        empathize.selectedTouchPointController = _controllerListTouchPoints[i].text.toString();
-                      });
-                      print(empathize.selectedTouchPointController);
-                      if(touchPointIdListStorage[i] == "x"){
-                        inputPainPointsApiProvider.uploadTouchPoints(context).whenComplete((){
-                          Future.delayed(const Duration(seconds: 0), () {
-                            touchPointIdListStorage.insert(i, empathize.receivedTouchPointIdSingle);
-                            print(touchPointIdListStorage.toList());
-                          });
-                        });
-                      }else{
-                        setState(() {
-                          empathize.selectedTouchPointId = touchPointIdListStorage[i].toString();
-                        });
-                        print(empathize.selectedTouchPointId);
-                        inputPainPointsApiProvider.updateTouchPoints(context).whenComplete((){
-
-                        });
+                  maxLines: 4,
+                    onChanged: (String newText){
+                      if(newText[0] != '•'){
+                        newText = '• ' + newText;
+                        _controllerListTouchPoints[i].text = newText;
+                        _controllerListTouchPoints[i].selection = TextSelection.fromPosition(TextPosition(offset: _controllerListTouchPoints[i].text.length));
                       }
-                    }
+                      if(newText[newText.length - 1] == '\n' && newText.length > currentTextLength){
+                        _controllerListTouchPoints[i].text = newText + '• ';
+                        _controllerListTouchPoints[i].selection = TextSelection.fromPosition(TextPosition(offset: _controllerListTouchPoints[i].text.length));
+                      }
+                      currentTextLength = _controllerListTouchPoints[i].text.length;
+                    },
+                  onEditingComplete: (){
+                    focusNodesTouchPoints[i].unfocus();
                   },
+//                  onFieldSubmitted: (val){
+//                    focusNodesTouchPoints[i].unfocus();
+//                    if(_controllerListTouchPoints[i].text.toString() == null || _controllerListTouchPoints[i].text.toString() == "" || _controllerListTouchPoints[i].text.toString() == " "){
+//
+//                    }else{
+//                      setState(() {
+//                        empathize.selectedTouchPointController = _controllerListTouchPoints[i].text.toString();
+//                      });
+//                      print(empathize.selectedTouchPointController);
+//                      if(touchPointIdListStorage[i] == "x"){
+//                        inputPainPointsApiProvider.uploadTouchPoints(context).whenComplete((){
+//                          Future.delayed(const Duration(seconds: 0), () {
+//                            touchPointIdListStorage.insert(i, empathize.receivedTouchPointIdSingle);
+//                            print(touchPointIdListStorage.toList());
+//                          });
+//                        });
+//                      }else{
+//                        setState(() {
+//                          empathize.selectedTouchPointId = touchPointIdListStorage[i].toString();
+//                        });
+//                        print(empathize.selectedTouchPointId);
+//                        inputPainPointsApiProvider.updateTouchPoints(context).whenComplete((){
+//
+//                        });
+//                      }
+//                    }
+//                  },
                 ),
               ),
             ),
@@ -845,6 +1143,9 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   }
 
   Widget buildCustomerThoughtsRow(BuildContext context){
+
+    int currentTextLength = 0;
+
     return Container(
       height: 95,
       child: Container(
@@ -889,10 +1190,9 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: TextFormField(
-                    maxLines: 2,
                     focusNode: focusNodesCustomerThoughts[i],
                     controller: _controllerListCustomerThoughts[i],
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.newline,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Receives an introductory set of emails and connect request on linkedIn"
@@ -903,34 +1203,50 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                       }
                       return null;
                     },
-                    onChanged: (val){
-                      //focusNodesCustomerThoughts[i].unfocus();
-                      if(_controllerListCustomerThoughts[i].text.toString() == null || _controllerListCustomerThoughts[i].text.toString() == "" || _controllerListCustomerThoughts[i].text.toString() == " "){
-
-                      }else{
-                        setState(() {
-                          empathize.selectedCustomerThoughtController = _controllerListCustomerThoughts[i].text.toString();
-                          empathize.selectedTouchPointId = touchPointIdListStorage[i];
-                        });
-                        print(empathize.selectedCustomerThoughtController);
-                        if(customerThoughtIdListStorage[i] == "x"){
-                          inputPainPointsApiProvider.uploadCustomerThoughts(context).whenComplete((){
-                            Future.delayed(const Duration(seconds: 3), () {
-                              customerThoughtIdListStorage.insert(i, empathize.receivedCustomerThoughtIdSingle);
-                              print(customerThoughtIdListStorage.toList());
-                            });
-                          });
-                        }else{
-                          setState(() {
-                            empathize.selectedTouchPointId = customerThoughtIdListStorage[i].toString();
-                          });
-                          print(empathize.selectedTouchPointId);
-                          inputPainPointsApiProvider.updateCustomerThoughts(context).whenComplete((){
-
-                          });
-                        }
+                    maxLines: 4,
+                    onChanged: (String newText){
+                      if(newText[0] != '•'){
+                        newText = '• ' + newText;
+                        _controllerListCustomerThoughts[i].text = newText;
+                        _controllerListCustomerThoughts[i].selection = TextSelection.fromPosition(TextPosition(offset: _controllerListCustomerThoughts[i].text.length));
                       }
+                      if(newText[newText.length - 1] == '\n' && newText.length > currentTextLength){
+                        _controllerListCustomerThoughts[i].text = newText + '• ';
+                        _controllerListCustomerThoughts[i].selection = TextSelection.fromPosition(TextPosition(offset: _controllerListCustomerThoughts[i].text.length));
+                      }
+                      currentTextLength = _controllerListCustomerThoughts[i].text.length;
                     },
+                    onEditingComplete: (){
+                      focusNodesCustomerThoughts[i].unfocus();
+                    },
+//                    onChanged: (val){
+//                      //focusNodesCustomerThoughts[i].unfocus();
+//                      if(_controllerListCustomerThoughts[i].text.toString() == null || _controllerListCustomerThoughts[i].text.toString() == "" || _controllerListCustomerThoughts[i].text.toString() == " "){
+//
+//                      }else{
+//                        setState(() {
+//                          empathize.selectedCustomerThoughtController = _controllerListCustomerThoughts[i].text.toString();
+//                          empathize.selectedTouchPointId = touchPointIdListStorage[i];
+//                        });
+//                        print(empathize.selectedCustomerThoughtController);
+//                        if(customerThoughtIdListStorage[i] == "x"){
+//                          inputPainPointsApiProvider.uploadCustomerThoughts(context).whenComplete((){
+//                            Future.delayed(const Duration(seconds: 3), () {
+//                              customerThoughtIdListStorage.insert(i, empathize.receivedCustomerThoughtIdSingle);
+//                              print(customerThoughtIdListStorage.toList());
+//                            });
+//                          });
+//                        }else{
+//                          setState(() {
+//                            empathize.selectedTouchPointId = customerThoughtIdListStorage[i].toString();
+//                          });
+//                          print(empathize.selectedTouchPointId);
+//                          inputPainPointsApiProvider.updateCustomerThoughts(context).whenComplete((){
+//
+//                          });
+//                        }
+//                      }
+//                    },
                   ),
                 ),
               ),
@@ -987,7 +1303,48 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
-                  child:
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15, bottom: 15, left: 30, right: 30),
+                    child: GridView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: emojiList1 == null ? 0 : emojiList1.length ,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, crossAxisSpacing: 25, mainAxisSpacing: 0),
+                        itemBuilder: (BuildContext context, int index){
+                          return customerExperienceIdListStorage[i] == emojiList1[index] ? Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(100)),
+                              border: Border.all(color: Color(0xff787cd1)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(customerExperienceIdListStorage[i],
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    letterSpacing: 2.0
+                                ),
+                              ),
+                            ),
+                          ) : GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                selectedEmoji = emojiList1[index];
+                                customerExperienceIdListStorage[i] = selectedEmoji;
+                              });
+                              print(selectedEmoji);
+                              print(customerExperienceIdListStorage);
+                            },
+                            child: Text(emojiList1[index],
+                                style: TextStyle(
+                                fontSize: 25,
+                                letterSpacing: 2.0
+                            )),
+                          );
+                        }
+
+                    ),
+                  ),
+                  /*
                   i == 1 ?
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -8508,6 +8865,8 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                       ),
                     ],
                   ),
+
+                   */
                   //Icon(Icons.add, color: Colors.white,),
               ),
             ),
@@ -8519,6 +8878,9 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   }
 
   Widget buildPainPointsRow(BuildContext context){
+
+    int currentTextLength = 0;
+
     return Container(
       height: 95,
       child: Container(
@@ -8563,10 +8925,9 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: TextFormField(
-                    maxLines: 2,
                     focusNode: focusNodesPainPoint[i],
                     keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.newline,
                     controller: _controllerListPainPoints[i],
                     decoration: InputDecoration(
                         border: InputBorder.none,
@@ -8578,34 +8939,60 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
                       }
                       return null;
                     },
-                    //onSaved: (val){print("onsaved called");},
-                    onChanged: (val){
-                      //focusNodesPainPoint[i].unfocus();
-                      if(_controllerListPainPoints[i].text.toString() == null || _controllerListPainPoints[i].text.toString() == "" || _controllerListPainPoints[i].text.toString() == " "){
-
-                      }else{
-                        setState(() {
-                          empathize.selectedPainPointController = _controllerListPainPoints[i].text.toString();
-                          empathize.selectedTouchPointId = touchPointIdListStorage[i];
-                        });
-                        print(empathize.selectedPainPointController);
-                        if(painPointIdListStorage[i] == "x"){
-                          inputPainPointsApiProvider.inputPainPointsFromDigitalJourneyMap(context).whenComplete((){
-                            Future.delayed(const Duration(seconds: 3), () {
-                              painPointIdListStorage.insert(i, empathize.receivedPainPointIdSingle);
-                              print(painPointIdListStorage.toList());
-                            });
-                          });
-                        }else{
-                          setState(() {
-                            empathize.selectedTouchPointId = painPointIdListStorage[i];
-                          });
-                          inputPainPointsApiProvider.updatePainPointsFromDigitalJourneyMap(context).whenComplete((){
-
-                          });
-                        }
-                      }
+                    onEditingComplete: (){
+                      focusNodesPainPoint[i].unfocus();
                     },
+                    maxLines: 4,
+                    onChanged: (String newText){
+
+                      if(i == (counter-1)){
+                        print("last controller");
+                        setState(() {
+                          showSaveButton = true;
+                        });
+                      }else{
+                        print("no");
+                      }
+
+                      if(newText[0] != '•'){
+                        newText = '• ' + newText;
+                        _controllerListPainPoints[i].text = newText;
+                        _controllerListPainPoints[i].selection = TextSelection.fromPosition(TextPosition(offset: _controllerListPainPoints[i].text.length));
+                      }
+                      if(newText[newText.length - 1] == '\n' && newText.length > currentTextLength){
+                        _controllerListPainPoints[i].text = newText + '• ';
+                        _controllerListPainPoints[i].selection = TextSelection.fromPosition(TextPosition(offset: _controllerListPainPoints[i].text.length));
+                      }
+                      currentTextLength = _controllerListPainPoints[i].text.length;
+                    },
+                    //onSaved: (val){print("onsaved called");},
+//                    onChanged: (val){
+//                      //focusNodesPainPoint[i].unfocus();
+//                      if(_controllerListPainPoints[i].text.toString() == null || _controllerListPainPoints[i].text.toString() == "" || _controllerListPainPoints[i].text.toString() == " "){
+//
+//                      }else{
+//                        setState(() {
+//                          empathize.selectedPainPointController = _controllerListPainPoints[i].text.toString();
+//                          empathize.selectedTouchPointId = touchPointIdListStorage[i];
+//                        });
+//                        print(empathize.selectedPainPointController);
+//                        if(painPointIdListStorage[i] == "x"){
+//                          inputPainPointsApiProvider.inputPainPointsFromDigitalJourneyMap(context).whenComplete((){
+//                            Future.delayed(const Duration(seconds: 3), () {
+//                              painPointIdListStorage.insert(i, empathize.receivedPainPointIdSingle);
+//                              print(painPointIdListStorage.toList());
+//                            });
+//                          });
+//                        }else{
+//                          setState(() {
+//                            empathize.selectedTouchPointId = painPointIdListStorage[i];
+//                          });
+//                          inputPainPointsApiProvider.updatePainPointsFromDigitalJourneyMap(context).whenComplete((){
+//
+//                          });
+//                        }
+//                      }
+//                    },
 //                    onEditingComplete: (){
 //                      focusNodesPainPoint[i].unfocus();
 //                      if(_controllerListPainPoints[i].text.toString() == null || _controllerListPainPoints[i].text.toString() == "" || _controllerListPainPoints[i].text.toString() == " "){
@@ -8646,22 +9033,24 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
   Widget saveButton(BuildContext context){
     return InkWell(
       onTap: (){
-        if(_controllerListTouchPoints[0].text.toString() == "" || _controllerListCustomerThoughts[0].text.toString() == "" || _controllerListPainPoints[0].text.toString() == "" ||
-            _controllerListTouchPoints[1].text.toString() == "" || _controllerListCustomerThoughts[1].text.toString() == "" || _controllerListPainPoints[1].text.toString() == "" ||
-            _controllerListTouchPoints[2].text.toString() == "" || _controllerListCustomerThoughts[2].text.toString() == "" || _controllerListPainPoints[2].text.toString() == ""){
-          Fluttertoast.showToast(msg: "Please fill atleast 3 column of fields", backgroundColor: Colors.black,
-            textColor: Colors.white,);
+
+        print("index == "+(counter-1).toString());
+
+        if(_controllerListTouchPoints[counter-1].text.toString() == "" || _controllerListCustomerThoughts[counter-1].text.toString() == "" || _controllerListPainPoints[counter-1].text.toString() == ""){
+          print("false");
+          Fluttertoast.showToast(msg: 'All the fields in a column are compulsory',backgroundColor: Colors.black, textColor: Colors.white);
         }else{
-          Fluttertoast.showToast(msg: "Saved", backgroundColor: Colors.black,
-            textColor: Colors.white,);
+          print("true");
+          showAlertDialogSave(context);
         }
+
       },
       child: Container(
         height: 35,
         width: 114,
         decoration: BoxDecoration(
           border: Border.all(
-            color: Color(0xffd4d4d4),
+            color: showSaveButton == true ? Color(0xff787cd1) : Color(0xffd4d4d4),
           ),
           borderRadius: BorderRadius.all(Radius.circular(50)),
         ),
@@ -8669,7 +9058,7 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
           child: Text(empathize.saveButton,
             style: GoogleFonts.nunitoSans(
               fontSize: 16,
-              color: Colors.grey,
+              color: showSaveButton == true ? Color(0xff787cd1) : Colors.grey,
             ),
           ),
         ),
@@ -8679,7 +9068,62 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
 
   Widget newPersonaButton(BuildContext context){
     return InkWell(
-      onTap: () => showAlertDialogNewMap(context),
+      onTap: (){
+        setState(() {
+          counter = 2;
+          showSaveButton = false;
+          storeTp = [];
+          storeCt = [];
+          storeCe = [];
+          storePp = [];
+          touchPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+          customerThoughtIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+          customerExperienceIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+          painPointIdListStorage = ['x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x','x', 'x', 'x', 'x', 'x',];
+          _controllerListTouchPoints = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+          _controllerListCustomerThoughts = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+          _controllerListPainPoints = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+          emojiList1 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList2 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList3 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList4 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList5 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList6 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList7 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList8 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList9 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList10 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList11 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList12 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList13 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList14 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          emojiList15 = ['🙂', '😞', '😥', '😍', '🤔', '😰', '😠', '🚫'];
+          boolEmojis1 = [false,false,false,false,false,false,false,false,];
+          boolEmojis2 = [false,false,false,false,false,false,false,false,];
+          boolEmojis3 = [false,false,false,false,false,false,false,false,];
+          boolEmojis4 = [false,false,false,false,false,false,false,false,];
+          boolEmojis5 = [false,false,false,false,false,false,false,false,];
+          boolEmojis6 = [false,false,false,false,false,false,false,false,];
+          boolEmojis7 = [false,false,false,false,false,false,false,false,];
+          boolEmojis8 = [false,false,false,false,false,false,false,false,];
+          boolEmojis9 = [false,false,false,false,false,false,false,false,];
+          boolEmojis10 = [false,false,false,false,false,false,false,false,];
+          boolEmojis11 = [false,false,false,false,false,false,false,false,];
+          boolEmojis12 = [false,false,false,false,false,false,false,false,];
+          boolEmojis13 = [false,false,false,false,false,false,false,false,];
+          boolEmojis14 = [false,false,false,false,false,false,false,false,];
+          boolEmojis15 = [false,false,false,false,false,false,false,false,];
+          focusNodesTouchPoints = List.generate(15, (i) => FocusNode());
+          focusEnableTouchPoints = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+          focusNodesCustomerThoughts = List.generate(15, (i) => FocusNode());
+          focusEnableCustomerThoughts = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+          focusNodesCustomerExperience = List.generate(15, (i) => FocusNode());
+          focusEnableCustomerExperience = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+          focusNodesPainPoint = List.generate(15, (i) => FocusNode());
+          focusEnablePainPoint = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
+        });
+        showAlertDialogNewMap(context);
+        },
       child: Container(
         height: 35,
         width: 114,
@@ -8705,14 +9149,14 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
     return GestureDetector(
       onTap: (){
         //inputPainPointsApiProvider.inputPainPoints(context);
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+//        if(ppListStatic == null || ppListStatic.isEmpty){
+//          Fluttertoast.showToast(msg: 'Please upload atleast one pain point!',
+//            backgroundColor: Colors.black, textColor: Colors.white,
+//          );
+//        }else{
+          prJpHorizontal.show();
+          getSprintsStatusesOfTeam2(context);
+        //}
       },
       child: Center(
         child: Container(
@@ -8871,11 +9315,87 @@ class _JourneyMapPainPointsListViewState extends State<JourneyMapPainPointsListV
     );
   }
 
+  showAlertDialogSave(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel",style: GoogleFonts.nunitoSans(),),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue",style: GoogleFonts.nunitoSans(),),
+      onPressed:  () async {
+        Navigator.of(context).pop();
+        _controllerListTouchPoints.toList().forEach((element){
+
+          setState(() {
+            int idx = _controllerListTouchPoints.indexOf(element);
+            if(idx > 0){
+              if(_controllerListTouchPoints[idx].text.toString() == "" || _controllerListCustomerThoughts[idx].text.toString() == "" || _controllerListPainPoints[idx].text.toString() == "" || customerExperienceIdListStorage[idx] == "x"){
+                print("not yet");
+              }else{
+                saveTouchPointControllerText = _controllerListTouchPoints[idx].text.toString();
+                saveCustomerThoughtsText = _controllerListCustomerThoughts[idx].text.toString();
+                saveCustomerExperienceText = customerExperienceIdListStorage[idx].toString();
+                savePainPointText = _controllerListPainPoints[idx].text.toString();
+
+                print("saveTouchPointControllerText..." + saveTouchPointControllerText.toString());
+                print("saveCustomerThoughtsText..." + saveCustomerThoughtsText.toString());
+                print("saveCustomerExperienceText..." + saveCustomerExperienceText.toString());
+                print("savePainPointText..." + savePainPointText.toString());
+
+                uploadTouchPoints(context,saveTouchPointControllerText);
+                uploadCustomerThoughts(context,saveCustomerThoughtsText);
+                uploadCustomerExperiences(context,saveCustomerExperienceText);
+                inputPainPointsFromDigitalJourneyMap(context,savePainPointText);
+
+                Fluttertoast.showToast(msg: 'Data saved successfully!',backgroundColor: Colors.black, textColor: Colors.white);
+
+              }
+            }else{
+
+            }
+          });
+
+        });
+
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Save Data",
+        style: GoogleFonts.nunitoSans(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      content: Text("Press Continue to save all your data! Please make sure that a particular column is filled competely else that column wont be saved!",
+        style: GoogleFonts.nunitoSans(
+          color: Colors.red,
+        ),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }
 
-List<TextEditingController> _controllerListTouchPoints = List.generate(15, (i) => TextEditingController());
-List<TextEditingController> _controllerListCustomerThoughts = List.generate(15, (i) => TextEditingController());
-List<TextEditingController> _controllerListPainPoints = List.generate(15, (i) => TextEditingController());
+List<TextEditingController> _controllerListTouchPoints = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+List<TextEditingController> _controllerListCustomerThoughts = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
+List<TextEditingController> _controllerListPainPoints = List.generate(15, (i) => i == 0 ? TextEditingController(text: 'ambadnya') : TextEditingController());
 
 List<FocusNode> focusNodesTouchPoints = List.generate(15, (i) => FocusNode());
 List<bool> focusEnableTouchPoints = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
@@ -8923,3 +9443,13 @@ List<String> touchPointIdListStorage;
 List<String> customerThoughtIdListStorage;
 List<String> customerExperienceIdListStorage;
 List<String> painPointIdListStorage;
+
+
+var saveTouchPointControllerText;
+var saveCustomerThoughtsText;
+var saveCustomerExperienceText;
+var savePainPointText;
+
+var saveTouchPointIdForAllValues;
+
+List<String> ppListStatic;

@@ -7,6 +7,7 @@ var responseArrayGetTeamBySprintsMsg2;
 
 var teamMemberNamesBySprintsList;
 var teamMemberIdsBySprintsList;
+var teamMemberEmailsBySprintsList;
 List<String> teamMemberNamesBySprintsList2;
 List<String> teamMemberIdsBySprintsList2;
 

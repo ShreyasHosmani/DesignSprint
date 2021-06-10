@@ -49,6 +49,12 @@ var status9;
 var status10;
 var status11;
 
+var step3StatusList;
+var step4StatusList;
+
+//step3StatusList = List.generate(responseArrayGetSprintStatuses['data'].length, (index) =>
+//responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3']);
+
 class ShowInsideSections extends StatefulWidget {
   final sprintid;
   final decsionMakersId;
@@ -802,17 +808,17 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
             status11 = responseArrayGetSprintStatuses['data']['sprintstatusStep11'].toString();
           });
 
-          print(status1);
-          print(status2);
-          print(status3);
-          print(status4);
-          print(status5);
-          print(status6);
-          print(status7);
-          print(status8);
-          print(status9);
-          print(status10);
-          print(status11);
+          print("status 1"+status1);
+          print("status 2"+status2);
+          print("status 3"+status3);
+          print("status 4"+status4);
+          print("status 5"+status5);
+          print("status 6"+status6);
+          print("status 7"+status7);
+          print("status 8"+status8);
+          print("status 9"+status9);
+          print("status 10"+status10);
+          print("status 11"+status11);
 
           if(dmIDd == profile.userID){
             print("I am a decision maker...");
@@ -853,14 +859,23 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "0" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               print("Goal & Personas & JourneyMaps have been uploaded...");
-              Navigator.pushReplacement(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
+              print(step3StatusList.toList());
+              if(step3StatusList.toList().contains('0')){
+                Fluttertoast.showToast(msg: 'Please wait until rest of the team members upload the pain points!',
+                  backgroundColor: Colors.black, textColor: Colors.white,
+                ).whenComplete((){
+                  Navigator.of(context).pop();
+                });
+              }else{
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
+                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                    transitionDuration: Duration(milliseconds: 300),
+                  ),
+                );
+              }
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               Navigator.pushReplacement(
@@ -981,14 +996,22 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "0" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               print("Goal & Personas & JourneyMaps have been uploaded...");
-              Navigator.pushReplacement(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
-                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                  transitionDuration: Duration(milliseconds: 300),
-                ),
-              );
+              if(step3StatusList.toList().contains('0')){
+                Fluttertoast.showToast(msg: 'Please wait until rest of the team members upload the pain points!',
+                  backgroundColor: Colors.black, textColor: Colors.white,
+                ).whenComplete((){
+                  Navigator.of(context).pop();
+                });
+              }else{
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (c, a1, a2) => IdentifyPainPointTutorial(),
+                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                    transitionDuration: Duration(milliseconds: 300),
+                  ),
+                );
+              }
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               Navigator.pushReplacement(
@@ -999,7 +1022,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
-            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "1" && status6 == "0"
+            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               Navigator.pushReplacement(
                 context,
@@ -1009,7 +1032,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
-            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "1" && status6 == "1"
+            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               Navigator.pushReplacement(
                 context,
@@ -1019,7 +1042,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
-            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "1" && status6 == "1"
+            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
                 && status7 == "1" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               Navigator.pushReplacement(
                 context,
@@ -1029,8 +1052,8 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
-            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "1" && status6 == "1"
-                && status7 == "1" && status8 == "1" && status9 == "0" && status10 == "0" && status11 == "0"){
+            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
+                && status7 == "1" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1039,8 +1062,8 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
-            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "1" && status6 == "1"
-                && status7 == "1" && status8 == "1" && status9 == "1" && status10 == "0" && status11 == "0"){
+            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
+                && status7 == "1" && status8 == "0" && status9 == "1" && status10 == "0" && status11 == "0"){
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1049,8 +1072,8 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
-            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "1" && status6 == "1"
-                && status7 == "1" && status8 == "1" && status9 == "1" && status10 == "1" && status11 == "0"){
+            }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
+                && status7 == "1" && status8 == "0" && status9 == "1" && status10 == "1" && status11 == "0"){
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1074,6 +1097,59 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
 
         }else{
 
+//          print("setting status default");
+//          setState(() {
+//            status1 = "1"; status2 = "1"; status3 = "1"; status4 = "1"; status5 = "1"; status6 = "1"; status7 = "1"; status8 = "1"; status9 = "1"; status10 = "1"; status11 = "1";
+//          });
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => ShowInsideSections(widget.sprintid, widget.decsionMakersId),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : widget.sprintid.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            step3StatusList = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3'].toString());
+            step4StatusList = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep4'].toString());
+            //sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(step3StatusList);
+          getSprintsStatuses(context);
+          //print(sprintCreatorId);
+
+        }else{
+
+          getSprintsStatuses(context);
           setState(() {
 
           });
@@ -1087,7 +1163,8 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSprintsStatuses(context);
+    //getSprintsStatuses(context);
+    getSprintsStatusesOfTeam(context);
     setState(() {
       status1 = null;
       status2 = null;

@@ -24,6 +24,7 @@ class CreateDigitalPersona extends StatefulWidget {
 class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
   final picker = ImagePicker();
+
   Future getImageOne() async {
     Navigator.of(context).pop();
     var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
@@ -40,6 +41,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       enableSave = true;
     });
   }
+
   void _settingModalBottomSheetOne(context){
     showModalBottomSheet(
         context: context,
@@ -120,6 +122,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         }
     );
   }
+
   void clearFields(BuildContext context){
     setState(() {
       empathize.nameController.clear();
@@ -129,6 +132,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       empathize.jobController.clear();
       empathize.bioController.clear();
       empathize.goalsAndMotivationController.clear();
+      empathize.fearsAndFrustrationController.clear();
       empathize.imageOne = null;
       enableSave = false;
     });
@@ -137,6 +141,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    clearFields(context);
     enableSave = false;
     lastStep = false;
   }
@@ -149,52 +154,57 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: empathize.statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Form(
-              key: empathize.formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10,),
-                  buildName2Widget(context),
-                  SizedBox(height: 43,),
-                  buildEditDpWidget(context),
-                  SizedBox(height: 40,),
-                  buildNameField(context),
-                  SizedBox(height: 20,),
-                  buildAgeField(context),
-                  SizedBox(height: 20,),
-                  buildLocationField(context),
-                  SizedBox(height: 20,),
-                  buildEducationField(context),
-                  SizedBox(height: 20,),
-                  buildJobField(context),
-                  SizedBox(height: 20,),
-                  buildBioField(context),
-                  SizedBox(height: 20,),
-                  buildGoalsAndMotivationField(context),
-                  SizedBox(height: 40,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      saveButton(context),
-                      newPersonaButton(context),
-                    ],
-                  ),
-                  SizedBox(height: 40,),
-                  buildNextButton(context),
-                  SizedBox(height: 40,),
-                ],
+      body: GestureDetector(
+        onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Form(
+                key: empathize.formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10,),
+                    buildName2Widget(context),
+                    SizedBox(height: 43,),
+                    buildEditDpWidget(context),
+                    SizedBox(height: 40,),
+                    buildNameField(context),
+                    SizedBox(height: 20,),
+                    buildAgeField(context),
+                    SizedBox(height: 20,),
+                    buildLocationField(context),
+                    SizedBox(height: 20,),
+                    buildEducationField(context),
+                    SizedBox(height: 20,),
+                    buildJobField(context),
+                    SizedBox(height: 20,),
+                    buildBioField(context),
+                    SizedBox(height: 20,),
+                    buildGoalsAndMotivationField(context),
+                    SizedBox(height: 20,),
+                    buildFearsAndFrustrationField(context),
+                    SizedBox(height: 40,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        saveButton(context),
+                        newPersonaButton(context),
+                      ],
+                    ),
+                    SizedBox(height: 40,),
+                    buildNextButton(context),
+                    SizedBox(height: 40,),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 80),
-              child: statusBarDrawer(context),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(top: 80),
+                child: statusBarDrawer(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1104,12 +1114,58 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           onChanged: (val){
             setState(() {
               enableSave = true;
-              lastStep = true;
             });
           },
           validator: (val){
             if(val.isEmpty){
               return hint.goalsAndMotivationValidation;
+            }
+            return null;
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buildFearsAndFrustrationField(BuildContext context){
+    return Container(
+      height: 148,
+      width: 302,
+      decoration: BoxDecoration(
+        border: empathize.fearsAndFrustrationController.text.toString() == null || empathize.fearsAndFrustrationController.text.toString() == "" || empathize.fearsAndFrustrationController.text.toString() == " " ? Border.all(color: Color(0xffd4d4d4)) : Border.all(color: Color(0xff787cd1)),
+        borderRadius: BorderRadius.all(Radius.circular(7)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 35, right: 35),
+        child: TextFormField(
+          style: TextStyle(color: Color(0xff787cd1)),
+          controller: empathize.fearsAndFrustrationController,
+          textCapitalization: TextCapitalization.sentences,
+          autofocus:false ,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.done,
+          maxLines: 4,
+          decoration: InputDecoration(
+            hintText: 'Fears and Frustrations\n\nDescribe your fears and frustrations',
+            border: InputBorder.none,
+          ),
+          onChanged: (val){
+            setState(() {
+              enableSave = true;
+            });
+          },
+          validator: (val){
+            if(val.isEmpty){
+              return 'Fears and Frustrations is compulsary!';
             }
             return null;
           },
@@ -1124,6 +1180,9 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
         if(enableSave == true){
           if(empathize.formKey.currentState.validate()){
             empathize.prDigitalPersona.show();
+            setState(() {
+              lastStep = true;
+            });
             createPersonaApiProvider.createDigitalPersona(context);
           }
         }else{

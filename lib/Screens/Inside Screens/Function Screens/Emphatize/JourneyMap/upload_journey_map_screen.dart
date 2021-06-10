@@ -17,10 +17,21 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool statusDrawer = false;
 bool showSecondStep = false;
 bool showPainPoint = false;
+
+var teamMemberStatuses;
+var sprintCreatorId;
 
 class UploadJourneyMap extends StatefulWidget {
   @override
@@ -33,12 +44,233 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
   CreateJourneyApiProvider createJourneyApiProvider = CreateJourneyApiProvider();
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+
+  Future<String> getJourneyMapDetails(context) async {
+
+    String url = globals.urlSignUp + "getjourneymap.php";
+
+    http.post(url, body: {
+
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetJourneyMap = jsonDecode(response.body);
+      print(empathize.responseArrayGetJourneyMap);
+
+      empathize.responseArrayGetJourneyMapMsg = empathize.responseArrayGetJourneyMap['message'].toString();
+      print(empathize.responseArrayGetJourneyMapMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayGetJourneyMapMsg == "Data Found"){
+
+          setState(() {
+            empathize.journeyMapImageNamesList = List.generate(empathize.responseArrayGetJourneyMap['data'].length, (i) => empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'] == null || empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'] == "null" ? "Digital Journey Map" : "https://dezyit.ml/mobileapp/"+empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'].toString().substring(6));
+          });
+
+          print(empathize.journeyMapImageNamesList.toList());
+
+        }else{
+
+          setState(() {
+            empathize.journeyMapImageNamesList = null;
+          });
+
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+
+          });
+
+        }
+      }
+    });
+  }
+  Future<String> getSprintsStatusesOfTeam2(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          empathize.prInputPainPoint.hide();
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          if(teamMemberStatuses.toList().contains('0')){
+            Fluttertoast.showToast(msg: 'Please wait until rest of the team uploads the pain points!',
+              backgroundColor: Colors.black, textColor: Colors.white,
+            );
+          }else{
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          empathize.prInputPainPoint.hide();
+          setState(() {
+
+          });
+
+        }
+      }
+    });
+  }
+
+  void _settingModalBottomSheetOne(context){
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc){
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOne();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using camera",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOneGallery();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using gallery",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    createJourneyApiProvider.getJourneyMapDetails(context);
+    getJourneyMapDetails(context);
+    //createJourneyApiProvider.getJourneyMapDetails(context);
     getPainPointsApiProvider.getPainPoints(context);
+    getSprintsStatusesOfTeam(context);
     ppListStatic = [];
     empathize.imagePaperJourneyMap = null;
     empathize.painPointsList = null;
@@ -57,7 +289,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
     createJourneyApiProvider.uploadPaperJourneyMap(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
-          createJourneyApiProvider.getJourneyMapDetails(context).whenComplete((){
+          getSprintsStatusesOfTeam(context);
+          getJourneyMapDetails(context).whenComplete((){
             Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
               textColor: Colors.white,);
             Future.delayed(const Duration(seconds: 3), () {setState(() {});});
@@ -80,7 +313,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
     createJourneyApiProvider.uploadPaperJourneyMap(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
-          createJourneyApiProvider.getJourneyMapDetails(context).whenComplete((){
+          getSprintsStatusesOfTeam(context);
+          getJourneyMapDetails(context).whenComplete((){
             Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
               textColor: Colors.white,);
             Future.delayed(const Duration(seconds: 3), () {setState(() {});});
@@ -147,11 +381,11 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   Widget buildAppBar(BuildContext context){
 
     Container line = Container(height:1,color: Colors.black,child: Divider());
-    void _openEndDrawer() {
+    void _openEndDrawer2() {
       setState(() {
-        empathize.statusDrawer = false;
+        statusDrawer = false;
       });
-      empathize.scaffoldKey.currentState.openEndDrawer();
+      _scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -178,8 +412,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 25, top: 18),
-          child: InkWell(
-            onTap: _openEndDrawer,
+          child: GestureDetector(
+            onTap: _openEndDrawer2,
             child: Container(
               height: 50,
               width: 25,
@@ -687,6 +921,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   Widget buildUploadButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        _settingModalBottomSheetOne(context);
+        /*
         showGeneralDialog(
           barrierLabel: "Label",
           barrierDismissible: true,
@@ -772,6 +1008,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
             );
           },
         );
+
+         */
 //        Navigator.push(
 //          context,
 //          PageRouteBuilder(
@@ -801,31 +1039,47 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   }
 
   Widget buildFileNameWidget(BuildContext context){
-    return empathize.journeyMapImageNamesList == null ? Container() : ListView.builder(
-      physics: ScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: empathize.journeyMapImageNamesList == null ? 0 : empathize.journeyMapImageNamesList.length,
-      itemBuilder: (context, i) => Center(
-        child: InkWell(
-          onTap: (){
-            if(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null"){
+    return empathize.journeyMapImageNamesList == null ? Container() : Container(
+      height: 50,
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: empathize.journeyMapImageNamesList == null ? 0 : empathize.journeyMapImageNamesList.length,
+        itemBuilder: (context, i) => Center(
+          child: InkWell(
+            onTap: (){
+              if(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null"){
 
-            }else{
-              launch(globals.urlSignUp+empathize.journeyMapImageNamesList[i]);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 2, left: 30, right: 30),
-            child: Text(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null" ? ("Digital Journey Map"+(i+1).toString()) : empathize.journeyMapImageNamesList[i],
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunitoSans(
-                  textStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  )
-              ),
+              }else{
+                launch(empathize.journeyMapImageNamesList[i]);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    border: Border.all(color: Colors.grey),
+                    image: DecorationImage(
+                        image: NetworkImage(empathize.journeyMapImageNamesList[i] == null ? "Digital Journey Map" : empathize.journeyMapImageNamesList[i]),
+                        fit: BoxFit.cover, scale: 5
+                    )
+                ),
+              )
+
+//            Text(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null" ? ("Digital Journey Map"+(i+1).toString()) : empathize.journeyMapImageNamesList[i],
+//              textAlign: TextAlign.center,
+//              style: GoogleFonts.nunitoSans(
+//                  textStyle: TextStyle(
+//                    fontSize: 12,
+//                    fontWeight: FontWeight.w500,
+//                    color: Colors.grey,
+//                  )
+//              ),
+//            ),
             ),
           ),
         ),
@@ -982,14 +1236,14 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        if(ppListStatic == null || ppListStatic.isEmpty){
+          Fluttertoast.showToast(msg: 'Please upload atleast one pain point!',
+            backgroundColor: Colors.black, textColor: Colors.white,
+          );
+        }else{
+          empathize.prInputPainPoint.show();
+          getSprintsStatusesOfTeam2(context);
+        }
       },
       child: Center(
         child: Container(

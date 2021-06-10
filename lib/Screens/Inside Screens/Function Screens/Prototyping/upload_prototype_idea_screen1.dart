@@ -16,6 +16,13 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/prototyping_data.dart' as prototype;
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool statusDrawer = false;
 bool showImages = false;
@@ -86,6 +93,139 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
     setState(() {
       prototyping.imageOne = File(pickedFile.path);
     });
+  }
+  Future<String> getPrototypeImagesPainPointWise(context) async {
+
+    String url = globals.urlSignUp + "getprototypeimagespainpointwise.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      prototype.responseArrayGetPrototypeImagesPainPointWise = jsonDecode(response.body);
+      print(prototype.responseArrayGetPrototypeImagesPainPointWise);
+
+      prototype.responseArrayGetPrototypeImagesPainPointWiseMsg = prototype.responseArrayGetPrototypeImagesPainPointWise['message'].toString();
+      print(prototype.responseArrayGetPrototypeImagesPainPointWiseMsg);
+
+      if(prototype.responseArrayGetPrototypeImagesPainPointWiseMsg == "Painpoint Data Found"){
+
+        prototype.prototypeImagesPPWiseList = List.generate(prototype.responseArrayGetPrototypeImagesPainPointWise['data'].length, (i) => "https://dezyit.ml/mobileapp/"+prototype.responseArrayGetPrototypeImagesPainPointWise['data'][i]['ptiImgpath'].toString().substring(6));
+
+        print(prototype.prototypeImagesPPWiseList.toList());
+
+      }else{
+
+        prototype.prototypeImagesPPWiseList = null;
+
+      }
+
+    });
+  }
+  void _settingModalBottomSheetOne(context){
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc){
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOne().then((value){
+                          prototypeApiProvider.uploadPrototypeImage(context);
+                          Future.delayed(const Duration(seconds: 3), () {
+                            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                              textColor: Colors.white,);
+                            getPrototypeImagesPainPointWise(context).whenComplete((){
+                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                            });
+                          });
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using camera",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOneGallery().then((value){
+                          prototypeApiProvider.uploadPrototypeImage(context);
+                          Future.delayed(const Duration(seconds: 3), () {
+                            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                              textColor: Colors.white,);
+                            getPrototypeImagesPainPointWise(context).whenComplete((){
+                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                            });
+                          });
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using gallery",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
   }
   @override
   void initState() {
@@ -760,27 +900,43 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   }
 
   Widget buildFileNameWidget(BuildContext context){
-    return prototyping.prototypeImagesPPWiseList == null ? Container() : ListView.builder(
-      physics: ScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: prototyping.prototypeImagesPPWiseList == null ? 0 : prototyping.prototypeImagesPPWiseList.length,
-      itemBuilder: (context, i) => Center(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 2, left: 35, right: 35),
-          child: InkWell(
-            onTap: (){
-              launch(globals.urlSignUp+prototyping.prototypeImagesPPWiseList[i]);
-            },
-            child: Text(prototyping.prototypeImagesPPWiseList[i],
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunitoSans(
-                  textStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  )
-              ),
+    return prototyping.prototypeImagesPPWiseList == null ? Container() : Container(
+      height: 50,
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: prototyping.prototypeImagesPPWiseList == null ? 0 : prototyping.prototypeImagesPPWiseList.length,
+        itemBuilder: (context, i) => Center(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+            child: InkWell(
+              onTap: (){
+                launch(prototyping.prototypeImagesPPWiseList[i]);
+              },
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    border: Border.all(color: Colors.grey),
+                    image: DecorationImage(
+                        image: NetworkImage(prototyping.prototypeImagesPPWiseList[i]),
+                        fit: BoxFit.cover, scale: 5
+                    )
+                ),
+              )
+
+//            Text(prototyping.prototypeImagesPPWiseList[i],
+//              textAlign: TextAlign.center,
+//              style: GoogleFonts.nunitoSans(
+//                  textStyle: TextStyle(
+//                    fontSize: 12,
+//                    fontWeight: FontWeight.w500,
+//                    color: Colors.grey,
+//                  )
+//              ),
+//            ),
             ),
           ),
         ),
@@ -791,99 +947,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildUploadButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        showGeneralDialog(
-          barrierLabel: "Label",
-          barrierDismissible: true,
-          barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: Duration(milliseconds: 400),
-          context: context,
-          pageBuilder: (context, anim1, anim2) {
-            return Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 195,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-//                          Navigator.of(context).pop();
-//                          setState(() {
-//                            showImages = true;
-//                          });
-                          getImageOneGallery().then((value){
-                            prototypeApiProvider.uploadPrototypeImage(context);
-                            Future.delayed(const Duration(seconds: 3), () {
-                              Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-                                textColor: Colors.white,);
-                              prototypeApiProvider.getPrototypeImagesPainPointWise(context).whenComplete((){
-                                Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-                              });
-                            });
-                          });
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 44,
-                                height: 44,
-                                child: Image.asset("assets/images/photo.png")),
-                            SizedBox(height: 8.97,),
-                            Text("Gallery",
-                              style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                              width: 44,
-                              height: 44,
-                              child: Image.asset("assets/images/folder.png")),
-                          SizedBox(height: 8.97,),
-                          Text("File Manager",
-                            style: GoogleFonts.nunitoSans(
-                              textStyle: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xff707070),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-          transitionBuilder: (context, anim1, anim2, child) {
-            return SlideTransition(
-              position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-              child: child,
-            );
-          },
-        );
+        _settingModalBottomSheetOne(context);
 //        Navigator.push(
 //          context,
 //          PageRouteBuilder(

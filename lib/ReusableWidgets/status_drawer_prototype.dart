@@ -214,14 +214,7 @@ class _StatusDrawerPrototypingState extends State<StatusDrawerPrototyping> {
                 SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (c, a1, a2) => UserTestingInsideSections1(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                        transitionDuration: Duration(milliseconds: 300),
-                      ),
-                    );
+
                   },
                   child: Row(
                     children: [
@@ -256,14 +249,7 @@ class _StatusDrawerPrototypingState extends State<StatusDrawerPrototyping> {
                 SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (c, a1, a2) => EmphatizeSections5(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                        transitionDuration: Duration(milliseconds: 300),
-                      ),
-                    );
+
                   },
                   child: Row(
                     children: [

@@ -19,6 +19,8 @@ bool statusDrawer = false;
 var selectedTeam;
 ProgressDialog prSelect;
 
+final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
 class SelectTeam extends StatefulWidget {
   @override
   _SelectTeamState createState() => _SelectTeamState();
@@ -163,7 +165,7 @@ class _SelectTeamState extends State<SelectTeam> {
       ),
     ) : Scaffold(
       backgroundColor: Colors.white,
-      key: team.scaffoldKey,
+      key: scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommonManageTeam(),
@@ -230,7 +232,7 @@ class _SelectTeamState extends State<SelectTeam> {
       setState(() {
         statusDrawer = false;
       });
-      team.scaffoldKey.currentState.openEndDrawer();
+     scaffoldKey.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -755,7 +757,7 @@ class _SelectTeamState extends State<SelectTeam> {
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       itemCount: team.teamNamesList == null ? 0 : team.teamNamesList.length,
-      itemBuilder: (context, i) => InkWell(
+      itemBuilder: (context, i) => (i > 0 && team.teamNamesList[i].toString() == team.teamNamesList[i-1].toString()) ? Container() : InkWell(
         onTap: (){
           if(selectedTeam == team.teamNamesIdsList[i]){
             Fluttertoast.showToast(msg: 'You have already selected the team!', backgroundColor: Colors.black, textColor: Colors.white);

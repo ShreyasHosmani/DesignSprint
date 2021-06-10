@@ -17,6 +17,11 @@ import 'package:http/http.dart' as http;
 bool statusDrawer = false;
 var ppStatus;
 
+var teamMemberStatuses;
+var sprintCreatorId;
+
+var sprintAdmins;
+
 class SelectFinalPainPoints extends StatefulWidget {
   @override
   _SelectFinalPainPointsState createState() => _SelectFinalPainPointsState();
@@ -95,16 +100,102 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       }
     });
   }
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep4'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+            teamMemberStatuses = ['1'];
+            sprintCreatorId = profile.userID.toString();
+          });
+
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintAdmins(context) async {
+    String url = globals.urlLogin + "getsprintbyrights.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintAdmins = jsonDecode(response.body);
+      print(responseArrayGetSprintAdmins);
+
+      var responseArrayGetSprintAdminsMsg = responseArrayGetSprintAdmins['message'].toString();
+      print(responseArrayGetSprintAdminsMsg);
+
+      if(statusCode == 200){
+        if(responseArrayGetSprintAdminsMsg == "Data Found"){
+
+          setState(() {
+            sprintAdmins = List.generate(responseArrayGetSprintAdmins['data'].length, (index) => responseArrayGetSprintAdmins['data'][index]['teamMemberEmail'].toString() == profile.email.toString() ? responseArrayGetSprintAdmins['data'][index]['teamStatus'].toString() : "null");
+          });
+
+          print(sprintAdmins.toList());
+
+        }else{
+
+          setState(() {
+            sprintAdmins = null;
+          });
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     updateStep4(context);
+    getSprintAdmins(context);
+    getSprintsStatusesOfTeam(context);
     empathize.painPointsListAccToVotes = null;
     checkList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
     getPainPointsAccordingToVotes(context);
   }
   @override
   Widget build(BuildContext context) {
+    getSprintsStatusesOfTeam(context);
     return empathize.painPointsListAccToVotes == null ? Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -116,7 +207,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: teamMemberStatuses.toList().contains("0") ? null : Padding(
         padding: const EdgeInsets.only(bottom: 50),
         child: Container(
             height: 50,
@@ -715,24 +806,32 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                 ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width/50,),
-              GestureDetector(
+              teamMemberStatuses.toList().contains("0") ? Container() : GestureDetector(
                 onTap: (){
-                      setState(() {
-                        checkList[i] = !checkList[i];
-                        empathize.selectedFinalPainPointId = empathize.painPointIdsListAccToVotes[i].toString();
-                        if(checkList[i] == true){
-                          empathize.painPointStatus ="2";
-                        }else{
-                          empathize.painPointStatus ="1";
-                        }
+                  print("profile.userID" + profile.userID.toString());
+                  print("sprintCreatorId" + sprintCreatorId.toString());
+                  if(profile.userID == sprintCreatorId || sprintAdmins.toList().contains('1')){
+                    setState(() {
+                      checkList[i] = !checkList[i];
+                      empathize.selectedFinalPainPointId = empathize.painPointIdsListAccToVotes[i].toString();
+                      if(checkList[i] == true){
+                        empathize.painPointStatus ="2";
+                      }else{
+                        empathize.painPointStatus ="1";
+                      }
+                    });
+                    print(empathize.selectedFinalPainPointId);
+                    print(empathize.painPointStatus);
+                    votePainPointsApiProvider.selectFinalPainPoints(context).whenComplete((){
+                      Future.delayed(Duration(seconds: 2), () async {
+                        getPainPointsAccordingToVotes(context);
                       });
-                      print(empathize.selectedFinalPainPointId);
-                      print(empathize.painPointStatus);
-                      votePainPointsApiProvider.selectFinalPainPoints(context).whenComplete((){
-                        Future.delayed(Duration(seconds: 2), () async {
-                          getPainPointsAccordingToVotes(context);
-                        });
-                      });
+                    });
+                  }else{
+                    Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final pain points!',
+                      backgroundColor: Colors.black, textColor: Colors.white,
+                    );
+                  }
                 },
                 child: Container(
                   height: 20,

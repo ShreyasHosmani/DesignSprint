@@ -8,6 +8,22 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%2
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+
+var teamMemberStatuses1;
+var teamMemberStatuses2;
+var teamMemberStatuses3;
+var teamMemberStatuses4;
+var teamMemberStatuses5;
+var teamMemberStatuses6;
+var teamMemberStatuses7;
+var teamMemberStatuses8;
+var teamMemberStatuses9;
+var teamMemberStatuses10;
+var sprintCreatorId;
 
 class StatusDrawerIdeation extends StatefulWidget {
   @override
@@ -15,6 +31,83 @@ class StatusDrawerIdeation extends StatefulWidget {
 }
 
 class _StatusDrawerIdeationState extends State<StatusDrawerIdeation> {
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            teamMemberStatuses1 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep1'].toString());
+            teamMemberStatuses2 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep2'].toString());
+            teamMemberStatuses3 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3'].toString());
+            teamMemberStatuses4 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep4'].toString());
+            teamMemberStatuses5 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep5'].toString());
+            teamMemberStatuses6 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep6'].toString());
+            teamMemberStatuses7 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep7'].toString());
+            teamMemberStatuses8 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep8'].toString());
+            teamMemberStatuses9 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep9'].toString());
+            teamMemberStatuses10 = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep10'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses1);
+          print(teamMemberStatuses2);
+          print(teamMemberStatuses3);
+          print(teamMemberStatuses4);
+          print(teamMemberStatuses5);
+          print(teamMemberStatuses6);
+          print(teamMemberStatuses7);
+          print(teamMemberStatuses8);
+          print(teamMemberStatuses9);
+          print(teamMemberStatuses10);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+            teamMemberStatuses1 = ['1'];
+            teamMemberStatuses2 = ['1'];
+            teamMemberStatuses3 = ['1'];
+            teamMemberStatuses4 = ['1'];
+            teamMemberStatuses5 = ['1'];
+            teamMemberStatuses6 = ['1'];
+            teamMemberStatuses7 = ['1'];
+            teamMemberStatuses8 = ['1'];
+            teamMemberStatuses9 = ['1'];
+            teamMemberStatuses10 = ['1'];
+            sprintCreatorId = profile.userID.toString();
+          });
+
+        }
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //getSprintsStatusesOfTeam(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -172,14 +265,7 @@ class _StatusDrawerIdeationState extends State<StatusDrawerIdeation> {
                 SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                        transitionDuration: Duration(milliseconds: 300),
-                      ),
-                    );
+
                   },
                   child: Row(
                     children: [
@@ -214,14 +300,7 @@ class _StatusDrawerIdeationState extends State<StatusDrawerIdeation> {
                 SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (c, a1, a2) => UserTestingInsideSections1(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                        transitionDuration: Duration(milliseconds: 300),
-                      ),
-                    );
+
                   },
                   child: Row(
                     children: [
@@ -256,14 +335,7 @@ class _StatusDrawerIdeationState extends State<StatusDrawerIdeation> {
                 SizedBox(height: 25,),
                 InkWell(
                   onTap: (){
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (c, a1, a2) => EmphatizeSections5(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                        transitionDuration: Duration(milliseconds: 300),
-                      ),
-                    );
+
                   },
                   child: Row(
                     children: [

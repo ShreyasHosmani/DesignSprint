@@ -40,7 +40,11 @@
 	<key>FacebookAppID</key>
 	<string>963311327761537</string>
 	<key>FacebookDisplayName</key>
-	<string>JawabyAndroid</string>
+	<string>DezyIt</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://dezy.page.link/toSprints</string>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

@@ -12,9 +12,19 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool statusDrawer = false;
+ProgressDialog prCheck;
+
+var teamMemberStatuses;
+var sprintCreatorId;
 
 class UploadIdeaImagePageViewBuilder extends StatefulWidget {
   @override
@@ -64,6 +74,104 @@ class UploadIdea1 extends StatefulWidget {
 class _UploadIdea1State extends State<UploadIdea1> {
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
   final picker = ImagePicker();
+  void _settingModalBottomSheetOne(context){
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc){
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOne().then((value){
+                          uploadIdeaApiProvider.uploadIdeaImage(context);
+                          Future.delayed(const Duration(seconds: 3), () {
+                            getIdeaImages(context).whenComplete((){
+                              Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                                textColor: Colors.white,);
+                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                            });
+                          });
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using camera",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    child: InkWell(
+                      onTap: (){
+                        getImageOneGallery().then((value){
+                          uploadIdeaApiProvider.uploadIdeaImage(context);
+                          Future.delayed(const Duration(seconds: 3), () {
+                            getIdeaImages(context).whenComplete((){
+                              Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                                textColor: Colors.white,);
+                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                            });
+                          });
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              //width: 100,
+                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
+                          ),
+                          Container(
+                              width: 150,
+                              child: Text("Open using gallery",
+                                style: GoogleFonts.nunitoSans(
+                                    letterSpacing: 0.5
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
   Future getImageOne() async {
     Navigator.of(context).pop();
     var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
@@ -78,6 +186,155 @@ class _UploadIdea1State extends State<UploadIdea1> {
       ideation.imageOne = File(pickedFile.path);
     });
   }
+  Future<String> getIdeaImages(context) async {
+
+    String url = globals.urlSignUp + "getideaimagesbypainpoint.php";
+
+    http.post(url, body: {
+
+      "painpointID" : ideation.selectedPainPointIdForUploadIdeaImage.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetIdeaImages);
+
+      ideation.responseArrayGetIdeaImagesMsg = ideation.responseArrayGetIdeaImages['message'].toString();
+      print(ideation.responseArrayGetIdeaImagesMsg);
+
+      if(ideation.responseArrayGetIdeaImagesMsg == "Painpoint Data Found"){
+
+        setState(() {
+          ideation.showImagesIdea = true;
+          ideation.ideaImagesPainPointWiseList = List.generate(ideation.responseArrayGetIdeaImages['data'].length, (i) => "https://dezyit.ml/mobileapp/"+ideation.responseArrayGetIdeaImages['data'][i]['iiImgpath'].toString().substring(6));
+        });
+
+        print(ideation.ideaImagesPainPointWiseList.toList());
+
+      }else{
+
+        setState(() {
+          ideation.ideaImagesPainPointWiseList = null;
+        });
+
+      }
+
+    });
+  }
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep6'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+            teamMemberStatuses = ['1'];
+          });
+
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintsStatusesOfTeam2(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          prCheck.hide();
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep6'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+          if(teamMemberStatuses.toList().contains('0')){
+            Fluttertoast.showToast(msg: 'Please wait until rest of the team uploads idea images!',
+              backgroundColor: Colors.black, textColor: Colors.white,
+            );
+          }else{
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+
+        }else{
+
+          prCheck.hide();
+          setState(() {
+            teamMemberStatuses = ['1'];
+            sprintCreatorId = profile.userID.toString();
+          });
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,9 +342,10 @@ class _UploadIdea1State extends State<UploadIdea1> {
     ideation.ideaImagesPainPointWiseList = null;
     ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List[ideation.pageIndexIdea];
     print(ideation.selectedPainPointIdForUploadIdeaImage);
+    getSprintsStatusesOfTeam(context);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        uploadIdeaApiProvider.getIdeaImages(context).whenComplete((){
+        getIdeaImages(context).whenComplete((){
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
       });
@@ -96,6 +354,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    prCheck = ProgressDialog(context);
     return Stack(
       children: [
         Scaffold(
@@ -733,27 +992,43 @@ class _UploadIdea1State extends State<UploadIdea1> {
   }
 
   Widget buildFileNameWidget(BuildContext context){
-    return ideation.ideaImagesPainPointWiseList == null ? Container() : ListView.builder(
-      physics: ScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: ideation.ideaImagesPainPointWiseList == null ? 0 : ideation.ideaImagesPainPointWiseList.length,
-      itemBuilder: (context, i) => Center(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 2, left: 35, right: 35),
-          child: InkWell(
-            onTap: (){
-              launch(globals.urlSignUp+ideation.ideaImagesPainPointWiseList[i]);
-            },
-            child: Text(ideation.ideaImagesPainPointWiseList[i],
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunitoSans(
-                  textStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  )
-              ),
+    return ideation.ideaImagesPainPointWiseList == null ? Container() : Container(
+      height: 50,
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: ideation.ideaImagesPainPointWiseList == null ? 0 : ideation.ideaImagesPainPointWiseList.length,
+        itemBuilder: (context, i) => Center(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+            child: InkWell(
+              onTap: (){
+                launch(ideation.ideaImagesPainPointWiseList[i]);
+              },
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    border: Border.all(color: Colors.grey),
+                    image: DecorationImage(
+                        image: NetworkImage(ideation.ideaImagesPainPointWiseList[i]),
+                        fit: BoxFit.cover, scale: 5
+                    )
+                ),
+              )
+
+//            Text(ideation.ideaImagesPainPointWiseList[i],
+//              textAlign: TextAlign.center,
+//              style: GoogleFonts.nunitoSans(
+//                  textStyle: TextStyle(
+//                    fontSize: 12,
+//                    fontWeight: FontWeight.w500,
+//                    color: Colors.grey,
+//                  )
+//              ),
+//            ),
             ),
           ),
         ),
@@ -768,6 +1043,8 @@ class _UploadIdea1State extends State<UploadIdea1> {
           ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List[ideation.pageIndexIdea];
         });
         print(ideation.selectedPainPointIdForUploadIdeaImage);
+        _settingModalBottomSheetOne(context);
+        /*
         showGeneralDialog(
           barrierLabel: "Label",
           barrierDismissible: true,
@@ -858,6 +1135,8 @@ class _UploadIdea1State extends State<UploadIdea1> {
             );
           },
         );
+
+         */
 //        Navigator.push(
 //          context,
 //          PageRouteBuilder(
@@ -889,25 +1168,19 @@ class _UploadIdea1State extends State<UploadIdea1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        if(ideation.ideaImagesPainPointWiseList == null){
-          Fluttertoast.showToast(msg: "You must upload atleast one image", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }else{
+//        if(ideation.ideaImagesPainPointWiseList == null){
+//          Fluttertoast.showToast(msg: "You must upload atleast one image", backgroundColor: Colors.black,
+//            textColor: Colors.white,);
+//        }else{
           if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndexIdea]){
             print("Last index reached, You are a great man ever!");
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
+            prCheck.show();
+            getSprintsStatusesOfTeam2(context);
           }else{
             print("You are a loser bro, try again!");
             widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
           }
-        }
+        //}
       },
       child: Center(
         child: Container(

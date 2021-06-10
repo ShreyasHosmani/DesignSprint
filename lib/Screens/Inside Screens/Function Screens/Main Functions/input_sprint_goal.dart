@@ -661,6 +661,9 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
   }
 
   Widget buildGoalTextField(BuildContext context){
+
+    int currentTextLength = 0;
+
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
       child: Theme(
@@ -675,6 +678,18 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
             ),
+            onChanged: (String newText){
+              if(newText[0] != '•'){
+                newText = '• ' + newText;
+                goal.goalController.text = newText;
+                goal.goalController.selection = TextSelection.fromPosition(TextPosition(offset: goal.goalController.text.length));
+              }
+              if(newText[newText.length - 1] == '\n' && newText.length > currentTextLength){
+                goal.goalController.text = newText + '• ';
+                goal.goalController.selection = TextSelection.fromPosition(TextPosition(offset: goal.goalController.text.length));
+              }
+              currentTextLength = goal.goalController.text.length;
+            },
             validator: (value){
               if(value.isEmpty){
                 return hint.goalEmpty;

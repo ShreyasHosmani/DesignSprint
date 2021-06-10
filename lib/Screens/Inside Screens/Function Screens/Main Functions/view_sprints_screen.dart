@@ -21,6 +21,11 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 var decisionMakerIdsList;
 var decisionMakerEmailsList;
 
+var new1; var new2; var new3; var new4; var new5; var new6;
+
+var sprintIdsList2; var sprintTitlesList2; var sprintStatusList2;
+ var decisionMakerIdsList2; var decisionMakerEmailsList2;
+
 class ViewSprints extends StatefulWidget {
   @override
   _ViewSprintsState createState() => _ViewSprintsState();
@@ -29,6 +34,7 @@ class ViewSprints extends StatefulWidget {
 class _ViewSprintsState extends State<ViewSprints> {
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
   DeleteSprintApiProvider deleteSprintApiProvider = DeleteSprintApiProvider();
+
   Future<String> getSprints(context) async {
 
     print(profile.email.toString());
@@ -59,7 +65,20 @@ class _ViewSprintsState extends State<ViewSprints> {
             home.sprintStatusList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintStatus'].toString());
             decisionMakerIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintUserid'].toString());
             decisionMakerEmailsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['userEmail'].toString());
+
+            new1 = home.sprintTitlesList.toList();
+            new2 = home.sprintIdsList.toList();
+            new3 = home.sprintStatusList.toList();
+            new4 = decisionMakerIdsList.toList();
+            new5 = decisionMakerEmailsList.toList();
+
           });
+
+          print(new1.toList()); //titles
+          print(new2.toList()); //ids
+          print(new3.toList()); //statusus
+          print(new4.toList()); //dm ids
+          print(new5.toList()); //dm emails
 
           print(home.sprintIdsList.toList());
           print(home.sprintTitlesList.toList());
@@ -70,25 +89,129 @@ class _ViewSprintsState extends State<ViewSprints> {
         }else{
 
           setState(() {
-            home.sprintIdsList = null;
-            home.sprintTitlesList = null;
-            home.sprintStatusList = null;
+            home.sprintIdsList = [];
+            home.sprintTitlesList = [];
+            home.sprintStatusList = [];
           });
 
         }
       }
     });
   }
+
+  Future<String> getSprintsByUserId(context) async {
+
+    print(profile.email.toString());
+    String url = globals.urlLogin + "getsprint.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      //"userEmail" : profile.email.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var getSoloSprints = jsonDecode(response.body);
+      print(getSoloSprints);
+
+      var getSoloSprintsMsg = getSoloSprints['message'].toString();
+      print(getSoloSprintsMsg);
+
+      if(statusCode == 200){
+        if(getSoloSprintsMsg == "Data Found"){
+
+          setState(() {
+            sprintIdsList2 = List.generate(getSoloSprints['data'].length, (i) => home.sprintIdsList.add(getSoloSprints['data'][i]['sprintID'].toString()));
+            sprintTitlesList2 = List.generate(getSoloSprints['data'].length, (i) => home.sprintTitlesList.add(getSoloSprints['data'][i]['sprintName'].toString()));
+            sprintStatusList2 = List.generate(getSoloSprints['data'].length, (i) => home.sprintStatusList.add(getSoloSprints['data'][i]['sprintStatus'].toString()));
+            decisionMakerIdsList2 = List.generate(getSoloSprints['data'].length, (i) => decisionMakerIdsList.add(getSoloSprints['data'][i]['sprintUserid'].toString()));
+            decisionMakerEmailsList2 = List.generate(getSoloSprints['data'].length, (i) => decisionMakerEmailsList.add(getSoloSprints['data'][i]['userEmail'].toString()));
+
+//            sprintIdsList2.forEach((element) {
+//
+//              int idx = sprintIdsList2.indexOf(element);
+//
+//              home.sprintIdsList.toList().add(sprintIdsList2[idx]);
+//              home.sprintTitlesList.toList().add(sprintTitlesList2[idx]);
+//              home.sprintStatusList.toList().add(sprintStatusList2[idx]);
+//              decisionMakerIdsList.toList().add(decisionMakerIdsList2[idx]);
+//              decisionMakerEmailsList.toList().add(decisionMakerEmailsList2[idx]);
+//
+//            });
+
+
+          });
+
+          print(home.sprintIdsList.toList());
+          print(home.sprintTitlesList.toList());
+          print(home.sprintStatusList.toList());
+          print(decisionMakerIdsList.toList());
+          print(decisionMakerEmailsList.toList());
+
+          setState(() {
+
+            new1 = home.sprintTitlesList.toSet().toList();
+
+            new1.forEach((element){
+
+              int idx = home.sprintTitlesList.indexOf(element);
+
+              new2.add(home.sprintIdsList[idx]);
+              new3.add(home.sprintStatusList[idx]);
+              new4.add(decisionMakerIdsList[idx]);
+              new5.add(decisionMakerEmailsList[idx]);
+
+              print("new2 list : "+ new2.toList().toString());
+
+            });
+
+          });
+          print(new1.toList()); //titles
+          print(new2.toList()); //ids
+          print(new3.toList()); //statusus
+          print(new4.toList()); //dm ids
+          print(new5.toList()); //dm emails
+
+        }else{
+
+          setState(() {
+            new1 = null;
+            sprintIdsList2 = null;
+            sprintTitlesList2 = null;
+            sprintStatusList2 = null;
+          });
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
+      new1 = []; new2 = [];  new3 = [];  new4 = [];  new5 = [];  new6 = [];
+      home.sprintIdsList = [];
+      home.sprintTitlesList = [];
+      home.sprintStatusList = [];
+      decisionMakerIdsList = [];
+      decisionMakerEmailsList = [];
+
       home.selectedSprintId = null;
       home.sprintID = null;
-      home.sprintTitlesList = "1";
+      //home.sprintTitlesList = "1";
     });
     getSprints(context);
+    Future.delayed(const Duration(seconds: 3), () {
+      getSprintsByUserId(context);
+    });
+    //getSprintsByUserId(context);
 //    createSprintApiProvider.getSprints(context).whenComplete((){
 //      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
 //    });
@@ -359,9 +482,10 @@ class _ViewSprintsState extends State<ViewSprints> {
   }
 
   Widget buildSprintsListViewBuilder(BuildContext context){
+
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: home.sprintTitlesList == "1" ? ListView.builder(
+      child: new1 == [] ? ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
@@ -387,19 +511,20 @@ class _ViewSprintsState extends State<ViewSprints> {
             ),
           ),
         ),
-      ) : home.sprintIdsList == null ? Container(
-          height: MediaQuery.of(context).size.height,
-          child: CreateSprintTwo() ) : ListView.builder(
+      ) : ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: home.sprintTitlesList == null ? 0 : home.sprintTitlesList.length,
-        itemBuilder: (context, i) => home.sprintTitlesList == null ? Center(child: Text("You've not created any sprints yet.")) : InkWell(
+        itemCount: new1 == null ? 0 : new1.length,
+        itemBuilder: (context, i) => new1 == null ? Center(child: Text("You've not created any sprints yet.")) :
+//        (i>0 && new1.toList()[i].toString() == new1.toList()[i-1].toString()) ? Container()
+//          :
+        InkWell(
           onTap: (){
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(home.sprintIdsList.reversed.toList()[i],decisionMakerIdsList.reversed.toList()[i], decisionMakerEmailsList.reversed.toList()[i]),
+                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(new2.reversed.toList()[i],new4.reversed.toList()[i], new5.reversed.toList()[i]),
                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                 transitionDuration: Duration(milliseconds: 300),
               ),
@@ -428,7 +553,7 @@ class _ViewSprintsState extends State<ViewSprints> {
                             alignment: Alignment.topLeft,
                             child: Container(
                               constraints: BoxConstraints(maxWidth: 250),
-                              child: Text(home.sprintTitlesList.reversed.toList()[i],
+                              child: Text(new1.reversed.toList()[i],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.nunitoSans(
@@ -446,7 +571,7 @@ class _ViewSprintsState extends State<ViewSprints> {
                           padding: const EdgeInsets.only(right: 30, bottom: 30),
                           child: Align(
                             alignment: Alignment.bottomRight,
-                            child: Text(home.sprintStatusList.reversed.toList()[i] == "0" ? "Completed" : "Ongoing",
+                            child: Text(new3.reversed.toList()[i] == "0" ? "Completed" : "Ongoing",
                               style: GoogleFonts.nunitoSans(
                                   textStyle: TextStyle(
                                     fontSize: 18,
@@ -461,20 +586,20 @@ class _ViewSprintsState extends State<ViewSprints> {
                     ),
                   ),
                 ),
-                decisionMakerIdsList[i] == profile.userID ? Padding(
+                new4[i] == profile.userID ? Padding(
                   padding: const EdgeInsets.only(right: 20),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       icon: Icon(Icons.close, color: Colors.white,size: 20,),
                       onPressed: (){
-                        if(decisionMakerIdsList[i] == profile.userID){
+                        if(new4[i] == profile.userID){
                           print("i am a decision maker");
                         }else{
                           print("i am not a decision maker");
                         }
                         setState(() {
-                          home.selectedSprintIdForDeleting = home.sprintIdsList.reversed.toList()[i];
+                          home.selectedSprintIdForDeleting = new2.reversed.toList()[i];
                         });
                         print(home.selectedSprintIdForDeleting);
                         showAlertDialogDelete(context);

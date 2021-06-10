@@ -1,4 +1,5 @@
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen_seperate.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -88,14 +89,14 @@ class TeamApiProvider {
           Fluttertoast.showToast(msg: team.teamSaved, backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
             Navigator.of(context).pop();
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ManageTeam(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
+//            Navigator.push(
+//              context,
+//              PageRouteBuilder(
+//                pageBuilder: (c, a1, a2) => ManageTeamSeperate(),
+//                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//                transitionDuration: Duration(milliseconds: 300),
+//              ),
+//            );
           });
         }else{
           team.prTeam.hide();

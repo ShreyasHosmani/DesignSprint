@@ -28,6 +28,7 @@ class ViewTeamBySprints extends StatefulWidget {
 
 class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
   GetTeamBySprintApiProvider getTeamBySprintApiProvider = GetTeamBySprintApiProvider();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -41,6 +42,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
       Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
   }
+
   Future<String> removeTeamMember(context) async {
 
     print(selectedMemberIdSeperate);
@@ -79,6 +81,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
 
     });
   }
+
   @override
   Widget build(BuildContext context) {
     team.prTeam = ProgressDialog(context);
@@ -119,7 +122,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(team.appBarTitle,
+        child: Text("Sprint Team",
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -610,7 +613,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(home.home,
+      child: Text("Team Members",
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -658,14 +661,27 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(teamBySprints.teamMemberNamesBySprintsList[i],
-                    style: GoogleFonts.nunitoSans(
-                      fontSize: 18,
-                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(teamBySprints.teamMemberEmailsBySprintsList[i],
+                        style: GoogleFonts.nunitoSans(
+                          fontSize: 16,
+                        ),
+                      ),
+                      (dmIDd == profile.userID) && (teamBySprints.teamMemberEmailsBySprintsList[i].toString() == profile.email.toString()) ? Text("Decision Maker",
+                        style: GoogleFonts.nunitoSans(
+                          fontSize: 14,
+                          color: Color(0xff787cd1),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ) : Container(),
+                    ],
                   ),
-                  PopupMenuButton<String>(
+                  dmIDd == profile.userID ? PopupMenuButton<String>(
                     onSelected: (val){
-                      if(val == "Delete Team"){
+                      if(val == "Remove Member"){
                         setState(() {
                           selectedMemberIdSeperate = teamBySprints.teamMemberIdsBySprintsList[i].toString();
                         });
@@ -709,7 +725,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
                     ),
                     color: Colors.white,
                     itemBuilder: (BuildContext context) {
-                      return {'Delete Team'}.map((String choice) {
+                      return {'Remove Member'}.map((String choice) {
                         return PopupMenuItem<String>(
                           value: choice,
                           textStyle: GoogleFonts.nunitoSans(
@@ -720,7 +736,7 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
                         );
                       }).toList();
                     },
-                  ),
+                  ) : Container(),
                 ],
               ),
             ),

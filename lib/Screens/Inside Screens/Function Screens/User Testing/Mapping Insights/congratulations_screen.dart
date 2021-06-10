@@ -618,14 +618,15 @@ class _CongratulationsState extends State<Congratulations> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeSections5(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+//        Navigator.push(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (c, a1, a2) => EmphatizeSections5(),
+//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//            transitionDuration: Duration(milliseconds: 300),
+//          ),
+//        );
       },
       child: Center(
         child: Container(
@@ -636,7 +637,7 @@ class _CongratulationsState extends State<Congratulations> {
               borderRadius: BorderRadius.all(Radius.circular(7))
           ),
           child: Center(
-            child: Text("Next",
+            child: Text("Okay",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),

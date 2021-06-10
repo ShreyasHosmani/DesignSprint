@@ -46,6 +46,7 @@ var educationController = new TextEditingController();
 var jobController = new TextEditingController();
 var bioController = new TextEditingController();
 var goalsAndMotivationController = new TextEditingController();
+var fearsAndFrustrationController = new TextEditingController();
 
 String saveButton = "Save";
 String newPersonaButton = "New Persona";

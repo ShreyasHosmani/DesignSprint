@@ -786,16 +786,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   }
 
   Widget buildTimerWidget(BuildContext context){
-    return
-//      Center(
-//      child: Text("$_start",
-//        style: TextStyle(
-//          color: ideation.timer < 120 ? Colors.red : Colors.black,
-//          fontWeight: FontWeight.w700,
-//          fontSize: 29,
-//        ),
-//      ),
-      startTimings == true ? CountDownTimer(
+    return startTimings == true ? CountDownTimer(
         secondsRemaining: ideation.timer,
         whenTimeExpires: () {
           showAlertDialog(context);
@@ -812,7 +803,6 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
           fontSize: 29,
         ),
       );
-    //);
   }
 
   Widget saveButton(BuildContext context){

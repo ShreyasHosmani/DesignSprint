@@ -13,6 +13,13 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 bool statusDrawer = false;
 bool showSecondStep = false;
@@ -107,11 +114,51 @@ class _UploadPersonaState extends State<UploadPersona> {
         }
     );
   }
+  Future<String> getPersonaDetails(context) async {
+
+    String url = globals.urlSignUp + "getpersona.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayGetPersona = jsonDecode(response.body);
+      print(empathize.responseArrayGetPersona);
+
+      empathize.responseArrayGetPersonaMsg = empathize.responseArrayGetPersona['message'].toString();
+      print(empathize.responseArrayGetPersonaMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayGetPersonaMsg == "Profile Found"){
+
+          setState(() {
+            empathize.paperPersonaImageNamesList = List.generate(empathize.responseArrayGetPersona['data'].length, (i) => empathize.responseArrayGetPersona['data'][i]['personadocImage'] == null || empathize.responseArrayGetPersona['data'][i]['personadocImage'] == "null" ? "" : "https://dezyit.ml/mobileapp/"+empathize.responseArrayGetPersona['data'][i]['personadocImage'].toString().substring(6));
+          });
+
+          print(empathize.paperPersonaImageNamesList.toList());
+
+        }else{
+
+          setState(() {
+            empathize.paperPersonaImageNamesList = null;
+          });
+
+        }
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    createPersonaApiProvider.getPersonaDetails(context);
+    getPersonaDetails(context);
     empathize.imagePaperPersona = null;
     empathize.fileNamePaperPersona = "";
     statusDrawer = false;
@@ -127,7 +174,7 @@ class _UploadPersonaState extends State<UploadPersona> {
     });
     createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
-        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
+        getPersonaDetails(context).whenComplete((){
           Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
             textColor: Colors.white,);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
@@ -143,7 +190,7 @@ class _UploadPersonaState extends State<UploadPersona> {
     });
     createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
-        createPersonaApiProvider.getPersonaDetails(context).whenComplete((){
+        getPersonaDetails(context).whenComplete((){
           Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
             textColor: Colors.white,);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
@@ -854,32 +901,45 @@ class _UploadPersonaState extends State<UploadPersona> {
   }
 
   Widget buildFileNameWidget(BuildContext context){
-    return ListView.builder(
-      physics: ScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
-      itemBuilder: (context, i) => Center(
-        child: InkWell(
+    return Container(
+      height: 50,
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
+        itemBuilder: (context, i) => InkWell(
           onTap: (){
             if(empathize.paperPersonaImageNamesList[i] == null || empathize.paperPersonaImageNamesList[i] == "null"){
 
             }else{
-              launch(globals.urlSignUp+empathize.paperPersonaImageNamesList[i]);
+              launch(empathize.paperPersonaImageNamesList[i]);
             }
           },
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 2, left: 30, right: 30),
-            child: Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunitoSans(
-                  textStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  )
+            padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+            child: Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                border: Border.all(color: Colors.grey),
+                image: DecorationImage(
+                  image: NetworkImage(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i]),
+                  fit: BoxFit.cover, scale: 5
+                )
               ),
             ),
+//            Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
+//              textAlign: TextAlign.center,
+//              style: GoogleFonts.nunitoSans(
+//                  textStyle: TextStyle(
+//                    fontSize: 12,
+//                    fontWeight: FontWeight.w500,
+//                    color: Colors.grey,
+//                  )
+//              ),
+//            ),
           ),
         ),
       ),

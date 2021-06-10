@@ -39,7 +39,7 @@ class LoginApiProvider {
       if(statusCode == 200){
         if(login.loginMessage == "Login Successfull"){
           login.prLogin.hide().whenComplete(() async {
-            Fluttertoast.showToast(msg: login.loginMessage, backgroundColor: Colors.black,
+            Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.black,
               textColor: Colors.white,);
             clearFields(context);
 

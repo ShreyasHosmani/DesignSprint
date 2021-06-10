@@ -10,6 +10,8 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/login_data.dart' as login;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 class SignUpApiProvider {
 
   Future<String> signUp(context) async {
@@ -21,7 +23,7 @@ class SignUpApiProvider {
       "fullname" : signup.nameController.text,
       "email": signup.emailController.text,
       "password" : signup.passwordController.text,
-      "fcmtoken" : "123456"
+      "fcmtoken" : userToken.toString(),
 
 
     }).then((http.Response response) async {

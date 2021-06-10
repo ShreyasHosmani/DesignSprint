@@ -32,7 +32,17 @@
               />
             <meta-data
                     android:name="com.google.firebase.messaging.default_notification_icon"
-                    android:resource="@drawable/app_icon" />
+                    android:resource="@drawable/ic_stat_ic_launcher" />
+
+            <meta-data
+                    android:name="com.google.firebase.messaging.default_notification_color"
+                    android:resource="@color/colorAccent" />
+
+            <meta-data
+                    android:name="com.google.firebase.messaging.default_notification_channel_id"
+                    android:value="fcm_default_channel"/>
+
+
             <!-- Displays an Android View that continues showing the launch screen
                  Drawable until Flutter paints its first frame, then this splash
                  screen fades out. A splash screen is useful to avoid any visual
@@ -46,6 +56,17 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
+                <data
+                        android:scheme="https"
+                        android:host="YOUR_SUBDOMAIN.page.link" />
+            </intent-filter>
+
         </activity>
         <meta-data android:name="com.facebook.sdk.ApplicationId"
                    android:value="@string/facebook_app_id"/>

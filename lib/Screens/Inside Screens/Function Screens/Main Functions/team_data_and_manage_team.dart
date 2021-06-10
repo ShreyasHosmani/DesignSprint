@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:design_sprint/APIs/create_add_team.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_manage_team.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
@@ -14,6 +16,10 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 import 'dart:convert';
 
 bool statusDrawer = false;
+
+var ordersMap = Map();
+
+var creatorId;
 
 class TeamDataAndManageTeam extends StatefulWidget {
   @override
@@ -46,11 +52,18 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
 
           setState(() {
             team.teamNamesList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnName'].toString());
-            team.teamNamesIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnID'].toString());
+            creatorId = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['teamUserid'].toString());
+            team.teamNamesIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['teamNameid'].toString());
           });
-
           print(team.teamNamesList.toList());
+          print(creatorId.toList());
           print(team.teamNamesIdsList.toList());
+
+          final result = new LinkedHashSet<int>(
+              equals: (int e1, int e2) => e1.abs() == e2.abs(),
+              hashCode: (int e) => e.abs().hashCode);
+          result.addAll([2, -2, 1, 3, 1]);
+          print(result); // {2, 1, 3}
 
         }else{
 
@@ -101,6 +114,8 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    creatorId = null;
+    ordersMap = Map();
     team.teamNamesList = null;
     selectedTeamIdForDeleting = null;
     getTeamNames(context);
@@ -701,7 +716,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       itemCount: team.teamNamesList == null ? 0 : team.teamNamesList.length,
-      itemBuilder: (context, i) => InkWell(
+      itemBuilder: (context, i) => (i > 0 && team.teamNamesList[i].toString() == team.teamNamesList[i-1].toString()) ? Container() : InkWell(
         onTap: (){
           Navigator.push(
             context,
@@ -738,17 +753,26 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
                     ),
                   ),
                 ),
-                Padding(
+                creatorId[i] == profile.userID ? Padding(
                   padding: const EdgeInsets.only(right: 20, bottom: 0),
                   child: Align(
                     alignment: Alignment.centerRight,
                       child: PopupMenuButton<String>(
                         onSelected: (val){
-                          setState(() {
-                            selectedTeamIdForDeleting = team.teamNamesIdsList[i];
-                          });
-                          print(selectedTeamIdForDeleting);
-                          showAlertDialogDeleteTeam(context);
+                          if(creatorId[i] == profile.userID){
+                            setState(() {
+                              selectedTeamIdForDeleting = team.teamNamesIdsList[i];
+                            });
+                            print(selectedTeamIdForDeleting);
+                            showAlertDialogDeleteTeam(context);
+                          }else{
+                            print("creatorId[i] : "+creatorId[i]);
+                            print("profile.userID : "+profile.userID);
+                            Fluttertoast.showToast(msg: 'Only the decision maker can delete the team!',
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,
+                            );
+                          }
                         },
                         icon: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -790,7 +814,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
                           }).toList();
                         },
                       ),
-                ),),
+                ),) : Container(),
               ],
             ),
           ),
@@ -860,7 +884,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
           team.prTeam.show();
           teamApiProvider.createTeamName2(context).whenComplete((){
             Future.delayed(const Duration(seconds: 2), () {
-              teamApiProvider.getTeamNames(context).whenComplete((){
+              getTeamNames(context).whenComplete((){
                 Future.delayed(const Duration(seconds: 2), () {
                   setState(() {});
                 });

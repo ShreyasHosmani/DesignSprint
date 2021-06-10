@@ -28,7 +28,7 @@ String hintJob = "Job";
 String jobValidation = "Job is compulsary!";
 String hintBio = "Bio\n\nDescribe the persona";
 String bioValidation = "Bio is compulsary!";
-String hintGoalsAndMotivation = "Goals and motivation\n\nDescribe the persona";
+String hintGoalsAndMotivation = "Goals and Motivations\n\nDescribe your goals and Motivations";
 String goalsAndMotivationValidation = "Goals and Motivation is compulsary!";
 
 String addTask = "Add Task";
