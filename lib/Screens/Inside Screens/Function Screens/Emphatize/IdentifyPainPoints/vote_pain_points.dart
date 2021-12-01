@@ -803,7 +803,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
           lineHeight: 10,
           percent: (empathize.pageIndex+1)/empathize.painPointsList.length,
           backgroundColor: Colors.grey.shade300,
-          progressColor: Color(0xff302B70),
+          progressColor: Color(0xff787CD1),
         ),
       ),
     );

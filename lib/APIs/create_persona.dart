@@ -139,10 +139,10 @@ class CreatePersonaApiProvider {
         if(empathize.responseArrayUploadPaperPersonaMsg == "Persona Added Successfully"){
           updateStep2(context);
           Fluttertoast.showToast(msg: empathize.personaUploaded, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayUploadPaperPersonaMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });

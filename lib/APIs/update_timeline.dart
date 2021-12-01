@@ -34,7 +34,7 @@ class UpdateTimelineApiProvider{
         if(home.responseArrayTimelineMsg == "Timeline updated Successfully"){
           home.prCreateSprint.hide();
           Fluttertoast.showToast(msg: home.timelineSaved, backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
+            textColor: Colors.white,gravity: ToastGravity.CENTER).whenComplete((){
             Navigator.push(
               context,
               PageRouteBuilder(
@@ -47,7 +47,7 @@ class UpdateTimelineApiProvider{
         }else if(home.responseArrayTimelineMsg == "Timeline updated Successfully. E-Mail Not Verified"){
           home.prCreateSprint.hide();
           Fluttertoast.showToast(msg: "Timeline updated Successfully. E-Mail Not Verified", backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
+            textColor: Colors.white,gravity: ToastGravity.CENTER).whenComplete((){
             Navigator.push(
               context,
               PageRouteBuilder(
@@ -60,7 +60,7 @@ class UpdateTimelineApiProvider{
         }else{
           home.prCreateSprint.hide();
           Fluttertoast.showToast(msg: home.responseArrayTimelineMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });

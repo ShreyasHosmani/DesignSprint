@@ -20,12 +20,12 @@ class CreateOrDownloadPersona extends StatefulWidget {
 class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Email email = Email(
-    body: 'Please find the attachment of Persona Template Link below...\n\n\n\n\nDownload link : \n\nhttps://dezyit.ml/mobileapp/appdata/personatemplate/Persona-Template.pdf',
+    body: 'Please find the attachment of Persona Template Link below...\n\n\n\n\nDownload link : \n\nhttps://admin.dezyit.com/mobileapp/appdata/personatemplate/Persona-Template.pdf',
     subject: 'Persona Template',
     recipients: ['example@gmail.com'],
     cc: [''],
     //bcc: ['bcc@example.com'],
-    //attachmentPaths: ['https://dezyit.ml/mobileapp/appdata/personatemplate/Persona-Template.pdf'],
+    //attachmentPaths: ['https://admin.dezyit.com/mobileapp/appdata/personatemplate/Persona-Template.pdf'],
     isHTML: false,
   );
   Dio dio = Dio();
@@ -743,7 +743,7 @@ class _CreateOrDownloadPersonaState extends State<CreateOrDownloadPersona> {
               InkWell(
                 onTap: () async {
                   //await dio.download("https://onetouchhosting.tk/appdata/personatemplate/template.pdf", "/sdcard/download/template.pdf");
-                  await launch("https://dezyit.ml/mobileapp/appdata/personatemplate/Persona-Template.pdf");
+                  await launch("https://admin.dezyit.com/mobileapp/appdata/personatemplate/Persona-Template.pdf");
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

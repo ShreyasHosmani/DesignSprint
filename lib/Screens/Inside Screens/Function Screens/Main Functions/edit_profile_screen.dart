@@ -13,7 +13,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/globals.dart' as globals;
-import 'package:image_cropper/image_cropper.dart';
+//import 'package:image_cropper/image_cropper.dart';
 
 bool imagePicked = false;
 var focusName = FocusNode();
@@ -31,6 +31,7 @@ class _EditProfileState extends State<EditProfile> {
   LogoutApiProvider logoutApiProvider = LogoutApiProvider();
   final picker = ImagePicker();
 
+  /*
   Future<Null> _cropImage() async {
     File croppedFile = await ImageCropper.cropImage(
         sourcePath: home.profileImage.path,
@@ -68,6 +69,8 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
+   */
+
   Future getImageOne() async {
     Navigator.of(context).pop();
     var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
@@ -76,7 +79,7 @@ class _EditProfileState extends State<EditProfile> {
       imagePicked = true;
       saveButton = true;
     });
-    _cropImage();
+    //_cropImage();
     print(imagePicked);
   }
   Future getImageOneGallery() async {
@@ -87,7 +90,7 @@ class _EditProfileState extends State<EditProfile> {
       imagePicked = true;
       saveButton = true;
     });
-    _cropImage();
+    //_cropImage();
     print(imagePicked);
   }
 

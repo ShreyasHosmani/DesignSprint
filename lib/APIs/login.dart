@@ -80,6 +80,7 @@ class LoginApiProvider {
       "password" : "",
       "fcmtoken" : userToken.toString(),
       "authtype" : "Google",
+      "authid" : "googly",
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -132,6 +133,7 @@ class LoginApiProvider {
       "password" : "",
       "fcmtoken" : userToken.toString(),
       "authtype" : "Facebook",
+      "authid" : "fb",
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -175,9 +177,6 @@ class LoginApiProvider {
 
   Future<String> LoginUsingApple(context,appleEmailStudent,appleFullNameStudent ) async {
 
-    print("NameeeeeeApppllleeee:"+appleFullNameStudent);
-    print("EmailllApppllleeee"+appleEmailStudent);
-
     String url = globals.urlSignUp + "socialregister.php";
 
     http.post(url, body: {
@@ -187,6 +186,7 @@ class LoginApiProvider {
       "password" : "",
       "fcmtoken" : userToken.toString(),
       "authtype" : "Apple",
+      "authid" : "",
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

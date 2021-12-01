@@ -6,7 +6,6 @@ import 'package:design_sprint/APIs/get_pain_points.dart';
 import 'package:design_sprint/APIs/input_pain_point.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
-import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree2.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree3.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -39,7 +38,7 @@ class UploadJourneyMap extends StatefulWidget {
 }
 
 class _UploadJourneyMapState extends State<UploadJourneyMap> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey22 = GlobalKey<ScaffoldState>();
   InputPainPointsApiProvider inputPainPointsApiProvider = InputPainPointsApiProvider();
   CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
   CreateJourneyApiProvider createJourneyApiProvider = CreateJourneyApiProvider();
@@ -69,7 +68,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         if(empathize.responseArrayGetJourneyMapMsg == "Data Found"){
 
           setState(() {
-            empathize.journeyMapImageNamesList = List.generate(empathize.responseArrayGetJourneyMap['data'].length, (i) => empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'] == null || empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'] == "null" ? "Digital Journey Map" : "https://dezyit.ml/mobileapp/"+empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'].toString().substring(6));
+            empathize.journeyMapImageNamesList = List.generate(empathize.responseArrayGetJourneyMap['data'].length, (i) => empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'] == null || empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'] == "null" ? "Digital Journey Map" : "https://admin.dezyit.com/mobileapp/"+empathize.responseArrayGetJourneyMap['data'][i]['jpdocImage'].toString().substring(6));
           });
 
           print(empathize.journeyMapImageNamesList.toList());
@@ -129,9 +128,12 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
 
     String url = globals.urlLogin + "getsprintstatusdata.php";
 
+    print("home.selectedSprintId : "+home.selectedSprintId.toString());
+    print("home.sprintId : "+home.sprintID.toString());
+
     http.post(url, body: {
 
-      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+      "sprintID" : home.sprintID.toString() == null || home.sprintID.toString() == "null" ? home.selectedSprintId.toString() : home.sprintID.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -174,6 +176,14 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         }else{
 
           empathize.prInputPainPoint.hide();
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
           setState(() {
 
           });
@@ -282,7 +292,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   final picker = ImagePicker();
   Future getImageOne() async {
     Navigator.of(context).pop();
-    var pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
     setState(() {
       empathize.imagePaperJourneyMap = File(pickedFile.path);
     });
@@ -292,7 +302,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
           getSprintsStatusesOfTeam(context);
           getJourneyMapDetails(context).whenComplete((){
             Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-              textColor: Colors.white,);
+              textColor: Colors.white,gravity: ToastGravity.CENTER);
             Future.delayed(const Duration(seconds: 3), () {setState(() {});});
             if(empathize.imagePaperJourneyMap == null){
 
@@ -316,7 +326,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
           getSprintsStatusesOfTeam(context);
           getJourneyMapDetails(context).whenComplete((){
             Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-              textColor: Colors.white,);
+              textColor: Colors.white,gravity: ToastGravity.CENTER);
             Future.delayed(const Duration(seconds: 3), () {setState(() {});});
             if(empathize.imagePaperJourneyMap == null){
 
@@ -333,7 +343,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
     empathize.prInputPainPoint = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      key: _scaffoldKey22,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
@@ -385,7 +395,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       setState(() {
         statusDrawer = false;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      _scaffoldKey22.currentState.openEndDrawer();
     }
 
     return AppBar(
@@ -614,7 +624,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       setState(() {
         statusDrawer = true;
       });
-      _scaffoldKey.currentState.openEndDrawer();
+      _scaffoldKey22.currentState.openEndDrawer();
     }
     return Align(
       alignment: Alignment.centerRight,
@@ -1176,6 +1186,15 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                         setState(() {
 
                         });
+                        if(empathize.formKey3.currentState.validate()){
+                          empathize.prInputPainPoint.show();
+                          inputPainPointsApiProvider.inputPainPoints(context).whenComplete((){
+                            setState(() {
+                              ppListStatic.add(empathize.painPointController.text);
+                            });
+                            print(ppListStatic.toList());
+                          });
+                        }
                       },
                       child: Text("Done",
                         style: GoogleFonts.nunitoSans(
@@ -1236,9 +1255,13 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+
+        print("home.sprintId : "+home.sprintID.toString());
+        //if(home.sprintID)
+
         if(ppListStatic == null || ppListStatic.isEmpty){
           Fluttertoast.showToast(msg: 'Please upload atleast one pain point!',
-            backgroundColor: Colors.black, textColor: Colors.white,
+            backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
           );
         }else{
           empathize.prInputPainPoint.show();

@@ -126,11 +126,11 @@ class CreateJourneyApiProvider{
       if(statusCode == 200){
         if(empathize.responseArrayUploadPaperJourneyMapMsg == "Journeymap Added Successfully"){
           Fluttertoast.showToast(msg: empathize.personaUploaded, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
           updateStep3(context);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayUploadPaperJourneyMapMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });

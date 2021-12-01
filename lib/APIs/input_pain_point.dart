@@ -9,6 +9,38 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 
 class InputPainPointsApiProvider {
 
+  Future<String> updateStep3(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "3",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
   Future<String> inputPainPoints(context) async {
 
     String url = globals.urlSignUp + "createpainpoint.php";
@@ -36,12 +68,13 @@ class InputPainPointsApiProvider {
         if(empathize.responseArrayInputPainPointsMsg == "Painpoint Added Successfully"){
           empathize.prInputPainPoint.hide();
           Fluttertoast.showToast(msg: "saved", backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
           empathize.painPointController.clear();
+          updateStep3(context);
         }else{
           empathize.prInputPainPoint.hide();
           Fluttertoast.showToast(msg: empathize.responseArrayInputPainPointsMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });

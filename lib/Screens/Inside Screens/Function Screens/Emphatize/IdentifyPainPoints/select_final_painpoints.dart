@@ -829,7 +829,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     });
                   }else{
                     Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final pain points!',
-                      backgroundColor: Colors.black, textColor: Colors.white,
+                      backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
                     );
                   }
                 },
@@ -864,8 +864,9 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
             ),
           );
         }else{
-          if(ppStatus.contains('2')){
-            print("contains 2");
+
+          if(ppStatus.contains('1')){
+            print("contains 1");
             if(dmIDd == profile.userID){
               print("i am a decision maker");
               Navigator.push(
@@ -878,21 +879,26 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
               );
             }else{
               print("i am not a decision maker");
-              Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final pain points!',
-                backgroundColor: Colors.black, textColor: Colors.white,
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
               );
             }
           }else{
-            print("doesnt contain 2");
+            print("doesnt contain 1");
             if(dmIDd == profile.userID){
               print("i am a decision maker");
               Fluttertoast.showToast(msg: 'Please select atleast one pain point!',
-                backgroundColor: Colors.black, textColor: Colors.white,
+                backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
               );
             }else{
               print("i am not a decision maker");
               Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final pain points!',
-                backgroundColor: Colors.black, textColor: Colors.white,
+                backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
               );
             }
           }

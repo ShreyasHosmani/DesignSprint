@@ -229,6 +229,8 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
             textColor: Colors.white,).whenComplete((){
             getTeamMembers(context);
           });
+          getTeamMembers(context);
+          getSprintAdmins(context);
         }else{
           team.prTeam.hide();
           Fluttertoast.showToast(msg: "Please check your network connection!", backgroundColor: Colors.black,
@@ -888,40 +890,51 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       itemCount: team.teamMemberNameList == null ? 0 : team.teamMemberNameList.length,
       itemBuilder: (context, i) => Padding(
         padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-        child: Stack(
-          children: [
-            Center(
-              child: Container(
-                width: 302,
-                height: 57,//sprintAdmins.toString() == team.teamMemberEmailList[i] ? 75 : 57,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xff787cd1)),
-                    borderRadius: BorderRadius.all(Radius.circular(7))
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //team.teamMemberNameList[i].toString() == "You" ?
-                        SizedBox(height: 5,),
-                        Text(team.teamMemberNameList[i].toString() == "You" ? sprintAdminsName.toString() : team.teamMemberNameList[i].toString(),
-                          maxLines: 1, overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.nunitoSans(
-                            fontSize: 16,
-                            color: sprintAdmins.toString() == team.teamMemberEmailList[i] ? Color(0xff787cd1) : Colors.black,
-                            fontWeight: sprintAdmins.toString() == team.teamMemberEmailList[i] ? FontWeight.bold : FontWeight.normal,
+        child: InkWell(
+          onTap: (){
+
+            int idx = team.teamMemberNameList.indexOf("You");
+            print("idx : " + idx.toString());
+
+            print("my email : " + profile.email.toString());
+            print("decision maker email : " + profile.email.toString());
+            print("sprintAdmins : "+ sprintAdmins.toString());
+            print("team.teamMemberEmailList[i] : "+ team.teamMemberEmailList[i]);
+          },
+          child: Stack(
+            children: [
+              Center(
+                child: Container(
+                  width: 302,
+                  height: 57,//sprintAdmins.toString() == team.teamMemberEmailList[i] ? 75 : 57,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xff787cd1)),
+                      borderRadius: BorderRadius.all(Radius.circular(7))
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //team.teamMemberNameList[i].toString() == "You" ?
+                          SizedBox(height: 5,),
+                          Text(team.teamMemberNameList[i].toString() == "You" ? sprintAdminsName.toString() : team.teamMemberNameList[i].toString(),
+                            maxLines: 1, overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.nunitoSans(
+                              fontSize: 16,
+                              color: sprintAdmins.toString() == team.teamMemberEmailList[i] ? Color(0xff787cd1) : Colors.black,
+                              fontWeight: sprintAdmins.toString() == team.teamMemberEmailList[i] ? FontWeight.bold : FontWeight.normal,
+                            ),
                           ),
-                        ),
-                        Text(team.teamMemberEmailList[i],
-                          maxLines: 1, overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.nunitoSans(
-                            fontSize: 16,
+                          Text(team.teamMemberEmailList[i],
+                            maxLines: 1, overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.nunitoSans(
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
 //                            : Text(team.teamMemberEmailList[i].toString() == profile.email.toString() ? "You ("+profile.name+")" : team.teamMemberNameList[i],
 //                          style: GoogleFonts.nunitoSans(
 //                            fontSize: 18,
@@ -932,92 +945,106 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 //                            fontSize: 14,color: Color(0xff787cd1),fontWeight: FontWeight.bold,
 //                          ),
 //                        ) : Container(),
-                        SizedBox(height: 5,),
-                      ],
+                          SizedBox(height: 5,),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            sprintAdmins.toString() == team.teamMemberEmailList[i] ?
-            Padding(
-              padding: const EdgeInsets.only(right: 20, top: 5),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: PopupMenuButton<String>(
-                  onSelected: (val){
-                    if(sprintAdmins.toString() == team.teamMemberEmailList[i]){
-                      if(val == "Make Decision Maker"){
+          sprintAdmins.toString() == team.teamMemberEmailList[i]  ? Container() :
+              Padding(
+                padding: const EdgeInsets.only(right: 20, top: 5),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: PopupMenuButton<String>(
+                    onSelected: (val){
+                      //if(sprintAdmins.toString() == team.teamMemberEmailList[i]){
+                        if(val == "Make Decision Maker"){
+                          print("Make Decision Maker called");
+                            setState(() {
+                              selectedMemberEmail = team.teamMemberEmailList[i].toString();
+                            });
+                            print(selectedMemberEmail);
+                            team.prTeam.show();
+                            giveAdminAccess(context);
+                        }else if(val == "Delete Member"){
+                          print(team.teamMemberEmailList[i]);
+//                        if(sprintAdmins.toString() == team.teamMemberEmailList[i]){
+//                          Fluttertoast.showToast(msg: 'You are the decision maker of this team!',
+//                            backgroundColor: Colors.black,
+//                            textColor: Colors.white,
+//                          );
+//                        }else{
+                            print("Delete Member called");
+                            print("sprintAdmins : "+sprintAdmins.toString());
+                            print("team.teamMemberEmailList[i] : "+team.teamMemberEmailList[i].toString());
+                            setState(() {
+                              selectedMemberId = team.teamMemberIdsList[i].toString();
+                            });
+                            print(selectedMemberId);
+                            showAlertDialogDeleteTeam(context);
+                          //}
+                        }else if(val == "Edit Details"){
+                          print("Edit Details called");
                           setState(() {
-                            selectedMemberEmail = team.teamMemberEmailList[i].toString();
+                            selectedMemberId = team.teamMemberIdsList[i].toString();
+                            memberNameControllerEdit.text = team.teamMemberNameList[i].toString();
+                            memberEmailControllerEdit.text = team.teamMemberEmailList[i].toString();
                           });
-                          print(selectedMemberEmail);
-                          team.prTeam.show();
-                          giveAdminAccess(context);
-                      }else if(val == "Delete Member"){
-                        setState(() {
-                          selectedMemberId = team.teamMemberIdsList[i].toString();
-                        });
-                        print(selectedMemberId);
-                        showAlertDialogDeleteTeam(context);
-                      }else if(val == "Edit Details"){
-                        setState(() {
-                          selectedMemberId = team.teamMemberIdsList[i].toString();
-                          memberNameControllerEdit.text = team.teamMemberNameList[i].toString();
-                          memberEmailControllerEdit.text = team.teamMemberEmailList[i].toString();
-                        });
-                        print(selectedMemberId);
-                        showAlertDialogEditTeamMember(context);
-                      }
-                    }else{
-                      Fluttertoast.showToast(msg: 'Only the decision maker can make changes!',
-                        backgroundColor: Colors.black,
-                        textColor: Colors.white,
-                      );
-                    }
-                  },
-                  icon: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(height: 3,width: 3,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.all(Radius.circular(50))
+                          print(selectedMemberId);
+                          showAlertDialogEditTeamMember(context);
+                        }
+//                    }else{
+//                      Fluttertoast.showToast(msg: 'Only the decision maker can make changes!',
+//                        backgroundColor: Colors.black,
+//                        textColor: Colors.white,
+//                      );
+//                    }
+                    },
+                    icon: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(height: 3,width: 3,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.all(Radius.circular(50))
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 3,),
-                      Container(height: 3,width: 3,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.all(Radius.circular(50))
+                        SizedBox(height: 3,),
+                        Container(height: 3,width: 3,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.all(Radius.circular(50))
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 3,),
-                      Container(height: 3,width: 3,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.all(Radius.circular(50))
+                        SizedBox(height: 3,),
+                        Container(height: 3,width: 3,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.all(Radius.circular(50))
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    color: Colors.white,
+                    itemBuilder: (BuildContext context) {
+                      return {'Delete Member', 'Edit Details', 'Make Decision Maker'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          textStyle: GoogleFonts.nunitoSans(
+                            color: Colors.grey.shade700,
+                            fontSize: 16,
+                          ),
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    },
                   ),
-                  color: Colors.white,
-                  itemBuilder: (BuildContext context) {
-                    return {'Delete Member', 'Edit Details', 'Make Decision Maker'}.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        textStyle: GoogleFonts.nunitoSans(
-                          color: Colors.grey.shade700,
-                          fontSize: 16,
-                        ),
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                ),
-              ),) : Container(),
-          ],
+                ),),
+            ],
+          ),
         ),
       ),
     );

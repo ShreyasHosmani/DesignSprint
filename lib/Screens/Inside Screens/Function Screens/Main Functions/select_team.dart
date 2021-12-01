@@ -12,7 +12,6 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'dart:convert';
-
 import 'design_sprint_sections_screen.dart';
 
 bool statusDrawer = false;
@@ -950,10 +949,7 @@ class _SelectTeamState extends State<SelectTeam> {
         elevation: 10,
         child: Container(
           height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
+          width: 200,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
               borderRadius: BorderRadius.all(Radius.circular(12))
@@ -973,9 +969,7 @@ class _SelectTeamState extends State<SelectTeam> {
       ),
       title: Column(
         children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+          IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},),
           //SizedBox(height: 10,),
           Text("What would you like to name", style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
           Text("your Team?",style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
@@ -986,7 +980,7 @@ class _SelectTeamState extends State<SelectTeam> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
           height: MediaQuery.of(context).size.height/4,
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.of(context).size.width/3,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -1029,7 +1023,7 @@ class _SelectTeamState extends State<SelectTeam> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Delete Team"),
-      content: Text("Are you sure you want to delete this team? Once deleted, it cannot be recovered!"),
+      content: Text("Are you sure you want to delete this team?\nOnce deleted, it cannot be recovered!"),
       actions: [
         cancelButton,
         continueButton,

@@ -272,7 +272,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xff302B70),
+                        Color(0xff787CD1),
                         Color(0xff787CD1),
                       ],
                     ),
@@ -746,7 +746,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
           lineHeight: 10,
           percent: (ideation.pageIndex+1)/ideation.painPointsOfStatus2List.length,
           backgroundColor: Colors.grey.shade300,
-          progressColor: Color(0xff302B70),
+          progressColor: Color(0xff787CD1),
         ),
       ),
     );
@@ -892,6 +892,20 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     GestureDetector buildSaveButton = GestureDetector(
       onTap: (){
         Navigator.of(context).pop();
+        if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndex]){
+          print("Last index reached, You are a great man ever!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => UploadIdeaImagePageViewBuilder(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          print("You are a loser bro, try again!");
+          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+        }
       },
       child: Card(
         shape: RoundedRectangleBorder(

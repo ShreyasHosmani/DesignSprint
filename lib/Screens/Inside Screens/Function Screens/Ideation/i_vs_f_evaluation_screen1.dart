@@ -231,7 +231,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xff302B70),
+                        Color(0xff787CD1),
                         Color(0xff787CD1),
                       ],
                     ),
@@ -705,7 +705,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
           lineHeight: 10,
           percent: (ideation.pageIndexIvsF+1)/ideation.painPointsOfStatus2List2.length,
           backgroundColor: Colors.grey.shade300,
-          progressColor: Color(0xff302B70),
+          progressColor: Color(0xff787CD1),
         ),
       ),
     );

@@ -669,6 +669,20 @@ class _InsightsFormState extends State<InsightsForm> {
                     GestureDetector(
                       onTap: (){
                         focus.unfocus();
+                        if(userTesting.painPointController.text == null || userTesting.painPointController.text == ""){
+                          Fluttertoast.showToast(msg: "Insight cannot be empty!", backgroundColor: Colors.black,
+                            textColor: Colors.white,);
+                        }else{
+                          Fluttertoast.showToast(msg: "Adding insight...", backgroundColor: Colors.black,
+                            textColor: Colors.white,);
+                          insightsApiProvider.addInsights(context).then((value){
+                            Future.delayed(Duration(seconds: 3), () {
+                              setState(() {
+
+                              });
+                            });
+                          });
+                        }
                       },
                       child: Text(userTesting.done,
                         style: GoogleFonts.nunitoSans(

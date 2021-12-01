@@ -33,62 +33,67 @@ class _SignUpState extends State<SignUp> {
             ),
           );
         },
-        child: Stack(
-          children: [
-            Positioned(
-                top: -MediaQuery.of(context).size.height/3.6,right: -MediaQuery.of(context).size.width/6,
-                child: buildUpperImage(context)),
-            Positioned(
-              top: -MediaQuery.of(context).size.height/5.6,left: -MediaQuery.of(context).size.width/10,
-              child: Container(
-                height: 280,
-                width: 280,
-                decoration: BoxDecoration(
-                    color: Color(0xff302B70),
-                    borderRadius: BorderRadius.all(Radius.circular(150))
-                ),
-              ),
-            ),
-            Positioned(
-              top: -30,left: 0, right: -MediaQuery.of(context).size.width/3,
-              child: Image.asset("assets/images/signup.png"),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
-              child: SingleChildScrollView(
-                child: Form(
-                  key: signup.formKey,
-                  child: Column(
-                    children: [
-                      SizedBox(height: MediaQuery.of(context).size.height/45,),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(signup.signUpHeading,
-                              style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                    fontSize: 32,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w600
-                                ),
-                              ),
-                            )),
-                      ),
-                      buildNameField(context),
-                      buildEmailField(context),
-                      buildPasswordField(context),
-                      SizedBox(height: MediaQuery.of(context).size.height/17,),
-                      buildSignUpButton(context),
-                      SizedBox(height: 20,),
-                      alreadyAUserLogin(context),
-                      SizedBox(height: 30,),
-                    ],
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              children: [
+                Positioned(
+                    top: -MediaQuery.of(context).size.height/3.6,right: -MediaQuery.of(context).size.width/6,
+                    child: buildUpperImage(context)),
+                Positioned(
+                  top: -MediaQuery.of(context).size.height/5.6,left: -MediaQuery.of(context).size.width/10,
+                  child: Container(
+                    height: 280,
+                    width: 280,
+                    decoration: BoxDecoration(
+                        color: Color(0xff302B70),
+                        borderRadius: BorderRadius.all(Radius.circular(150))
+                    ),
                   ),
                 ),
-              ),
+                Positioned(
+                  top: -30,left: 0, right: -MediaQuery.of(context).size.width/3,
+                  child: Image.asset("assets/images/signup.png"),
+                ),
+                Positioned(
+                  top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: signup.formKey,
+                      child: Column(
+                        children: [
+                          SizedBox(height: MediaQuery.of(context).size.height/45,),
+                          Padding(
+                            padding: EdgeInsets.only(left: 30),
+                            child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(signup.signUpHeading,
+                                  style: GoogleFonts.nunitoSans(
+                                    textStyle: TextStyle(
+                                        fontSize: 32,
+                                        letterSpacing: 0,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          buildNameField(context),
+                          buildEmailField(context),
+                          buildPasswordField(context),
+                          SizedBox(height: MediaQuery.of(context).size.height/17,),
+                          buildSignUpButton(context),
+                          SizedBox(height: 20,),
+                          alreadyAUserLogin(context),
+                          SizedBox(height: 30,),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

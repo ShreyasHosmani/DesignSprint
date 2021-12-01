@@ -211,7 +211,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
 
         setState(() {
           ideation.showImagesIdea = true;
-          ideation.ideaImagesPainPointWiseList = List.generate(ideation.responseArrayGetIdeaImages['data'].length, (i) => "https://dezyit.ml/mobileapp/"+ideation.responseArrayGetIdeaImages['data'][i]['iiImgpath'].toString().substring(6));
+          ideation.ideaImagesPainPointWiseList = List.generate(ideation.responseArrayGetIdeaImages['data'].length, (i) => "https://admin.dezyit.com/mobileapp/"+ideation.responseArrayGetIdeaImages['data'][i]['iiImgpath'].toString().substring(6));
         });
 
         print(ideation.ideaImagesPainPointWiseList.toList());

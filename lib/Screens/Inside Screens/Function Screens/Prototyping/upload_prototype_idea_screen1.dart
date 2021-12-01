@@ -117,7 +117,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
 
       if(prototype.responseArrayGetPrototypeImagesPainPointWiseMsg == "Painpoint Data Found"){
 
-        prototype.prototypeImagesPPWiseList = List.generate(prototype.responseArrayGetPrototypeImagesPainPointWise['data'].length, (i) => "https://dezyit.ml/mobileapp/"+prototype.responseArrayGetPrototypeImagesPainPointWise['data'][i]['ptiImgpath'].toString().substring(6));
+        prototype.prototypeImagesPPWiseList = List.generate(prototype.responseArrayGetPrototypeImagesPainPointWise['data'].length, (i) => "https://admin.dezyit.com/mobileapp/"+prototype.responseArrayGetPrototypeImagesPainPointWise['data'][i]['ptiImgpath'].toString().substring(6));
 
         print(prototype.prototypeImagesPPWiseList.toList());
 

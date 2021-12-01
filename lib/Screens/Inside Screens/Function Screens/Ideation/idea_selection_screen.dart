@@ -885,9 +885,12 @@ class _IdeaSelectionState extends State<IdeaSelection> {
             SizedBox(height: 20,),
             teamMemberStatuses.toList().contains("0") ? Container() : GestureDetector(
               onTap: (){
-                print(sprintAdmins);
-                if(dmIDd == profile.userID){
-                if(profile.userID == sprintCreatorId || sprintAdmins.toList().contains('1')){
+                print("sprintAdmins + " + sprintAdmins.toString());
+
+                print("dmID : " + dmIDd.toString());
+                print("profile.userID : " + profile.userID.toString());
+
+                if(dmIDd.toString() == "null"){
                   setState(() {
                     boolSelectedList[i] = !boolSelectedList[i];
                     if(boolSelectedList[i] == false){
@@ -921,20 +924,64 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     }
                   });
                 }else{
-                  Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final ideas!',
-                    backgroundColor: Colors.black, textColor: Colors.white,
-                  );
-                }
+                  if(dmIDd == profile.userID){
+
+                    print("entering first if else looooooppppp!!!");
+
+                    if(profile.userID == sprintCreatorId || sprintAdmins.toList().contains('1')){
+
+                      print("entering second if else looooooppppp!!!");
+
+                      setState(() {
+                        boolSelectedList[i] = !boolSelectedList[i];
+                        if(boolSelectedList[i] == false){
+                          print("1111111");
+                          setState(() {
+                            counter--;
+                            ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                            ideation.selectedPainPointForPrototypingStatus = "0";
+                          });
+                          print(ideation.selectedPainPointIdForPrototyping);
+                          print(ideation.selectedPainPointForPrototypingStatus);
+                          votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                            Future.delayed(Duration(seconds: 2), () async {
+                              getPainPointsByIvsFPriority(context);
+                            });
+                          });
+                        }else{
+                          print("222222");
+                          setState(() {
+                            counter++;
+                            ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                            ideation.selectedPainPointForPrototypingStatus = "2";
+                          });
+                          print(ideation.selectedPainPointIdForPrototyping);
+                          print(ideation.selectedPainPointForPrototypingStatus);
+                          votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                            Future.delayed(Duration(seconds: 2), () async {
+                              getPainPointsByIvsFPriority(context);
+                            });
+                          });
+                        }
+                      });
+                    }else{
+                      print("exiting second else looooooppppp!!!");
+                      Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final ideas!',
+                        backgroundColor: Colors.black, textColor: Colors.white,
+                      );
+                    }
 
 //                }else{
 //                  Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
 //                    backgroundColor: Colors.black, textColor: Colors.white,
 //                  );
 //                }
-              }else{
-                  Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final ideas!',
-                    backgroundColor: Colors.black, textColor: Colors.white,
-                  );
+                  }else{
+                    print("exiting first else looooooppppp!!!");
+                    Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final ideas!',
+                      backgroundColor: Colors.black, textColor: Colors.white,
+                    );
+                  }
                 }
                 },
               child: Container(
@@ -969,61 +1016,88 @@ class _IdeaSelectionState extends State<IdeaSelection> {
 
 
 
-        if(boolSelectedList.toList().contains(true)){
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
-        }else{
-          Fluttertoast.showToast(msg: 'Please select atleast one Idea Image to Proceed!',backgroundColor: Colors.black, textColor: Colors.white);
-        }
-//        if(home.selectedSprintId == null || home.selectedSprintId == "null"){
-//          if(ppiiStatus.contains('2')){
-//            print("contains 2");
-//            if(dmIDd == profile.userID){
-//              print("i am a decision maker");
-//              Navigator.push(
-//                context,
-//                PageRouteBuilder(
-//                  pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-//                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//                  transitionDuration: Duration(milliseconds: 300),
-//                ),
-//              );
-//            }else{
-//              print("i am not a decision maker");
-//              Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
-//                backgroundColor: Colors.black, textColor: Colors.white,
-//              );
-//            }
-//          }else{
-//            print("doesnt contain 2");
-//            if(dmIDd == profile.userID){
-//              print("i am a decision maker");
-//              Fluttertoast.showToast(msg: 'Please select atleast one of the ideas!',
-//                backgroundColor: Colors.black, textColor: Colors.white,
-//              );
-//            }else{
-//              print("i am not a decision maker");
-//              Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
-//                backgroundColor: Colors.black, textColor: Colors.white,
-//              );
-//            }
-//          }
-//        }else{
-//          Navigator.push(
-//            context,
-//            PageRouteBuilder(
-//              pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-//              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//              transitionDuration: Duration(milliseconds: 300),
-//            ),
-//          );
-//        }
+        // if(boolSelectedList.toList().contains(true)){
+        //   Navigator.push(
+        //     context,
+        //     PageRouteBuilder(
+        //       pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+        //       transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+        //       transitionDuration: Duration(milliseconds: 300),
+        //     ),
+        //   );
+        // }else{
+        //   Fluttertoast.showToast(msg: 'Please select atleast one Idea Image to Proceed!',backgroundColor: Colors.black, textColor: Colors.white);
+        // }
+       if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+         if(ppiiStatus.contains('1')){
+           print("contains 1");
+           if(dmIDd == profile.userID){
+             print("i am a decision maker");
+             Navigator.push(
+               context,
+               PageRouteBuilder(
+                 pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                 transitionDuration: Duration(milliseconds: 300),
+               ),
+             );
+           }else{
+             print("i am not a decision maker");
+             Navigator.push(
+               context,
+               PageRouteBuilder(
+                 pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                 transitionDuration: Duration(milliseconds: 300),
+               ),
+             );
+           }
+         }else{
+           print("doesnt contain 1");
+           if(dmIDd == profile.userID){
+             print("i am a decision maker");
+             if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+               Navigator.push(
+                 context,
+                 PageRouteBuilder(
+                   pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                   transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                   transitionDuration: Duration(milliseconds: 300),
+                 ),
+               );
+             }else{
+               Fluttertoast.showToast(msg: 'Please select atleast one of the ideas!',
+                 backgroundColor: Colors.black, textColor: Colors.white,
+               );
+             }
+           }else{
+             print("i am not a decision maker");
+             if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+               Navigator.push(
+                 context,
+                 PageRouteBuilder(
+                   pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                   transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                   transitionDuration: Duration(milliseconds: 300),
+                 ),
+               );
+             }else{
+               Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
+                 backgroundColor: Colors.black, textColor: Colors.white,
+               );
+             }
+           }
+         }
+       }else{
+         Navigator.push(
+           context,
+           PageRouteBuilder(
+             pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+             transitionDuration: Duration(milliseconds: 300),
+           ),
+         );
+       }
       },
       child: Center(
         child: Container(

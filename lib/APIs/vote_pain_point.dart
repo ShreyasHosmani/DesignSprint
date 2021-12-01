@@ -104,10 +104,10 @@ class VotePainPointsApiProvider {
       if(statusCode == 200){
         if(empathize.responseArrayVitePainPointsMsg == "Vote Saved Successfully"){
           Fluttertoast.showToast(msg: empathize.voteSaved, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayVitePainPointsMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });
@@ -140,11 +140,11 @@ class VotePainPointsApiProvider {
       if(statusCode == 200){
         if(empathize.responseArrayVitePainPointsMsg == "priority updated Successfully"){
           Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
           updateStep5(context);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayVitePainPointsMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });
@@ -181,11 +181,11 @@ class VotePainPointsApiProvider {
       if(statusCode == 200){
         if(ideation.responseArrayVoteImpactFeasibilityMsg == "Vote Saved Successfully"){
           Fluttertoast.showToast(msg: empathize.voteSaved, backgroundColor: Colors.black,
-            textColor: Colors.white,).then((value){
+            textColor: Colors.white,gravity: ToastGravity.CENTER).then((value){
           });
         }else{
           Fluttertoast.showToast(msg: ideation.responseArrayVoteImpactFeasibilityMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });
@@ -219,14 +219,14 @@ class VotePainPointsApiProvider {
         if(ideation.responseArrayUpdateImpactPriorityMsg == "priority updated Successfully"){
           if(ideation.selectedPainPointForPrototypingStatus == "2"){
             Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
-              textColor: Colors.white,);
+              textColor: Colors.white,gravity: ToastGravity.CENTER);
             updateStep8(context);
           }else{
 
           }
         }else{
           Fluttertoast.showToast(msg: ideation.responseArrayUpdateImpactPriorityMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
         }
       }
     });

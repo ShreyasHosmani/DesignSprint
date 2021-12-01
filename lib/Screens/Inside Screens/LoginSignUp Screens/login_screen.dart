@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:apple_sign_in/apple_sign_in.dart';
+//import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:design_sprint/APIs/login.dart';
 import 'package:design_sprint/ReusableWidgets/upper_curve_clipper.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
@@ -8,7 +8,7 @@ import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/for
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/signup_screen.dart';
 import 'package:design_sprint/main.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -22,9 +22,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 var appleEmailStudent;
 var appleFullNameStudent;
+var appleAuthId;
 
 class Login extends StatefulWidget {
   @override
@@ -89,6 +91,59 @@ class _LoginState extends State<Login> {
 
   Future<void> _handleSignOut() => login.googleSignIn.disconnect();
 
+  Future<String> LoginUsingApple(context) async {
+
+    String url = globals.urlSignUp + "socialregister.php";
+
+    http.post(url, body: {
+
+      "fullname" : appleFullNameStudent.toString(),
+      "email" : appleEmailStudent.toString(),
+      "password" : "",
+      "fcmtoken" : userToken.toString(),
+      "authtype" : "Apple",
+      "authid" : "$appleAuthId",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      login.responseArrayLogin = jsonDecode(response.body);
+      print(login.responseArrayLogin);
+      var msg = login.responseArrayLogin['message'];
+      if(msg == "Register Successfull" || msg == "Login Successfull"){
+        login.prLogin.hide().whenComplete(() async {
+          Fluttertoast.showToast(msg: "Logged in successfully", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+
+          profile.userID = login.responseArrayLogin['data']['userID'].toString();
+
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString("userID", profile.userID);
+
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => Load(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        });
+      }else{
+        login.googleSignIn.disconnect();
+        Fluttertoast.showToast(msg: 'You have already used this email for sign up!', backgroundColor: Colors.black,
+          textColor: Colors.white,);
+        login.prLogin.hide();
+      }
+
+    });
+  }
+
+  /*
   Future<FirebaseUser> signInWithApple({List<Scope> scopes = const [Scope.email, Scope.fullName]}) async {
     final _firebaseAuth = FirebaseAuth.instance;
     // 1. perform the sign-in request
@@ -188,14 +243,16 @@ class _LoginState extends State<Login> {
     return null;
   }
 
+   */
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    AppleSignIn.onCredentialRevoked.listen((_) {
-      print("Credentials revoked");
-    });
-    FirebaseAuth.instance.signOut();
+    // AppleSignIn.onCredentialRevoked.listen((_) {
+    //   print("Credentials revoked");
+    // });
+    //FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -203,79 +260,84 @@ class _LoginState extends State<Login> {
     login.prLogin = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned(
-              top: -MediaQuery.of(context).size.height/10,left: 0,right: 0,
-              child: buildUpperImage(context)),
-          Positioned(
-            top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
-            child: WillPopScope(
-              onWillPop: () => showDialog(
-                context: context,
-                builder: (context) => new AlertDialog(
-                  title: new Text('Are you sure?'),
-                  content: new Text('Do you want to exit the App'),
-                  actions: <Widget>[
-                    new GestureDetector(
-                      onTap: () => Navigator.of(context).pop(false),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Text("No"),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              Positioned(
+                  top: -MediaQuery.of(context).size.height/10,left: 0,right: 0,
+                  child: buildUpperImage(context)),
+              Positioned(
+                top: MediaQuery.of(context).size.height/3.5,left: 0,right: 0,
+                child: WillPopScope(
+                  onWillPop: () => showDialog(
+                    context: context,
+                    builder: (context) => new AlertDialog(
+                      title: new Text('Are you sure?'),
+                      content: new Text('Do you want to exit the App'),
+                      actions: <Widget>[
+                        new GestureDetector(
+                          onTap: () => Navigator.of(context).pop(false),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text("No"),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        new GestureDetector(
+                          onTap: () => exit(0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text("Yes"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: login.formKey,
+                      child: Column(
+                        children: [
+                          //buildUpperImage(context),
+                          SizedBox(height: 50),
+                          Padding(
+                            padding: EdgeInsets.only(left: 30),
+                            child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(login.loginHeading,
+                                  style: GoogleFonts.nunitoSans(
+                                    textStyle: TextStyle(
+                                        fontSize: 32,
+                                        letterSpacing: 0,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          buildEmailField(context),
+                          buildPasswordField(context),
+                          forgotPassword(context),
+                          SizedBox(height: MediaQuery.of(context).size.height/30,),
+                          buildLoginButton(context),
+                          SizedBox(height: MediaQuery.of(context).size.height/20,),
+                          newUserSignUp(context),
+                          SizedBox(height: MediaQuery.of(context).size.height/20,),
+                          signInWith(context),
+                          SizedBox(height: MediaQuery.of(context).size.height/40,),
+                          Platform.isAndroid ? buildSocialLogins(context) :
+                          buildSocialLoginsRow(context),
+                          SizedBox(height: 40,),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 16),
-                    new GestureDetector(
-                      onTap: () => exit(0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Text("Yes"),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: login.formKey,
-                  child: Column(
-                    children: [
-                      //buildUpperImage(context),
-                      SizedBox(height: 50),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(login.loginHeading,
-                              style: GoogleFonts.nunitoSans(
-                                textStyle: TextStyle(
-                                    fontSize: 32,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w600
-                                ),
-                              ),
-                            )),
-                      ),
-                      buildEmailField(context),
-                      buildPasswordField(context),
-                      forgotPassword(context),
-                      SizedBox(height: MediaQuery.of(context).size.height/30,),
-                      buildLoginButton(context),
-                      SizedBox(height: MediaQuery.of(context).size.height/50,),
-                      newUserSignUp(context),
-                      SizedBox(height: MediaQuery.of(context).size.height/20,),
-                      signInWith(context),
-                      SizedBox(height: MediaQuery.of(context).size.height/40,),
-                      Platform.isAndroid ? buildSocialLogins(context) :
-                      buildSocialLoginsRow(context),
-                      //SizedBox(height: 40,),
-                    ],
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -519,9 +581,35 @@ class _LoginState extends State<Login> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         InkWell(
-          onTap: (){
-            login.prLogin.show();
-            loginWithFacebook();
+          onTap: () async {
+
+            final credential = await SignInWithApple.getAppleIDCredential(
+              scopes: [
+                AppleIDAuthorizationScopes.email,
+                AppleIDAuthorizationScopes.fullName,
+              ],
+            );
+
+            print(credential);
+
+            setState(() {
+              appleAuthId = credential.userIdentifier.toString();
+              appleFullNameStudent = credential.givenName.toString()+" "+credential.familyName.toString();
+              appleEmailStudent = credential.email.toString();
+            });
+
+            print("apple userIdentifier : "+appleAuthId);
+            print("appleFullNameStudent : "+appleFullNameStudent);
+            print("appleEmailStudent : "+appleEmailStudent);
+
+            if(appleFullNameStudent.toString() == "null" || credential.email.toString() == "null" || credential.email.isEmpty || credential.email == null){
+              print("**********");
+              Fluttertoast.showToast(msg: "Account already exists! Please login.", textColor: Colors.white, backgroundColor: Colors.black);
+            }else{
+              print("/////////");
+              LoginUsingApple(context);
+            }
+
           },
           child: Container(
             height: 40,
@@ -529,7 +617,7 @@ class _LoginState extends State<Login> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               image: DecorationImage(
-                image: AssetImage("assets/images/faceb.png"),
+                image: AssetImage("assets/images/apple.png"),
               ),
             ),
           ),
@@ -561,11 +649,12 @@ class _LoginState extends State<Login> {
             ),
           ),
         ),
+        /*
         SizedBox(width: 25,),
         InkWell(
           onTap: (){
             login.prLogin.show();
-            signInWithApple();
+            loginWithFacebook();
           },
           child: Container(
             height: 40,
@@ -573,11 +662,13 @@ class _LoginState extends State<Login> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               image: DecorationImage(
-                image: AssetImage("assets/images/apple.png"),
+                image: AssetImage("assets/images/faceb.png"),
               ),
             ),
           ),
         ),
+
+         */
       ],
     );
   }
@@ -586,10 +677,7 @@ class _LoginState extends State<Login> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SizedBox(width: 30,),
         buildGoogleLogin(context),
-        buildFacebookLogin(context),
-        SizedBox(width: 30,),
       ],
     );
   }

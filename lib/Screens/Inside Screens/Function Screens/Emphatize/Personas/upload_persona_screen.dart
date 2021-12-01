@@ -139,7 +139,7 @@ class _UploadPersonaState extends State<UploadPersona> {
         if(empathize.responseArrayGetPersonaMsg == "Profile Found"){
 
           setState(() {
-            empathize.paperPersonaImageNamesList = List.generate(empathize.responseArrayGetPersona['data'].length, (i) => empathize.responseArrayGetPersona['data'][i]['personadocImage'] == null || empathize.responseArrayGetPersona['data'][i]['personadocImage'] == "null" ? "" : "https://dezyit.ml/mobileapp/"+empathize.responseArrayGetPersona['data'][i]['personadocImage'].toString().substring(6));
+            empathize.paperPersonaImageNamesList = List.generate(empathize.responseArrayGetPersona['data'].length, (i) => empathize.responseArrayGetPersona['data'][i]['personadocImage'] == null || empathize.responseArrayGetPersona['data'][i]['personadocImage'] == "null" ? "" : "https://admin.dezyit.com/mobileapp/"+empathize.responseArrayGetPersona['data'][i]['personadocImage'].toString().substring(6));
           });
 
           print(empathize.paperPersonaImageNamesList.toList());
@@ -168,7 +168,7 @@ class _UploadPersonaState extends State<UploadPersona> {
   final picker = ImagePicker();
   Future getImageOne() async {
     Navigator.of(context).pop();
-    var pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
     setState(() {
       empathize.imagePaperPersona = File(pickedFile.path);
     });
@@ -176,7 +176,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       Future.delayed(const Duration(seconds: 3), () {
         getPersonaDetails(context).whenComplete((){
           Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
       });
@@ -192,7 +192,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       Future.delayed(const Duration(seconds: 3), () {
         getPersonaDetails(context).whenComplete((){
           Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-            textColor: Colors.white,);
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
       });

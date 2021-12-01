@@ -21,7 +21,7 @@ class CreateOrDownloadJourneyMap extends StatefulWidget {
 class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Email email = Email(
-    body: 'Please find the attachment of Journey Map Template Link below...\n\n\n\n\nDownload link : \n\nhttps://dezyit.ml/mobileapp/appdata/personatemplate/Journey-Map-Template.pdf',
+    body: 'Please find the attachment of Journey Map Template Link below...\n\n\n\n\nDownload link : \n\nhttps://admin.dezyit.com/mobileapp/appdata/personatemplate/Journey-Map-Template.pdf',
     subject: 'Journey Map Template',
     recipients: ['example@gmail.com'],
     cc: [''],
@@ -744,7 +744,7 @@ class _CreateOrDownloadJourneyMapState extends State<CreateOrDownloadJourneyMap>
               InkWell(
                 onTap: () async {
                   //await dio.download("https://onetouchhosting.tk/appdata/personatemplate/template.pdf", "/sdcard/download/template.pdf");
-                  await launch("https://dezyit.ml/mobileapp/appdata/personatemplate/Journey-Map-Template.pdf");
+                  await launch("https://admin.dezyit.com/mobileapp/appdata/personatemplate/Journey-Map-Template.pdf");
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

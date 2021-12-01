@@ -38,6 +38,7 @@ class InputGoalApiProvider {
           Fluttertoast.showToast(msg: goal.goalSaved, backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
             print("###############");
+            goal.goalController.clear();
             Navigator.push(
               context,
               PageRouteBuilder(

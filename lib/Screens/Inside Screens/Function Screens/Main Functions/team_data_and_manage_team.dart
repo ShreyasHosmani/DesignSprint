@@ -725,7 +725,9 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
               transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
               transitionDuration: Duration(milliseconds: 300),
             ),
-          );
+          ).whenComplete((){
+            getTeamNames(context);
+          });
         },
         child: Padding(
           padding: const EdgeInsets.only(top: 10, left: 30, right: 30),

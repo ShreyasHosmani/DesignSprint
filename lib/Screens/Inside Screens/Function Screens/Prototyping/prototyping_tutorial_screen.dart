@@ -25,14 +25,14 @@ class _PrototypingTutorialState extends State<PrototypingTutorial> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-        'https://dezyit.ml/mobileapp/mailerimages/DezyVideos/prototyping.mp4')
+        'https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/prototyping.mp4')
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
       });
     flickManager = FlickManager(
       videoPlayerController:
-      VideoPlayerController.network("https://dezyit.ml/mobileapp/mailerimages/DezyVideos/prototyping.mp4"),
+      VideoPlayerController.network("https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/prototyping.mp4"),
     );
   }
   @override
