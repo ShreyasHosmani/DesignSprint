@@ -825,7 +825,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
           lineHeight: 10,
           percent: (prototyping.pageIndex+1)/prototyping.painPointsForPrototypingList.length,
           backgroundColor: Colors.grey.shade300,
-          progressColor: Color(0xff302B70),
+          progressColor: Color(0xff787cd1),
         ),
       ),
     );
@@ -962,13 +962,13 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
           height: 37,
           width: 166,
           decoration: BoxDecoration(
-              border: Border.all(color :Color(0xff302B70),width: 2),
+              border: Border.all(color :Color(0xff787cd1),width: 2),
               borderRadius: BorderRadius.all(Radius.circular(19))
           ),
           child: Center(
             child: Text("Upload",
               style: TextStyle(
-                  color: Color(0xff302B70), letterSpacing: 1, fontSize: 16),
+                  color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
             ),
           ),
         ),

@@ -910,9 +910,10 @@ class _UploadPersonaState extends State<UploadPersona> {
         itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
         itemBuilder: (context, i) => InkWell(
           onTap: (){
-            if(empathize.paperPersonaImageNamesList[i] == null || empathize.paperPersonaImageNamesList[i] == "null"){
-
+            if(empathize.paperPersonaImageNamesList[i].toString() == ""){
+              print("if loop");
             }else{
+              print("else loop");
               launch(empathize.paperPersonaImageNamesList[i]);
             }
           },
@@ -925,7 +926,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                 borderRadius: BorderRadius.all(Radius.circular(5)),
                 border: Border.all(color: Colors.grey),
                 image: DecorationImage(
-                  image: NetworkImage(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i]),
+                  image: NetworkImage(empathize.paperPersonaImageNamesList[i].toString() == "" ? "https://admin.dezyit.com/assets/media/favicons/favicon.png" : empathize.paperPersonaImageNamesList[i]),
                   fit: BoxFit.cover, scale: 5
                 )
               ),

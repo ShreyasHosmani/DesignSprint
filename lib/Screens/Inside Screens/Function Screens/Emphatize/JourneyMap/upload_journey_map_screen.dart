@@ -1059,9 +1059,13 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         itemBuilder: (context, i) => Center(
           child: InkWell(
             onTap: (){
-              if(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null"){
 
+              print("empathize.journeyMapImageNamesList[i].toString() : "+empathize.journeyMapImageNamesList[i].toString());
+
+              if(empathize.journeyMapImageNamesList[i].toString() == "Digital Journey Map"){
+                print("If loop");
               }else{
+                print("else loop");
                 launch(empathize.journeyMapImageNamesList[i]);
               }
             },
@@ -1074,7 +1078,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     border: Border.all(color: Colors.grey),
                     image: DecorationImage(
-                        image: NetworkImage(empathize.journeyMapImageNamesList[i] == null ? "Digital Journey Map" : empathize.journeyMapImageNamesList[i]),
+                        image: NetworkImage(empathize.journeyMapImageNamesList[i].toString() == "Digital Journey Map" ? "https://admin.dezyit.com/assets/media/favicons/favicon.png" : empathize.journeyMapImageNamesList[i]),
                         fit: BoxFit.cover, scale: 5
                     )
                 ),

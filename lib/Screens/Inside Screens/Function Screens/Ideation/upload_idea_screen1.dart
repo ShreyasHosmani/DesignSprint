@@ -952,7 +952,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
           lineHeight: 10,
           percent: (ideation.pageIndexIdea+1)/ideation.painPointsOfStatus2List.length,
           backgroundColor: Colors.grey.shade300,
-          progressColor: Color(0xff302B70),
+          progressColor: Color(0xff787cd1),
         ),
       ),
     );
@@ -1151,13 +1151,13 @@ class _UploadIdea1State extends State<UploadIdea1> {
           height: 37,
           width: 166,
           decoration: BoxDecoration(
-              border: Border.all(color :Color(0xff302B70),width: 2),
+              border: Border.all(color :Color(0xff787cd1),width: 2),
               borderRadius: BorderRadius.all(Radius.circular(19))
           ),
           child: Center(
             child: Text("Upload",
               style: TextStyle(
-                  color: Color(0xff302B70), letterSpacing: 1, fontSize: 16),
+                  color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
             ),
           ),
         ),
