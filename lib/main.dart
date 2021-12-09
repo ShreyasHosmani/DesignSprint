@@ -5,8 +5,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Screens/Initial Screen/initial_screen.dart';
+import 'View Models/CustomViewModel.dart';
 import 'utils/main_data.dart' as mainData;
 
 var tempID;
@@ -53,14 +55,29 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: <String, WidgetBuilder>{
-        '/initial': (context) => InitialScreen(),
-        '/trial': (context) => ManageTeam(),
-        '/Login': (context) => Login(),
-      },
-      home: InitialScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) => CustomViewModel(),
+            child:  MaterialApp(
+              debugShowCheckedModeBanner: false,
+              routes: <String, WidgetBuilder>{
+                '/initial': (context) => InitialScreen(),
+                '/trial': (context) => ManageTeam(),
+                '/Login': (context) => Login(),
+              },
+              home: InitialScreen(),
+            ),),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes: <String, WidgetBuilder>{
+          '/initial': (context) => InitialScreen(),
+          '/trial': (context) => ManageTeam(),
+          '/Login': (context) => Login(),
+        },
+        home: InitialScreen(),
+      ),
     );
   }
 

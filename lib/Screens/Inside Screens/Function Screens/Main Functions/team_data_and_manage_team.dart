@@ -100,7 +100,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
         if(msg == "Team deleted"){
           Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
-              getTeamNames(context);
+            getTeamNames(context);
           });
         }else{
           Fluttertoast.showToast(msg: "error deleting team", backgroundColor: Colors.black,
@@ -759,64 +759,64 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
                   padding: const EdgeInsets.only(right: 20, bottom: 0),
                   child: Align(
                     alignment: Alignment.centerRight,
-                      child: PopupMenuButton<String>(
-                        onSelected: (val){
-                          if(creatorId[i] == profile.userID){
-                            setState(() {
-                              selectedTeamIdForDeleting = team.teamNamesIdsList[i];
-                            });
-                            print(selectedTeamIdForDeleting);
-                            showAlertDialogDeleteTeam(context);
-                          }else{
-                            print("creatorId[i] : "+creatorId[i]);
-                            print("profile.userID : "+profile.userID);
-                            Fluttertoast.showToast(msg: 'Only the decision maker can delete the team!',
-                              backgroundColor: Colors.black,
-                              textColor: Colors.white,
-                            );
-                          }
-                        },
-                        icon: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(height: 3,width: 3,
-                              decoration: BoxDecoration(
+                    child: PopupMenuButton<String>(
+                      onSelected: (val){
+                        if(creatorId[i] == profile.userID){
+                          setState(() {
+                            selectedTeamIdForDeleting = team.teamNamesIdsList[i];
+                          });
+                          print(selectedTeamIdForDeleting);
+                          showAlertDialogDeleteTeam(context);
+                        }else{
+                          print("creatorId[i] : "+creatorId[i]);
+                          print("profile.userID : "+profile.userID);
+                          Fluttertoast.showToast(msg: 'Only the decision maker can delete the team!',
+                            backgroundColor: Colors.black,
+                            textColor: Colors.white,
+                          );
+                        }
+                      },
+                      icon: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(height: 3,width: 3,
+                            decoration: BoxDecoration(
                                 color: Colors.grey,
                                 borderRadius: BorderRadius.all(Radius.circular(50))
-                              ),
                             ),
-                            SizedBox(height: 3,),
-                            Container(height: 3,width: 3,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.all(Radius.circular(50))
-                              ),
+                          ),
+                          SizedBox(height: 3,),
+                          Container(height: 3,width: 3,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(50))
                             ),
-                            SizedBox(height: 3,),
-                            Container(height: 3,width: 3,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.all(Radius.circular(50))
-                              ),
+                          ),
+                          SizedBox(height: 3,),
+                          Container(height: 3,width: 3,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(50))
                             ),
-                          ],
-                        ),
-                        color: Colors.white,
-                        itemBuilder: (BuildContext context) {
-                          return {'Delete Team'}.map((String choice) {
-                            return PopupMenuItem<String>(
-                              value: choice,
-                              textStyle: GoogleFonts.nunitoSans(
-                                color: Colors.grey.shade700,
-                                fontSize: 16,
-                              ),
-                              child: Text(choice),
-                            );
-                          }).toList();
-                        },
+                          ),
+                        ],
                       ),
-                ),) : Container(),
+                      color: Colors.white,
+                      itemBuilder: (BuildContext context) {
+                        return {'Delete Team'}.map((String choice) {
+                          return PopupMenuItem<String>(
+                            value: choice,
+                            textStyle: GoogleFonts.nunitoSans(
+                              color: Colors.grey.shade700,
+                              fontSize: 16,
+                            ),
+                            child: Text(choice),
+                          );
+                        }).toList();
+                      },
+                    ),
+                  ),) : Container(),
               ],
             ),
           ),
@@ -828,6 +828,9 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
   Widget buildAddTeamWidget(BuildContext context){
     return GestureDetector(
       onTap: (){
+        setState(() {
+          team.teamNameController.clear();
+        });
         showAlertDialog(context);
       },
       child: Column(
@@ -869,7 +872,7 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
             controller: team.teamNameController,
             decoration: InputDecoration(
                 hintText: 'Enter team name',
-              hintStyle: GoogleFonts.nunitoSans(letterSpacing: 0.5)
+                hintStyle: GoogleFonts.nunitoSans(letterSpacing: 0.5)
             ),
             validator: (value){
               if(value.isEmpty){

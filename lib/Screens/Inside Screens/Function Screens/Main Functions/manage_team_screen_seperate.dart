@@ -45,6 +45,28 @@ class ManageTeamSeperate extends StatefulWidget {
 }
 
 class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
+
+
+  // bool _isloaded = false;
+  //
+  // Future initTask() async {
+  //   Provider.of<CustomViewModel>(context, listen: false)
+  //       .getTeamList()
+  //       .then((value) async {
+  //     setState(() {
+  //       _isloaded = true;
+  //     });
+  //   });
+  // }
+  //
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   initTask();
+  // }
+  //
+
   Future<String> getTeamMembers(context) async {
     String url = globals.urlLogin + "getteamstatusbyid.php";
     http.post(url, body: {
@@ -200,7 +222,6 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     });
   }
-
   Future<String> giveAdminAccess(context) async {
 
     String url = globals.urlLogin + "updateteamstatus.php";
@@ -240,7 +261,6 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     });
   }
-
   Future<String> getSprintAdmins(context) async {
     String url = globals.urlLogin + "getsprintbyrights.php";
 
@@ -284,6 +304,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       }
     });
   }
+
 
   @override
   void initState() {
