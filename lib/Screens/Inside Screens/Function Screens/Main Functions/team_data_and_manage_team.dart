@@ -718,16 +718,16 @@ class _TeamDataAndManageTeamState extends State<TeamDataAndManageTeam> {
       itemCount: team.teamNamesList == null ? 0 : team.teamNamesList.length,
       itemBuilder: (context, i) => (i > 0 && team.teamNamesList[i].toString() == team.teamNamesList[i-1].toString()) ? Container() : InkWell(
         onTap: (){
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => ManageTeamSeperate(team.teamNamesIdsList[i], team.teamNamesList[i]),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          ).whenComplete((){
-            getTeamNames(context);
-          });
+          // Navigator.push(
+          //   context,
+          //   PageRouteBuilder(
+          //     pageBuilder: (c, a1, a2) => ManageTeamSeperate(team.teamNamesIdsList[i], team.teamNamesList[i]),
+          //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          //     transitionDuration: Duration(milliseconds: 300),
+          //   ),
+          // ).whenComplete((){
+          //   getTeamNames(context);
+          // });
         },
         child: Padding(
           padding: const EdgeInsets.only(top: 10, left: 30, right: 30),

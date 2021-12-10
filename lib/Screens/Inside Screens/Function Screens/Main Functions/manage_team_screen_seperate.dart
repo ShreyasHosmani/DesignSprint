@@ -1,6 +1,8 @@
 import 'package:design_sprint/APIs/create_add_team.dart';
+import 'package:design_sprint/Helpers/helper.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
+import 'package:design_sprint/View%20Models/CustomViewModel.dart';
 import 'package:design_sprint/main.dart';
 import 'package:design_sprint/utils/main_data.dart';
 import 'package:flutter/material.dart';
@@ -15,304 +17,44 @@ import 'package:design_sprint/utils/globals.dart' as globals;
 import 'dart:convert';
 
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 bool statusDrawer = false;
-var selectedMemberId;
 
 var memberNameControllerEdit = new TextEditingController();
 var memberEmailControllerEdit = new TextEditingController();
 
-var teamCreatorID;
-
-var selectedMemberEmail;
-
-var teamMemberStatuses;
-var allTeamMemberStatuses;
-
-var teamMemberUserIds;
-
-var sprintAdmins;
-var sprintAdminsName;
-
-//ScrollController controller = ScrollController();
-
 class ManageTeamSeperate extends StatefulWidget {
+  final index;
   final teamid;
   final teamName;
-  ManageTeamSeperate(this.teamid, this.teamName) : super();
+
+  ManageTeamSeperate(this.index, this.teamid, this.teamName) : super();
+
   @override
   _ManageTeamSeperateState createState() => _ManageTeamSeperateState();
 }
 
 class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
+  bool _isloaded = false;
 
-
-  // bool _isloaded = false;
-  //
-  // Future initTask() async {
-  //   Provider.of<CustomViewModel>(context, listen: false)
-  //       .getTeamList()
-  //       .then((value) async {
-  //     setState(() {
-  //       _isloaded = true;
-  //     });
-  //   });
-  // }
-  //
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   initTask();
-  // }
-  //
-
-  Future<String> getTeamMembers(context) async {
-    String url = globals.urlLogin + "getteamstatusbyid.php";
-    http.post(url, body: {
-      //"userID" : profile.userID,
-      "teamID" : widget.teamid,
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      team.responseArrayTeamDetails = jsonDecode(response.body);
-      print(team.responseArrayTeamDetails);
-
-      team.responseArrayTeamDetailsMsg = team.responseArrayTeamDetails['message'].toString();
-      if(statusCode == 200){
-        if(team.responseArrayTeamDetailsMsg == "Profile Found"){
-          setState(() {
-            teamCreatorID = team.responseArrayTeamDetails['data'][0]['teamUserid'].toString();
-            //teamMemberUserIds = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
-            team.teamMemberNameList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
-            team.teamMemberEmailList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'].toString());
-            team.teamMemberIdsList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamID'].toString());
-            teamMemberStatuses = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'] == profile.email.toString() ? team.responseArrayTeamDetails['data'][i]['teamStatus'].toString() : "null");
-            allTeamMemberStatuses = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamStatus'].toString());
-          });
-          print("teamCreatorID ::: "+teamCreatorID.toString());
-          print(team.teamMemberNameList.toList());
-          print(team.teamMemberEmailList.toList());
-          print(team.teamMemberIdsList.toList());
-          print(teamMemberStatuses.toList());print(allTeamMemberStatuses.toList());
-        }else{
-          setState(() {
-            team.teamMemberNameList = "1";
-            team.teamMemberEmailList = null;
-            team.teamMemberIdsList = null;
-          });
-        }
-      }
+  Future initTask() async {
+    Provider.of<CustomViewModel>(context, listen: false)
+        .getTeamMembersList(widget.teamid)
+        .then((value) async {
+      setState(() {
+        _isloaded = true;
+      });
     });
   }
-  Future<String> addTeamMember(context) async {
-
-    String url = globals.urlLogin + "addteammemberbyid.php";
-
-    http.post(url, body: {
-
-      "userID" : profile.userID,
-      "teamid" : widget.teamid,
-      "membername" : team.memberNameController.text,
-      "memberemail" : team.memberEmailController.text,
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      team.responseArrayAddTeam = jsonDecode(response.body);
-      print(team.responseArrayAddTeam);
-
-      team.responseArrayAddTeamMsg = team.responseArrayAddTeam['message'].toString();
-      if(statusCode == 200){
-        if(team.responseArrayAddTeamMsg == "Team Added Successfully"){
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: team.memberAdded, backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
-            team.memberEmailController.clear();
-            team.memberNameController.clear();
-            getTeamMembers(context);
-            Navigator.of(context).pop();
-          });
-        }else{
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: team.responseArrayAddTeamMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }
-      }
-
-    });
-  }
-  Future<String> removeTeamMember(context) async {
-
-    String url = globals.urlLogin + "removeteammember.php";
-    http.post(url, body: {
-
-      "teamID" : selectedMemberId,
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      team.responseArrayRemoveMember = jsonDecode(response.body);
-      print(team.responseArrayRemoveMember);
-
-      team.responseArrayRemoveMemberMsg = team.responseArrayRemoveMember['message'].toString();
-      if(statusCode == 200){
-        if(team.responseArrayRemoveMemberMsg == "Member Removed Successfully"){
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: "Removed", backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
-            getTeamMembers(context);
-          });
-        }else{
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: "Error", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }
-      }
-
-    });
-  }
-  Future<String> editTeamMember(context) async {
-
-    String url = globals.urlSignUp + "manageteammember.php";
-    http.post(url, body: {
-
-      "teamID" : selectedMemberId,
-      "email" : memberEmailControllerEdit.text.toString(),
-      "name" : memberNameControllerEdit.text.toString(),
-      "fcmtoken" : userToken.toString(),
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      var responseArrayEditTeamMember = jsonDecode(response.body);
-      print(responseArrayEditTeamMember);
-
-      var responseArrayEditTeamMemberMsg = responseArrayEditTeamMember['message'].toString();
-      if(statusCode == 200){
-        if(responseArrayEditTeamMemberMsg == "Member Updated Successfully"){
-          team.prTeam.hide();
-          Navigator.of(context).pop();
-          Fluttertoast.showToast(msg: "Saved", backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
-            getTeamMembers(context);
-          });
-        }else{
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: "Error", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }
-      }
-
-    });
-  }
-  Future<String> giveAdminAccess(context) async {
-
-    String url = globals.urlLogin + "updateteamstatus.php";
-    http.post(url, body: {
-
-      "teamname" : widget.teamName.toString(),
-      "useremail" : selectedMemberEmail.toString(),
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      var giveAdminAccessResponseArray = jsonDecode(response.body);
-      print(giveAdminAccessResponseArray);
-
-      var giveAdminAccessResponseArrayMsg = giveAdminAccessResponseArray['message'].toString();
-      print(giveAdminAccessResponseArrayMsg);
-
-      if(statusCode == 200){
-        if(giveAdminAccessResponseArrayMsg == "Team Right Updated Successfully"){
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: "Admin access granted to : "+selectedMemberEmail.toString(), backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
-            getTeamMembers(context);
-          });
-          getTeamMembers(context);
-          getSprintAdmins(context);
-        }else{
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: "Please check your network connection!", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }
-      }
-
-    });
-  }
-  Future<String> getSprintAdmins(context) async {
-    String url = globals.urlLogin + "getsprintbyrights.php";
-
-    http.post(url, body: {
-
-      "teamName" : widget.teamName.toString(),//home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      var responseArrayGetSprintAdmins = jsonDecode(response.body);
-      print(responseArrayGetSprintAdmins);
-
-      var responseArrayGetSprintAdminsMsg = responseArrayGetSprintAdmins['message'].toString();
-      print(responseArrayGetSprintAdminsMsg);
-
-      if(statusCode == 200){
-        if(responseArrayGetSprintAdminsMsg == "Data Found"){
-
-          setState(() {
-            sprintAdmins = responseArrayGetSprintAdmins['data']['userEmail'].toString();
-            sprintAdminsName = responseArrayGetSprintAdmins['data']['userFullname'].toString();
-          });
-
-          print("*********");
-          print(sprintAdmins.toString());
-          print(sprintAdminsName.toString());
-          print("*********");
-
-        }else{
-
-          setState(() {
-            sprintAdmins = null;
-          });
-
-        }
-      }
-    });
-  }
-
 
   @override
   void initState() {
-    getTeamMembers(context);
-    getSprintAdmins(context);
+    // TODO: implement initState
     super.initState();
-    team.teamMemberNameList = null;
+    initTask();
   }
+
   @override
   Widget build(BuildContext context) {
     team.prTeam = ProgressDialog(context);
@@ -321,49 +63,66 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       key: team.scaffoldKey2,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommon(),
-      body: team.teamMemberNameList == null ? Center(
-        child: CircularProgressIndicator(),
-      ) : Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      endDrawer: statusDrawer == true
+          ? StatusDrawerSprintGoal()
+          : ProfileDrawerCommon(),
+      body: _isloaded == false
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Stack(
               children: [
-                SizedBox(height: 10,),
-                buildName2Widget(context),
-                SizedBox(height: 20,),
-                buildName3Widget(context),
-                SizedBox(height: 20,),
-                buildMemberCardWidget(context),
-                SizedBox(height: 75,),
-                buildAddMemberWidget(context),
-                SizedBox(height: MediaQuery.of(context).size.height/7,),
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      buildName2Widget(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildName3Widget(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildMemberCardWidget(context),
+                      SizedBox(
+                        height: 75,
+                      ),
+                      buildAddMemberWidget(context),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 7,
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  right: 0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 40,
+                        ),
+                        child: statusBarDrawer(context),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-          Positioned(
-            top: 40, right: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 40,),
-                  child: statusBarDrawer(context),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
-  Widget buildAppBar(BuildContext context){
-
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+  Widget buildAppBar(BuildContext context) {
+    Container line =
+        Container(height: 1, color: Colors.black, child: Divider());
     void _openEndDrawer() {
       setState(() {
         statusDrawer = false;
@@ -377,7 +136,8 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(team.appBarTitle,
+        child: Text(
+          team.appBarTitle,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -388,8 +148,14 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
       actions: [
@@ -404,10 +170,18 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   line,
-                  SizedBox(height: 6,),
+                  SizedBox(
+                    height: 6,
+                  ),
                   line,
-                  SizedBox(height: 6,),
-                  Container(height:1,width:20, color: Colors.black,child: Divider()),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                      height: 1,
+                      width: 20,
+                      color: Colors.black,
+                      child: Divider()),
                 ],
               ),
             ),
@@ -417,7 +191,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
     );
   }
 
-  Widget buildProfileDrawer(BuildContext context){
+  Widget buildProfileDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -450,140 +224,204 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                         width: 80,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
                         ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(
+                        width: 15,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi, " + profile.name + "!",
+                          Text(
+                            "Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
                           ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 14,
+                            )),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingHome,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingDesignSprint,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingTips,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingManageTeam,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingFAQs,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingLegalPolicy,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
               ],
             ),
           ),
@@ -592,13 +430,14 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
     );
   }
 
-  Widget statusBarDrawer(BuildContext context){
+  Widget statusBarDrawer(BuildContext context) {
     void _openEndDrawer() {
       setState(() {
         statusDrawer = true;
       });
       team.scaffoldKey2.currentState.openEndDrawer();
     }
+
     return Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
@@ -621,13 +460,18 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
               ),
             ],
           ),
-          child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
+          child: Center(
+              child: Text(
+            "<<",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),
+          )),
         ),
       ),
     );
   }
 
-  Widget buildStatusDrawer(BuildContext context){
+  Widget buildStatusDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -643,21 +487,25 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                   height: 70,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(
+                      "Sprint Name",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
@@ -666,201 +514,261 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Sprint Goal",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Sprint Goal",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Empathize",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Empathize",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Ideation",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Ideation",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Prototype",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Prototype",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("User Testing",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "User Testing",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Re - Iterate",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Re - Iterate",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Team",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Team",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
@@ -872,208 +780,267 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
+  Widget buildName2Widget(BuildContext context) {
     return Center(
-      child: Text(widget.teamName,
+      child: Text(
+        widget.teamName,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
                 fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
+                fontWeight: FontWeight.w200)),
       ),
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
+  Widget buildName3Widget(BuildContext context) {
     return Center(
-      child: Text(team.subTitleManageTeam2,
+      child: Text(
+        team.subTitleManageTeam2,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
+                fontWeight: FontWeight.w500)),
       ),
     );
   }
 
-  Widget buildMemberCardWidget(BuildContext context){
-    return team.teamMemberNameList == "1" ? Container() : ListView.builder(
-      physics: ScrollPhysics(),
-      //controller: controller,
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: team.teamMemberNameList == null ? 0 : team.teamMemberNameList.length,
-      itemBuilder: (context, i) => Padding(
-        padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-        child: InkWell(
-          onTap: (){
+  Widget buildMemberCardWidget(BuildContext context) {
+    final providerListener = Provider.of<CustomViewModel>(context);
 
-            int idx = team.teamMemberNameList.indexOf("You");
-            print("idx : " + idx.toString());
+    return providerListener.membersList.length == 0
+        ? Container()
+        : ListView.builder(
+            physics: ScrollPhysics(),
+            //controller: controller,
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: providerListener.membersList.length,
+            itemBuilder: (context, i) => Padding(
+              padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+              child: InkWell(
+                onTap: () {
+                  /* int idx = team.teamMemberNameList.indexOf("You");
+                  print("idx : " + idx.toString());
 
-            print("my email : " + profile.email.toString());
-            print("decision maker email : " + profile.email.toString());
-            print("sprintAdmins : "+ sprintAdmins.toString());
-            print("team.teamMemberEmailList[i] : "+ team.teamMemberEmailList[i]);
-          },
-          child: Stack(
-            children: [
-              Center(
-                child: Container(
-                  width: 302,
-                  height: 57,//sprintAdmins.toString() == team.teamMemberEmailList[i] ? 75 : 57,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xff787cd1)),
-                      borderRadius: BorderRadius.all(Radius.circular(7))
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //team.teamMemberNameList[i].toString() == "You" ?
-                          SizedBox(height: 5,),
-                          Text(team.teamMemberNameList[i].toString() == "You" ? sprintAdminsName.toString() : team.teamMemberNameList[i].toString(),
-                            maxLines: 1, overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.nunitoSans(
-                              fontSize: 16,
-                              color: sprintAdmins.toString() == team.teamMemberEmailList[i] ? Color(0xff787cd1) : Colors.black,
-                              fontWeight: sprintAdmins.toString() == team.teamMemberEmailList[i] ? FontWeight.bold : FontWeight.normal,
+                  print("my email : " + profile.email.toString());
+                  print("decision maker email : " + profile.email.toString());
+                  print("sprintAdmins : " + sprintAdmins.toString());
+                  print("team.teamMemberEmailList[i] : " +
+                      team.teamMemberEmailList[i]);*/
+                },
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 302,
+                        height: 57,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xff787cd1)),
+                            borderRadius: BorderRadius.all(Radius.circular(7))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 30, right: 30),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  (providerListener
+                                          .membersList[i].teamMemberName ??
+                                      ""),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.nunitoSans(
+                                    fontSize: 16,
+                                    color: (providerListener
+                                                .teamsList[widget.index]
+                                                .userEmail) ==
+                                            (providerListener.membersList[i]
+                                                    .teamMemberEmail ??
+                                                "")
+                                        ? Color(0xff787cd1)
+                                        : Colors.black,
+                                    fontWeight: (providerListener
+                                                .teamsList[widget.index]
+                                                .userEmail) ==
+                                            (providerListener.membersList[i]
+                                                    .teamMemberEmail ??
+                                                "")
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                                Text(
+                                  (providerListener
+                                          .membersList[i].teamMemberEmail ??
+                                      ""),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.nunitoSans(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                              ],
                             ),
                           ),
-                          Text(team.teamMemberEmailList[i],
-                            maxLines: 1, overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.nunitoSans(
-                              fontSize: 16,
-                            ),
-                          ),
-//                            : Text(team.teamMemberEmailList[i].toString() == profile.email.toString() ? "You ("+profile.name+")" : team.teamMemberNameList[i],
-//                          style: GoogleFonts.nunitoSans(
-//                            fontSize: 18,
-//                          ),
-//                        ),
-//                        sprintAdmins.toString() == team.teamMemberEmailList[i] ? Text("Decision Maker",
-//                          style: GoogleFonts.nunitoSans(
-//                            fontSize: 14,color: Color(0xff787cd1),fontWeight: FontWeight.bold,
-//                          ),
-//                        ) : Container(),
-                          SizedBox(height: 5,),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                    (providerListener.teamsList[widget.index].teamUserid) !=
+                            (profile.userID ?? "")
+                        ? Container()
+                        : (providerListener
+                                    .teamsList[widget.index].userEmail) ==
+                                (providerListener
+                                        .membersList[i].teamMemberEmail ??
+                                    "")
+                            ? Container()
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 20, top: 5),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: PopupMenuButton<String>(
+                                    onSelected: (val) {
+                                      if (val == "Make Decision Maker") {
+                                        print("Make Decision Maker called");
+                                        team.prTeam.show();
+
+                                        Provider.of<CustomViewModel>(context,
+                                                listen: false)
+                                            .changeDecisionMaker(
+                                                widget.teamid,
+                                                widget.teamName,
+                                                (providerListener.membersList[i]
+                                                        .teamMemberEmail ??
+                                                    ""))
+                                            .then((value) async {
+                                          team.prTeam.hide();
+                                          if (value == "success") {
+                                          } else if (value == "error") {
+                                            Fluttertoast.showToast(
+                                              msg: "Please try gain!",
+                                              backgroundColor: Colors.black,
+                                              textColor: Colors.white,
+                                            );
+                                          } else {
+                                            Fluttertoast.showToast(
+                                              msg: (value ?? ""),
+                                              backgroundColor: Colors.black,
+                                              textColor: Colors.white,
+                                            );
+                                          }
+                                        });
+                                      } else if (val == "Delete Member") {
+                                        print("Delete Member called");
+
+                                        showAlertDialogDeleteTeam(
+                                            context,
+                                            i,
+                                            (providerListener
+                                                    .membersList[i].teamID ??
+                                                ""));
+                                      } else if (val == "Edit Details") {
+                                        print("Edit Details called");
+                                        setState(() {
+                                          memberNameControllerEdit.text =
+                                              (providerListener.membersList[i]
+                                                      .teamMemberName ??
+                                                  "");
+                                          memberEmailControllerEdit.text =
+                                              (providerListener.membersList[i]
+                                                      .teamMemberEmail ??
+                                                  "");
+                                        });
+                                        showAlertDialogEditTeamMember(
+                                            context,
+                                            i,
+                                            (providerListener
+                                                    .membersList[i].teamID ??
+                                                ""));
+                                      }
+                                    },
+                                    icon: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 3,
+                                          width: 3,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50))),
+                                        ),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        Container(
+                                          height: 3,
+                                          width: 3,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50))),
+                                        ),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        Container(
+                                          height: 3,
+                                          width: 3,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50))),
+                                        ),
+                                      ],
+                                    ),
+                                    color: Colors.white,
+                                    itemBuilder: (BuildContext context) {
+                                      return {
+                                        'Delete Member',
+                                        'Edit Details',
+                                        'Make Decision Maker'
+                                      }.map((String choice) {
+                                        return PopupMenuItem<String>(
+                                          value: choice,
+                                          textStyle: GoogleFonts.nunitoSans(
+                                            color: Colors.grey.shade700,
+                                            fontSize: 16,
+                                          ),
+                                          child: Text(choice),
+                                        );
+                                      }).toList();
+                                    },
+                                  ),
+                                ),
+                              ),
+                  ],
                 ),
               ),
-          sprintAdmins.toString() == team.teamMemberEmailList[i]  ? Container() :
-              Padding(
-                padding: const EdgeInsets.only(right: 20, top: 5),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: PopupMenuButton<String>(
-                    onSelected: (val){
-                      //if(sprintAdmins.toString() == team.teamMemberEmailList[i]){
-                        if(val == "Make Decision Maker"){
-                          print("Make Decision Maker called");
-                            setState(() {
-                              selectedMemberEmail = team.teamMemberEmailList[i].toString();
-                            });
-                            print(selectedMemberEmail);
-                            team.prTeam.show();
-                            giveAdminAccess(context);
-                        }else if(val == "Delete Member"){
-                          print(team.teamMemberEmailList[i]);
-//                        if(sprintAdmins.toString() == team.teamMemberEmailList[i]){
-//                          Fluttertoast.showToast(msg: 'You are the decision maker of this team!',
-//                            backgroundColor: Colors.black,
-//                            textColor: Colors.white,
-//                          );
-//                        }else{
-                            print("Delete Member called");
-                            print("sprintAdmins : "+sprintAdmins.toString());
-                            print("team.teamMemberEmailList[i] : "+team.teamMemberEmailList[i].toString());
-                            setState(() {
-                              selectedMemberId = team.teamMemberIdsList[i].toString();
-                            });
-                            print(selectedMemberId);
-                            showAlertDialogDeleteTeam(context);
-                          //}
-                        }else if(val == "Edit Details"){
-                          print("Edit Details called");
-                          setState(() {
-                            selectedMemberId = team.teamMemberIdsList[i].toString();
-                            memberNameControllerEdit.text = team.teamMemberNameList[i].toString();
-                            memberEmailControllerEdit.text = team.teamMemberEmailList[i].toString();
-                          });
-                          print(selectedMemberId);
-                          showAlertDialogEditTeamMember(context);
-                        }
-//                    }else{
-//                      Fluttertoast.showToast(msg: 'Only the decision maker can make changes!',
-//                        backgroundColor: Colors.black,
-//                        textColor: Colors.white,
-//                      );
-//                    }
-                    },
-                    icon: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(height: 3,width: 3,
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.all(Radius.circular(50))
-                          ),
-                        ),
-                        SizedBox(height: 3,),
-                        Container(height: 3,width: 3,
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.all(Radius.circular(50))
-                          ),
-                        ),
-                        SizedBox(height: 3,),
-                        Container(height: 3,width: 3,
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.all(Radius.circular(50))
-                          ),
-                        ),
-                      ],
-                    ),
-                    color: Colors.white,
-                    itemBuilder: (BuildContext context) {
-                      return {'Delete Member', 'Edit Details', 'Make Decision Maker'}.map((String choice) {
-                        return PopupMenuItem<String>(
-                          value: choice,
-                          textStyle: GoogleFonts.nunitoSans(
-                            color: Colors.grey.shade700,
-                            fontSize: 16,
-                          ),
-                          child: Text(choice),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ),),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 
-  Widget buildAddMemberWidget(BuildContext context){
+  Widget buildAddMemberWidget(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
+        setState(() {
+          team.memberNameController.clear();
+          team.memberEmailController.clear();
+        });
         showAlertDialogAddTeamMember(context);
       },
       child: Column(
@@ -1087,16 +1054,21 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
               borderRadius: BorderRadius.all(Radius.circular(50)),
               color: Color(0xff787CD1),
             ),
-            child: Icon(Icons.add, color: Colors.white,),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
           ),
-          SizedBox(height: 10,),
-          Text("Add Member",
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Add Member",
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
-                  color: Color(0xff787CD1),
-                  fontSize: 14,
-                )
-            ),
+              color: Color(0xff787CD1),
+              fontSize: 14,
+            )),
           )
         ],
       ),
@@ -1104,18 +1076,15 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
   }
 
   showAlertDialogAddTeamMember(BuildContext context) {
-
     Widget textField = Theme(
         data: ThemeData(
           primaryColor: Color(0xff787CD1),
         ),
         child: TextFormField(
           controller: team.memberNameController,
-          decoration: InputDecoration(
-              hintText: 'Enter member name'
-          ),
-          validator: (value){
-            if(value.isEmpty){
+          decoration: InputDecoration(hintText: 'Enter member name'),
+          validator: (value) {
+            if (value.isEmpty) {
               return team.teamMemberNameEmpty;
             }
             return null;
@@ -1128,11 +1097,9 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
         ),
         child: TextFormField(
           controller: team.memberEmailController,
-          decoration: InputDecoration(
-              hintText: hint.memberEmail
-          ),
-          validator: (value){
-            if(value.isEmpty){
+          decoration: InputDecoration(hintText: hint.memberEmail),
+          validator: (value) {
+            if (value.isEmpty) {
               return team.teamMemberEmailEmpty;
             }
             return null;
@@ -1141,9 +1108,19 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     GestureDetector buildSaveButton = GestureDetector(
       onTap: () async {
-        if(team.formKey2.currentState.validate()){
+        if (team.formKey2.currentState.validate()) {
           team.prTeam.show();
-          addTeamMember(context);
+
+          Provider.of<CustomViewModel>(context, listen: false)
+              .addTeamMember(
+                  profile.userID,
+                  widget.teamid,
+                  team.memberNameController.text,
+                  team.memberEmailController.text)
+              .then((value) async {
+            team.prTeam.hide();
+            pop(context);
+          });
         }
       },
       child: Card(
@@ -1153,18 +1130,16 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
         elevation: 10,
         child: Container(
           height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
+          width: MediaQuery.of(context).size.width / 2.4,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(12))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(12))),
           child: Center(
             child: Text(team.nextButtonText,
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
+                style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                      fontSize: 16, letterSpacing: 1, color: Colors.white),
+                )),
           ),
         ),
       ),
@@ -1172,25 +1147,33 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(15.0))),
       title: Column(
         children: [
           InkWell(
-            onTap: (){
-
-            },
+            onTap: () {},
             child: Align(
                 alignment: Alignment.centerRight,
-                child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )),
           ),
-          Text(team.addMember, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text(team.addMember,
+              style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(fontSize: 16, letterSpacing: 1),
+              )),
         ],
       ),
       content: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: MediaQuery.of(context).size.height/3,
+          height: MediaQuery.of(context).size.height / 3,
           width: MediaQuery.of(context).size.width,
           child: Form(
             key: team.formKey2,
@@ -1216,19 +1199,16 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
     );
   }
 
-  showAlertDialogEditTeamMember(BuildContext context) {
-
+  showAlertDialogEditTeamMember(BuildContext context, index, teamMemberId) {
     Widget textField = Theme(
         data: ThemeData(
           primaryColor: Color(0xff787CD1),
         ),
         child: TextFormField(
           controller: memberNameControllerEdit,
-          decoration: InputDecoration(
-              hintText: hint.memberName
-          ),
-          validator: (value){
-            if(value.isEmpty){
+          decoration: InputDecoration(hintText: hint.memberName),
+          validator: (value) {
+            if (value.isEmpty) {
               return team.teamMemberNameEmpty;
             }
             return null;
@@ -1241,11 +1221,9 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
         ),
         child: TextFormField(
           controller: memberEmailControllerEdit,
-          decoration: InputDecoration(
-              hintText: hint.memberEmail
-          ),
-          validator: (value){
-            if(value.isEmpty){
+          decoration: InputDecoration(hintText: hint.memberEmail),
+          validator: (value) {
+            if (value.isEmpty) {
               return team.teamMemberEmailEmpty;
             }
             return null;
@@ -1254,9 +1232,21 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     GestureDetector buildSaveButton = GestureDetector(
       onTap: () async {
-        if(team.formKey2.currentState.validate()){
+        if (team.formKey2.currentState.validate()) {
           team.prTeam.show();
-          editTeamMember(context);
+
+          Provider.of<CustomViewModel>(context, listen: false)
+              .editTeamMember(
+                  index,
+                  widget.teamid,
+                  teamMemberId,
+                  memberEmailControllerEdit.text,
+                  memberNameControllerEdit.text,
+                  "fcmtoken")
+              .then((value) async {
+            team.prTeam.hide();
+            pop(context);
+          });
         }
       },
       child: Card(
@@ -1266,18 +1256,16 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
         elevation: 10,
         child: Container(
           height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
+          width: MediaQuery.of(context).size.width / 2.4,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(12))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(12))),
           child: Center(
             child: Text(team.nextButtonText,
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
+                style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                      fontSize: 16, letterSpacing: 1, color: Colors.white),
+                )),
           ),
         ),
       ),
@@ -1285,25 +1273,33 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(15.0))),
       title: Column(
         children: [
           InkWell(
-            onTap: (){
-
-            },
+            onTap: () {},
             child: Align(
                 alignment: Alignment.centerRight,
-                child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )),
           ),
-          Text(team.addMember, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+          Text(team.addMember,
+              style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(fontSize: 16, letterSpacing: 1),
+              )),
         ],
       ),
       content: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: MediaQuery.of(context).size.height/3,
+          height: MediaQuery.of(context).size.height / 3,
           width: MediaQuery.of(context).size.width,
           child: Form(
             key: team.formKey2,
@@ -1329,24 +1325,26 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
     );
   }
 
-  showAlertDialogDeleteTeam(BuildContext context) {
-
+  showAlertDialogDeleteTeam(BuildContext context, index, teamMemberId) {
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = FlatButton(
       child: Text("Delete"),
-      onPressed:  () async {
-        Navigator.of(context).pop();
-        removeTeamMember(context).whenComplete((){
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+      onPressed: () async {
+        team.prTeam.show();
+
+        Provider.of<CustomViewModel>(context, listen: false)
+            .deleteTeamMember(index, teamMemberId)
+            .then((value) async {
+          team.prTeam.hide();
+          Navigator.of(context).pop();
         });
       },
-
     );
 
     // set up the AlertDialog
@@ -1367,5 +1365,4 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       },
     );
   }
-
 }

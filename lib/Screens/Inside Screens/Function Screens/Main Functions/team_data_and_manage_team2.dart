@@ -48,7 +48,6 @@ class _TeamDataAndManageTeam2State extends State<TeamDataAndManageTeam2> {
 
   @override
   Widget build(BuildContext context) {
-
     team.prTeam = ProgressDialog(context);
     setState(() {
       parentContext = context;
@@ -786,8 +785,9 @@ class _TeamDataAndManageTeam2State extends State<TeamDataAndManageTeam2> {
                       push(
                           context,
                           ManageTeamSeperate(
-                              providerListener.teamsList[i].teamID,
-                              providerListener.teamsList[i].teamNameid));
+                              i,
+                              providerListener.teamsList[i].teamNameid,
+                              providerListener.teamsList[i].tnName));
                     },
                     child: Padding(
                       padding:
@@ -832,8 +832,11 @@ class _TeamDataAndManageTeam2State extends State<TeamDataAndManageTeam2> {
                                           team.prTeam.show();
                                           Provider.of<CustomViewModel>(context,
                                                   listen: false)
-                                              .deleteTeam(i, providerListener
-                                                  .teamsList[i].tnID).then((value) {
+                                              .deleteTeam(
+                                                  i,
+                                                  providerListener
+                                                      .teamsList[i].tnID)
+                                              .then((value) {
                                             team.prTeam.hide();
                                           });
                                         },
@@ -1059,5 +1062,4 @@ class _TeamDataAndManageTeam2State extends State<TeamDataAndManageTeam2> {
       },
     );
   }
-
 }

@@ -65,6 +65,7 @@ class WebService {
     try {
       Map body = {"teamID": teamID};
 
+      print(body);
       final response = await http
           .post(Uri.parse(urlLogin + "getteamstatusbyid.php"), body: body);
 
@@ -78,13 +79,76 @@ class WebService {
     }
   }
 
-  Future getDecisionMakerEmail(teamName) async {
+  Future addTeamMember(userID, teamid, membername, memberemail) async {
     try {
-      Map body = {"teamName": teamName};
+      Map body = {
+        "userID": userID,
+        "teamid": teamid,
+        "membername": membername,
+        "memberemail": memberemail
+      };
+      print(body);
 
       final response = await http
-          .post(Uri.parse(urlLogin + "getsprintbyrights.php"), body: body);
+          .post(Uri.parse(urlLogin + "addteammemberbyid.php"), body: body);
+      print(response.body);
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return "error";
+      }
+    } catch (Exception) {
+      print("exception" + Exception.toString());
+    }
+  }
 
+  Future deleteTeamMember(teamID) async {
+    try {
+      Map body = {"teamID": teamID};
+
+      final response = await http
+          .post(Uri.parse(urlLogin + "removeteammember.php"), body: body);
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return "error";
+      }
+    } catch (Exception) {
+      print("exception" + Exception.toString());
+    }
+  }
+
+  Future editTeamMember(teamID, email, name, fcmtoken) async {
+    try {
+      Map body = {
+        "teamID": teamID,
+        "email": email,
+        "name": name,
+        "fcmtoken": fcmtoken
+      };
+
+      final response = await http
+          .post(Uri.parse(urlLogin + "manageteammember.php"), body: body);
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return "error";
+      }
+    } catch (Exception) {
+      print("exception" + Exception.toString());
+    }
+  }
+
+  Future changeDecisionMaker(teamname, useremail) async {
+    try {
+      Map body = {"teamname": teamname, "useremail": useremail};
+
+      print(body);
+      final response = await http
+          .post(Uri.parse(urlLogin + "updateteamstatus.php"), body: body);
+      print(response.body);
       if (response.statusCode == 200) {
         return response;
       } else {

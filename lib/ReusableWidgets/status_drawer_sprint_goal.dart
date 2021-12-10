@@ -32,265 +32,318 @@ class _StatusDrawerSprintGoalState extends State<StatusDrawerSprintGoal> {
                   height: 120,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text(home.savedSprintName,
+                    child: Text(
+                      home.savedSprintName,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 25,
-                          )
-                      ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                      )),
                     ),
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (c, a1, a2) => InputSprintGoal(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionsBuilder: (c, anim, a2, child) =>
+                            FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
                     );
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 25,),
+                      SizedBox(
+                        width: 25,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(50)),
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
-                        child: Divider(color: Colors.grey,),
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
                       ),
-                      SizedBox(width: 10,),
-                      Text("Sprint Goal",
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Sprint Goal",
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Row(
                     children: [
-                      SizedBox(width: 25,),
+                      SizedBox(
+                        width: 25,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50)),
-                            border: Border.all(color: Colors.grey)
-                        ),
+                            border: Border.all(color: Colors.grey)),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
-                        child: Divider(color: Colors.grey,),
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
                       ),
-                      SizedBox(width: 10,),
-                      Text("Empathize",
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Empathize",
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Row(
                     children: [
-                      SizedBox(width: 25,),
+                      SizedBox(
+                        width: 25,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50)),
-                            border: Border.all(color: Colors.grey)
-                        ),
+                            border: Border.all(color: Colors.grey)),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
-                        child: Divider(color: Colors.grey,),
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
                       ),
-                      SizedBox(width: 10,),
-                      Text("Ideation",
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Ideation",
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Row(
                     children: [
-                      SizedBox(width: 25,),
+                      SizedBox(
+                        width: 25,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50)),
-                            border: Border.all(color: Colors.grey)
-                        ),
+                            border: Border.all(color: Colors.grey)),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
-                        child: Divider(color: Colors.grey,),
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
                       ),
-                      SizedBox(width: 10,),
-                      Text("Prototype",
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Prototype",
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Row(
                     children: [
-                      SizedBox(width: 25,),
+                      SizedBox(
+                        width: 25,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50)),
-                            border: Border.all(color: Colors.grey)
-                        ),
+                            border: Border.all(color: Colors.grey)),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
-                        child: Divider(color: Colors.grey,),
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
                       ),
-                      SizedBox(width: 10,),
-                      Text("User Testing",
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "User Testing",
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Row(
                     children: [
-                      SizedBox(width: 25,),
+                      SizedBox(
+                        width: 25,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50)),
-                            border: Border.all(color: Colors.grey)
-                        ),
+                            border: Border.all(color: Colors.grey)),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
-                        child: Divider(color: Colors.grey,),
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
                       ),
-                      SizedBox(width: 10,),
-                      Text("Re - Iterate",
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Re - Iterate",
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Row(
                     children: [
-                      SizedBox(width: 25,),
+                      SizedBox(
+                        width: 25,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50)),
-                            border: Border.all(color: Colors.grey)
-                        ),
+                            border: Border.all(color: Colors.grey)),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         height: 8,
                         width: 8,
-                        child: Divider(color: Colors.grey,),
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
                       ),
-                      SizedBox(width: 10,),
-                      Text("Team",
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Team",
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),

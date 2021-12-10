@@ -807,14 +807,14 @@ class _SelectTeamState extends State<SelectTeam> {
                       child: PopupMenuButton<String>(
                         onSelected: (val){
                           if(val == "Edit Team"){
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (c, a1, a2) => ManageTeamSeperate(team.teamNamesIdsList[i], team.teamNamesList[i]),
-                                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                                transitionDuration: Duration(milliseconds: 300),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   PageRouteBuilder(
+                            //     pageBuilder: (c, a1, a2) => ManageTeamSeperate(team.teamNamesIdsList[i], team.teamNamesList[i]),
+                            //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                            //     transitionDuration: Duration(milliseconds: 300),
+                            //   ),
+                            // );
                           }else{
                             setState(() {
                               selectedTeamIdForDeleting = team.teamNamesIdsList[i];
