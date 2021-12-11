@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:design_sprint/Models/DecisionMakerParser.dart';
 import 'package:design_sprint/Models/MembersListParser.dart';
 import 'package:design_sprint/Models/TeamListParser.dart';
 import 'package:design_sprint/services/web_service.dart';
@@ -9,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CustomViewModel extends ChangeNotifier {
   List<TeamListParser> teamsList = [];
   List<MembersListParser> membersList = [];
+  DecisionMakerParser decisionMakerParser;
+  var adminEmail;
 
   Future getTeamList() async {
     this.teamsList.clear();
@@ -63,8 +66,8 @@ class CustomViewModel extends ChangeNotifier {
     }
   }
 
-  Future addTeam(teamname) async {
-    final response = await WebService().addTeam(teamname);
+  Future addTeam(teamname, fullname) async {
+    final response = await WebService().addTeam(teamname, fullname);
 
     if (response != "error" && response != null) {
       var responseDecoded = jsonDecode(utf8.decode(response.bodyBytes));
@@ -93,7 +96,6 @@ class CustomViewModel extends ChangeNotifier {
     if (response != "error" && response != null) {
       var responseDecoded = jsonDecode(utf8.decode(response.bodyBytes));
 
-
       var message = responseDecoded['message'];
 
       if (message == "Profile Found") {
@@ -103,6 +105,8 @@ class CustomViewModel extends ChangeNotifier {
             this.membersList.add(MembersListParser.fromJson(i));
           }
         }
+
+        adminEmail = responseDecoded['adminEmail'];
 
         notifyListeners();
         return "success";
@@ -214,4 +218,28 @@ class CustomViewModel extends ChangeNotifier {
       return "error";
     }
   }
+
+  // Future getDecisionMaker(teamName) async {
+  //   this.decisionMakerParser = null;
+  //   final response = await WebService().getDecisionMaker(teamName);
+  //
+  //   if (response != "error" && response != null) {
+  //     var responseDecoded = jsonDecode(utf8.decode(response.bodyBytes));
+  //
+  //     print(responseDecoded);
+  //     var message = responseDecoded['message'];
+  //
+  //     if (message == "Data Found") {
+  //       this.decisionMakerParser = DecisionMakerParser.fromJson(i);
+  //       notifyListeners();
+  //       return "success";
+  //     } else {
+  //       notifyListeners();
+  //       return "error";
+  //     }
+  //   } else {
+  //     notifyListeners();
+  //     return "error";
+  //   }
+  // }
 }

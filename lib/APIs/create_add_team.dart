@@ -11,55 +11,6 @@ import 'package:design_sprint/utils/team_data.dart' as team;
 
 class TeamApiProvider {
 
-  Future<String> createTeamNamekk(context) async {
-
-    String url = globals.urlLogin + "createteam.php";
-
-    http.post(url, body: {
-
-      "userID" : profile.userID,
-      "sprintID" : home.sprintID == null || home.sprintID == "null" ? "null" : home.sprintID,
-      "teamname" : team.teamNameController.text,
-      "useremail" : profile.email.toString(),
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      team.responseArrayTeamName = jsonDecode(response.body);
-      print(team.responseArrayTeamName);
-
-      team.responseArrayTeamNameMsg = team.responseArrayTeamName['message'].toString();
-      if(statusCode == 200){
-        if(team.responseArrayTeamNameMsg == "Team Added Successfully"){
-          team.prTeam.hide();
-          team.teamID = team.responseArrayTeamName['data'];
-          print(team.teamID.toString());
-          Fluttertoast.showToast(msg: team.teamSaved, backgroundColor: Colors.black,
-          textColor: Colors.white,).whenComplete((){
-            Navigator.of(context).pop();
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ManageTeam(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
-          });
-        }else{
-          team.prTeam.hide();
-          Fluttertoast.showToast(msg: team.responseArrayTeamNameMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }
-      }
-
-    });
-  }
-
   Future<String> createTeamName2(context) async {
 
     String url = globals.urlLogin + "createteambyuserid.php";

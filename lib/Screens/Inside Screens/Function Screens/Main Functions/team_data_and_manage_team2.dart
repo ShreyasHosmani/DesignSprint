@@ -974,19 +974,8 @@ class _TeamDataAndManageTeam2State extends State<TeamDataAndManageTeam2> {
           team.prTeam.show();
 
           Provider.of<CustomViewModel>(parentContext, listen: false)
-              .addTeam(team.teamNameController.text);
-          pop(parentContext);
-
-          // teamApiProvider.createTeamName2(context).whenComplete(() {
-          //   Future.delayed(const Duration(seconds: 2), () {
-          //     getTeamNames(context).whenComplete(() {
-          //       Future.delayed(const Duration(seconds: 2), () {
-          //         setState(() {});
-          //       });
-          //     });
-          //   });
-          // });
-
+              .addTeam(team.teamNameController.text, profile.name ?? "");
+          pop(context);
         }
       },
       child: Card(

@@ -44,9 +44,9 @@ class WebService {
     }
   }
 
-  Future addTeam(teamname) async {
+  Future addTeam(teamname, fullname) async {
     try {
-      Map body = {"userID": userID, "teamname": teamname, "useremail": email};
+      Map body = {"userID": userID, "teamname": teamname, "useremail": email, "fullname": fullname};
 
       final response = await http
           .post(Uri.parse(urlLogin + "createteambyuserid.php"), body: body);
@@ -158,4 +158,24 @@ class WebService {
       print("exception" + Exception.toString());
     }
   }
+
+
+  Future getDecisionMaker(teamName) async {
+    try {
+      Map body = {"teamName": teamName};
+
+      print(body);
+      final response = await http
+          .post(Uri.parse(urlLogin + "getsprintbyrights.php"), body: body);
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return "error";
+      }
+    } catch (Exception) {
+      print("exception" + Exception.toString());
+    }
+  }
+
 }

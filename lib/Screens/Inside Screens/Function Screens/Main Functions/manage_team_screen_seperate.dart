@@ -858,20 +858,16 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.nunitoSans(
                                     fontSize: 16,
-                                    color: (providerListener
-                                                .teamsList[widget.index]
-                                                .userEmail) ==
-                                            (providerListener.membersList[i]
-                                                    .teamMemberEmail ??
-                                                "")
+                                    color: (providerListener.adminEmail??"") ==
+                                        (providerListener
+                                            .membersList[i].teamMemberEmail ??
+                                            "")
                                         ? Color(0xff787cd1)
                                         : Colors.black,
-                                    fontWeight: (providerListener
-                                                .teamsList[widget.index]
-                                                .userEmail) ==
-                                            (providerListener.membersList[i]
-                                                    .teamMemberEmail ??
-                                                "")
+                                    fontWeight: (providerListener.adminEmail??"") ==
+                                        (providerListener
+                                            .membersList[i].teamMemberEmail ??
+                                            "")
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                   ),
@@ -898,8 +894,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                     (providerListener.teamsList[widget.index].teamUserid) !=
                             (profile.userID ?? "")
                         ? Container()
-                        : (providerListener
-                                    .teamsList[widget.index].userEmail) ==
+                        : (profile.email ?? "") ==
                                 (providerListener
                                         .membersList[i].teamMemberEmail ??
                                     "")
