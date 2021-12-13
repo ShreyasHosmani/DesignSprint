@@ -44,14 +44,20 @@ class CreatePersonaApiProvider {
 
   Future<String> createDigitalPersona(context) async {
 
+    print("empathize.imageOne : "+empathize.imageOne.toString());
+
     String url = globals.urlSignUp + "createpersonadigitally.php";
 
-    empathize.baseImage = base64Encode(empathize.imageOne.readAsBytesSync());
+    if(empathize.imageOne == null || empathize.imageOne.toString() == "null"){
 
-    empathize.fileName = empathize.imageOne.path.split("/").last;
+    }else{
+      empathize.baseImage = base64Encode(empathize.imageOne.readAsBytesSync());
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('test_image', empathize.imageOne.path);
+      empathize.fileName = empathize.imageOne.path.split("/").last;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('test_image', empathize.imageOne.path);
+    }
 
     http.post(url, body: {
 

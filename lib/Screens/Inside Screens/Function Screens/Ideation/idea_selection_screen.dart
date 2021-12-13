@@ -239,11 +239,13 @@ class _IdeaSelectionState extends State<IdeaSelection> {
     boolSelectedList = [false,false,false,false,false,false,false,false,false,false,];
     counter = 0;
     textColorList = [Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), ];
+    getSprintsStatusesOfTeam(context);
+    getSprintsStatusesOfTeam(context);
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    getSprintsStatusesOfTeam(context);
+    //getSprintsStatusesOfTeam(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -796,13 +798,18 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(ideation.ivsfanalysis,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                color: Color(0xff707070),
-                fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
+      child: GestureDetector(
+        onTap: (){
+          getSprintsStatusesOfTeam(context);
+        },
+        child: Text(ideation.ivsfanalysis,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                  color: Color(0xff707070),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w200
+              )
+          ),
         ),
       ),
     );

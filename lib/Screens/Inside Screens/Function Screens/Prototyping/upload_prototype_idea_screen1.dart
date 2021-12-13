@@ -96,11 +96,14 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   }
   Future<String> getPrototypeImagesPainPointWise(context) async {
 
+    print("sprint id : "+home.sprintID.toString());
+    print("sprint id 2 : "+home.selectedSprintId.toString());
+
     String url = globals.urlSignUp + "getprototypeimagespainpointwise.php";
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "sprintID" : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -154,11 +157,25 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                         getImageOne().then((value){
                           prototypeApiProvider.uploadPrototypeImage(context);
                           Future.delayed(const Duration(seconds: 3), () {
-                            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-                              textColor: Colors.white,);
-                            getPrototypeImagesPainPointWise(context).whenComplete((){
-                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-                            });
+                            // Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                            //   textColor: Colors.white,);
+                            if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
+                              print("Last index reached, You are a great man ever!");
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+                                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                  transitionDuration: Duration(milliseconds: 300),
+                                ),
+                              );
+                            }else{
+                              print("You are a loser bro, try again!");
+                              widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+                            }
+                            // getPrototypeImagesPainPointWise(context).whenComplete((){
+                            //   Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                            // });
                           });
                         });
                       },
@@ -191,11 +208,25 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                         getImageOneGallery().then((value){
                           prototypeApiProvider.uploadPrototypeImage(context);
                           Future.delayed(const Duration(seconds: 3), () {
-                            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-                              textColor: Colors.white,);
-                            getPrototypeImagesPainPointWise(context).whenComplete((){
-                              Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-                            });
+                            // Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+                            //   textColor: Colors.white,);
+                            if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
+                              print("Last index reached, You are a great man ever!");
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+                                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                  transitionDuration: Duration(milliseconds: 300),
+                                ),
+                              );
+                            }else{
+                              print("You are a loser bro, try again!");
+                              widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+                            }
+                            // getPrototypeImagesPainPointWise(context).whenComplete((){
+                            //   Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+                            // });
                           });
                         });
                       },
@@ -979,10 +1010,21 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        if(prototyping.prototypeImagesPPWiseList == null){
-          Fluttertoast.showToast(msg: "You must upload atleast one image", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }else{
+
+        //Navigator.push(
+        //   context,
+        //   PageRouteBuilder(
+        //     pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+        //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+        //     transitionDuration: Duration(milliseconds: 300),
+        //   ),
+        // );
+
+
+        // if(prototyping.prototypeImagesPPWiseList == null){
+        //   Fluttertoast.showToast(msg: "You must upload atleast one image", backgroundColor: Colors.black,
+        //     textColor: Colors.white,);
+        // }else{
           if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
             print("Last index reached, You are a great man ever!");
             Navigator.push(
@@ -997,7 +1039,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
             print("You are a loser bro, try again!");
             widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
           }
-        }
+        //}
       },
       child: Center(
         child: Container(

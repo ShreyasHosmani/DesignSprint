@@ -1183,7 +1183,11 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
             setState(() {
               lastStep = true;
             });
-            createPersonaApiProvider.createDigitalPersona(context);
+            createPersonaApiProvider.createDigitalPersona(context).whenComplete((){
+              setState(() {
+                enableSave = false;
+              });
+            });
           }
         }else{
           Fluttertoast.showToast(msg: "You've not entered anything", backgroundColor: Colors.black,

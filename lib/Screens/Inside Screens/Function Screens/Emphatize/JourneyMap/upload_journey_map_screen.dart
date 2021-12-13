@@ -1056,7 +1056,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemCount: empathize.journeyMapImageNamesList == null ? 0 : empathize.journeyMapImageNamesList.length,
-        itemBuilder: (context, i) => Center(
+        itemBuilder: (context, i) => empathize.journeyMapImageNamesList[i].toString() == "Digital Journey Map" ? Container() : Center(
           child: InkWell(
             onTap: (){
 

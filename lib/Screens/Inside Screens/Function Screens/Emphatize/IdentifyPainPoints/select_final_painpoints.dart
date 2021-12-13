@@ -195,7 +195,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   }
   @override
   Widget build(BuildContext context) {
-    getSprintsStatusesOfTeam(context);
+    //getSprintsStatusesOfTeam(context);
     return empathize.painPointsListAccToVotes == null ? Scaffold(
       backgroundColor: Colors.white,
       body: Center(

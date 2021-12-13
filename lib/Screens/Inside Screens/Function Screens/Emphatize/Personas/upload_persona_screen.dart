@@ -908,7 +908,7 @@ class _UploadPersonaState extends State<UploadPersona> {
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
-        itemBuilder: (context, i) => InkWell(
+        itemBuilder: (context, i) => empathize.paperPersonaImageNamesList[i].toString() == "" ? Container() : InkWell(
           onTap: (){
             if(empathize.paperPersonaImageNamesList[i].toString() == ""){
               print("if loop");
