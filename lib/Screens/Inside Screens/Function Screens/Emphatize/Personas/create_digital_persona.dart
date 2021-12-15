@@ -1186,6 +1186,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
             createPersonaApiProvider.createDigitalPersona(context).whenComplete((){
               setState(() {
                 enableSave = false;
+                clearFields(context);
               });
             });
           }

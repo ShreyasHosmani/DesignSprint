@@ -34,7 +34,7 @@ var baseImagePaperPersona;
 var fileNamePaperPersona;
 var responseArrayUploadPaperPersona;
 var responseArrayUploadPaperPersonaMsg;
-String personaUploaded = "Image uploaded";
+String personaUploaded = "Uploading...";
 String upload = "Upload";
 
 bool statusDrawer = false;

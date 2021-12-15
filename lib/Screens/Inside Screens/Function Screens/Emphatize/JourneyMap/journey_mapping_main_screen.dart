@@ -603,6 +603,9 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
   Widget buildCreateDigitallyCard(BuildContext context){
     return GestureDetector(
       onTap: (){
+        setState(() {
+          empathize.journeyNameController.clear();
+        });
         showAlertDialog(context);
       },
       child: Card(
@@ -654,6 +657,9 @@ class _JourneyMappingMainScreenState extends State<JourneyMappingMainScreen> {
                   alignment: Alignment.bottomRight,
                   child: IconButton(
                     onPressed: (){
+                      setState(() {
+                        empathize.journeyNameController.clear();
+                      });
                       showAlertDialog(context);
                     },
                     icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),

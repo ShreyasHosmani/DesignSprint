@@ -219,27 +219,58 @@ class CustomViewModel extends ChangeNotifier {
     }
   }
 
-  // Future getDecisionMaker(teamName) async {
-  //   this.decisionMakerParser = null;
-  //   final response = await WebService().getDecisionMaker(teamName);
-  //
-  //   if (response != "error" && response != null) {
-  //     var responseDecoded = jsonDecode(utf8.decode(response.bodyBytes));
-  //
-  //     print(responseDecoded);
-  //     var message = responseDecoded['message'];
-  //
-  //     if (message == "Data Found") {
-  //       this.decisionMakerParser = DecisionMakerParser.fromJson(i);
-  //       notifyListeners();
-  //       return "success";
-  //     } else {
-  //       notifyListeners();
-  //       return "error";
-  //     }
-  //   } else {
-  //     notifyListeners();
-  //     return "error";
-  //   }
-  // }
+  Future masterSaveJourney(userID, sprintID, mapID, touchpointID, touchPoints,
+      customerThoughts, customerExperience, painpointname) async {
+    final response = await WebService().masterSaveJourney(
+        userID,
+        sprintID,
+        mapID,
+        touchpointID,
+        touchPoints,
+        customerThoughts,
+        customerExperience,
+        painpointname);
+
+    if (response != "error" && response != null) {
+      var responseDecoded = jsonDecode(utf8.decode(response.bodyBytes));
+
+      print(responseDecoded);
+      var message = responseDecoded['message'];
+
+      if (message == "Added Successfully") {
+        notifyListeners();
+        return message;
+      } else {
+        notifyListeners();
+        return "error";
+      }
+    } else {
+      notifyListeners();
+      return "error";
+    }
+  }
+
+// Future getDecisionMaker(teamName) async {
+//   this.decisionMakerParser = null;
+//   final response = await WebService().getDecisionMaker(teamName);
+//
+//   if (response != "error" && response != null) {
+//     var responseDecoded = jsonDecode(utf8.decode(response.bodyBytes));
+//
+//     print(responseDecoded);
+//     var message = responseDecoded['message'];
+//
+//     if (message == "Data Found") {
+//       this.decisionMakerParser = DecisionMakerParser.fromJson(i);
+//       notifyListeners();
+//       return "success";
+//     } else {
+//       notifyListeners();
+//       return "error";
+//     }
+//   } else {
+//     notifyListeners();
+//     return "error";
+//   }
+// }
 }

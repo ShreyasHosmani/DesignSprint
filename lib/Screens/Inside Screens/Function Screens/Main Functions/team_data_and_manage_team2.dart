@@ -972,10 +972,12 @@ class _TeamDataAndManageTeam2State extends State<TeamDataAndManageTeam2> {
       onTap: () {
         if (team.formKey.currentState.validate()) {
           team.prTeam.show();
-
-          Provider.of<CustomViewModel>(parentContext, listen: false)
-              .addTeam(team.teamNameController.text, profile.name ?? "");
-          pop(context);
+          Provider.of<CustomViewModel>(context, listen: false)
+              .addTeam(team.teamNameController.text, profile.name ?? "")
+              .then((value) {
+            pop(context);
+            pop(context);
+          });
         }
       },
       child: Card(

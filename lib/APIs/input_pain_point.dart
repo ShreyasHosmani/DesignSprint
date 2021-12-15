@@ -237,7 +237,7 @@ class InputPainPointsApiProvider {
 
   //APIs for Horizontal Journey Map - Edit/Update Section
 
-  Future<String> updateTouchPoints(context) async {
+  Future<String> TeamDataAndManageTeam2(context) async {
 
     String url = globals.urlSignUp + "edittouchpoint.php";
 

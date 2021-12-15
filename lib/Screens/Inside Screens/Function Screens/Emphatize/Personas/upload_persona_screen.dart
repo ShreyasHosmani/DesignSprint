@@ -175,7 +175,7 @@ class _UploadPersonaState extends State<UploadPersona> {
     createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+          Fluttertoast.showToast(msg: "Loading...", backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
@@ -191,7 +191,7 @@ class _UploadPersonaState extends State<UploadPersona> {
     createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+          Fluttertoast.showToast(msg: "Loading...", backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
           Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
@@ -784,102 +784,6 @@ class _UploadPersonaState extends State<UploadPersona> {
     return GestureDetector(
       onTap: (){
         _settingModalBottomSheetOne(context);
-        /*
-        showGeneralDialog(
-          barrierLabel: "Label",
-          barrierDismissible: true,
-          barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: Duration(milliseconds: 400),
-          context: context,
-          pageBuilder: (context, anim1, anim2) {
-            return Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 195,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          getImageOneGallery();
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 44,
-                                height: 44,
-                                child: Image.asset("assets/images/photo.png")),
-                            SizedBox(height: 8.97,),
-                            Text(empathize.gallery,
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          getImageOne();
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 44,
-                                height: 44,
-                                child: Image.asset("assets/images/folder.png")),
-                            SizedBox(height: 8.97,),
-                            Text(empathize.fileManager,
-                              style: GoogleFonts.nunitoSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                      color: Colors.white,
-                                  ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xff707070),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-          transitionBuilder: (context, anim1, anim2, child) {
-            return SlideTransition(
-              position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-              child: child,
-            );
-          },
-        );
-
-         */
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => PersonaMainScreen(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
       },
       child: Center(
         child: Container(
@@ -931,16 +835,6 @@ class _UploadPersonaState extends State<UploadPersona> {
                 )
               ),
             ),
-//            Text(empathize.paperPersonaImageNamesList[i] == null ? "Digital persona" : empathize.paperPersonaImageNamesList[i],
-//              textAlign: TextAlign.center,
-//              style: GoogleFonts.nunitoSans(
-//                  textStyle: TextStyle(
-//                    fontSize: 12,
-//                    fontWeight: FontWeight.w500,
-//                    color: Colors.grey,
-//                  )
-//              ),
-//            ),
           ),
         ),
       ),

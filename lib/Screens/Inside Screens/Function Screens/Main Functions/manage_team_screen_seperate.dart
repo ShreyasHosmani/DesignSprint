@@ -811,221 +811,314 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
 
     return providerListener.membersList.length == 0
         ? Container()
-        : ListView.builder(
-            physics: ScrollPhysics(),
-            //controller: controller,
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: providerListener.membersList.length,
-            itemBuilder: (context, i) => Padding(
-              padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-              child: InkWell(
-                onTap: () {
-                  /* int idx = team.teamMemberNameList.indexOf("You");
-                  print("idx : " + idx.toString());
-
-                  print("my email : " + profile.email.toString());
-                  print("decision maker email : " + profile.email.toString());
-                  print("sprintAdmins : " + sprintAdmins.toString());
-                  print("team.teamMemberEmailList[i] : " +
-                      team.teamMemberEmailList[i]);*/
+        : Column(
+            children: [
+              ListView.builder(
+                physics: ScrollPhysics(),
+                //controller: controller,
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: providerListener.membersList.length,
+                itemBuilder: (context, i) {
+                  return (providerListener.adminEmail ?? "") ==
+                          (providerListener.membersList[i].teamMemberEmail ??
+                              "")
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 30, right: 30),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Container(
+                                  width: 302,
+                                  height: 57,
+                                  decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Color(0xff787cd1)),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(7))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 30, right: 30),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            (providerListener.membersList[i]
+                                                    .teamMemberName ??
+                                                ""),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.nunitoSans(
+                                              fontSize: 16,
+                                              color: (providerListener
+                                                              .adminEmail ??
+                                                          "") ==
+                                                      (providerListener
+                                                              .membersList[i]
+                                                              .teamMemberEmail ??
+                                                          "")
+                                                  ? Color(0xff787cd1)
+                                                  : Colors.black,
+                                              fontWeight: (providerListener
+                                                              .adminEmail ??
+                                                          "") ==
+                                                      (providerListener
+                                                              .membersList[i]
+                                                              .teamMemberEmail ??
+                                                          "")
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                            ),
+                                          ),
+                                          Text(
+                                            (providerListener.membersList[i]
+                                                    .teamMemberEmail ??
+                                                ""),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.nunitoSans(
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container();
                 },
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 302,
-                        height: 57,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xff787cd1)),
-                            borderRadius: BorderRadius.all(Radius.circular(7))),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  (providerListener
-                                          .membersList[i].teamMemberName ??
-                                      ""),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.nunitoSans(
-                                    fontSize: 16,
-                                    color: (providerListener.adminEmail??"") ==
-                                        (providerListener
-                                            .membersList[i].teamMemberEmail ??
-                                            "")
-                                        ? Color(0xff787cd1)
-                                        : Colors.black,
-                                    fontWeight: (providerListener.adminEmail??"") ==
-                                        (providerListener
-                                            .membersList[i].teamMemberEmail ??
-                                            "")
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+              ),
+              ListView.builder(
+                physics: ScrollPhysics(),
+                //controller: controller,
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: providerListener.membersList.length,
+                itemBuilder: (context, i) {
+                  return (providerListener.adminEmail ?? "") ==
+                      (providerListener.membersList[i].teamMemberEmail ??
+                          "")?Container(): Padding(
+                  padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 302,
+                          height: 57,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Color(0xff787cd1)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7))),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 5,
                                   ),
-                                ),
-                                Text(
-                                  (providerListener
-                                          .membersList[i].teamMemberEmail ??
-                                      ""),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.nunitoSans(
-                                    fontSize: 16,
+                                  Text(
+                                    (providerListener
+                                            .membersList[i].teamMemberName ??
+                                        ""),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.nunitoSans(
+                                      fontSize: 16,
+                                      color:
+                                          (providerListener.adminEmail ?? "") ==
+                                                  (providerListener
+                                                          .membersList[i]
+                                                          .teamMemberEmail ??
+                                                      "")
+                                              ? Color(0xff787cd1)
+                                              : Colors.black,
+                                      fontWeight:
+                                          (providerListener.adminEmail ?? "") ==
+                                                  (providerListener
+                                                          .membersList[i]
+                                                          .teamMemberEmail ??
+                                                      "")
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                              ],
+                                  Text(
+                                    (providerListener
+                                            .membersList[i].teamMemberEmail ??
+                                        ""),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.nunitoSans(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    (providerListener.teamsList[widget.index].teamUserid) !=
-                            (profile.userID ?? "")
-                        ? Container()
-                        : (profile.email ?? "") ==
-                                (providerListener
-                                        .membersList[i].teamMemberEmail ??
-                                    "")
-                            ? Container()
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 20, top: 5),
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: PopupMenuButton<String>(
-                                    onSelected: (val) {
-                                      if (val == "Make Decision Maker") {
-                                        print("Make Decision Maker called");
-                                        team.prTeam.show();
+                      (providerListener.teamsList[widget.index].teamUserid) !=
+                              (profile.userID ?? "")
+                          ? Container()
+                          : (profile.email ?? "") ==
+                                  (providerListener
+                                          .membersList[i].teamMemberEmail ??
+                                      "")
+                              ? Container()
+                              : Padding(
+                                  padding:
+                                      const EdgeInsets.only(right: 20, top: 5),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: PopupMenuButton<String>(
+                                      onSelected: (val) {
+                                        if (val == "Make Decision Maker") {
+                                          print("Make Decision Maker called");
+                                          team.prTeam.show();
 
-                                        Provider.of<CustomViewModel>(context,
-                                                listen: false)
-                                            .changeDecisionMaker(
-                                                widget.teamid,
-                                                widget.teamName,
+                                          Provider.of<CustomViewModel>(context,
+                                                  listen: false)
+                                              .changeDecisionMaker(
+                                                  widget.teamid,
+                                                  widget.teamName,
+                                                  (providerListener
+                                                          .membersList[i]
+                                                          .teamMemberEmail ??
+                                                      ""))
+                                              .then((value) async {
+                                            team.prTeam.hide();
+                                            if (value == "success") {
+                                            } else if (value == "error") {
+                                              Fluttertoast.showToast(
+                                                msg: "Please try gain!",
+                                                backgroundColor: Colors.black,
+                                                textColor: Colors.white,
+                                              );
+                                            } else {
+                                              Fluttertoast.showToast(
+                                                msg: (value ?? ""),
+                                                backgroundColor: Colors.black,
+                                                textColor: Colors.white,
+                                              );
+                                            }
+                                          });
+                                        } else if (val == "Delete Member") {
+                                          print("Delete Member called");
+
+                                          showAlertDialogDeleteTeam(
+                                              context,
+                                              i,
+                                              (providerListener
+                                                      .membersList[i].teamID ??
+                                                  ""));
+                                        } else if (val == "Edit Details") {
+                                          print("Edit Details called");
+                                          setState(() {
+                                            memberNameControllerEdit.text =
+                                                (providerListener.membersList[i]
+                                                        .teamMemberName ??
+                                                    "");
+                                            memberEmailControllerEdit.text =
                                                 (providerListener.membersList[i]
                                                         .teamMemberEmail ??
-                                                    ""))
-                                            .then((value) async {
-                                          team.prTeam.hide();
-                                          if (value == "success") {
-                                          } else if (value == "error") {
-                                            Fluttertoast.showToast(
-                                              msg: "Please try gain!",
-                                              backgroundColor: Colors.black,
-                                              textColor: Colors.white,
-                                            );
-                                          } else {
-                                            Fluttertoast.showToast(
-                                              msg: (value ?? ""),
-                                              backgroundColor: Colors.black,
-                                              textColor: Colors.white,
-                                            );
-                                          }
-                                        });
-                                      } else if (val == "Delete Member") {
-                                        print("Delete Member called");
-
-                                        showAlertDialogDeleteTeam(
-                                            context,
-                                            i,
-                                            (providerListener
-                                                    .membersList[i].teamID ??
-                                                ""));
-                                      } else if (val == "Edit Details") {
-                                        print("Edit Details called");
-                                        setState(() {
-                                          memberNameControllerEdit.text =
-                                              (providerListener.membersList[i]
-                                                      .teamMemberName ??
-                                                  "");
-                                          memberEmailControllerEdit.text =
-                                              (providerListener.membersList[i]
-                                                      .teamMemberEmail ??
-                                                  "");
-                                        });
-                                        showAlertDialogEditTeamMember(
-                                            context,
-                                            i,
-                                            (providerListener
-                                                    .membersList[i].teamID ??
-                                                ""));
-                                      }
-                                    },
-                                    icon: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 3,
-                                          width: 3,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50))),
-                                        ),
-                                        SizedBox(
-                                          height: 3,
-                                        ),
-                                        Container(
-                                          height: 3,
-                                          width: 3,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50))),
-                                        ),
-                                        SizedBox(
-                                          height: 3,
-                                        ),
-                                        Container(
-                                          height: 3,
-                                          width: 3,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50))),
-                                        ),
-                                      ],
-                                    ),
-                                    color: Colors.white,
-                                    itemBuilder: (BuildContext context) {
-                                      return {
-                                        'Delete Member',
-                                        'Edit Details',
-                                        'Make Decision Maker'
-                                      }.map((String choice) {
-                                        return PopupMenuItem<String>(
-                                          value: choice,
-                                          textStyle: GoogleFonts.nunitoSans(
-                                            color: Colors.grey.shade700,
-                                            fontSize: 16,
+                                                    "");
+                                          });
+                                          showAlertDialogEditTeamMember(
+                                              context,
+                                              i,
+                                              (providerListener
+                                                      .membersList[i].teamID ??
+                                                  ""));
+                                        }
+                                      },
+                                      icon: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 3,
+                                            width: 3,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(50))),
                                           ),
-                                          child: Text(choice),
-                                        );
-                                      }).toList();
-                                    },
+                                          SizedBox(
+                                            height: 3,
+                                          ),
+                                          Container(
+                                            height: 3,
+                                            width: 3,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(50))),
+                                          ),
+                                          SizedBox(
+                                            height: 3,
+                                          ),
+                                          Container(
+                                            height: 3,
+                                            width: 3,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(50))),
+                                          ),
+                                        ],
+                                      ),
+                                      color: Colors.white,
+                                      itemBuilder: (BuildContext context) {
+                                        return {
+                                          'Delete Member',
+                                          'Edit Details',
+                                          'Make Decision Maker'
+                                        }.map((String choice) {
+                                          return PopupMenuItem<String>(
+                                            value: choice,
+                                            textStyle: GoogleFonts.nunitoSans(
+                                              color: Colors.grey.shade700,
+                                              fontSize: 16,
+                                            ),
+                                            child: Text(choice),
+                                          );
+                                        }).toList();
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                  ],
-                ),
+                    ],
+                  ),
+                );
+                },
               ),
-            ),
+            ],
           );
   }
 

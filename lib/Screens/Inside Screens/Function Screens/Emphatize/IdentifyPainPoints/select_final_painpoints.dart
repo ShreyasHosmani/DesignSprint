@@ -195,7 +195,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   }
   @override
   Widget build(BuildContext context) {
-    //getSprintsStatusesOfTeam(context);
+   // getSprintsStatusesOfTeam(context);
     return empathize.painPointsListAccToVotes == null ? Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -207,7 +207,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      bottomNavigationBar: teamMemberStatuses.toList().contains("0") ? null : Padding(
+      bottomNavigationBar: /*teamMemberStatuses.toList().contains("0") ? null :*/ Padding(
         padding: const EdgeInsets.only(bottom: 50),
         child: Container(
             height: 50,
@@ -806,7 +806,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                 ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width/50,),
-              teamMemberStatuses.toList().contains("0") ? Container() : GestureDetector(
+              /*teamMemberStatuses.toList().contains("0") ? Container() : */GestureDetector(
                 onTap: (){
                   print("profile.userID" + profile.userID.toString());
                   print("sprintCreatorId" + sprintCreatorId.toString());

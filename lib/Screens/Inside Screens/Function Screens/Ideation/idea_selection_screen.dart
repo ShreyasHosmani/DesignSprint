@@ -252,7 +252,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
-      bottomNavigationBar: teamMemberStatuses.toList().contains("0") ? null : Padding(
+      bottomNavigationBar:/* teamMemberStatuses.toList().contains("0") ? null : */Padding(
         padding: const EdgeInsets.only(bottom: 50),
         child: Container(
             height: 50,
@@ -890,7 +890,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
               ],
             ),
             SizedBox(height: 20,),
-            teamMemberStatuses.toList().contains("0") ? Container() : GestureDetector(
+            /*teamMemberStatuses.toList().contains("0") ? Container() :*/ GestureDetector(
               onTap: (){
                 print("sprintAdmins + " + sprintAdmins.toString());
 
@@ -1009,7 +1009,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                 ),
               ),
             ),
-            teamMemberStatuses.toList().contains("0") ? Container() : SizedBox(height: 20,),
+            /*teamMemberStatuses.toList().contains("0") ? Container() : */SizedBox(height: 20,),
           ],
         ),
       ),
@@ -1019,22 +1019,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        print(boolSelectedList.toList());
 
-
-
-        // if(boolSelectedList.toList().contains(true)){
-        //   Navigator.push(
-        //     context,
-        //     PageRouteBuilder(
-        //       pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-        //       transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-        //       transitionDuration: Duration(milliseconds: 300),
-        //     ),
-        //   );
-        // }else{
-        //   Fluttertoast.showToast(msg: 'Please select atleast one Idea Image to Proceed!',backgroundColor: Colors.black, textColor: Colors.white);
-        // }
        if(home.selectedSprintId == null || home.selectedSprintId == "null"){
          if(ppiiStatus.contains('1')){
            print("contains 1");
@@ -1105,6 +1090,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
            ),
          );
        }
+
       },
       child: Center(
         child: Container(

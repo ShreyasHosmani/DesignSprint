@@ -1173,9 +1173,17 @@ class _UploadIdea1State extends State<UploadIdea1> {
 //            textColor: Colors.white,);
 //        }else{
           if(ideation.painPointsOfStatus2List.last == ideation.painPointsOfStatus2List[ideation.pageIndexIdea]){
-            print("Last index reached, You are a great man ever!");
+            /*  print("Last index reached, You are a great man ever!");
             prCheck.show();
-            getSprintsStatusesOfTeam2(context);
+            getSprintsStatusesOfTeam2(context);*/
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => IdeationInsideSections2(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
           }else{
             print("You are a loser bro, try again!");
             widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);

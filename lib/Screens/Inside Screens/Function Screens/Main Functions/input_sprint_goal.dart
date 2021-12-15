@@ -29,6 +29,9 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      goal.goalController.clear();
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -673,7 +676,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
         child: Form(
           key: goal.formKey,
           child: TextFormField(
-            maxLines: (MediaQuery.of(context).size.height/60).toInt(),
+            maxLines: MediaQuery.of(context).size.height~/60,
             controller: goal.goalController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),

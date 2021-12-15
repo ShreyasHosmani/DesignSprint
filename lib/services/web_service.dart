@@ -46,7 +46,12 @@ class WebService {
 
   Future addTeam(teamname, fullname) async {
     try {
-      Map body = {"userID": userID, "teamname": teamname, "useremail": email, "fullname": fullname};
+      Map body = {
+        "userID": userID,
+        "teamname": teamname,
+        "useremail": email,
+        "fullname": fullname
+      };
 
       final response = await http
           .post(Uri.parse(urlLogin + "createteambyuserid.php"), body: body);
@@ -159,7 +164,6 @@ class WebService {
     }
   }
 
-
   Future getDecisionMaker(teamName) async {
     try {
       Map body = {"teamName": teamName};
@@ -178,4 +182,30 @@ class WebService {
     }
   }
 
+  Future masterSaveJourney(userID, sprintID, mapID, touchpointID, touchPoints,
+      customerThoughts, customerExperience, painpointname) async {
+    try {
+      Map body = {
+        "userID": userID,
+        "sprintID": sprintID,
+        "mapID": mapID,
+        "touchpointID": touchpointID,
+        "touchPoints": touchPoints,
+        "customerThoughts": customerThoughts,
+        "customerExperience": customerExperience,
+        "painpointname": painpointname
+      };
+
+      final response = await http
+          .post(Uri.parse(urlLogin + "master_save_journey.php"), body: body);
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return "error";
+      }
+    } catch (Exception) {
+      print("exception" + Exception.toString());
+    }
+  }
 }
