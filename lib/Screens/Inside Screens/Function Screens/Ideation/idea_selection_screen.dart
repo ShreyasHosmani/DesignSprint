@@ -35,6 +35,8 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
+
+
   Future<String> getPainPointsByIvsFPriority(context) async {
 
     String url = globals.urlSignUp + "getimpactfeasibilityvote.php";
@@ -72,6 +74,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       }
     });
   }
+
   Future<String> getAllIdeaImages(context) async {
 
     String url = globals.urlSignUp + "getideaimagespainpointwise.php";
@@ -910,9 +913,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                       print(ideation.selectedPainPointIdForPrototyping);
                       print(ideation.selectedPainPointForPrototypingStatus);
                       votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
-                        Future.delayed(Duration(seconds: 2), () async {
-                          getPainPointsByIvsFPriority(context);
-                        });
+                        getPainPointsByIvsFPriority(context);
                       });
                     }else{
                       print("222222");
@@ -924,9 +925,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                       print(ideation.selectedPainPointIdForPrototyping);
                       print(ideation.selectedPainPointForPrototypingStatus);
                       votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
-                        Future.delayed(Duration(seconds: 2), () async {
-                          getPainPointsByIvsFPriority(context);
-                        });
+                        getPainPointsByIvsFPriority(context);
                       });
                     }
                   });

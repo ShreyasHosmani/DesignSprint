@@ -101,11 +101,16 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
 
     String url = globals.urlSignUp + "getprototypeimagespainpointwise.php";
 
+    print(url);
+    print(home.sprintID);
     http.post(url, body: {
 
-      "sprintID" : home.sprintID,
+      "sprintID" : home.selectedSprintId,
 
     }).then((http.Response response) async {
+
+
+
       final int statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
@@ -113,7 +118,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       }
 
       prototype.responseArrayGetPrototypeImagesPainPointWise = jsonDecode(response.body);
-      print(prototype.responseArrayGetPrototypeImagesPainPointWise);
+
 
       prototype.responseArrayGetPrototypeImagesPainPointWiseMsg = prototype.responseArrayGetPrototypeImagesPainPointWise['message'].toString();
       print(prototype.responseArrayGetPrototypeImagesPainPointWiseMsg);
@@ -155,27 +160,8 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     child: InkWell(
                       onTap: (){
                         getImageOne().then((value){
-                          prototypeApiProvider.uploadPrototypeImage(context);
-                          Future.delayed(const Duration(seconds: 3), () {
-                            // Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-                            //   textColor: Colors.white,);
-                            if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
-                              print("Last index reached, You are a great man ever!");
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) => EmphatizeSections4(),
-                                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                                  transitionDuration: Duration(milliseconds: 300),
-                                ),
-                              );
-                            }else{
-                              print("You are a loser bro, try again!");
-                              widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-                            }
-                            // getPrototypeImagesPainPointWise(context).whenComplete((){
-                            //   Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-                            // });
+                          prototypeApiProvider.uploadPrototypeImage(context).then((value) {
+                            getPrototypeImagesPainPointWise(context);
                           });
                         });
                       },
@@ -206,27 +192,8 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     child: InkWell(
                       onTap: (){
                         getImageOneGallery().then((value){
-                          prototypeApiProvider.uploadPrototypeImage(context);
-                          Future.delayed(const Duration(seconds: 3), () {
-                            // Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-                            //   textColor: Colors.white,);
-                            if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
-                              print("Last index reached, You are a great man ever!");
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) => EmphatizeSections4(),
-                                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                                  transitionDuration: Duration(milliseconds: 300),
-                                ),
-                              );
-                            }else{
-                              print("You are a loser bro, try again!");
-                              widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-                            }
-                            // getPrototypeImagesPainPointWise(context).whenComplete((){
-                            //   Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-                            // });
+                          prototypeApiProvider.uploadPrototypeImage(context).then((value) {
+                            getPrototypeImagesPainPointWise(context);
                           });
                         });
                       },
@@ -295,6 +262,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+
                 SizedBox(height: 52,),
                 buildName3Widget(context),
                 SizedBox(height: 35,),
@@ -304,9 +272,12 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                 SizedBox(height: 35,),
                 buildName4Widget(context),
                 SizedBox(height: 34,),
+                buildFileNameWidget(context),
+                SizedBox(height: 23,),
                 buildUploadButton(context),
                 SizedBox(height: 23,),
-                buildFileNameWidget(context),
+
+
               ],
             ),
           ),
@@ -1010,36 +981,20 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-
-        //Navigator.push(
-        //   context,
-        //   PageRouteBuilder(
-        //     pageBuilder: (c, a1, a2) => EmphatizeSections4(),
-        //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-        //     transitionDuration: Duration(milliseconds: 300),
-        //   ),
-        // );
-
-
-        // if(prototyping.prototypeImagesPPWiseList == null){
-        //   Fluttertoast.showToast(msg: "You must upload atleast one image", backgroundColor: Colors.black,
-        //     textColor: Colors.white,);
-        // }else{
-          if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
-            print("Last index reached, You are a great man ever!");
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => EmphatizeSections4(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
-          }else{
-            print("You are a loser bro, try again!");
-            widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-          }
-        //}
+        if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
+          print("Last index reached, You are a great man ever!");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          print("You are a loser bro, try again!");
+          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+        }
       },
       child: Center(
         child: Container(

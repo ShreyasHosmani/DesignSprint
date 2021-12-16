@@ -6,6 +6,7 @@ import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/i_vs_f_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/idea_selection_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/globals.dart' as globals;
@@ -30,9 +31,6 @@ class _ImpactVsFeasibilityPageViewBuilderState extends State<ImpactVsFeasibility
     super.initState();
     ideation.pageIndexIvsF = 0;
     getPainPointsApiProvider.getPainPointsOfStatusTwo2(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {
-        setState(() {});
-      });
     });
   }
   @override
@@ -89,6 +87,8 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
     containerColorList2 = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +132,6 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                   SizedBox(height: 25,),
                   buildVoteRow2(context),
                   SizedBox(height: 53,),
-                  buildNextButton(context),
                   SizedBox(height: 40,),
                 ],
               ),
@@ -837,6 +836,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       ),
     );
   }
+
   Widget buildVoteRow2(BuildContext context){
     return Center(
       child: Container(
@@ -856,16 +856,41 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                 children: [
                   GestureDetector(
                     onTap: (){
-                      setState(() {
-                        selectedIndex2 = i2.toString();
-                        var feasibilityRangeTemp = (i2 + 1).toString();
-                        ideation.feasibilityRange = feasibilityRangeTemp.toString();
-                        ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
-                      });
-                      print(ideation.feasibilityRange);
-                      print(ideation.selectedPainPointIdForVoteOfIvsF);
-                      setColorState2(context, selectedIndex2);
-                      votePainPointsApiProvider.votePainPointsAccToIvsF(context);
+                      if(ideation.impactRange==0){
+                        Fluttertoast.showToast(msg: "Please select impact first", backgroundColor: Colors.black,
+                            textColor: Colors.white,gravity: ToastGravity.BOTTOM).then((value){
+                        });
+                      }else{
+                        setState(() {
+                          selectedIndex2 = i2.toString();
+                          var feasibilityRangeTemp = (i2 + 1).toString();
+                          ideation.feasibilityRange = feasibilityRangeTemp.toString();
+                          ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+                        });
+                        print(ideation.feasibilityRange);
+                        print(ideation.selectedPainPointIdForVoteOfIvsF);
+                        setColorState2(context, selectedIndex2);
+                        votePainPointsApiProvider.votePainPointsAccToIvsF(context).then((value) {
+                          if(ideation.painPointsIdsOfStatus2List2.last == ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF]){
+                            print("Last index reached, You are a great man ever!");
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (c, a1, a2) => IdeaSelection(),
+                                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                transitionDuration: Duration(milliseconds: 300),
+                              ),
+                            );
+                          }else{
+                            setState(() {
+                              ideation.impactRange =0;
+                            });
+                            print("You are a loser bro, try again!");
+                            widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+                          }
+                        });
+                      }
+
                     },
                     child: Container(
                       height: 20,
@@ -1008,6 +1033,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
 //      containerColorList[int.parse(selectedIndex)] = Color(0xff787cd1);
 //    });
   }
+
   void setColorState2(BuildContext context, selectedIndex2){
     if(selectedIndex2 == "0" || selectedIndex2 == 0){
       setState(() {
@@ -1125,45 +1151,6 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     }
   }
 
-  Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        if(ideation.painPointsIdsOfStatus2List2.last == ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF]){
-          print("Last index reached, You are a great man ever!");
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => IdeaSelection(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
-        }else{
-          print("You are a loser bro, try again!");
-          widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
-        }
-      },
-      child: Center(
-        child: Container(
-          height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.0,
-          decoration: BoxDecoration(
-              color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
-          child: Center(
-            child: Text("Next",
-              style: TextStyle(
-                  color: Colors.white, letterSpacing: 1, fontSize: 16),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
 }
 

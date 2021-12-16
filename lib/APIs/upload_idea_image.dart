@@ -72,7 +72,7 @@ class UploadIdeaApiProvider {
 
       ideation.responseArrayUploadIdeaImageMsg = ideation.responseArrayUploadIdeaImage['message'].toString();
       if(ideation.responseArrayUploadIdeaImageMsg == "Persona Added Successfully"){
-        Fluttertoast.showToast(msg: "Image uploaded", backgroundColor: Colors.black,
+        Fluttertoast.showToast(msg: "Processing...", backgroundColor: Colors.black,
           textColor: Colors.white,);
         updateStep6(context);
       }else{

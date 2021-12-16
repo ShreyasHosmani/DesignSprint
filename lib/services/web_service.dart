@@ -196,9 +196,15 @@ class WebService {
         "painpointname": painpointname
       };
 
+
+      print("aaaaaaaaaaa");
+      print(body);
+
       final response = await http
           .post(Uri.parse(urlLogin + "master_save_journey.php"), body: body);
 
+      print("aaaaaaaaaaa");
+      print(response.body);
       if (response.statusCode == 200) {
         return response;
       } else {

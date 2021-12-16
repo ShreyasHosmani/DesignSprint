@@ -823,9 +823,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     print(empathize.selectedFinalPainPointId);
                     print(empathize.painPointStatus);
                     votePainPointsApiProvider.selectFinalPainPoints(context).whenComplete((){
-                      Future.delayed(Duration(seconds: 2), () async {
-                        getPainPointsAccordingToVotes(context);
-                      });
+                      getPainPointsAccordingToVotes(context);
                     });
                   }else{
                     Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final pain points!',

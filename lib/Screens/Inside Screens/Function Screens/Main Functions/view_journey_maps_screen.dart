@@ -27,90 +27,7 @@ class ViewJourneyMaps extends StatefulWidget {
 
 class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
   GetWareHouseJourneyMapDataApiProvider getWareHouseJourneyMapDataApiProvider = GetWareHouseJourneyMapDataApiProvider();
-  Future<String> addComments(context) async {
 
-    //Status : 0-digital persona; 1-paper persona; 2-digital journey maps; 3-paper journey maps
-
-    String url = globals.urlSignUp + "addcomments.php";
-
-    http.post(url, body: {
-
-      "userID" : profile.userID,
-      "sprintID": home.selectedSprintId,
-      "text" : comments.commentController2.text,
-      "statuses" : "2",
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      comments.responseArrayAddComments2 = jsonDecode(response.body);
-      print(comments.responseArrayAddComments2);
-
-      comments.responseArrayAddComments2Msg = comments.responseArrayAddComments2['message'].toString();
-      print(comments.responseArrayAddComments2Msg);
-      if(statusCode == 200){
-        if(comments.responseArrayAddComments2Msg == "Added Data"){
-
-          comments.commentController2.clear();
-          getComments(context);
-
-        }else{
-
-
-
-        }
-      }
-    });
-  }
-  Future<String> getComments(context) async {
-
-    //Status : 0-digital persona; 1-paper persona; 2-digital journey maps; 3-paper journey maps
-
-    String url = globals.urlSignUp + "getcomments.php";
-
-    http.post(url, body: {
-
-      "sprintID": home.selectedSprintId,
-      "statuses" : "2",
-
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
-
-      if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Error fetching data");
-      }
-
-      comments.responseArrayGetComments2 = jsonDecode(response.body);
-      print(comments.responseArrayGetComments2);
-
-      comments.responseArrayGetComments2Msg = comments.responseArrayGetComments2['message'].toString();
-      print(comments.responseArrayGetComments2Msg);
-      if(statusCode == 200){
-        if(comments.responseArrayGetComments2Msg == "Comment Data Found"){
-
-          setState(() {
-            comments.commentsDigitalMapList = List.generate(comments.responseArrayGetComments2['data'].length, (i) => comments.responseArrayGetComments2['data'][i]['commentText'].toString());
-            comments.commentsUserNameDigitalMapList = List.generate(comments.responseArrayGetComments2['data'].length, (i) => comments.responseArrayGetComments2['data'][i]['userFullname'].toString());
-            comments.commentsProfilePicDigitalMapList = List.generate(comments.responseArrayGetComments2['data'].length, (i) => comments.responseArrayGetComments2['data'][i]['userProfilepic'].toString());
-          });
-          print(comments.commentsDigitalMapList.toList());
-          print(comments.commentsUserNameDigitalMapList.toList());
-          print(comments.commentsProfilePicDigitalMapList.toList());
-
-        }else{
-
-          setState(() {
-            comments.commentsDigitalMapList = null;
-          });
-
-        }
-      }
-    });
-  }
   Future getJourneyMapWareHouseData(context) async {
 
     String url = globals.urlSignUp + "getjourneymap.php";
@@ -137,7 +54,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
 
         setState(() {
           journeyMapWH.journeyMapWareHouseIdsList = List.generate(journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'].length, (i) => journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['jpID'].toString());
-          journeyMapWH.journeyMapWareHouseUserNameList = List.generate(journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'].length, (i) => journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['userFullname'].toString());
+          journeyMapWH.journeyMapWareHouseUserNameList = List.generate(journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'].length, (i) => journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['jpName'].toString());
           journeyMapWH.journeyMapWareHouseImagesList = List.generate(journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'].length, (i) => journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['jpdocImage'] == null ? "null" : journeyMapWH.responseArrayGetWareHouseJourneyMapData['data'][i]['jpdocImage'].toString());
         });
 
@@ -161,6 +78,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
     // TODO: implement initState
     super.initState();
     journeyMapWH.journeyMapWareHouseIdsList = null;
+    print(home.selectedSprintId);
     getJourneyMapWareHouseData(context);
   }
   @override

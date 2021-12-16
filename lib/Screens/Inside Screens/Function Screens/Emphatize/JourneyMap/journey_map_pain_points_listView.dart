@@ -1,8 +1,10 @@
 import 'package:design_sprint/APIs/create_journey_map.dart';
 import 'package:design_sprint/APIs/input_pain_point.dart';
+import 'package:design_sprint/Helpers/helper.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/EmpathizeScreens/emphatize_inside_sections_scree3.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_journey_maps_screen.dart';
 import 'package:design_sprint/View%20Models/CustomViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10153,6 +10155,7 @@ class _JourneyMapPainPointsListViewState
       ),
       onPressed: () async {
         Navigator.of(context).pop();
+        prJpHorizontal.show();
         setState(() {
           saveTouchPointControllerText = "";
           saveCustomerThoughtsText = "";
@@ -10171,53 +10174,57 @@ class _JourneyMapPainPointsListViewState
               } else {
                 saveTouchPointControllerText =
                     (saveTouchPointControllerText ?? "") +
-                        "////" +
+                        (saveTouchPointControllerText == "" ? "" : "////") +
                         _controllerListTouchPoints[idx].text.toString();
                 saveCustomerThoughtsText = (saveCustomerThoughtsText ?? "") +
-                    "////" +
+                    (saveCustomerThoughtsText == "" ? "" : "////") +
                     _controllerListCustomerThoughts[idx].text.toString();
                 saveCustomerExperienceText =
                     (saveCustomerExperienceText ?? "") +
-                        "////" +
+                        (saveCustomerExperienceText == "" ? "" : "////") +
                         customerExperienceIdListStorage[idx].toString();
                 savePainPointText = (savePainPointText ?? "") +
-                    "////" +
+                    (savePainPointText == "" ? "" : "////") +
                     _controllerListPainPoints[idx].text.toString();
-
-                print("saveTouchPointControllerText..." +
-                    saveTouchPointControllerText
-                        .toString()
-                        .replaceAll("•", ""));
-                print("saveCustomerThoughtsText..." +
-                    saveCustomerThoughtsText.toString().replaceAll("•", ""));
-                print("saveCustomerExperienceText..." +
-                    saveCustomerExperienceText.toString().replaceAll("•", ""));
-                print("savePainPointText..." +
-                    savePainPointText.toString().replaceAll("•", ""));
-
-                prJpHorizontal.show();
-
-                Provider.of<CustomViewModel>(context, listen: false)
-                    .masterSaveJourney(profile.userID, home.sprintID, empathize.journeyMapId, "0", savePainPointText??"",
-                    saveCustomerThoughtsText, saveCustomerExperienceText, savePainPointText)
-                    .then((value) async {
-                  prJpHorizontal.hide();
-                  Fluttertoast.showToast(
-                      msg: 'Data saved successfully!',
-                      backgroundColor: Colors.black,
-                      textColor: Colors.white);
-                });
-
-                /* uploadTouchPoints(context, saveTouchPointControllerText);
-                uploadCustomerThoughts(context, saveCustomerThoughtsText);
-                uploadCustomerExperiences(context, saveCustomerExperienceText);
-                inputPainPointsFromDigitalJourneyMap(
-                    context, savePainPointText);
-*/
-
               }
             } else {}
           });
+        });
+
+        Provider.of<CustomViewModel>(context, listen: false)
+            .masterSaveJourney(
+                profile.userID,
+                home.selectedSprintId.toString() == null ||
+                        home.selectedSprintId.toString() == "null"
+                    ? home.sprintID.toString()
+                    : home.selectedSprintId.toString(),
+                empathize.journeyMapId,
+                "0",
+                (savePainPointText ?? "").toString().replaceAll("•", ""),
+                (saveCustomerThoughtsText).toString().replaceAll("•", ""),
+                (saveCustomerExperienceText).toString().replaceAll("•", ""),
+                (savePainPointText).toString().replaceAll("•", ""))
+            .then((value) async {
+          Fluttertoast.showToast(
+              msg: 'Data saved successfully!',
+              backgroundColor: Colors.black,
+              textColor: Colors.white);
+          pop(context);
+
+          pop(context);
+          pop(context);
+          pop(context);
+
+          pop(context);
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => ViewJourneyMaps(),
+              transitionsBuilder: (c, anim, a2, child) =>
+                  FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
         });
       },
     );

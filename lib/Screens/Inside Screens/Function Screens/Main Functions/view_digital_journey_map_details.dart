@@ -274,6 +274,7 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getTouchPoints(context);
     getCustomerThoughts(context);
     getCustomerExperiences(context);

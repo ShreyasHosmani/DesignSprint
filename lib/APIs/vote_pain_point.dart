@@ -102,13 +102,14 @@ class VotePainPointsApiProvider {
       empathize.responseArrayVitePainPointsMsg = empathize.responseArrayVitePainPoints['message'].toString();
       print(empathize.responseArrayVitePainPointsMsg);
       if(statusCode == 200){
-        if(empathize.responseArrayVitePainPointsMsg == "Vote Saved Successfully"){
+        /*if(empathize.responseArrayVitePainPointsMsg == "Vote Saved Successfully"){
           Fluttertoast.showToast(msg: empathize.voteSaved, backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayVitePainPointsMsg, backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
-        }
+        }*/
+        return "success";
       }
     });
   }
@@ -138,14 +139,14 @@ class VotePainPointsApiProvider {
       empathize.responseArrayVitePainPointsMsg = empathize.responseArrayVitePainPoints['message'].toString();
       print(empathize.responseArrayVitePainPointsMsg);
       if(statusCode == 200){
-        if(empathize.responseArrayVitePainPointsMsg == "priority updated Successfully"){
+        /*if(empathize.responseArrayVitePainPointsMsg == "priority updated Successfully"){
           Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
           updateStep5(context);
         }else{
           Fluttertoast.showToast(msg: empathize.responseArrayVitePainPointsMsg, backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
-        }
+        }*/
       }
     });
   }
@@ -179,14 +180,14 @@ class VotePainPointsApiProvider {
       ideation.responseArrayVoteImpactFeasibilityMsg = ideation.responseArrayVoteImpactFeasibility['message'].toString();
       print(ideation.responseArrayVoteImpactFeasibilityMsg);
       if(statusCode == 200){
-        if(ideation.responseArrayVoteImpactFeasibilityMsg == "Vote Saved Successfully"){
+       /* if(ideation.responseArrayVoteImpactFeasibilityMsg == "Vote Saved Successfully"){
           Fluttertoast.showToast(msg: empathize.voteSaved, backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER).then((value){
           });
         }else{
           Fluttertoast.showToast(msg: ideation.responseArrayVoteImpactFeasibilityMsg, backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
-        }
+        }*/
       }
     });
   }
