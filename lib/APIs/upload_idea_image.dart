@@ -54,6 +54,9 @@ class UploadIdeaApiProvider {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('test_image', ideation.imageOne.path);
 
+/*    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    print(ideation.selectedPainPointIdForUploadIdeaImage);*/
+
     http.post(url, body: {
 
       "painpointid" : ideation.selectedPainPointIdForUploadIdeaImage.toString(),

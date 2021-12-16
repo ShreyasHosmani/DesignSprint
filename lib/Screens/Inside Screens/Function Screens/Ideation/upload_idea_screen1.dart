@@ -190,6 +190,10 @@ class _UploadIdea1State extends State<UploadIdea1> {
 
     String url = globals.urlSignUp + "getideaimagesbypainpoint.php";
 
+
+    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    print(ideation.selectedPainPointIdForUploadIdeaImage);
+
     http.post(url, body: {
 
       "painpointID" : ideation.selectedPainPointIdForUploadIdeaImage.toString(),
@@ -338,11 +342,13 @@ class _UploadIdea1State extends State<UploadIdea1> {
   @override
   void initState() {
     super.initState();
-    ideation.showImagesIdea = false;
-    ideation.ideaImagesPainPointWiseList = null;
-    ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List[ideation.pageIndexIdea];
-    print(ideation.selectedPainPointIdForUploadIdeaImage);
-    getSprintsStatusesOfTeam(context);
+    setState(() {
+      ideation.showImagesIdea = false;
+      ideation.ideaImagesPainPointWiseList = null;
+      ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List[ideation.pageIndexIdea];
+      print(ideation.selectedPainPointIdForUploadIdeaImage);
+      getSprintsStatusesOfTeam(context);
+    });
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         getIdeaImages(context).whenComplete((){
@@ -1019,16 +1025,6 @@ class _UploadIdea1State extends State<UploadIdea1> {
                 ),
               )
 
-//            Text(ideation.ideaImagesPainPointWiseList[i],
-//              textAlign: TextAlign.center,
-//              style: GoogleFonts.nunitoSans(
-//                  textStyle: TextStyle(
-//                    fontSize: 12,
-//                    fontWeight: FontWeight.w500,
-//                    color: Colors.grey,
-//                  )
-//              ),
-//            ),
             ),
           ),
         ),
