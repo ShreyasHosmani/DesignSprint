@@ -19,75 +19,113 @@ bool statusDrawer = false;
 
 class ImpactVsFeasibilityPageViewBuilder extends StatefulWidget {
   @override
-  _ImpactVsFeasibilityPageViewBuilderState createState() => _ImpactVsFeasibilityPageViewBuilderState();
+  _ImpactVsFeasibilityPageViewBuilderState createState() =>
+      _ImpactVsFeasibilityPageViewBuilderState();
 }
 
-class _ImpactVsFeasibilityPageViewBuilderState extends State<ImpactVsFeasibilityPageViewBuilder> {
+class _ImpactVsFeasibilityPageViewBuilderState
+    extends State<ImpactVsFeasibilityPageViewBuilder> {
   final controller = PageController(viewportFraction: 1);
-  GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+  GetPainPointsApiProvider getPainPointsApiProvider =
+      GetPainPointsApiProvider();
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
+
   void initState() {
     // TODO: implement initState
     super.initState();
     ideation.pageIndexIvsF = 0;
-    getPainPointsApiProvider.getPainPointsOfStatusTwo2(context).whenComplete((){
-    });
+    getPainPointsApiProvider
+        .getPainPointsOfStatusTwo2(context)
+        .whenComplete(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ideation.painPointsOfStatus2List2 == null ? Center(
-        child: CircularProgressIndicator(),
-      ) : PageView.builder(
-        physics:new NeverScrollableScrollPhysics(),
-        itemCount: ideation.painPointsOfStatus2List2 == null ? 0 : ideation.painPointsOfStatus2List2.length,
-        controller: controller,
-        onPageChanged: (index){
-          setState(() {
-            ideation.pageIndexIvsF = index;
-            ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
-          });
-          print(ideation.pageIndexIvsF);
-        },
-        itemBuilder: (BuildContext context, int index) {
-          return IvsFEvaluation1(controller);
-        },
-      ),
+      body: ideation.painPointsOfStatus2List2 == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : PageView.builder(
+              physics: new NeverScrollableScrollPhysics(),
+              itemCount: ideation.painPointsOfStatus2List2 == null
+                  ? 0
+                  : ideation.painPointsOfStatus2List2.length,
+              controller: controller,
+              onPageChanged: (index) {
+                setState(() {
+                  ideation.pageIndexIvsF = index;
+                  ideation.selectedPainPointIdForVoteOfIvsF = ideation
+                      .painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+                });
+                print(ideation.pageIndexIvsF);
+              },
+              itemBuilder: (BuildContext context, int index) {
+                return IvsFEvaluation1(controller);
+              },
+            ),
     );
   }
 }
 
 class IvsFEvaluation1 extends StatefulWidget {
   final controller;
+
   IvsFEvaluation1(this.controller) : super();
+
   @override
   _IvsFEvaluation1State createState() => _IvsFEvaluation1State();
 }
 
 class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
+  VotePainPointsApiProvider votePainPointsApiProvider =
+      VotePainPointsApiProvider();
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     ideation.ideaImagesPainPointWiseList = null;
-    uploadIdeaApiProvider.getIdeaImages(context).whenComplete((){
+    uploadIdeaApiProvider.getIdeaImages(context).whenComplete(() {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
-          ideation.selectedPainPointIdForUploadIdeaImage = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+          ideation.selectedPainPointIdForUploadIdeaImage =
+              ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
         });
         print(ideation.selectedPainPointIdForUploadIdeaImage);
       });
     });
-    ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+    ideation.selectedPainPointIdForVoteOfIvsF =
+        ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
     print(ideation.selectedPainPointIdForVoteOfIvsF);
-    containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
-    containerColorList2 = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
+    containerColorList = [
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+    ];
+    containerColorList2 = [
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white,
+    ];
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -96,13 +134,16 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerEmpathize() : ProfileDrawerCommon(),
+      endDrawer: statusDrawer == true
+          ? StatusDrawerEmpathize()
+          : ProfileDrawerCommon(),
       body: WillPopScope(
         onWillPop: () => Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => IvsFTutorial(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
         ),
@@ -113,26 +154,48 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   buildName2Widget(context),
-                  SizedBox(height: 25,),
+                  SizedBox(
+                    height: 25,
+                  ),
                   buildName3Widget(context),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   buildLevelContainer(context),
-                  SizedBox(height: 46,),
+                  SizedBox(
+                    height: 46,
+                  ),
                   buildPainPointNumberIndicator(context),
-                  SizedBox(height: 28,),
+                  SizedBox(
+                    height: 28,
+                  ),
                   buildImageContainer(context),
-                  SizedBox(height: 43,),
+                  SizedBox(
+                    height: 43,
+                  ),
                   buildName4Widget(context),
-                  SizedBox(height: 25,),
+                  SizedBox(
+                    height: 25,
+                  ),
                   buildVoteRow(context),
-                  SizedBox(height: 25,),
+                  SizedBox(
+                    height: 25,
+                  ),
                   buildName5Widget(context),
-                  SizedBox(height: 25,),
+                  SizedBox(
+                    height: 25,
+                  ),
                   buildVoteRow2(context),
-                  SizedBox(height: 53,),
-                  SizedBox(height: 40,),
+                  SizedBox(
+                    height: 53,
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
                 ],
               ),
               Padding(
@@ -146,9 +209,9 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     );
   }
 
-  Widget buildAppBar(BuildContext context){
-
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+  Widget buildAppBar(BuildContext context) {
+    Container line =
+        Container(height: 1, color: Colors.black, child: Divider());
     void _openEndDrawer() {
       setState(() {
         statusDrawer = false;
@@ -162,7 +225,8 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(ideation.title,
+        child: Text(
+          ideation.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -173,17 +237,22 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
-          onPressed: (){
+          onPressed: () {
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
                 pageBuilder: (c, a1, a2) => IvsFTutorial(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionsBuilder: (c, anim, a2, child) =>
+                    FadeTransition(opacity: anim, child: child),
                 transitionDuration: Duration(milliseconds: 300),
               ),
             );
-            },
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
       actions: [
@@ -198,10 +267,18 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   line,
-                  SizedBox(height: 6,),
+                  SizedBox(
+                    height: 6,
+                  ),
                   line,
-                  SizedBox(height: 6,),
-                  Container(height:1,width:20, color: Colors.black,child: Divider()),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                      height: 1,
+                      width: 20,
+                      color: Colors.black,
+                      child: Divider()),
                 ],
               ),
             ),
@@ -211,7 +288,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     );
   }
 
-  Widget buildProfileDrawer(BuildContext context){
+  Widget buildProfileDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -244,140 +321,204 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                         width: 80,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
                         ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(
+                        width: 15,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi, " + profile.name + "!",
+                          Text(
+                            "Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
                           ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 14,
+                            )),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingHome,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingDesignSprint,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingTips,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingManageTeam,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingFAQs,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingLegalPolicy,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
               ],
             ),
           ),
@@ -386,13 +527,14 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     );
   }
 
-  Widget statusBarDrawer(BuildContext context){
+  Widget statusBarDrawer(BuildContext context) {
     void _openEndDrawer() {
       setState(() {
         statusDrawer = true;
       });
       _scaffoldKey.currentState.openEndDrawer();
     }
+
     return Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
@@ -415,13 +557,18 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
               ),
             ],
           ),
-          child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
+          child: Center(
+              child: Text(
+            "<<",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),
+          )),
         ),
       ),
     );
   }
 
-  Widget buildStatusDrawer(BuildContext context){
+  Widget buildStatusDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -437,224 +584,287 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                   height: 70,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(
+                      "Sprint Name",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Sprint Goal",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Sprint Goal",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Empathize",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Empathize",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Ideation",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Ideation",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Prototype",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Prototype",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("User Testing",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "User Testing",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Re - Iterate",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Re - Iterate",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Team",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Team",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
@@ -666,43 +876,40 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
+  Widget buildName2Widget(BuildContext context) {
     return Center(
-      child: Text(ideation.ivsfanalysis,
+      child: Text(
+        ideation.ivsfanalysis,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
                 fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
+                fontWeight: FontWeight.w200)),
       ),
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
+  Widget buildName3Widget(BuildContext context) {
     return Center(
-      child: Text(ideation.ivsfHint1,
+      child: Text(
+        ideation.ivsfHint1,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
       ),
     );
   }
 
-  Widget buildLevelContainer(BuildContext context){
+  Widget buildLevelContainer(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+      padding: EdgeInsets.only(
+          right: MediaQuery.of(context).size.width / 5,
+          left: MediaQuery.of(context).size.width / 5),
       child: Center(
         child: LinearPercentIndicator(
           lineHeight: 10,
-          percent: (ideation.pageIndexIvsF+1)/ideation.painPointsOfStatus2List2.length,
+          percent: (ideation.pageIndexIvsF + 1) /
+              ideation.painPointsOfStatus2List2.length,
           backgroundColor: Colors.grey.shade300,
           progressColor: Color(0xff787CD1),
         ),
@@ -710,83 +917,75 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     );
   }
 
-  Widget buildPainPointNumberIndicator(BuildContext context){
+  Widget buildPainPointNumberIndicator(BuildContext context) {
     return Center(
       child: Container(
         height: 32,
         width: 32,
         decoration: BoxDecoration(
             color: Color(0xff787CD1),
-            borderRadius: BorderRadius.all(Radius.circular(50))
-        ),
+            borderRadius: BorderRadius.all(Radius.circular(50))),
         child: Center(
-          child: Text((ideation.pageIndexIvsF+1).toString(),
-            style: GoogleFonts.nunitoSans(
-                fontSize: 16,
-                color: Colors.white
+          child: Text(
+            (ideation.pageIndexIvsF + 1).toString(),
+            style: GoogleFonts.nunitoSans(fontSize: 16, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildImageContainer(BuildContext context) {
+    return ideation.ideaImagesPainPointWiseList == null
+        ? Container(
+            height: 161,
+            width: 302,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : InkWell(
+            onTap: () {
+              launch(
+                  globals.urlSignUp + ideation.ideaImagesPainPointWiseList[0]);
+            },
+            child: Container(
+              height: 161,
+              width: 302,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+                border: Border.all(color: Colors.grey),
+                image: DecorationImage(
+                    image: NetworkImage(globals.urlSignUp +
+                        ideation.ideaImagesPainPointWiseList[0]),
+                    fit: BoxFit.cover),
+              ),
+            ),
+          );
   }
 
-  Widget buildImageContainer(BuildContext context){
-    return ideation.ideaImagesPainPointWiseList == null ? Container(
-      height: 161,
-      width: 302,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(7)),
-        border: Border.all(color: Colors.grey),
-      ),
-    ) : InkWell(
-      onTap: (){
-        launch(globals.urlSignUp+ideation.ideaImagesPainPointWiseList[0]);
-      },
-      child: Container(
-        height: 161,
-        width: 302,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(7)),
-          border: Border.all(color: Colors.grey),
-          image: DecorationImage(
-            image: NetworkImage(globals.urlSignUp + ideation.ideaImagesPainPointWiseList[0]),
-            fit: BoxFit.cover
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildName4Widget(BuildContext context){
-
+  Widget buildName4Widget(BuildContext context) {
     return Center(
-      child: Text(ideation.ivsfHint2,
+      child: Text(
+        ideation.ivsfHint2,
         style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold
-            )
-        ),
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ),
     );
   }
 
-  Widget buildName5Widget(BuildContext context){
-
+  Widget buildName5Widget(BuildContext context) {
     return Center(
-      child: Text(ideation.ivsfHint3,
+      child: Text(
+        ideation.ivsfHint3,
         style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold
-            )
-        ),
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ),
     );
   }
 
-  Widget buildVoteRow(BuildContext context){
+  Widget buildVoteRow(BuildContext context) {
     return Center(
       child: Container(
         height: 20,
@@ -795,7 +994,9 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("1"),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             ListView.builder(
               physics: ScrollPhysics(),
               shrinkWrap: true,
@@ -804,12 +1005,14 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
               itemBuilder: (context, i) => Row(
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         selectedIndex = i.toString();
                         var impactRangeTemp = (i + 1).toString();
                         ideation.impactRange = impactRangeTemp.toString();
-                        ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+                        ideation.selectedPainPointIdForVoteOfIvsF =
+                            ideation.painPointsIdsOfStatus2List2[
+                                ideation.pageIndexIvsF];
                       });
                       print(ideation.impactRange);
                       print(ideation.selectedPainPointIdForVoteOfIvsF);
@@ -825,11 +1028,15 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 5,),
+                  SizedBox(
+                    width: 5,
+                  ),
                 ],
               ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Text("10"),
           ],
         ),
@@ -837,7 +1044,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     );
   }
 
-  Widget buildVoteRow2(BuildContext context){
+  Widget buildVoteRow2(BuildContext context) {
     return Center(
       child: Container(
         height: 20,
@@ -846,7 +1053,9 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("1"),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             ListView.builder(
               physics: ScrollPhysics(),
               shrinkWrap: true,
@@ -855,42 +1064,55 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
               itemBuilder: (context, i2) => Row(
                 children: [
                   GestureDetector(
-                    onTap: (){
-                      if(ideation.impactRange==0){
-                        Fluttertoast.showToast(msg: "Please select impact first", backgroundColor: Colors.black,
-                            textColor: Colors.white,gravity: ToastGravity.BOTTOM).then((value){
-                        });
-                      }else{
+                    onTap: () {
+                      if (ideation.impactRange == 0) {
+                        Fluttertoast.showToast(
+                                msg: "Please select impact first",
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                                gravity: ToastGravity.BOTTOM)
+                            .then((value) {});
+                      } else {
                         setState(() {
                           selectedIndex2 = i2.toString();
                           var feasibilityRangeTemp = (i2 + 1).toString();
-                          ideation.feasibilityRange = feasibilityRangeTemp.toString();
-                          ideation.selectedPainPointIdForVoteOfIvsF = ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+                          ideation.feasibilityRange =
+                              feasibilityRangeTemp.toString();
+                          ideation.selectedPainPointIdForVoteOfIvsF =
+                              ideation.painPointsIdsOfStatus2List2[
+                                  ideation.pageIndexIvsF];
                         });
                         print(ideation.feasibilityRange);
                         print(ideation.selectedPainPointIdForVoteOfIvsF);
                         setColorState2(context, selectedIndex2);
-                        votePainPointsApiProvider.votePainPointsAccToIvsF(context).then((value) {
-                          if(ideation.painPointsIdsOfStatus2List2.last == ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF]){
-                            print("Last index reached, You are a great man ever!");
+                        votePainPointsApiProvider
+                            .votePainPointsAccToIvsF(context)
+                            .then((value) {
+                          if (ideation.painPointsIdsOfStatus2List2.last ==
+                              ideation.painPointsIdsOfStatus2List2[
+                                  ideation.pageIndexIvsF]) {
+                            print(
+                                "Last index reached, You are a great man ever!");
                             Navigator.push(
                               context,
                               PageRouteBuilder(
                                 pageBuilder: (c, a1, a2) => IdeaSelection(),
-                                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                transitionsBuilder: (c, anim, a2, child) =>
+                                    FadeTransition(opacity: anim, child: child),
                                 transitionDuration: Duration(milliseconds: 300),
                               ),
                             );
-                          }else{
+                          } else {
                             setState(() {
-                              ideation.impactRange =0;
+                              ideation.impactRange = 0;
                             });
                             print("You are a loser bro, try again!");
-                            widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+                            widget.controller.nextPage(
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeIn);
                           }
                         });
                       }
-
                     },
                     child: Container(
                       height: 20,
@@ -902,11 +1124,15 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 5,),
+                  SizedBox(
+                    width: 5,
+                  ),
                 ],
               ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Text("10"),
           ],
         ),
@@ -914,8 +1140,8 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
     );
   }
 
-  void setColorState(BuildContext context, selectedIndex){
-    if(selectedIndex == "0" || selectedIndex == 0){
+  void setColorState(BuildContext context, selectedIndex) {
+    if (selectedIndex == "0" || selectedIndex == 0) {
       setState(() {
         containerColorList[0] = Color(0xff787cd1);
         containerColorList[0] = Colors.white;
@@ -929,7 +1155,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
         containerColorList[8] = Colors.white;
         containerColorList[9] = Colors.white;
       });
-    }else if(selectedIndex == "1" || selectedIndex == 1){
+    } else if (selectedIndex == "1" || selectedIndex == 1) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Colors.white;
@@ -940,7 +1166,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Colors.white;
       containerColorList[8] = Colors.white;
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "2" || selectedIndex == 2){
+    } else if (selectedIndex == "2" || selectedIndex == 2) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -951,7 +1177,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Colors.white;
       containerColorList[8] = Colors.white;
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "3" || selectedIndex == 3){
+    } else if (selectedIndex == "3" || selectedIndex == 3) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -962,7 +1188,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Colors.white;
       containerColorList[8] = Colors.white;
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "4" || selectedIndex == 4){
+    } else if (selectedIndex == "4" || selectedIndex == 4) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -973,7 +1199,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Colors.white;
       containerColorList[8] = Colors.white;
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "5" || selectedIndex == 5){
+    } else if (selectedIndex == "5" || selectedIndex == 5) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -984,7 +1210,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Colors.white;
       containerColorList[8] = Colors.white;
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "6" || selectedIndex == 6){
+    } else if (selectedIndex == "6" || selectedIndex == 6) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -995,7 +1221,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Colors.white;
       containerColorList[8] = Colors.white;
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "7" || selectedIndex == 7){
+    } else if (selectedIndex == "7" || selectedIndex == 7) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -1006,7 +1232,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Color(0xff787cd1);
       containerColorList[8] = Colors.white;
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "8" || selectedIndex == 8){
+    } else if (selectedIndex == "8" || selectedIndex == 8) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -1017,7 +1243,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList[7] = Color(0xff787cd1);
       containerColorList[8] = Color(0xff787cd1);
       containerColorList[9] = Colors.white;
-    }else if(selectedIndex == "9" || selectedIndex == 9){
+    } else if (selectedIndex == "9" || selectedIndex == 9) {
       containerColorList[0] = Color(0xff787cd1);
       containerColorList[1] = Color(0xff787cd1);
       containerColorList[2] = Color(0xff787cd1);
@@ -1034,8 +1260,8 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
 //    });
   }
 
-  void setColorState2(BuildContext context, selectedIndex2){
-    if(selectedIndex2 == "0" || selectedIndex2 == 0){
+  void setColorState2(BuildContext context, selectedIndex2) {
+    if (selectedIndex2 == "0" || selectedIndex2 == 0) {
       setState(() {
         containerColorList2[0] = Color(0xff787cd1);
         containerColorList2[0] = Colors.white;
@@ -1049,7 +1275,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
         containerColorList2[8] = Colors.white;
         containerColorList2[9] = Colors.white;
       });
-    }else if(selectedIndex2 == "1" || selectedIndex2 == 1){
+    } else if (selectedIndex2 == "1" || selectedIndex2 == 1) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Colors.white;
@@ -1060,7 +1286,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Colors.white;
       containerColorList2[8] = Colors.white;
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "2" || selectedIndex2 == 2){
+    } else if (selectedIndex2 == "2" || selectedIndex2 == 2) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1071,7 +1297,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Colors.white;
       containerColorList2[8] = Colors.white;
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "3" || selectedIndex2 == 3){
+    } else if (selectedIndex2 == "3" || selectedIndex2 == 3) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1082,7 +1308,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Colors.white;
       containerColorList2[8] = Colors.white;
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "4" || selectedIndex2 == 4){
+    } else if (selectedIndex2 == "4" || selectedIndex2 == 4) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1093,7 +1319,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Colors.white;
       containerColorList2[8] = Colors.white;
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "5" || selectedIndex2 == 5){
+    } else if (selectedIndex2 == "5" || selectedIndex2 == 5) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1104,7 +1330,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Colors.white;
       containerColorList2[8] = Colors.white;
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "6" || selectedIndex2 == 6){
+    } else if (selectedIndex2 == "6" || selectedIndex2 == 6) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1115,7 +1341,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Colors.white;
       containerColorList2[8] = Colors.white;
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "7" || selectedIndex2 == 7){
+    } else if (selectedIndex2 == "7" || selectedIndex2 == 7) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1126,7 +1352,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Color(0xff787cd1);
       containerColorList2[8] = Colors.white;
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "8" || selectedIndex2 == 8){
+    } else if (selectedIndex2 == "8" || selectedIndex2 == 8) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1137,7 +1363,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[7] = Color(0xff787cd1);
       containerColorList2[8] = Color(0xff787cd1);
       containerColorList2[9] = Colors.white;
-    }else if(selectedIndex2 == "9" || selectedIndex2 == 9){
+    } else if (selectedIndex2 == "9" || selectedIndex2 == 9) {
       containerColorList2[0] = Color(0xff787cd1);
       containerColorList2[1] = Color(0xff787cd1);
       containerColorList2[2] = Color(0xff787cd1);
@@ -1150,11 +1376,31 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       containerColorList2[9] = Color(0xff787cd1);
     }
   }
-
-
 }
 
-var containerColorList = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
-var containerColorList2 = [Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, Colors.white, ];
+var containerColorList = [
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+];
+var containerColorList2 = [
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+  Colors.white,
+];
 var selectedIndex;
 var selectedIndex2;

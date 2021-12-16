@@ -219,8 +219,8 @@ class VotePainPointsApiProvider {
       if(statusCode == 200){
         if(ideation.responseArrayUpdateImpactPriorityMsg == "priority updated Successfully"){
           if(ideation.selectedPainPointForPrototypingStatus == "2"){
-            Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
-              textColor: Colors.white,gravity: ToastGravity.CENTER);
+          /*  Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
+              textColor: Colors.white,gravity: ToastGravity.CENTER);*/
             updateStep8(context);
           }else{
 

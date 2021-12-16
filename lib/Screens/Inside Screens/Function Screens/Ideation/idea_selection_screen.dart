@@ -840,7 +840,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: ideation.painPointsByIvsFPriorityList == null ? 0 : ideation.ideaAllImagesPainPointWiseList.length,
+        itemCount: ideation.ideaAllImagesPainPointWiseList == null ? 0 : ideation.ideaAllImagesPainPointWiseList.length,
         itemBuilder: (context, i) => Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -881,14 +881,9 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                         borderRadius: BorderRadius.all(Radius.circular(50))
                     ),
                     child: Center(
-                      child: Text("$counter",
-                        style: GoogleFonts.nunitoSans(
-                            fontSize: 16,
-                            color: Colors.white
-                        ),
+                      child: Icon(Icons.check, color: Colors.white,),
                       ),
                     ),
-                  ),
                 ) : Container(height: 1,width: 1,)
               ],
             ),
@@ -999,7 +994,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                   color: boolSelectedList[i] == true ? Color(0xff787cd1) : Colors.white,
                 ),
                 child: Center(
-                  child: Text("Select",
+                  child: Text( boolSelectedList[i] == true ? "Remove":"Select",
                     style: GoogleFonts.nunitoSans(
                       color: boolSelectedList[i] == false ? textColorList[i] : Colors.white,
                       fontSize: 14,
@@ -1057,7 +1052,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                  ),
                );
              }else{
-               Fluttertoast.showToast(msg: 'Please select atleast one of the ideas!',
+               Fluttertoast.showToast(msg: 'Please select attest one of the ideas!',
                  backgroundColor: Colors.black, textColor: Colors.white,
                );
              }
@@ -1073,7 +1068,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                  ),
                );
              }else{
-               Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final ideas!',
+               Fluttertoast.showToast(msg: 'Please wait until decision maker selects the final ideas!',
                  backgroundColor: Colors.black, textColor: Colors.white,
                );
              }

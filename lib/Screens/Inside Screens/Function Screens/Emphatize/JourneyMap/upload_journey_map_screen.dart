@@ -38,6 +38,10 @@ class UploadJourneyMap extends StatefulWidget {
 }
 
 class _UploadJourneyMapState extends State<UploadJourneyMap> {
+
+
+  bool _isVisible = true;
+
   final GlobalKey<ScaffoldState> _scaffoldKey22 = GlobalKey<ScaffoldState>();
   InputPainPointsApiProvider inputPainPointsApiProvider = InputPainPointsApiProvider();
   CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
@@ -86,6 +90,9 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
 
   Future<String> getSprintsStatusesOfTeam(context) async {
 
+    setState(() {
+      _isVisible = false;
+    });
     String url = globals.urlLogin + "getsprintstatusdata.php";
 
     http.post(url, body: {
@@ -109,6 +116,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
           setState(() {
             teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3'].toString());
             sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+            _isVisible = true;
           });
 
           print(teamMemberStatuses);
@@ -117,7 +125,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         }else{
 
           setState(() {
-
+            _isVisible = true;
           });
 
         }
@@ -291,19 +299,25 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   }
   final picker = ImagePicker();
   Future getImageOne() async {
+
     Navigator.of(context).pop();
-    var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
-    setState(() {
-      empathize.imagePaperJourneyMap = File(pickedFile.path);
+   /* var pickedFile =*/ await picker.getImage(source: ImageSource.camera, imageQuality: 25,).then((value) {
+      setState(() {
+        empathize.imagePaperJourneyMap = File(value.path);
+        _isVisible = false;
+      });
     });
+
+
     createJourneyApiProvider.uploadPaperJourneyMap(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           getSprintsStatusesOfTeam(context);
           getJourneyMapDetails(context).whenComplete((){
-            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-              textColor: Colors.white,gravity: ToastGravity.CENTER);
-            Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+
+            Future.delayed(const Duration(seconds: 3), () {setState(() {
+              _isVisible = true;
+            });});
             if(empathize.imagePaperJourneyMap == null){
 
             }else{
@@ -316,18 +330,26 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   }
   Future getImageOneGallery() async {
     Navigator.of(context).pop();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
-    setState(() {
-      empathize.imagePaperJourneyMap = File(pickedFile.path);
+
+
+    /*final pickedFile = */await picker.getImage(source: ImageSource.gallery, imageQuality: 25,).then((value) {
+      setState(() {
+        empathize.imagePaperJourneyMap = File(value.path);
+        _isVisible = false;
+      });
     });
+
+
     createJourneyApiProvider.uploadPaperJourneyMap(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           getSprintsStatusesOfTeam(context);
           getJourneyMapDetails(context).whenComplete((){
-            Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
-              textColor: Colors.white,gravity: ToastGravity.CENTER);
-            Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+        /*    Fluttertoast.showToast(msg: "processing...", backgroundColor: Colors.black,
+              textColor: Colors.white,gravity: ToastGravity.CENTER);*/
+            Future.delayed(const Duration(seconds: 3), () {setState(() {
+              _isVisible = true;
+            });});
             if(empathize.imagePaperJourneyMap == null){
 
             }else{
@@ -364,7 +386,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                 SizedBox(height: 25,),
                 buildName3Widget(context),
                 SizedBox(height: 43,),
-                buildUploadButton(context),
+                _isVisible == false ? Container() :  buildUploadButton(context),
                 SizedBox(height: 25,),
                 buildFileNameWidget(context),
                 SizedBox(height: 25,),
@@ -1257,7 +1279,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   }
 
   Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
+    return _isVisible == true
+        ? GestureDetector(
       onTap: (){
 
         print("home.sprintId : "+home.sprintID.toString());
@@ -1288,6 +1311,21 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
+          ),
+        ),
+      ),
+    ): Center(
+      child: Container(
+        height: 45,
+        width: 146,
+        decoration: BoxDecoration(
+            color: Color(0xff7579cb),
+            borderRadius: BorderRadius.all(Radius.circular(7))),
+        child: Center(
+          child: Text(
+            "Loading...",
+            style: TextStyle(
+                color: Colors.white, letterSpacing: 1, fontSize: 16),
           ),
         ),
       ),

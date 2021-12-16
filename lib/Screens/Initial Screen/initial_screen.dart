@@ -4,6 +4,7 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%2
 import 'package:design_sprint/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
 
 class InitialScreen extends StatefulWidget {
   @override
@@ -52,8 +53,10 @@ class _InitialScreenState extends State<InitialScreen> {
 
   Future<void> jumpScreen(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    tempID = prefs.getString("userID"); //setString("userID", profile.userID);
+    tempID = prefs.getString("userID");
+    //setString("userID", profile.userID);
     print(tempID);
+    profile.userID = tempID;
     profileApiProvider.getProfile(context);
     Future.delayed(const Duration(seconds: 2), () {
       profileApiProvider.getSideBarProfile();
