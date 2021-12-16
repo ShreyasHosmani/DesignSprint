@@ -79,7 +79,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
 
       home.responseArrayGetSprintsMsg = home.responseArrayGetSprints['message'].toString();
       if(statusCode == 200){
-        if(home.responseArrayGetSprintsMsg == "Goal Added Successfully, E-Mail Not Verified"){
+        if(home.responseArrayGetSprintsMsg == "Goal Added Successfully"){
 
           print("done....");
           updateStep1(context);

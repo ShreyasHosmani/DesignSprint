@@ -35,22 +35,32 @@ class UploadPrototypeImagesPageViewBuilder extends StatefulWidget {
 class _UploadPrototypeImagesPageViewBuilderState extends State<UploadPrototypeImagesPageViewBuilder> {
   final controller = PageController(viewportFraction: 1);
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
+
+ bool _isLoaded = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     prototyping.pageIndex = 0;
     getPainPointsApiProvider.getPainPointsForPrototyping(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+      Future.delayed(const Duration(seconds: 3), () {
+
+        print("aaaaaaaaaaaaaa");
+        print(prototyping.painPointsForPrototypingList );
+        setState(() {
+          _isLoaded = true;
+        });
+      });
     });
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: prototyping.painPointsForPrototypingList == null ? Center(
+      body: _isLoaded == false ? Center(
         child: CircularProgressIndicator(),
-      ) : PageView.builder(
+      ) : prototyping.painPointsForPrototypingList == null?Container(): PageView.builder(
         physics:new NeverScrollableScrollPhysics(),
         itemCount: prototyping.painPointsForPrototypingList == null ? 0 : prototyping.painPointsForPrototypingList.length,
         controller: controller,
@@ -79,7 +89,9 @@ class UploadPrototype1 extends StatefulWidget {
 class _UploadPrototype1State extends State<UploadPrototype1> {
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
   PrototypeApiProvider prototypeApiProvider = PrototypeApiProvider();
+
   final picker = ImagePicker();
+
   Future getImageOne() async {
     Navigator.of(context).pop();
     var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
@@ -94,6 +106,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       prototyping.imageOne = File(pickedFile.path);
     });
   }
+
   Future<String> getPrototypeImagesPainPointWise(context) async {
 
     print("sprint id : "+home.sprintID.toString());

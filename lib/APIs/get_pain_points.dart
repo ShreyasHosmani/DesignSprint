@@ -228,6 +228,8 @@ class GetPainPointsApiProvider {
 
     String url = globals.urlSignUp + "getimpactpriority.php";
 
+    print(home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID);
+
     http.post(url, body: {
 
       //"userID" : profile.userID,
@@ -246,6 +248,7 @@ class GetPainPointsApiProvider {
       prototyping.responseArrayGetPainPointsForPrototypingMsg = prototyping.responseArrayGetPainPointsForPrototyping['message'].toString();
       print(prototyping.responseArrayGetPainPointsForPrototypingMsg);
       if(statusCode == 200){
+
         if(prototyping.responseArrayGetPainPointsForPrototypingMsg == "Data Found"){
           prototyping.painPointsForPrototypingList = List.generate(prototyping.responseArrayGetPainPointsForPrototyping['data'].length, (index) => prototyping.responseArrayGetPainPointsForPrototyping['data'][index]['ppName'].toString());
           prototyping.painPointIdsForPrototypingList = List.generate(prototyping.responseArrayGetPainPointsForPrototyping['data'].length, (index) => prototyping.responseArrayGetPainPointsForPrototyping['data'][index]['ppID'].toString());

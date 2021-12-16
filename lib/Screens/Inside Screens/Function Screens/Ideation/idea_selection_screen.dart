@@ -840,7 +840,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: ideation.painPointsByIvsFPriorityList == null ? 0 : ideation.painPointsByIvsFPriorityList.length,
+        itemCount: ideation.painPointsByIvsFPriorityList == null ? 0 : ideation.ideaAllImagesPainPointWiseList.length,
         itemBuilder: (context, i) => Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,

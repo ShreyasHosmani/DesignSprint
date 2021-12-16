@@ -9987,7 +9987,7 @@ class _JourneyMapPainPointsListViewState
 
   showAlertDialog(BuildContext context) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+   /* Widget cancelButton = FlatButton(
       child: Text(
         "Cancel",
         style: GoogleFonts.nunitoSans(),
@@ -9996,10 +9996,10 @@ class _JourneyMapPainPointsListViewState
         Navigator.of(context).pop();
         Navigator.of(context).pop();
       },
-    );
+    );*/
     Widget continueButton = FlatButton(
       child: Text(
-        "Continue",
+        "Discard",
         style: GoogleFonts.nunitoSans(),
       ),
       onPressed: () async {
@@ -10016,11 +10016,11 @@ class _JourneyMapPainPointsListViewState
         ),
       ),
       content: Text(
-        "Press Continue to discard this journey map, else press Cancel to go back without deleting.",
+        "Discard this journey Map",
         style: GoogleFonts.nunitoSans(),
       ),
       actions: [
-        cancelButton,
+      /*  cancelButton,*/
         continueButton,
       ],
     );
@@ -10209,7 +10209,10 @@ class _JourneyMapPainPointsListViewState
               msg: 'Data saved successfully!',
               backgroundColor: Colors.black,
               textColor: Colors.white);
-          pop(context);
+          pop(context);  // closing progress dialog
+
+          pop(context); // getting back to list
+          /*
 
           pop(context);
           pop(context);
@@ -10224,7 +10227,7 @@ class _JourneyMapPainPointsListViewState
                   FadeTransition(opacity: anim, child: child),
               transitionDuration: Duration(milliseconds: 300),
             ),
-          );
+          );*/
         });
       },
     );
@@ -10238,9 +10241,9 @@ class _JourneyMapPainPointsListViewState
         ),
       ),
       content: Text(
-        "Press Continue to save all your data! Please make sure that a particular column is filled competely else that column wont be saved!",
+        "All the fields of each column should be filled",
         style: GoogleFonts.nunitoSans(
-          color: Colors.red,
+          color: Color(0xff7579cb),
         ),
       ),
       actions: [
