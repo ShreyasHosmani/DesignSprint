@@ -13,11 +13,14 @@ class InputGoalApiProvider {
   Future<String> inputSprintGoal(context) async {
 
     String url = globals.urlLogin + "creategoal.php";
+    print("sprintID");
+    print(home.sprintID);
+    print( profile.userID);
 
     http.post(url, body: {
 
       "userID" : profile.userID,
-      "sprintID" : home.sprintID,
+      "sprintID" : home.sprintID!=null?home.sprintID: home.selectedSprintId,
       "goalname" : goal.goalController.text,
 
     }).then((http.Response response) async {

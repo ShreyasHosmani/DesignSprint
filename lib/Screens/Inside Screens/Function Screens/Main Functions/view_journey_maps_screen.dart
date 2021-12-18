@@ -26,6 +26,7 @@ class ViewJourneyMaps extends StatefulWidget {
 }
 
 class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
+
   GetWareHouseJourneyMapDataApiProvider getWareHouseJourneyMapDataApiProvider = GetWareHouseJourneyMapDataApiProvider();
 
   Future getJourneyMapWareHouseData(context) async {
@@ -454,14 +455,14 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
                     ),
                   ),
                   SizedBox(width: 20,),
-                  Flexible(
+                 Flexible(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           width: 180,
-                          child: Text(journeyMapWH.journeyMapWareHouseUserNameList[i],
+                          child: Text( journeyMapWH.journeyMapWareHouseUserNameList[i]=="null"?"Paper Map":journeyMapWH.journeyMapWareHouseUserNameList[i],
                             maxLines: 2,
                             //textScaleFactor: 0.7,
                             overflow: TextOverflow.ellipsis,

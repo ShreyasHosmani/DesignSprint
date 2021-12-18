@@ -239,7 +239,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
     getPainPointsByIvsFPriority(context);
     getAllIdeaImages(context);
     updateStep7(context);
-    boolSelectedList = [false,false,false,false,false,false,false,false,false,false,];
+    boolSelectedList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false ,false,false,false ,false,false,false ,false ,false,false,false ,false ,false,false,false ,false];
     counter = 0;
     textColorList = [Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), Color(0xff787cd1), ];
     getSprintsStatusesOfTeam(context);

@@ -21,6 +21,9 @@ class CreateOrDownloadJourneyMap extends StatefulWidget {
 
 class _CreateOrDownloadJourneyMapState
     extends State<CreateOrDownloadJourneyMap> {
+
+
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Email email = Email(
     body:
@@ -32,6 +35,7 @@ class _CreateOrDownloadJourneyMapState
     //attachmentPaths: ['/path/to/attachment.zip'],
     isHTML: false,
   );
+
   Dio dio = Dio();
 
   @override
@@ -979,4 +983,5 @@ class _CreateOrDownloadJourneyMapState
       },
     );
   }
+
 }
