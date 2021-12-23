@@ -1,6 +1,7 @@
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/i_vs_f_evaluation_screen1.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/idea_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
@@ -9,6 +10,14 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:video_player/video_player.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 bool statusDrawer = false;
 
@@ -21,6 +30,198 @@ class _IvsFTutorialState extends State<IvsFTutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   VideoPlayerController _controller;
   FlickManager flickManager;
+
+  Future<String> getPainPointsByIvsFPriority(context) async {
+
+    String url = globals.urlSignUp + "getimpactfeasibilityvote.php";
+
+    http.post(url, body: {
+
+      //"userID" : profile.userID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetIvsFByPriority = jsonDecode(response.body);
+      print(ideation.responseArrayGetIvsFByPriority);
+
+      ideation.responseArrayGetIvsFByPriorityMsg = ideation.responseArrayGetIvsFByPriority['message'].toString();
+      print(ideation.responseArrayGetIvsFByPriorityMsg);
+      if(statusCode == 200){
+        if(ideation.responseArrayGetIvsFByPriorityMsg == "Data Found"){
+          setState(() {
+            ideation.painPointsByIvsFPriorityList = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppName'].toString());
+            ideation.painPointIdsByIvsFPriorityList = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppID'].toString());
+            ppiiStatus = List.generate(ideation.responseArrayGetIvsFByPriority['data'].length, (index) => ideation.responseArrayGetIvsFByPriority['data'][index]['ppImagestatus'].toString());
+          });
+          print(ideation.painPointsByIvsFPriorityList.toList());
+          print(ideation.painPointIdsByIvsFPriorityList.toList());
+          print(ppiiStatus.toList());
+        }else{
+
+        }
+      }
+    });
+  }
+
+  Future<String> getAllIdeaImages(context) async {
+
+    String url = globals.urlSignUp + "getideaimagespainpointwise.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImages);
+
+      ideation.responseArrayGetAllIdeaImagesMsg = ideation.responseArrayGetAllIdeaImages['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesMsg == "Painpoint Data Found"){
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+        });
+
+        print(ideation.ideaAllImagesPainPointWiseList.toList());
+
+      }else{
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = null;
+        });
+
+      }
+
+    });
+  }
+  Future<String> updateStep7(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "7",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep7'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+            teamMemberStatuses = ['1'];
+            sprintCreatorId = profile.userID.toString();
+          });
+
+        }
+      }
+    });
+  }
+
+  Future<String> getSprintAdmins(context) async {
+    String url = globals.urlLogin + "getsprintbyrights.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintAdmins = jsonDecode(response.body);
+      print(responseArrayGetSprintAdmins);
+
+      var responseArrayGetSprintAdminsMsg = responseArrayGetSprintAdmins['message'].toString();
+      print(responseArrayGetSprintAdminsMsg);
+
+      if(statusCode == 200){
+        if(responseArrayGetSprintAdminsMsg == "Data Found"){
+
+          setState(() {
+            sprintAdmins = List.generate(responseArrayGetSprintAdmins['data'].length, (index) => responseArrayGetSprintAdmins['data'][index]['teamMemberEmail'].toString() == profile.email.toString() ? responseArrayGetSprintAdmins['data'][index]['teamStatus'].toString() : "null");
+          });
+
+          print("sprintAdmins : "+sprintAdmins.toList().toString());
+
+        }else{
+
+          setState(() {
+            sprintAdmins = ["0"];
+          });
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +235,12 @@ class _IvsFTutorialState extends State<IvsFTutorial> {
       videoPlayerController:
       VideoPlayerController.network("https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/ivsf.mp4"),
     );
+    getSprintAdmins(context);
+    getSprintsStatusesOfTeam(context);
+    getPainPointsByIvsFPriority(context);
+    getAllIdeaImages(context);
+    updateStep7(context);
+    getSprintsStatusesOfTeam(context);
   }
   @override
   void dispose() {

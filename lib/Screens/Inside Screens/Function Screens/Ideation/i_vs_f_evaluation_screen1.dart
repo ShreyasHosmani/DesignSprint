@@ -14,6 +14,8 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 bool statusDrawer = false;
 
@@ -30,13 +32,47 @@ class _ImpactVsFeasibilityPageViewBuilderState
       GetPainPointsApiProvider();
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
 
+  Future<String> getPainPointsOfStatusTwo2(context) async {
+
+    String url = globals.urlSignUp + "getpainpointpriority.php";
+
+    http.post(url, body: {
+
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetPainPointsOfStatusTwo2 = jsonDecode(response.body);
+      print(ideation.responseArrayGetPainPointsOfStatusTwo2);
+
+      ideation.responseArrayGetPainPointsOfStatusTwoMsg2 = ideation.responseArrayGetPainPointsOfStatusTwo2['message'].toString();
+      print(ideation.responseArrayGetPainPointsOfStatusTwoMsg2);
+      if(statusCode == 200){
+        if(ideation.responseArrayGetPainPointsOfStatusTwoMsg2 == "Data Found"){
+          setState(() {
+            ideation.painPointsOfStatus2List2 = List.generate(ideation.responseArrayGetPainPointsOfStatusTwo2['data'].length, (index) => ideation.responseArrayGetPainPointsOfStatusTwo2['data'][index]['ppName'].toString());
+            ideation.painPointsIdsOfStatus2List2 = List.generate(ideation.responseArrayGetPainPointsOfStatusTwo2['data'].length, (index) => ideation.responseArrayGetPainPointsOfStatusTwo2['data'][index]['ppID'].toString());
+
+            print(ideation.painPointsOfStatus2List2.toList());
+            print(ideation.painPointsIdsOfStatus2List2.toList());
+          });
+        }else{
+
+        }
+      }
+    });
+  }
+
   void initState() {
     // TODO: implement initState
     super.initState();
     ideation.pageIndexIvsF = 0;
-    getPainPointsApiProvider
-        .getPainPointsOfStatusTwo2(context)
-        .whenComplete(() {});
+    getPainPointsOfStatusTwo2(context);
   }
 
   @override

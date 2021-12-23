@@ -87,7 +87,7 @@ class UploadPrototype1 extends StatefulWidget {
 }
 
 class _UploadPrototype1State extends State<UploadPrototype1> {
-  UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
+  //UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
   PrototypeApiProvider prototypeApiProvider = PrototypeApiProvider();
 
   final picker = ImagePicker();
@@ -150,6 +150,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
 
     });
   }
+
   void _settingModalBottomSheetOne(context){
     showModalBottomSheet(
         context: context,
@@ -174,7 +175,20 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                       onTap: (){
                         getImageOne().then((value){
                           prototypeApiProvider.uploadPrototypeImage(context).then((value) {
-                            getPrototypeImagesPainPointWise(context);
+                          if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
+                            print("Last index reached, You are a great man ever!");
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+                                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                transitionDuration: Duration(milliseconds: 300),
+                              ),
+                            );
+                          }else{
+                            print("You are a loser bro, try again!");
+                            widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+                          }
                           });
                         });
                       },
@@ -206,7 +220,22 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                       onTap: (){
                         getImageOneGallery().then((value){
                           prototypeApiProvider.uploadPrototypeImage(context).then((value) {
-                            getPrototypeImagesPainPointWise(context);
+                            prototypeApiProvider.uploadPrototypeImage(context).then((value) {
+                              if(prototyping.painPointsForPrototypingList.last == prototyping.painPointsForPrototypingList[prototyping.pageIndex]){
+                                print("Last index reached, You are a great man ever!");
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+                                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                    transitionDuration: Duration(milliseconds: 300),
+                                  ),
+                                );
+                              }else{
+                                print("You are a loser bro, try again!");
+                                widget.controller.nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+                              }
+                            });
                           });
                         });
                       },
@@ -238,20 +267,57 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
         }
     );
   }
+
+  Future<String> getIdeaImagesByStatus(context) async {
+
+    String url = globals.urlSignUp + "getideaimagesbystatus.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "status" : "2",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImagesByStatus = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImagesByStatus);
+
+      ideation.responseArrayGetAllIdeaImagesByStatusMsg = ideation.responseArrayGetAllIdeaImagesByStatus['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesByStatusMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesByStatusMsg == "Painpoint Data Found"){
+
+        setState(() {
+          ideation.ideaAllImagesOfStatusTwo = List.generate(ideation.responseArrayGetAllIdeaImagesByStatus['data'].length, (i) => ideation.responseArrayGetAllIdeaImagesByStatus['data'][i]['iiImgpath'].toString());
+        });
+
+        print(ideation.ideaAllImagesOfStatusTwo.toList());
+
+      }else{
+
+        setState(() {
+          ideation.ideaAllImagesOfStatusTwo = null;
+        });
+
+      }
+
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     showImages = false;
-    uploadIdeaApiProvider.getIdeaImagesByStatus(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {
-        setState(() {});
-        setState(() {
-          prototyping.selectedPainPointIdForUploadingPrototypeImage = prototyping.painPointIdsForPrototypingList[prototyping.pageIndex];
-        });
-        print(prototyping.selectedPainPointIdForUploadingPrototypeImage);
-      });
+    setState(() {
+      prototyping.selectedPainPointIdForUploadingPrototypeImage = prototyping.painPointIdsForPrototypingList[prototyping.pageIndex];
     });
+    print(prototyping.selectedPainPointIdForUploadingPrototypeImage);
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
