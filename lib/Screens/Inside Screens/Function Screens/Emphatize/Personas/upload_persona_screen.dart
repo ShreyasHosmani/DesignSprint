@@ -33,13 +33,15 @@ class UploadPersona extends StatefulWidget {
 
 class _UploadPersonaState extends State<UploadPersona> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  CreatePersonaApiProvider createPersonaApiProvider = CreatePersonaApiProvider();
-  void _settingModalBottomSheetOne(context){
+  CreatePersonaApiProvider createPersonaApiProvider =
+      CreatePersonaApiProvider();
+
+  void _settingModalBottomSheetOne(context) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (BuildContext bc){
+        builder: (BuildContext bc) {
           return Container(
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
@@ -55,7 +57,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                   Padding(
                     padding: const EdgeInsets.only(top: 20, bottom: 10),
                     child: InkWell(
-                      onTap: (){
+                      onTap: () {
                         getImageOne();
                       },
                       child: Row(
@@ -65,16 +67,19 @@ class _UploadPersonaState extends State<UploadPersona> {
                           Padding(
                             padding: const EdgeInsets.only(right: 20),
                             child: Container(
-                              //width: 100,
-                                child: Icon(Icons.camera_alt, color: Color(0xff7579cb),)),
+                                //width: 100,
+                                child: Icon(
+                              Icons.camera_alt,
+                              color: Color(0xff7579cb),
+                            )),
                           ),
                           Container(
-                              width: 150,
-                              child: Text("Open using camera",
-                                style: GoogleFonts.nunitoSans(
-                                    letterSpacing: 0.5
-                                ),
-                              ))
+                            width: 150,
+                            child: Text(
+                              "Open using camera",
+                              style: GoogleFonts.nunitoSans(letterSpacing: 0.5),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -83,7 +88,7 @@ class _UploadPersonaState extends State<UploadPersona> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
                     child: InkWell(
-                      onTap: (){
+                      onTap: () {
                         getImageOneGallery();
                       },
                       child: Row(
@@ -93,15 +98,18 @@ class _UploadPersonaState extends State<UploadPersona> {
                           Padding(
                             padding: const EdgeInsets.only(right: 20),
                             child: Container(
-                              //width: 100,
-                                child: Icon(Icons.image, color: Color(0xff7579cb),)),
+                                //width: 100,
+                                child: Icon(
+                              Icons.image,
+                              color: Color(0xff7579cb),
+                            )),
                           ),
                           Container(
                               width: 150,
-                              child: Text("Open using gallery",
-                                style: GoogleFonts.nunitoSans(
-                                    letterSpacing: 0.5
-                                ),
+                              child: Text(
+                                "Open using gallery",
+                                style:
+                                    GoogleFonts.nunitoSans(letterSpacing: 0.5),
                               ))
                         ],
                       ),
@@ -111,18 +119,17 @@ class _UploadPersonaState extends State<UploadPersona> {
               ),
             ),
           );
-        }
-    );
+        });
   }
-  Future<String> getPersonaDetails(context) async {
 
+  Future<String> getPersonaDetails(context) async {
     String url = globals.urlSignUp + "getpersona.php";
 
     http.post(url, body: {
-
-      "userID" : profile.userID,
-      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
-
+      "userID": profile.userID,
+      "sprintID": home.sprintID == null || home.sprintID == "null"
+          ? home.selectedSprintId
+          : home.sprintID,
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -133,27 +140,38 @@ class _UploadPersonaState extends State<UploadPersona> {
       empathize.responseArrayGetPersona = jsonDecode(response.body);
       print(empathize.responseArrayGetPersona);
 
-      empathize.responseArrayGetPersonaMsg = empathize.responseArrayGetPersona['message'].toString();
+      empathize.responseArrayGetPersonaMsg =
+          empathize.responseArrayGetPersona['message'].toString();
       print(empathize.responseArrayGetPersonaMsg);
-      if(statusCode == 200){
-        if(empathize.responseArrayGetPersonaMsg == "Profile Found"){
-
+      if (statusCode == 200) {
+        if (empathize.responseArrayGetPersonaMsg == "Profile Found") {
           setState(() {
-            empathize.paperPersonaImageNamesList = List.generate(empathize.responseArrayGetPersona['data'].length, (i) => empathize.responseArrayGetPersona['data'][i]['personadocImage'] == null || empathize.responseArrayGetPersona['data'][i]['personadocImage'] == "null" ? "" : "https://admin.dezyit.com/mobileapp/"+empathize.responseArrayGetPersona['data'][i]['personadocImage'].toString().substring(6));
+            empathize.paperPersonaImageNamesList = List.generate(
+                empathize.responseArrayGetPersona['data'].length,
+                (i) => empathize.responseArrayGetPersona['data'][i]
+                                ['personadocImage'] ==
+                            null ||
+                        empathize.responseArrayGetPersona['data'][i]
+                                ['personadocImage'] ==
+                            "null"
+                    ? ""
+                    : "https://admin.dezyit.com/mobileapp/" +
+                        empathize.responseArrayGetPersona['data'][i]
+                                ['personadocImage']
+                            .toString()
+                            .substring(6));
           });
 
           print(empathize.paperPersonaImageNamesList.toList());
-
-        }else{
-
+        } else {
           setState(() {
             empathize.paperPersonaImageNamesList = null;
           });
-
         }
       }
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -165,39 +183,59 @@ class _UploadPersonaState extends State<UploadPersona> {
     showSecondStep = false;
     showPainPoint = false;
   }
+
   final picker = ImagePicker();
+
   Future getImageOne() async {
     Navigator.of(context).pop();
-    var pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 25,);
+    var pickedFile = await picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 25,
+    );
     setState(() {
       empathize.imagePaperPersona = File(pickedFile.path);
     });
-    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
+    createPersonaApiProvider.uploadPaperPersona(context).whenComplete(() {
       Future.delayed(const Duration(seconds: 3), () {
-        getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "Loading...", backgroundColor: Colors.black,
-            textColor: Colors.white,gravity: ToastGravity.CENTER);
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+        getPersonaDetails(context).whenComplete(() {
+          Fluttertoast.showToast(
+              msg: "Loading...",
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              gravity: ToastGravity.CENTER);
+          Future.delayed(const Duration(seconds: 3), () {
+            setState(() {});
+          });
         });
       });
     });
   }
+
   Future getImageOneGallery() async {
     Navigator.of(context).pop();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 25,);
+    final pickedFile = await picker.getImage(
+      source: ImageSource.gallery,
+      imageQuality: 25,
+    );
     setState(() {
       empathize.imagePaperPersona = File(pickedFile.path);
     });
-    createPersonaApiProvider.uploadPaperPersona(context).whenComplete((){
+    createPersonaApiProvider.uploadPaperPersona(context).whenComplete(() {
       Future.delayed(const Duration(seconds: 3), () {
-        getPersonaDetails(context).whenComplete((){
-          Fluttertoast.showToast(msg: "Loading...", backgroundColor: Colors.black,
-            textColor: Colors.white,gravity: ToastGravity.CENTER);
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+        getPersonaDetails(context).whenComplete(() {
+          Fluttertoast.showToast(
+              msg: "Loading...",
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              gravity: ToastGravity.CENTER);
+          Future.delayed(const Duration(seconds: 3), () {
+            setState(() {});
+          });
         });
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,12 +243,11 @@ class _UploadPersonaState extends State<UploadPersona> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
+      endDrawer:
+          statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 50),
-        child: Container(
-            height: 50,
-            child: buildNextButton(context)),
+        child: Container(height: 50, child: buildNextButton(context)),
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -218,16 +255,36 @@ class _UploadPersonaState extends State<UploadPersona> {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 buildName2Widget(context),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 buildName3Widget(context),
-                SizedBox(height: 43,),
+                SizedBox(
+                  height: 43,
+                ),
                 buildUploadButton(context),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 buildFileNameWidget(context),
-                showSecondStep == false ? Container(height: 1, width: 1,) :SizedBox(height: 25,),
-                showSecondStep == false ? Container(height: 1, width: 1,) :buildName4Widget(context),
+                showSecondStep == false
+                    ? Container(
+                        height: 1,
+                        width: 1,
+                      )
+                    : SizedBox(
+                        height: 25,
+                      ),
+                showSecondStep == false
+                    ? Container(
+                        height: 1,
+                        width: 1,
+                      )
+                    : buildName4Widget(context),
               ],
             ),
             Padding(
@@ -240,9 +297,9 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget buildAppBar(BuildContext context){
-
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+  Widget buildAppBar(BuildContext context) {
+    Container line =
+        Container(height: 1, color: Colors.black, child: Divider());
     void _openEndDrawer() {
       setState(() {
         empathize.statusDrawer = false;
@@ -256,7 +313,8 @@ class _UploadPersonaState extends State<UploadPersona> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(empathize.empathize,
+        child: Text(
+          empathize.empathize,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -267,8 +325,14 @@ class _UploadPersonaState extends State<UploadPersona> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
       actions: [
@@ -283,10 +347,18 @@ class _UploadPersonaState extends State<UploadPersona> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   line,
-                  SizedBox(height: 6,),
+                  SizedBox(
+                    height: 6,
+                  ),
                   line,
-                  SizedBox(height: 6,),
-                  Container(height:1,width:20, color: Colors.black,child: Divider()),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                      height: 1,
+                      width: 20,
+                      color: Colors.black,
+                      child: Divider()),
                 ],
               ),
             ),
@@ -296,7 +368,7 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget buildProfileDrawer(BuildContext context){
+  Widget buildProfileDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -329,140 +401,204 @@ class _UploadPersonaState extends State<UploadPersona> {
                         width: 80,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
                         ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(
+                        width: 15,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi, " + profile.name + "!",
+                          Text(
+                            "Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
                           ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 14,
+                            )),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingHome,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingDesignSprint,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingTips,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingManageTeam,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingFAQs,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingLegalPolicy,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
               ],
             ),
           ),
@@ -471,13 +607,14 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget statusBarDrawer(BuildContext context){
+  Widget statusBarDrawer(BuildContext context) {
     void _openEndDrawer() {
       setState(() {
         statusDrawer = true;
       });
       _scaffoldKey.currentState.openEndDrawer();
     }
+
     return Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
@@ -500,13 +637,18 @@ class _UploadPersonaState extends State<UploadPersona> {
               ),
             ],
           ),
-          child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
+          child: Center(
+              child: Text(
+            "<<",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),
+          )),
         ),
       ),
     );
   }
 
-  Widget buildStatusDrawer(BuildContext context){
+  Widget buildStatusDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -522,21 +664,25 @@ class _UploadPersonaState extends State<UploadPersona> {
                   height: 70,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(
+                      "Sprint Name",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
@@ -545,201 +691,261 @@ class _UploadPersonaState extends State<UploadPersona> {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(
+                        color: Color(0xffd4d4d4),
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Sprint Goal",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Sprint Goal",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
-                      ),
+                          border: Border.all(color: Color(0xffd4d4d4))),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(
+                        color: Color(0xffd4d4d4),
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Empathize",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Empathize",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
-                      ),
+                          border: Border.all(color: Color(0xffd4d4d4))),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(
+                        color: Color(0xffd4d4d4),
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Ideation",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Ideation",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
-                      ),
+                          border: Border.all(color: Color(0xffd4d4d4))),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(
+                        color: Color(0xffd4d4d4),
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Prototype",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Prototype",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
-                      ),
+                          border: Border.all(color: Color(0xffd4d4d4))),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(
+                        color: Color(0xffd4d4d4),
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("User Testing",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "User Testing",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
-                      ),
+                          border: Border.all(color: Color(0xffd4d4d4))),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(
+                        color: Color(0xffd4d4d4),
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Re - Iterate",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Re - Iterate",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Color(0xffd4d4d4))
-                      ),
+                          border: Border.all(color: Color(0xffd4d4d4))),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Color(0xffd4d4d4),),
+                      child: Divider(
+                        color: Color(0xffd4d4d4),
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Team",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Team",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
@@ -751,38 +957,32 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
+  Widget buildName2Widget(BuildContext context) {
     return Center(
-      child: Text(empathize.paperPersona,
+      child: Text(
+        empathize.paperPersona,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
                 fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
+                fontWeight: FontWeight.w200)),
       ),
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
+  Widget buildName3Widget(BuildContext context) {
     return Center(
-      child: Text(empathize.paperPersonaHint1,
+      child: Text(
+        empathize.paperPersonaHint1,
         style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
       ),
     );
   }
 
   Widget buildUploadButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         _settingModalBottomSheetOne(context);
       },
       child: Center(
@@ -790,11 +990,11 @@ class _UploadPersonaState extends State<UploadPersona> {
           height: 37,
           width: 166,
           decoration: BoxDecoration(
-              border: Border.all(color :Color(0xff302B70),width: 2),
-              borderRadius: BorderRadius.all(Radius.circular(19))
-          ),
+              border: Border.all(color: Color(0xff302B70), width: 2),
+              borderRadius: BorderRadius.all(Radius.circular(19))),
           child: Center(
-            child: Text(empathize.upload,
+            child: Text(
+              empathize.upload,
               style: TextStyle(
                   color: Color(0xff302B70), letterSpacing: 1, fontSize: 16),
             ),
@@ -804,64 +1004,73 @@ class _UploadPersonaState extends State<UploadPersona> {
     );
   }
 
-  Widget buildFileNameWidget(BuildContext context){
+  Widget buildFileNameWidget(BuildContext context) {
     return Container(
       height: 50,
       child: ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: empathize.paperPersonaImageNamesList == null ? 0 : empathize.paperPersonaImageNamesList.length,
-        itemBuilder: (context, i) => empathize.paperPersonaImageNamesList[i].toString() == "" ? Container() : InkWell(
-          onTap: (){
-            if(empathize.paperPersonaImageNamesList[i].toString() == ""){
-              print("if loop");
-            }else{
-              print("else loop");
-              launch(empathize.paperPersonaImageNamesList[i]);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
-            child: Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                border: Border.all(color: Colors.grey),
-                image: DecorationImage(
-                  image: NetworkImage(empathize.paperPersonaImageNamesList[i].toString() == "" ? "https://admin.dezyit.com/assets/media/favicons/favicon.png" : empathize.paperPersonaImageNamesList[i]),
-                  fit: BoxFit.cover, scale: 5
-                )
-              ),
-            ),
-          ),
-        ),
+        itemCount: empathize.paperPersonaImageNamesList == null
+            ? 0
+            : empathize.paperPersonaImageNamesList.length,
+        itemBuilder: (context, i) =>
+            empathize.paperPersonaImageNamesList[i].toString() == ""
+                ? Container()
+                : InkWell(
+                    onTap: () {
+                      if (empathize.paperPersonaImageNamesList[i].toString() ==
+                          "") {
+                        print("if loop");
+                      } else {
+                        print("else loop");
+                        launch(empathize.paperPersonaImageNamesList[i]);
+                      }
+                    },
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Colors.grey),
+                            image: DecorationImage(
+                                image: NetworkImage(empathize
+                                            .paperPersonaImageNamesList[i]
+                                            .toString() ==
+                                        ""
+                                    ? "https://admin.dezyit.com/assets/media/favicons/favicon.png"
+                                    : empathize.paperPersonaImageNamesList[i]),
+                                fit: BoxFit.cover,
+                                scale: 5)),
+                      ),
+                    ),
+                  ),
       ),
     );
   }
 
-  Widget buildName4Widget(BuildContext context){
+  Widget buildName4Widget(BuildContext context) {
     return Center(
-        child: Text(empathize.paperPersonaHint2,
-          style: GoogleFonts.nunitoSans(
-              textStyle: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500
-              )
-          ),
-        ),
-      );
+      child: Text(
+        empathize.paperPersonaHint2,
+        style: GoogleFonts.nunitoSans(
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+      ),
+    );
   }
 
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => EmphatizeInsideSections2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
@@ -869,16 +1078,13 @@ class _UploadPersonaState extends State<UploadPersona> {
       child: Center(
         child: Container(
           height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.0,
+          width: MediaQuery.of(context).size.width / 2.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(7))),
           child: Center(
-            child: Text("Next",
+            child: Text(
+              "Next",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
@@ -887,5 +1093,4 @@ class _UploadPersonaState extends State<UploadPersona> {
       ),
     );
   }
-
 }

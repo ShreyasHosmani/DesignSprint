@@ -18,7 +18,7 @@ class UserInterviewTutorial extends StatefulWidget {
 }
 
 class _UserInterviewTutorialState extends State<UserInterviewTutorial> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   VideoPlayerController _controller;
   FlickManager flickManager;
   @override

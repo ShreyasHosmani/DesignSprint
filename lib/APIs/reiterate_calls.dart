@@ -15,7 +15,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -88,7 +88,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
       "status" : "2",
 
     }).then((http.Response response) async {
@@ -125,10 +125,19 @@ class ReIterateApiProvider{
 
     String url = globals.urlSignUp + "createprototypenote.php";
 
+    print({
+
+      "userID" : "null",
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
+      "prototypeID" : reiterate.selectedPrototypeIdForUploadingNotesAndTimeLine.toString(),
+      "notetext" : reiterate.notesController.text,
+
+    });
+
     http.post(url, body: {
 
       "userID" : "null",
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
       "prototypeID" : reiterate.selectedPrototypeIdForUploadingNotesAndTimeLine.toString(),
       "notetext" : reiterate.notesController.text,
 
@@ -157,6 +166,7 @@ class ReIterateApiProvider{
 
         Fluttertoast.showToast(msg: "please check your internet connection", backgroundColor: Colors.black,
           textColor: Colors.white,);
+
 
       }
 
@@ -206,7 +216,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
       "prototypeID" : reiterate.selectedPrototypeIdForUploadingNotesAndTimeLine.toString(),
       "tasktext" : reiterate.taskLineController.text,
       "userID" : teamBySprints.selectedTeamMemberIdForTasks.toString(),
@@ -252,7 +262,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -287,7 +297,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -318,6 +328,8 @@ class ReIterateApiProvider{
     });
   }
 
+
+
   Future<String> getRoadMapDataNotes2(context) async {
 
     print(home.selectedSprintId);
@@ -325,7 +337,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.selectedSprintId.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -361,7 +373,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.selectedSprintId.toString(),
+      "sprintID" : (home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -398,7 +410,7 @@ class ReIterateApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.selectedSprintId.toString(),
+      "sprintID" :(home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID).toString(),
       "status" : "2",
 
     }).then((http.Response response) async {

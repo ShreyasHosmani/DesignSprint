@@ -19,7 +19,7 @@ class ShadowingTutorial extends StatefulWidget {
 }
 
 class _ShadowingTutorialState extends State<ShadowingTutorial> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   VideoPlayerController _controller;
   FlickManager flickManager;
   @override

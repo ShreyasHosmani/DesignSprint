@@ -16,7 +16,7 @@ class UserTestingInsideSections3 extends StatefulWidget {
 }
 
 class _UserTestingInsideSections3State extends State<UserTestingInsideSections3> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

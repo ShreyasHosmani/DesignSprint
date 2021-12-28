@@ -221,8 +221,6 @@ class CustomViewModel extends ChangeNotifier {
 
   Future masterSaveJourney(userID, sprintID, mapID, touchpointID, touchPoints,
       customerThoughts, customerExperience, painpointname) async {
-
-
     final response = await WebService().masterSaveJourney(
         userID,
         sprintID,

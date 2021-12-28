@@ -1070,7 +1070,65 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
     );
   }
 
-  Widget buildFileNameWidget(BuildContext context){
+  Widget buildFileNameWidget(BuildContext context) {
+    return empathize.journeyMapImageNamesList == null
+        ? Container()
+        : Container(
+      height: 200,
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: empathize.journeyMapImageNamesList == null
+            ? 0
+            : empathize.journeyMapImageNamesList.length,
+        itemBuilder: (context, i) => Center(
+          child: InkWell(
+            onTap: () {
+              if (empathize.journeyMapImageNamesList[i] == null ||
+                  empathize.journeyMapImageNamesList[i] == "null") {
+              } else {
+                launch(empathize.journeyMapImageNamesList[i]);
+              }
+            },
+            child: Padding(
+                padding:
+                const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      border: Border.all(color: Colors.grey),
+                      image: DecorationImage(
+                          image: NetworkImage(empathize
+                              .journeyMapImageNamesList[i] ==
+                              null
+                              ? "Digital Journey Map"
+                              : empathize.journeyMapImageNamesList[i]),
+                          fit: BoxFit.fill,
+                          scale: 5)),
+                )
+
+//            Text(empathize.journeyMapImageNamesList[i] == null || empathize.journeyMapImageNamesList[i] == "null" ? ("Digital Journey Map"+(i+1).toString()) : empathize.journeyMapImageNamesList[i],
+//              textAlign: TextAlign.center,
+//              style: GoogleFonts.nunitoSans(
+//                  textStyle: TextStyle(
+//                    fontSize: 12,
+//                    fontWeight: FontWeight.w500,
+//                    color: Colors.grey,
+//                  )
+//              ),
+//            ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /*Widget buildFileNameWidget(BuildContext context){
+
     return empathize.journeyMapImageNamesList == null ? Container() : Container(
       height: 50,
       child: ListView.builder(
@@ -1121,7 +1179,9 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         ),
       ),
     );
-  }
+
+
+  }*/
 
   Widget buildName4Widget(BuildContext context){
 

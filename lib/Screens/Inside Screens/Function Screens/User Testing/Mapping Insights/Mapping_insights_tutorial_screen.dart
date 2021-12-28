@@ -14,13 +14,15 @@ bool statusDrawer = false;
 
 class MappingInsightsTutorial extends StatefulWidget {
   @override
-  _MappingInsightsTutorialState createState() => _MappingInsightsTutorialState();
+  _MappingInsightsTutorialState createState() =>
+      _MappingInsightsTutorialState();
 }
 
 class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   VideoPlayerController _controller;
   FlickManager flickManager;
+
   @override
   void initState() {
     super.initState();
@@ -31,16 +33,18 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
         setState(() {});
       });
     flickManager = FlickManager(
-      videoPlayerController:
-      VideoPlayerController.network("https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/mappinginsights.mp4"),
+      videoPlayerController: VideoPlayerController.network(
+          "https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/mappinginsights.mp4"),
     );
   }
+
   @override
   void dispose() {
     super.dispose();
     flickManager.dispose();
     _controller.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +52,12 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
+      endDrawer: statusDrawer == true
+          ? StatusDrawerPrototyping()
+          : ProfileDrawerCommon(),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 50),
-        child: Container(
-            height: 50,
-            child: buildNextButton(context)),
+        child: Container(height: 50, child: buildNextButton(context)),
       ),
       body: Stack(
         children: [
@@ -62,24 +66,35 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 buildVideoContainer(context),
-                SizedBox(height: 45,),
+                SizedBox(
+                  height: 45,
+                ),
                 buildInfoText1(context),
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
                 buildImage1Container(context),
-                SizedBox(height: 35,),
+                SizedBox(
+                  height: 35,
+                ),
               ],
             ),
           ),
           Positioned(
-            top: 40, right: 0,
+            top: 40,
+            right: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
               child: Align(
                 alignment: Alignment.topRight,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 40,),
+                  padding: EdgeInsets.only(
+                    top: 40,
+                  ),
                   child: statusBarDrawer(context),
                 ),
               ),
@@ -90,9 +105,9 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildAppBar(BuildContext context){
-
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+  Widget buildAppBar(BuildContext context) {
+    Container line =
+        Container(height: 1, color: Colors.black, child: Divider());
     void _openEndDrawer() {
       setState(() {
         statusDrawer = false;
@@ -106,7 +121,8 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(userTesting.title,
+        child: Text(
+          userTesting.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -117,8 +133,14 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
       actions: [
@@ -133,10 +155,18 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   line,
-                  SizedBox(height: 6,),
+                  SizedBox(
+                    height: 6,
+                  ),
                   line,
-                  SizedBox(height: 6,),
-                  Container(height:1,width:20, color: Colors.black,child: Divider()),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                      height: 1,
+                      width: 20,
+                      color: Colors.black,
+                      child: Divider()),
                 ],
               ),
             ),
@@ -146,7 +176,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildProfileDrawer(BuildContext context){
+  Widget buildProfileDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -179,140 +209,204 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
                         width: 80,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
                         ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(
+                        width: 15,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi, " + profile.name + "!",
+                          Text(
+                            "Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
                           ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 14,
+                            )),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingHome,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingDesignSprint,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingTips,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingManageTeam,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingFAQs,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingLegalPolicy,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
               ],
             ),
           ),
@@ -321,13 +415,14 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget statusBarDrawer(BuildContext context){
+  Widget statusBarDrawer(BuildContext context) {
     void _openEndDrawer() {
       setState(() {
         statusDrawer = true;
       });
       _scaffoldKey.currentState.openEndDrawer();
     }
+
     return Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
@@ -350,13 +445,18 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
               ),
             ],
           ),
-          child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
+          child: Center(
+              child: Text(
+            "<<",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),
+          )),
         ),
       ),
     );
   }
 
-  Widget buildStatusDrawer(BuildContext context){
+  Widget buildStatusDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -372,224 +472,287 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
                   height: 70,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(
+                      "Sprint Name",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
-                Row(
-                  children: [
-                    SizedBox(width: 62,),
-                    Container(
-                      height: 8,
-                      width: 8,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                        border: Border.all(color: Colors.grey)
-                      ),
-                    ),
-                    SizedBox(width: 5,),
-                    Container(
-                      height: 8,
-                      width: 8,
-                      child: Divider(color: Colors.grey,),
-                    ),
-                    SizedBox(width: 10,),
-                    Text("Sprint Goal",
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  height: 42,
                 ),
-                SizedBox(height: 42,),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Empathize",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Sprint Goal",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Ideation",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Empathize",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Prototype",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Ideation",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("User Testing",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Prototype",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Re - Iterate",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "User Testing",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Team",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Re - Iterate",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 42,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Container(
+                      height: 8,
+                      width: 8,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          border: Border.all(color: Colors.grey)),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Container(
+                      height: 8,
+                      width: 8,
+                      child: Divider(
+                        color: Colors.grey,
                       ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Team",
+                      style: GoogleFonts.nunitoSans(
+                          textStyle: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
@@ -601,22 +764,20 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
+  Widget buildName2Widget(BuildContext context) {
     return Center(
-      child: Text(userTesting.sectionsScreenCard3,
+      child: Text(
+        userTesting.sectionsScreenCard3,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
                 fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
+                fontWeight: FontWeight.w200)),
       ),
     );
   }
 
-  Widget buildVideoContainer(BuildContext context){
+  Widget buildVideoContainer(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 215,
@@ -632,10 +793,11 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildInfoText1(BuildContext context){
+  Widget buildInfoText1(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
-      child: Text("Mapping Insights can take place in person or via video conferencing. In a design sprint, they are usually 30-45-minute casual conversations. In the interview room, the user is introduced to the prototype and is allowed to interact with it while their reactions are monitored.",
+      child: Text(
+        "Mapping Insights can take place in person or via video conferencing. In a design sprint, they are usually 30-45-minute casual conversations. In the interview room, the user is introduced to the prototype and is allowed to interact with it while their reactions are monitored.",
         style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
             fontSize: 16,
@@ -645,30 +807,32 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildStepText1(BuildContext context){
+  Widget buildStepText1(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Step 1 :",
+          Text(
+            "Step 1 :",
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )
-            ),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            )),
           ),
-          SizedBox(width: 5,),
+          SizedBox(
+            width: 5,
+          ),
           Flexible(
-            child: Text("Step 1: Identify the objective. What is the problem you are trying to solve?",
+            child: Text(
+              "Step 1: Identify the objective. What is the problem you are trying to solve?",
               maxLines: 3,
               style: GoogleFonts.nunitoSans(
                   textStyle: TextStyle(
-                    fontSize: 16,
-                  )
-              ),
+                fontSize: 16,
+              )),
             ),
           ),
         ],
@@ -676,7 +840,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildImage1Container(BuildContext context){
+  Widget buildImage1Container(BuildContext context) {
     return Center(
       child: Container(
           width: 233.56,
@@ -685,30 +849,32 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildStepText2(BuildContext context){
+  Widget buildStepText2(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Step 2 :",
+          Text(
+            "Step 2 :",
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )
-            ),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            )),
           ),
-          SizedBox(width: 5,),
+          SizedBox(
+            width: 5,
+          ),
           Flexible(
-            child: Text("Define the goal for your sprint. Ask yourself these questions. What do you expect from solving this problem? What do you want in long term for eg: 6 months or an year? How is your success is to be measured?",
+            child: Text(
+              "Define the goal for your sprint. Ask yourself these questions. What do you expect from solving this problem? What do you want in long term for eg: 6 months or an year? How is your success is to be measured?",
               maxLines: 7,
               style: GoogleFonts.nunitoSans(
                   textStyle: TextStyle(
-                    fontSize: 16,
-                  )
-              ),
+                fontSize: 16,
+              )),
             ),
           ),
         ],
@@ -716,7 +882,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildImage2Container(BuildContext context){
+  Widget buildImage2Container(BuildContext context) {
     return Center(
       child: Container(
           width: 233.56,
@@ -725,30 +891,32 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildStepText3(BuildContext context){
+  Widget buildStepText3(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Step 3 :",
+          Text(
+            "Step 3 :",
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )
-            ),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            )),
           ),
-          SizedBox(width: 5,),
+          SizedBox(
+            width: 5,
+          ),
           Flexible(
-            child: Text("Define your guiding questions that will be solved through the course of sprint. For eg: How might we optimize the app to show what users want? How might we showcase the best selling products on our app to increase sales? How might we extract more personal information from the users to tailor our campaigns?",
+            child: Text(
+              "Define your guiding questions that will be solved through the course of sprint. For eg: How might we optimize the app to show what users want? How might we showcase the best selling products on our app to increase sales? How might we extract more personal information from the users to tailor our campaigns?",
               maxLines: 10,
               style: GoogleFonts.nunitoSans(
                   textStyle: TextStyle(
-                    fontSize: 16,
-                  )
-              ),
+                fontSize: 16,
+              )),
             ),
           ),
         ],
@@ -756,7 +924,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
     );
   }
 
-  Widget buildImage3Container(BuildContext context){
+  Widget buildImage3Container(BuildContext context) {
     return Center(
       child: Container(
           width: 233.56,
@@ -767,12 +935,13 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
 
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => InsightsForm(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
@@ -780,16 +949,13 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       child: Center(
         child: Container(
           height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.0,
+          width: MediaQuery.of(context).size.width / 2.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(7))),
           child: Center(
-            child: Text("Next",
+            child: Text(
+              "Next",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
@@ -798,5 +964,4 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
       ),
     );
   }
-
 }

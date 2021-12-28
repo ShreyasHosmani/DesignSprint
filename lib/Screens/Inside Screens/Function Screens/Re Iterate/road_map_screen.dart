@@ -22,11 +22,9 @@ class _RoadMapState extends State<RoadMap> {
     // TODO: implement initState
     super.initState();
     reIterateApiProvider.getRoadMapDataNotes(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {
-        setState(() {
-          reIterateApiProvider.getRoadMapDataTasksAndTimeLines(context).whenComplete((){
-            Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-          });
+      setState(() {
+        reIterateApiProvider.getRoadMapDataTasksAndTimeLines(context).whenComplete((){
+          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
         });
       });
     });

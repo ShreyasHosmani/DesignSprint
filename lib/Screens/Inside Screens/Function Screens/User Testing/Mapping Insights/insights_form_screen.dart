@@ -1,6 +1,7 @@
 import 'package:design_sprint/APIs/add_insights.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/reiterate_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Mapping%20Insights/congratulations_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,7 +23,8 @@ class InsightsForm extends StatefulWidget {
 
 class _InsightsFormState extends State<InsightsForm> {
   InsightsApiProvider insightsApiProvider = InsightsApiProvider();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -32,6 +34,7 @@ class _InsightsFormState extends State<InsightsForm> {
     showSecondStep = false;
     showPainPoint = false;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +42,12 @@ class _InsightsFormState extends State<InsightsForm> {
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
+      endDrawer: statusDrawer == true
+          ? StatusDrawerPrototyping()
+          : ProfileDrawerCommon(),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 50),
-        child: Container(height:50,child: buildNextButton(context)),
+        child: Container(height: 50, child: buildNextButton(context)),
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -50,19 +55,32 @@ class _InsightsFormState extends State<InsightsForm> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 buildName2Widget(context),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 buildInsightsListViewBuilder(context),
-                SizedBox(height: 51,),
-                userTesting.uploadedInsightsList == null ?
-                Positioned(
-                    top: 0,left: 0,right: 0,bottom: 0,
-                    child: buildInsightTextFieldContainer(context)) :
-                buildInsightTextFieldContainer(context),
-                SizedBox(height: 35,),
+                SizedBox(
+                  height: 51,
+                ),
+                userTesting.uploadedInsightsList == null
+                    ? Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: buildInsightTextFieldContainer(context))
+                    : buildInsightTextFieldContainer(context),
+                SizedBox(
+                  height: 35,
+                ),
                 buildAddInsightButton(context),
-                SizedBox(height: 35,),
+                SizedBox(
+                  height: 35,
+                ),
               ],
             ),
             Padding(
@@ -75,9 +93,9 @@ class _InsightsFormState extends State<InsightsForm> {
     );
   }
 
-  Widget buildAppBar(BuildContext context){
-
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+  Widget buildAppBar(BuildContext context) {
+    Container line =
+        Container(height: 1, color: Colors.black, child: Divider());
     void _openEndDrawer() {
       setState(() {
         statusDrawer = false;
@@ -91,7 +109,8 @@ class _InsightsFormState extends State<InsightsForm> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(userTesting.title,
+        child: Text(
+          userTesting.title,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -102,8 +121,14 @@ class _InsightsFormState extends State<InsightsForm> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
       actions: [
@@ -118,10 +143,18 @@ class _InsightsFormState extends State<InsightsForm> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   line,
-                  SizedBox(height: 6,),
+                  SizedBox(
+                    height: 6,
+                  ),
                   line,
-                  SizedBox(height: 6,),
-                  Container(height:1,width:20, color: Colors.black,child: Divider()),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                      height: 1,
+                      width: 20,
+                      color: Colors.black,
+                      child: Divider()),
                 ],
               ),
             ),
@@ -131,7 +164,7 @@ class _InsightsFormState extends State<InsightsForm> {
     );
   }
 
-  Widget buildProfileDrawer(BuildContext context){
+  Widget buildProfileDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -164,140 +197,204 @@ class _InsightsFormState extends State<InsightsForm> {
                         width: 80,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
                         ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(
+                        width: 15,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi, " + profile.name + "!",
+                          Text(
+                            "Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
                           ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 14,
+                            )),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingHome,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingDesignSprint,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingTips,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingManageTeam,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingFAQs,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingLegalPolicy,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
               ],
             ),
           ),
@@ -306,13 +403,14 @@ class _InsightsFormState extends State<InsightsForm> {
     );
   }
 
-  Widget statusBarDrawer(BuildContext context){
+  Widget statusBarDrawer(BuildContext context) {
     void _openEndDrawer() {
       setState(() {
         statusDrawer = true;
       });
       _scaffoldKey.currentState.openEndDrawer();
     }
+
     return Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
@@ -335,13 +433,18 @@ class _InsightsFormState extends State<InsightsForm> {
               ),
             ],
           ),
-          child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
+          child: Center(
+              child: Text(
+            "<<",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),
+          )),
         ),
       ),
     );
   }
 
-  Widget buildStatusDrawer(BuildContext context){
+  Widget buildStatusDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -357,21 +460,25 @@ class _InsightsFormState extends State<InsightsForm> {
                   height: 70,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(
+                      "Sprint Name",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
@@ -380,201 +487,261 @@ class _InsightsFormState extends State<InsightsForm> {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Sprint Goal",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Sprint Goal",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Empathize",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Empathize",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Ideation",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Ideation",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Prototype",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Prototype",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("User Testing",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "User Testing",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Re - Iterate",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Re - Iterate",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Team",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Team",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
@@ -586,27 +753,27 @@ class _InsightsFormState extends State<InsightsForm> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
+  Widget buildName2Widget(BuildContext context) {
     return Center(
-      child: Text(userTesting.insightsForm,
+      child: Text(
+        userTesting.insightsForm,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
                 fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
+                fontWeight: FontWeight.w200)),
       ),
     );
   }
 
-  Widget buildInsightsListViewBuilder(BuildContext context){
+  Widget buildInsightsListViewBuilder(BuildContext context) {
     return ListView.builder(
       physics: ScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: userTesting.uploadedInsightsList == null ? 0 : userTesting.uploadedInsightsList.length,
+      itemCount: userTesting.uploadedInsightsList == null
+          ? 0
+          : userTesting.uploadedInsightsList.length,
       itemBuilder: (context, i) => Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
         child: Card(
@@ -615,7 +782,8 @@ class _InsightsFormState extends State<InsightsForm> {
             width: 302,
             height: 105.54,
             child: Center(
-              child: Text(userTesting.uploadedInsightsList[i],
+              child: Text(
+                userTesting.uploadedInsightsList[i],
                 style: GoogleFonts.nunitoSans(
                   fontSize: 16,
                 ),
@@ -627,7 +795,7 @@ class _InsightsFormState extends State<InsightsForm> {
     );
   }
 
-  Widget buildInsightTextFieldContainer(BuildContext context){
+  Widget buildInsightTextFieldContainer(BuildContext context) {
     return Card(
       elevation: 5,
       child: Container(
@@ -647,47 +815,59 @@ class _InsightsFormState extends State<InsightsForm> {
                     border: InputBorder.none,
                   ),
                 ),
-                Divider(color: Color(0xff787CD1),height: 2,),
-                SizedBox(height: 24,),
+                Divider(
+                  color: Color(0xff787CD1),
+                  height: 2,
+                ),
+                SizedBox(
+                  height: 24,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         setState(() {
                           userTesting.painPointController.clear();
                         });
                       },
-                      child: Text(userTesting.cancel,
-                        style: GoogleFonts.nunitoSans(
-                            color: Color(0xff787CD1)
-                        ),
+                      child: Text(
+                        userTesting.cancel,
+                        style: GoogleFonts.nunitoSans(color: Color(0xff787CD1)),
                       ),
                     ),
-                    SizedBox(width: 36,),
+                    SizedBox(
+                      width: 36,
+                    ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         focus.unfocus();
-                        if(userTesting.painPointController.text == null || userTesting.painPointController.text == ""){
-                          Fluttertoast.showToast(msg: "Insight cannot be empty!", backgroundColor: Colors.black,
-                            textColor: Colors.white,);
-                        }else{
-                          Fluttertoast.showToast(msg: "Adding insight...", backgroundColor: Colors.black,
-                            textColor: Colors.white,);
-                          insightsApiProvider.addInsights(context).then((value){
+                        if (userTesting.painPointController.text == null ||
+                            userTesting.painPointController.text == "") {
+                          Fluttertoast.showToast(
+                            msg: "Insight cannot be empty!",
+                            backgroundColor: Colors.black,
+                            textColor: Colors.white,
+                          );
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Adding insight...",
+                            backgroundColor: Colors.black,
+                            textColor: Colors.white,
+                          );
+                          insightsApiProvider
+                              .addInsights(context)
+                              .then((value) {
                             Future.delayed(Duration(seconds: 3), () {
-                              setState(() {
-
-                              });
+                              setState(() {});
                             });
                           });
                         }
                       },
-                      child: Text(userTesting.done,
-                        style: GoogleFonts.nunitoSans(
-                            color: Color(0xff787CD1)
-                        ),
+                      child: Text(
+                        userTesting.done,
+                        style: GoogleFonts.nunitoSans(color: Color(0xff787CD1)),
                       ),
                     ),
                   ],
@@ -702,18 +882,23 @@ class _InsightsFormState extends State<InsightsForm> {
 
   Widget buildAddInsightButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        if(userTesting.painPointController.text == null || userTesting.painPointController.text == ""){
-          Fluttertoast.showToast(msg: "Insight cannot be empty!", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-        }else{
-          Fluttertoast.showToast(msg: "Adding insight...", backgroundColor: Colors.black,
-            textColor: Colors.white,);
-          insightsApiProvider.addInsights(context).then((value){
+      onTap: () {
+        if (userTesting.painPointController.text == null ||
+            userTesting.painPointController.text == "") {
+          Fluttertoast.showToast(
+            msg: "Insight cannot be empty!",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: "Adding insight...",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
+          insightsApiProvider.addInsights(context).then((value) {
             Future.delayed(Duration(seconds: 3), () {
-              setState(() {
-
-              });
+              setState(() {});
             });
           });
         }
@@ -723,11 +908,11 @@ class _InsightsFormState extends State<InsightsForm> {
           height: 37,
           width: 166,
           decoration: BoxDecoration(
-              border: Border.all(color :Color(0xff787cd1),width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(19))
-          ),
+              border: Border.all(color: Color(0xff787cd1), width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(19))),
           child: Center(
-            child: Text(userTesting.addInsight,
+            child: Text(
+              userTesting.addInsight,
               style: TextStyle(
                   color: Color(0xff787cd1), letterSpacing: 1, fontSize: 16),
             ),
@@ -739,12 +924,22 @@ class _InsightsFormState extends State<InsightsForm> {
 
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        Navigator.push(
+      onTap: () {
+       /* Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => Congratulations(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );*/
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ReIterateTutorial(),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
@@ -755,10 +950,10 @@ class _InsightsFormState extends State<InsightsForm> {
           width: 146,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(7))),
           child: Center(
-            child: Text("Next",
+            child: Text(
+              "Next",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
@@ -767,5 +962,4 @@ class _InsightsFormState extends State<InsightsForm> {
       ),
     );
   }
-
 }
