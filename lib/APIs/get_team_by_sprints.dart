@@ -13,7 +13,10 @@ class GetTeamBySprintApiProvider{
 
     http.post(url, body: {
 
-      "sprintID" : home.selectedSprintId,
+      "sprintID" : (home.sprintID == null || home.sprintID == "null"
+          ? home.selectedSprintId
+          : home.sprintID)
+          .toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -51,9 +54,17 @@ class GetTeamBySprintApiProvider{
 
     String url = globals.urlSignUp + "getteammemberbysprint.php";
 
+    print("*******");
+    print((home.sprintID == null || home.sprintID == "null"
+        ? home.selectedSprintId
+        : home.sprintID)
+        .toString());
     http.post(url, body: {
 
-      "sprintID" : home.sprintID.toString(),
+      "sprintID" :(home.sprintID == null || home.sprintID == "null"
+          ? home.selectedSprintId
+          : home.sprintID)
+          .toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

@@ -1,5 +1,6 @@
 library main_app.reiterateglobals;
 
+import 'package:design_sprint/Models/TaskListParser.dart';
 import 'package:flutter/material.dart';
 
 String title = "Re - Iterate";
@@ -92,6 +93,8 @@ var roadMapNotesList10;
 var roadMapTaskList10;
 
 var allPrototypeNotes;
+var allPrototypeId;
 var allPrototypeTasks;
+List<TaskListParser> taskList = [];
 var allPrototypeDueDates;
 var allPrototypeNames;

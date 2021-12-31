@@ -885,78 +885,111 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
                                             )),
                                           ),
                                           SizedBox(height: 10),
-                                          Text(
-                                            reiterate.allPrototypeTasks[i],
-                                            style: GoogleFonts.nunitoSans(
-                                              textStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Icon(
-                                                    Icons.perm_identity,
-                                                    color: Colors.grey,
-                                                    size: 12,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 6,
-                                                  ),
-                                                  Text(
-                                                    "member name",
-                                                    style:
-                                                        GoogleFonts.nunitoSans(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                width: 30,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Icon(
-                                                    Icons.date_range,
-                                                    color: Colors.grey,
-                                                    size: 12,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 6,
-                                                  ),
-                                                  Text(
-                                                    reiterate
-                                                        .allPrototypeDueDates[i],
-                                                    style:
-                                                        GoogleFonts.nunitoSans(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                          reiterate.taskList.length == 0
+                                              ? Container()
+                                              : ListView.builder(
+                                                  physics: ScrollPhysics(),
+                                                  //controller: controller,
+                                                  shrinkWrap: true,
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  itemCount:
+                                                      reiterate.taskList.length,
+                                                  itemBuilder: (context, index) {
+                                                    return  reiterate.allPrototypeId[i]!=reiterate.taskList[index].pptPrototypeid?Container(): Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          reiterate.taskList[index].pptTasktext??"",
+                                                          style: GoogleFonts
+                                                              .nunitoSans(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 14,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                           /* Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .perm_identity,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  size: 12,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 6,
+                                                                ),
+                                                                Text(
+                                                                  "member name",
+                                                                  style: GoogleFonts
+                                                                      .nunitoSans(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),*/
+                                                            SizedBox(
+                                                              width: 30,
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .date_range,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  size: 12,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 6,
+                                                                ),
+                                                                Text(
+                                                                  reiterate.taskList[index].pptDuedate??"",
+                                                                  style: GoogleFonts
+                                                                      .nunitoSans(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        12,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  }),
                                         ],
                                       ),
                                     ),

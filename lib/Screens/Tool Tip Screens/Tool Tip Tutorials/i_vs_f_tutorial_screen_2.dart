@@ -765,7 +765,7 @@ class _IvsFTutorial2State extends State<IvsFTutorial2> {
           width: MediaQuery
               .of(context)
               .size
-              .width / 2.0,
+              .width / 3.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
               borderRadius: BorderRadius.all(Radius.circular(7))

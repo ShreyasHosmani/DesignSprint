@@ -178,7 +178,19 @@ class CreatePersonaApiProvider {
       if(statusCode == 200){
         if(empathize.responseArrayGetPersonaMsg == "Profile Found"){
 
+
           empathize.paperPersonaImageNamesList = List.generate(empathize.responseArrayGetPersona['data'].length, (i) => empathize.responseArrayGetPersona['data'][i]['personadocImage']);
+          print("aaaaaaaaaaaaaaaaaaaa");
+          if(empathize.paperPersonaImageNamesList!=null){
+            for(int i=0;i<empathize.paperPersonaImageNamesList.length;i++){
+              if(empathize.paperPersonaImageNamesList[i].toString() == ""){
+                empathize.paperPersonaImageNamesList.removeAt(i);
+                print("aaaaaaaaaaaaaaaaaaaa");
+              }
+            }
+          }
+
+
 
           print(empathize.paperPersonaImageNamesList.toList());
 

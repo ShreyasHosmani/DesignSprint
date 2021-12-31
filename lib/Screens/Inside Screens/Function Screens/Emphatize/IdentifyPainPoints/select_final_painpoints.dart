@@ -904,8 +904,11 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       },
       child: Center(
         child: Container(
-          height: 45,
-          width: 146,
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 3.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
               borderRadius: BorderRadius.all(Radius.circular(7))

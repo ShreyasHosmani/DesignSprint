@@ -23,13 +23,11 @@ class ManageTeam extends StatefulWidget {
 
 class _ManageTeamState extends State<ManageTeam> {
   TeamApiProvider teamApiProvider = TeamApiProvider();
-  Future<String> removeTeamMember(context) async {
 
+  Future<String> removeTeamMember(context) async {
     String url = globals.urlLogin + "removeteammember.php";
     http.post(url, body: {
-
-      "teamID" : selectedTeamMemberIdForDeleting.toString(),
-
+      "teamID": selectedTeamMemberIdForDeleting.toString(),
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -40,35 +38,40 @@ class _ManageTeamState extends State<ManageTeam> {
       team.responseArrayRemoveMember = jsonDecode(response.body);
       print(team.responseArrayRemoveMember);
 
-      team.responseArrayRemoveMemberMsg = team.responseArrayRemoveMember['message'].toString();
-      if(statusCode == 200){
-        if(team.responseArrayRemoveMemberMsg == "Member Removed Successfully"){
+      team.responseArrayRemoveMemberMsg =
+          team.responseArrayRemoveMember['message'].toString();
+      if (statusCode == 200) {
+        if (team.responseArrayRemoveMemberMsg ==
+            "Member Removed Successfully") {
           team.prTeam.hide();
-          Fluttertoast.showToast(msg: "Removing...", backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
+          Fluttertoast.showToast(
+            msg: "Removing...",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          ).whenComplete(() {
             teamApiProvider.getTeamMembers(context);
           });
-        }else{
+        } else {
           team.prTeam.hide();
-          Fluttertoast.showToast(msg: "Error", backgroundColor: Colors.black,
-            textColor: Colors.white,);
+          Fluttertoast.showToast(
+            msg: "Error",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
         }
       }
-
     });
   }
-  Future<String> addTeamMember(context) async {
 
+  Future<String> addTeamMember(context) async {
     String url = globals.urlLogin + "addteammember.php";
 
     http.post(url, body: {
-
-      "userID" : profile.userID,
-      "sprintID" : "1",
-      "teamid" : team.teamID,
-      "membername" : team.memberNameController.text,
-      "memberemail" : team.memberEmailController.text,
-
+      "userID": profile.userID,
+      "sprintID": "1",
+      "teamid": team.teamID,
+      "membername": team.memberNameController.text,
+      "memberemail": team.memberEmailController.text,
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -79,36 +82,40 @@ class _ManageTeamState extends State<ManageTeam> {
       team.responseArrayAddTeam = jsonDecode(response.body);
       print(team.responseArrayAddTeam);
 
-      team.responseArrayAddTeamMsg = team.responseArrayAddTeam['message'].toString();
-      if(statusCode == 200){
-        if(team.responseArrayAddTeamMsg == "Team Added Successfully"){
+      team.responseArrayAddTeamMsg =
+          team.responseArrayAddTeam['message'].toString();
+      if (statusCode == 200) {
+        if (team.responseArrayAddTeamMsg == "Team Added Successfully") {
           team.prTeam.hide();
-          Fluttertoast.showToast(msg: team.memberAdded, backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
+          Fluttertoast.showToast(
+            msg: team.memberAdded,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          ).whenComplete(() {
             team.memberEmailController.clear();
             team.memberNameController.clear();
             getTeamMembers(context);
             Navigator.of(context).pop();
           });
-        }else{
+        } else {
           team.prTeam.hide();
-          Fluttertoast.showToast(msg: team.responseArrayAddTeamMsg, backgroundColor: Colors.black,
-            textColor: Colors.white,);
+          Fluttertoast.showToast(
+            msg: team.responseArrayAddTeamMsg,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
         }
       }
-
     });
   }
-  Future<String> getTeamMembers(context) async {
 
+  Future<String> getTeamMembers(context) async {
     String url = globals.urlLogin + "getteamstatus.php";
 
     http.post(url, body: {
-
-      "userID" : profile.userID,
+      "userID": profile.userID,
       //"sprintID" : home.sprintID,
-      "teamID" : team.teamID,
-
+      "teamID": team.teamID,
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -119,18 +126,30 @@ class _ManageTeamState extends State<ManageTeam> {
       team.responseArrayTeamDetails = jsonDecode(response.body);
       print(team.responseArrayTeamDetails);
 
-      team.responseArrayTeamDetailsMsg = team.responseArrayTeamDetails['message'].toString();
-      if(statusCode == 200){
-        if(team.responseArrayTeamDetailsMsg == "Profile Found"){
+      team.responseArrayTeamDetailsMsg =
+          team.responseArrayTeamDetails['message'].toString();
+      if (statusCode == 200) {
+        if (team.responseArrayTeamDetailsMsg == "Profile Found") {
           setState(() {
-            team.teamMemberIdsList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamID'].toString());
-            team.teamMemberNameList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberName'].toString());
-            team.teamMemberEmailList = List.generate(team.responseArrayTeamDetails['data'].length, (i) => team.responseArrayTeamDetails['data'][i]['teamMemberEmail'].toString());
+            team.teamMemberIdsList = List.generate(
+                team.responseArrayTeamDetails['data'].length,
+                (i) => team.responseArrayTeamDetails['data'][i]['teamID']
+                    .toString());
+            team.teamMemberNameList = List.generate(
+                team.responseArrayTeamDetails['data'].length,
+                (i) => team.responseArrayTeamDetails['data'][i]
+                        ['teamMemberName']
+                    .toString());
+            team.teamMemberEmailList = List.generate(
+                team.responseArrayTeamDetails['data'].length,
+                (i) => team.responseArrayTeamDetails['data'][i]
+                        ['teamMemberEmail']
+                    .toString());
           });
           print(team.teamMemberIdsList.toList());
           print(team.teamMemberNameList.toList());
           print(team.teamMemberEmailList.toList());
-        }else{
+        } else {
           setState(() {
             team.teamMemberIdsList = null;
             team.teamMemberNameList = null;
@@ -138,15 +157,16 @@ class _ManageTeamState extends State<ManageTeam> {
           });
         }
       }
-
     });
   }
+
   @override
   void initState() {
     teamApiProvider.getTeamMembers(context);
     super.initState();
     team.teamMemberNameList = null;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,12 +174,12 @@ class _ManageTeamState extends State<ManageTeam> {
       key: team.scaffoldKey2,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerSprintGoal() : ProfileDrawerCommon(),
+      endDrawer: statusDrawer == true
+          ? StatusDrawerSprintGoal()
+          : ProfileDrawerCommon(),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 50),
-        child: Container(
-            height: 50,
-            child: buildNextButton(context)),
+        child: Container(height: 50, child: buildNextButton(context)),
       ),
       body: Stack(
         children: [
@@ -168,33 +188,46 @@ class _ManageTeamState extends State<ManageTeam> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 buildName2Widget(context),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 buildName3Widget(context),
-                SizedBox(height: 40,),
+                SizedBox(
+                  height: 40,
+                ),
                 buildMemberCardWidget(context),
-                SizedBox(height: 40,),
-                team.teamMemberNameList == null ? Container() : buildAddMemberWidget(context),
+                SizedBox(
+                  height: 40,
+                ),
+                team.teamMemberNameList == null
+                    ? Container()
+                    : buildAddMemberWidget(context),
               ],
             ),
           ),
           Positioned(
-            top: 80, right: 0,
+            top: 80,
+            right: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
               child: statusBarDrawer(context),
             ),
           ),
-          team.teamMemberNameList == null ? Center(child: buildAddMemberWidget(context)) : Container(),
+          team.teamMemberNameList == null
+              ? Center(child: buildAddMemberWidget(context))
+              : Container(),
         ],
       ),
     );
   }
 
-  Widget buildAppBar(BuildContext context){
-
-    Container line = Container(height:1,color: Colors.black,child: Divider());
+  Widget buildAppBar(BuildContext context) {
+    Container line =
+        Container(height: 1, color: Colors.black, child: Divider());
     void _openEndDrawer() {
       setState(() {
         statusDrawer = false;
@@ -208,7 +241,8 @@ class _ManageTeamState extends State<ManageTeam> {
       centerTitle: true,
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(team.appBarTitle,
+        child: Text(
+          team.appBarTitle,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -219,8 +253,14 @@ class _ManageTeamState extends State<ManageTeam> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
       actions: [
@@ -235,10 +275,18 @@ class _ManageTeamState extends State<ManageTeam> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   line,
-                  SizedBox(height: 6,),
+                  SizedBox(
+                    height: 6,
+                  ),
                   line,
-                  SizedBox(height: 6,),
-                  Container(height:1,width:20, color: Colors.black,child: Divider()),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                      height: 1,
+                      width: 20,
+                      color: Colors.black,
+                      child: Divider()),
                 ],
               ),
             ),
@@ -248,7 +296,7 @@ class _ManageTeamState extends State<ManageTeam> {
     );
   }
 
-  Widget buildProfileDrawer(BuildContext context){
+  Widget buildProfileDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -281,140 +329,204 @@ class _ManageTeamState extends State<ManageTeam> {
                         width: 80,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
                         ),
-                        child: Icon(Icons.person, color: Colors.grey, size: 40,),
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(
+                        width: 15,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Hi, " + profile.name + "!",
+                          Text(
+                            "Hi, " + profile.name + "!",
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
                           ),
-                          SizedBox(height: 8,),
-                          Text(profile.email,
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            profile.email,
                             style: GoogleFonts.nunitoSans(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                )
-                            ),
+                              color: Colors.white,
+                              fontSize: 14,
+                            )),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingHome,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingHome,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingDesignSprint,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingDesignSprint,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingTips,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingTips,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingManageTeam,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingManageTeam,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingFAQs,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingLegalPolicy,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
               ],
             ),
           ),
@@ -423,13 +535,14 @@ class _ManageTeamState extends State<ManageTeam> {
     );
   }
 
-  Widget statusBarDrawer(BuildContext context){
+  Widget statusBarDrawer(BuildContext context) {
     void _openEndDrawer() {
       setState(() {
         statusDrawer = true;
       });
       team.scaffoldKey2.currentState.openEndDrawer();
     }
+
     return Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
@@ -452,13 +565,18 @@ class _ManageTeamState extends State<ManageTeam> {
               ),
             ],
           ),
-          child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
+          child: Center(
+              child: Text(
+            "<<",
+            style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),
+          )),
         ),
       ),
     );
   }
 
-  Widget buildStatusDrawer(BuildContext context){
+  Widget buildStatusDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -474,21 +592,25 @@ class _ManageTeamState extends State<ManageTeam> {
                   height: 70,
                   color: Color(0xff787CD1),
                   child: Center(
-                    child: Text("Sprint Name",
+                    child: Text(
+                      "Sprint Name",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
@@ -497,201 +619,261 @@ class _ManageTeamState extends State<ManageTeam> {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Sprint Goal",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Sprint Goal",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Empathize",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Empathize",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Ideation",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Ideation",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Prototype",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Prototype",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("User Testing",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "User Testing",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Re - Iterate",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Re - Iterate",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
+                    SizedBox(
+                      width: 62,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
-                      ),
+                          border: Border.all(color: Colors.grey)),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Container(
                       height: 8,
                       width: 8,
-                      child: Divider(color: Colors.grey,),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
                     ),
-                    SizedBox(width: 10,),
-                    Text("Team",
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Team",
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
@@ -703,50 +885,47 @@ class _ManageTeamState extends State<ManageTeam> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
-
+  Widget buildName2Widget(BuildContext context) {
     return Center(
-      child: Text(team.teamNameController.text,
+      child: Text(
+        team.teamNameController.text,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
                 fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
+                fontWeight: FontWeight.w200)),
       ),
     );
   }
 
-  Widget buildName3Widget(BuildContext context){
-
+  Widget buildName3Widget(BuildContext context) {
     return Center(
-      child: Text(team.subTitleManageTeam2,
+      child: Text(
+        team.subTitleManageTeam2,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
-                fontWeight: FontWeight.w500
-            )
-        ),
+                fontWeight: FontWeight.w500)),
       ),
     );
   }
 
-  Widget buildMemberCardWidget(BuildContext context){
+  Widget buildMemberCardWidget(BuildContext context) {
     return ListView.builder(
       physics: ScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: team.teamMemberNameList == null ? 0 : team.teamMemberNameList.length,
+      itemCount:
+          team.teamMemberNameList == null ? 0 : team.teamMemberNameList.length,
       itemBuilder: (context, i) => Padding(
         padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
         child: Container(
           width: 302,
           height: 57,
           decoration: BoxDecoration(
-              border: Border.all(color: Color(0xff787cd1)),
-              borderRadius: BorderRadius.all(Radius.circular(7)),
+            border: Border.all(color: Color(0xff787cd1)),
+            borderRadius: BorderRadius.all(Radius.circular(7)),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
@@ -763,52 +942,63 @@ class _ManageTeamState extends State<ManageTeam> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(team.teamMemberNameList[i],
+                Text(
+                  team.teamMemberNameList[i],
                   style: GoogleFonts.nunitoSans(
                     fontSize: 18,
                   ),
                 ),
                 PopupMenuButton<String>(
-                  onSelected: (val){
+                  onSelected: (val) {
                     print(val);
-                    if(val == "Delete Member"){
+                    if (val == "Delete Member") {
                       setState(() {
-                        selectedTeamMemberIdForDeleting = team.teamMemberIdsList[i];
+                        selectedTeamMemberIdForDeleting =
+                            team.teamMemberIdsList[i];
                       });
                       showAlertDialogDeleteTeam(context);
-                    }else{
-
-                    }
+                    } else {}
                   },
                   icon: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(height: 3,width: 3,
+                      Container(
+                        height: 3,
+                        width: 3,
                         decoration: BoxDecoration(
                             color: Colors.grey,
-                            borderRadius: BorderRadius.all(Radius.circular(50))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
                       ),
-                      SizedBox(height: 3,),
-                      Container(height: 3,width: 3,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.all(Radius.circular(50))
-                        ),
+                      SizedBox(
+                        height: 3,
                       ),
-                      SizedBox(height: 3,),
-                      Container(height: 3,width: 3,
+                      Container(
+                        height: 3,
+                        width: 3,
                         decoration: BoxDecoration(
                             color: Colors.grey,
-                            borderRadius: BorderRadius.all(Radius.circular(50))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Container(
+                        height: 3,
+                        width: 3,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
                       ),
                     ],
                   ),
                   color: Colors.white,
                   itemBuilder: (BuildContext context) {
-                    return {'Delete Member', 'Make Decision Maker'}.map((String choice) {
+                    return {'Delete Member', 'Make Decision Maker'}
+                        .map((String choice) {
                       return PopupMenuItem<String>(
                         value: choice,
                         textStyle: GoogleFonts.nunitoSans(
@@ -839,9 +1029,9 @@ class _ManageTeamState extends State<ManageTeam> {
     );
   }
 
-  Widget buildAddMemberWidget(BuildContext context){
+  Widget buildAddMemberWidget(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         showAlertDialogAddTeamMember(context);
       },
       child: Column(
@@ -855,16 +1045,21 @@ class _ManageTeamState extends State<ManageTeam> {
               borderRadius: BorderRadius.all(Radius.circular(50)),
               color: Color(0xff787CD1),
             ),
-            child: Icon(Icons.add, color: Colors.white,),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
           ),
-          SizedBox(height: 10,),
-          Text("Add Member",
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Add Member",
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
-                  color: Color(0xff787CD1),
-                  fontSize: 14,
-                )
-            ),
+              color: Color(0xff787CD1),
+              fontSize: 14,
+            )),
           )
         ],
       ),
@@ -873,12 +1068,13 @@ class _ManageTeamState extends State<ManageTeam> {
 
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => EmphatizeSections(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
@@ -886,16 +1082,13 @@ class _ManageTeamState extends State<ManageTeam> {
       child: Center(
         child: Container(
           height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.0,
+          width: MediaQuery.of(context).size.width / 3.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(7))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(7))),
           child: Center(
-            child: Text("Next",
+            child: Text(
+              "Next",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),
@@ -906,18 +1099,15 @@ class _ManageTeamState extends State<ManageTeam> {
   }
 
   showAlertDialogAddTeamMember(BuildContext context) {
-
     Widget textField = Theme(
         data: ThemeData(
           primaryColor: Color(0xff787CD1),
         ),
         child: TextFormField(
           controller: team.memberNameController,
-          decoration: InputDecoration(
-              hintText: hint.memberName
-          ),
-          validator: (value){
-            if(value.isEmpty){
+          decoration: InputDecoration(hintText: hint.memberName),
+          validator: (value) {
+            if (value.isEmpty) {
               return team.teamMemberNameEmpty;
             }
             return null;
@@ -930,17 +1120,14 @@ class _ManageTeamState extends State<ManageTeam> {
         ),
         child: TextFormField(
           controller: team.memberEmailController,
-          decoration: InputDecoration(
-              hintText: hint.memberEmail
-          ),
-          validator: (val) => !EmailValidator.validate(val, true)
-              ? hint.validationEmail
-              : null,
+          decoration: InputDecoration(hintText: hint.memberEmail),
+          validator: (val) =>
+              !EmailValidator.validate(val, true) ? hint.validationEmail : null,
         ));
 
     GestureDetector buildSaveButton = GestureDetector(
       onTap: () async {
-        if(team.formKey2.currentState.validate()){
+        if (team.formKey2.currentState.validate()) {
           team.prTeam.show();
           addTeamMember(context);
         }
@@ -952,18 +1139,16 @@ class _ManageTeamState extends State<ManageTeam> {
         elevation: 10,
         child: Container(
           height: 50,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 2.4,
+          width: MediaQuery.of(context).size.width / 2.4,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
-              borderRadius: BorderRadius.all(Radius.circular(12))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(12))),
           child: Center(
             child: Text(team.nextButtonText,
-                style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1,color: Colors.white),)
-            ),
+                style: GoogleFonts.nunitoSans(
+                  textStyle: TextStyle(
+                      fontSize: 16, letterSpacing: 1, color: Colors.white),
+                )),
           ),
         ),
       ),
@@ -971,14 +1156,24 @@ class _ManageTeamState extends State<ManageTeam> {
 
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(15.0))),
       title: Column(
         children: [
           Align(
               alignment: Alignment.centerRight,
-              child: IconButton(icon: Icon(Icons.close,color: Colors.grey,),onPressed: (){Navigator.of(context).pop();},)),
-          Text(team.addMember, style: GoogleFonts.nunitoSans(textStyle: TextStyle(fontSize: 16, letterSpacing: 1),)),
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )),
+          Text(team.addMember,
+              style: GoogleFonts.nunitoSans(
+                textStyle: TextStyle(fontSize: 16, letterSpacing: 1),
+              )),
         ],
       ),
       content: Padding(
@@ -1013,23 +1208,23 @@ class _ManageTeamState extends State<ManageTeam> {
   }
 
   showAlertDialogDeleteTeam(BuildContext context) {
-
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = FlatButton(
       child: Text("Delete"),
-      onPressed:  () async {
+      onPressed: () async {
         Navigator.of(context).pop();
-        removeTeamMember(context).whenComplete((){
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+        removeTeamMember(context).whenComplete(() {
+          Future.delayed(const Duration(seconds: 3), () {
+            setState(() {});
+          });
         });
       },
-
     );
 
     // set up the AlertDialog
@@ -1050,7 +1245,6 @@ class _ManageTeamState extends State<ManageTeam> {
       },
     );
   }
-
 }
 
 var selectedTeamMemberIdForDeleting;

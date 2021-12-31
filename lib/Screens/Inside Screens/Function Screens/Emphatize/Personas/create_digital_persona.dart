@@ -1058,7 +1058,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.done,
-          maxLines: 4,
+          maxLines: 7,
           controller: empathize.bioController,
           decoration: InputDecoration(
             hintText: hint.hintBio,
@@ -1106,7 +1106,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           autofocus:false ,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
-          maxLines: 4,
+          maxLines: 7,
           decoration: InputDecoration(
             hintText: hint.hintGoalsAndMotivation,
             border: InputBorder.none,
@@ -1153,7 +1153,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
           autofocus:false ,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
-          maxLines: 4,
+          maxLines: 7,
           decoration: InputDecoration(
             hintText: 'Fears and Frustrations\n\nDescribe your fears and frustrations',
             border: InputBorder.none,

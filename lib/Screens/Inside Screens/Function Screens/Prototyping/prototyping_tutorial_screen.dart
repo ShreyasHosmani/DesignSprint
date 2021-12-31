@@ -1,3 +1,4 @@
+import 'package:design_sprint/Helpers/helper.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_ideation.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Prototyping/upload_prototype_idea_screen1.dart';
@@ -749,6 +750,8 @@ class _PrototypingTutorialState extends State<PrototypingTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        _controller.pause();
+        pushReplacement(context, PrototypingTutorial());
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -764,7 +767,7 @@ class _PrototypingTutorialState extends State<PrototypingTutorial> {
           width: MediaQuery
               .of(context)
               .size
-              .width / 2.0,
+              .width / 3.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
               borderRadius: BorderRadius.all(Radius.circular(7))

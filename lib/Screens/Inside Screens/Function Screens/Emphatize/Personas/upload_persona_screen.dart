@@ -162,6 +162,18 @@ class _UploadPersonaState extends State<UploadPersona> {
                             .substring(6));
           });
 
+          if(empathize.paperPersonaImageNamesList!=null){
+            for(int i=0;i<empathize.paperPersonaImageNamesList.length;i++){
+              if(empathize.paperPersonaImageNamesList[i].toString() == ""){
+                empathize.paperPersonaImageNamesList.removeAt(i);
+                print("aaaaaaaaaaaaaaaaaaaa");
+              }
+            }
+          }
+
+
+
+
           print(empathize.paperPersonaImageNamesList.toList());
         } else {
           setState(() {
@@ -254,6 +266,7 @@ class _UploadPersonaState extends State<UploadPersona> {
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
+
               children: [
                 SizedBox(
                   height: 10,
@@ -1006,49 +1019,57 @@ class _UploadPersonaState extends State<UploadPersona> {
 
   Widget buildFileNameWidget(BuildContext context) {
     return Container(
-      height: 50,
-      child: ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
+      height: 100.0*(empathize.paperPersonaImageNamesList == null
+          ? 0
+          : empathize.paperPersonaImageNamesList.length),
+      child:GridView.builder(
         itemCount: empathize.paperPersonaImageNamesList == null
             ? 0
             : empathize.paperPersonaImageNamesList.length,
-        itemBuilder: (context, i) =>
-            empathize.paperPersonaImageNamesList[i].toString() == ""
-                ? Container()
-                : InkWell(
-                    onTap: () {
-                      if (empathize.paperPersonaImageNamesList[i].toString() ==
-                          "") {
-                        print("if loop");
-                      } else {
-                        print("else loop");
-                        launch(empathize.paperPersonaImageNamesList[i]);
-                      }
-                    },
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: 2, left: 10, right: 10),
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            border: Border.all(color: Colors.grey),
-                            image: DecorationImage(
-                                image: NetworkImage(empathize
-                                            .paperPersonaImageNamesList[i]
-                                            .toString() ==
-                                        ""
-                                    ? "https://admin.dezyit.com/assets/media/favicons/favicon.png"
-                                    : empathize.paperPersonaImageNamesList[i]),
-                                fit: BoxFit.cover,
-                                scale: 5)),
-                      ),
-                    ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount:  3),
+        itemBuilder: (BuildContext context, int i) {
+          return empathize.paperPersonaImageNamesList[i].toString() == ""
+              ? Container()
+              : InkWell(
+            onTap: () {
+              if (empathize.paperPersonaImageNamesList[i].toString() ==
+                  "") {
+                print("if loop");
+              } else {
+                print("else loop");
+                launch(empathize.paperPersonaImageNamesList[i]);
+              }
+            },
+            child: Padding(
+              padding:
+              const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+              child: Column(
+                children: [
+
+                  Container(
+                    height: 80,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        border: Border.all(color: Colors.grey),
+                        image: DecorationImage(
+                            image: NetworkImage(empathize
+                                .paperPersonaImageNamesList[i]
+                                .toString() ==
+                                ""
+                                ? "https://admin.dezyit.com/assets/media/favicons/favicon.png"
+                                : empathize.paperPersonaImageNamesList[i]),
+                            fit: BoxFit.cover,
+                            scale: 5)),
                   ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
+
     );
   }
 
@@ -1078,7 +1099,7 @@ class _UploadPersonaState extends State<UploadPersona> {
       child: Center(
         child: Container(
           height: 50,
-          width: MediaQuery.of(context).size.width / 2.0,
+          width: MediaQuery.of(context).size.width / 3.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
               borderRadius: BorderRadius.all(Radius.circular(7))),

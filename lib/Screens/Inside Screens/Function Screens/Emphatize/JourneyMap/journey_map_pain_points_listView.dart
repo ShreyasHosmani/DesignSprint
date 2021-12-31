@@ -12,7 +12,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -48,10 +47,7 @@ class _JourneyMapPainPointsListViewState
       CreateJourneyApiProvider();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  KeyboardVisibilityNotification _keyboardVisibility =
-      new KeyboardVisibilityNotification();
-  int _keyboardVisibilitySubscriberId;
-  bool _keyboardState;
+
 
   /* Future<String> uploadTouchPoints(
       context, saveTouchPointControllerText) async {
@@ -669,21 +665,9 @@ class _JourneyMapPainPointsListViewState
         false,
       ];
     });
-//    _keyboardState = _keyboardVisibility.isKeyboardVisible;
-//    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
-//      onChange: (bool visible) {
-//        setState(() {
-//          _keyboardState = visible;
-//        });
-//        print(_keyboardState);
-//      },
-//    );
   }
 
-//  @override
-//  void dispose() {
-//    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
-//  }
+
   @override
   Widget build(BuildContext context) {
     prJpHorizontal = ProgressDialog(context);
@@ -9969,7 +9953,10 @@ class _JourneyMapPainPointsListViewState
       child: Center(
         child: Container(
           height: 50,
-          width: MediaQuery.of(context).size.width / 2.0,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 3.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
               borderRadius: BorderRadius.all(Radius.circular(7))),

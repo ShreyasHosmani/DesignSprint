@@ -1204,7 +1204,7 @@ class _UploadIdea1State extends State<UploadIdea1> {
     return ideation.ideaImagesPainPointWiseList == null
         ? Container()
         : Container(
-            height: 50,
+            height: 80,
             child: ListView.builder(
               physics: ScrollPhysics(),
               shrinkWrap: true,
@@ -1221,8 +1221,8 @@ class _UploadIdea1State extends State<UploadIdea1> {
                         launch(ideation.ideaImagesPainPointWiseList[i]);
                       },
                       child: Container(
-                        height: 50,
-                        width: 50,
+                        height: 70,
+                        width: 70,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             border: Border.all(color: Colors.grey),

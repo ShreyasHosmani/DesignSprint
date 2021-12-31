@@ -1153,7 +1153,7 @@ class _VotePainPointsState extends State<VotePainPoints> {
       child: Center(
         child: Container(
           height: 50,
-          width: MediaQuery.of(context).size.width / 2.0,
+          width: MediaQuery.of(context).size.width / 3.0,
           decoration: BoxDecoration(
               color: Color(0xff7579cb),
               borderRadius: BorderRadius.all(Radius.circular(7))),
