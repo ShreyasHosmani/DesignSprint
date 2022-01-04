@@ -787,9 +787,9 @@ class _JourneyMapPainPointsListViewState
                     SizedBox(
                       height: 40,
                     ),
-                    Container(
+                   /* Container(
                         width: MediaQuery.of(context).size.width,
-                        child: Center(child: buildNextButton(context))),
+                        child: Center(child: buildNextButton(context))),*/
                     SizedBox(
                       height: 40,
                     ),
@@ -10197,8 +10197,20 @@ class _JourneyMapPainPointsListViewState
               backgroundColor: Colors.black,
               textColor: Colors.white);
           pop(context);  // closing progress dialog
+          pop(context);
 
-          pop(context); // getting back to list
+          // Navigator.push(
+          //   context,
+          //   PageRouteBuilder(
+          //     pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
+          //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          //     transitionDuration: Duration(milliseconds: 300),
+          //   ),
+          // );
+          //
+          // getting back to list
+
+
           /*
 
           pop(context);

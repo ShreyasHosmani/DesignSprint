@@ -44,7 +44,9 @@ class _AddNotesAndTimeLinePageViewBuilderState
     getTeamBySprintApiProvider.getTeamdata2(context);
     reIterateApiProvider.getPrototypeOfStatusTwo(context).whenComplete(() {
       Future.delayed(const Duration(seconds: 3), () {
-        setState(() {});
+        setState(() {
+
+        });
       });
     });
   }

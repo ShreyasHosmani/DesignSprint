@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:design_sprint/APIs/reiterate_calls.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
@@ -8,6 +10,7 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 bool statusDrawer = false;
 
@@ -17,20 +20,69 @@ class SelectPrototypes extends StatefulWidget {
 }
 
 class _SelectPrototypesState extends State<SelectPrototypes> {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ReIterateApiProvider reIterateApiProvider = ReIterateApiProvider();
+
+  Future<String> getPrototypeImagesPainPointWise(context) async {
+    print((home.sprintID == null || home.sprintID == "null"
+        ? home.selectedSprintId
+        : home.sprintID));
+
+    String url = globals.urlSignUp + "getprototypeimagespainpointwise.php";
+
+    http.post(url, body: {
+      "sprintID": (home.sprintID == null || home.sprintID == "null"
+              ? home.selectedSprintId
+              : home.sprintID)
+          .toString(),
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+      setState(() {
+
+        reiterate.responseArrayGetAllPrototypeImages = jsonDecode(response.body);
+        print(reiterate.responseArrayGetAllPrototypeImages);
+
+        reiterate.responseArrayGetAllPrototypeImagesMsg =
+            reiterate.responseArrayGetAllPrototypeImages['message'].toString();
+        print(reiterate.responseArrayGetAllPrototypeImagesMsg);
+
+        if (reiterate.responseArrayGetAllPrototypeImagesMsg ==
+            "Painpoint Data Found") {
+          reiterate.prototypeAllImagesList = List.generate(
+              reiterate.responseArrayGetAllPrototypeImages['data'].length,
+                  (i) => reiterate.responseArrayGetAllPrototypeImages['data'][i]
+              ['ptiImgpath']
+                  .toString());
+          reiterate.prototypeAllImagesIdsList = List.generate(
+              reiterate.responseArrayGetAllPrototypeImages['data'].length,
+                  (i) => reiterate.responseArrayGetAllPrototypeImages['data'][i]
+              ['ptiID']
+                  .toString());
+
+          print(reiterate.prototypeAllImagesList.toList());
+          print(reiterate.prototypeAllImagesIdsList.toList());
+        } else {
+          reiterate.prototypeAllImagesList = null;
+        }
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    reIterateApiProvider
+    getPrototypeImagesPainPointWise(context);
+    /* reIterateApiProvider
         .getPrototypeImagesPainPointWise(context)
         .whenComplete(() {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {});
       });
-    });
+    });*/
   }
 
   @override

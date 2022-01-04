@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:design_sprint/APIs/reiterate_calls.dart';
+import 'package:design_sprint/Models/TaskListParser.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
+import 'package:design_sprint/utils/reiterate_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 bool statusDrawer = false;
 
@@ -23,6 +28,152 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ReIterateApiProvider reIterateApiProvider = ReIterateApiProvider();
 
+  Future<String> getRoadMapDataNotes2(context) async {
+    String url = globals.urlSignUp + "getprototypenotebysprint.php";
+
+    http.post(url, body: {
+      "sprintID": (home.sprintID == null || home.sprintID == "null"
+              ? home.selectedSprintId
+              : home.sprintID)
+          .toString(),
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      setState(() {
+        reiterate.responseArrayGetRoadNotesMap = jsonDecode(response.body);
+        print(reiterate.responseArrayGetRoadNotesMap.toString());
+
+        reiterate.responseArrayGetRoadMapNotesMsg =
+            reiterate.responseArrayGetRoadNotesMap['message'].toString();
+        if (reiterate.responseArrayGetRoadMapNotesMsg == "Data Found") {
+          reiterate.allPrototypeNotes = List.generate(
+              reiterate.responseArrayGetRoadNotesMap['images'].length,
+              (i) => reiterate.responseArrayGetRoadNotesMap['images'][i]
+                  ['ptnNotetext']);
+
+          reiterate.allPrototypeId = List.generate(
+              reiterate.responseArrayGetRoadNotesMap['images'].length,
+              (i) => reiterate.responseArrayGetRoadNotesMap['images'][i]
+                  ['ptnPrototypeid']);
+
+          print(reiterate.allPrototypeNotes.toList());
+          getRoadMapDataTasksAndTimeLines2(context);
+        } else {
+          reiterate.allPrototypeNotes = null;
+          reiterate.allPrototypeId = null;
+        }
+      });
+    });
+  }
+
+  Future<String> getRoadMapDataTasksAndTimeLines2(context) async {
+    taskList.clear();
+
+    print(home.selectedSprintId);
+    String url = globals.urlSignUp + "getprototypetaskbysprint.php";
+
+    http.post(url, body: {
+      "sprintID": (home.sprintID == null || home.sprintID == "null"
+              ? home.selectedSprintId
+              : home.sprintID)
+          .toString(),
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      setState(() {
+        reiterate.responseArrayGetRoadTasksMap = jsonDecode(response.body);
+        print(reiterate.responseArrayGetRoadTasksMap.toString());
+
+        reiterate.responseArrayGetRoadTasksMsg =
+            reiterate.responseArrayGetRoadTasksMap['message'].toString();
+
+        if (reiterate.responseArrayGetRoadTasksMsg == "Data Found") {
+          var data = reiterate.responseArrayGetRoadTasksMap['images'];
+          if (data != null) {
+            for (Map i in data) {
+              taskList.add(TaskListParser.fromJson(i));
+            }
+          }
+
+          reiterate.allPrototypeTasks = List.generate(
+              reiterate.responseArrayGetRoadTasksMap['images'].length,
+              (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]
+                  ['pptTasktext']);
+          reiterate.allPrototypeDueDates = List.generate(
+              reiterate.responseArrayGetRoadTasksMap['images'].length,
+              (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]
+                  ['pptDuedate']);
+
+          print(reiterate.allPrototypeTasks.toList());
+          print(reiterate.allPrototypeDueDates.toList());
+          getRoadMapPrototypeOfStatusTwo(context);
+        } else {
+          reiterate.allPrototypeTasks = null;
+        }
+      });
+    });
+  }
+
+  Future<String> getRoadMapPrototypeOfStatusTwo(context) async {
+    String url = globals.urlSignUp + "getprototypebystatus.php";
+
+    http.post(url, body: {
+      "sprintID": (home.sprintID == null || home.sprintID == "null"
+              ? home.selectedSprintId
+              : home.sprintID)
+          .toString(),
+      "status": "2",
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      setState(() {
+        reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2 =
+            jsonDecode(response.body);
+        print(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2);
+
+        reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg2 = reiterate
+            .responseArrayGetAllPrototypeImagesOfStatusTwo2['message']
+            .toString();
+        print(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg2);
+
+        if (reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg2 ==
+            "Data Found") {
+          reiterate.prototypeAllImagesListOfStatusTwo2 = List.generate(
+              reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2['data']
+                  .length,
+              (i) => reiterate
+                  .responseArrayGetAllPrototypeImagesOfStatusTwo2['data'][i]
+                      ['ptiImgpath']
+                  .toString());
+          reiterate.prototypeAllImagesIdsListOfStatusTwo2 = List.generate(
+              reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo2['data']
+                  .length,
+              (i) => reiterate
+                  .responseArrayGetAllPrototypeImagesOfStatusTwo2['data'][i]
+                      ['ptiID']
+                  .toString());
+
+          print(reiterate.prototypeAllImagesListOfStatusTwo2.toList());
+          print(reiterate.prototypeAllImagesIdsListOfStatusTwo2.toList());
+        } else {
+          reiterate.prototypeAllImagesListOfStatusTwo2 = null;
+        }
+      });
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -33,9 +184,12 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
       reiterate.allPrototypeTasks = null;
       reiterate.allPrototypeDueDates = null;
     });
-    reIterateApiProvider.getRoadMapDataNotes2(context).whenComplete(() {
+    getRoadMapDataNotes2(context);
+    /* reIterateApiProvider.getRoadMapDataNotes2(context).whenComplete(() {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
+
+
           reIterateApiProvider
               .getRoadMapDataTasksAndTimeLines2(context)
               .whenComplete(() {
@@ -44,9 +198,11 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
               setState(() {});
             });
           });
+
+
         });
       });
-    });
+    });*/
   }
 
   @override
@@ -895,34 +1051,48 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
                                                       Axis.vertical,
                                                   itemCount:
                                                       reiterate.taskList.length,
-                                                  itemBuilder: (context, index) {
-                                                    return  reiterate.allPrototypeId[i]!=reiterate.taskList[index].pptPrototypeid?Container(): Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          reiterate.taskList[index].pptTasktext??"",
-                                                          style: GoogleFonts
-                                                              .nunitoSans(
-                                                            textStyle:
-                                                                TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 14,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                           /* Row(
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return reiterate.allPrototypeId[
+                                                                i] !=
+                                                            reiterate
+                                                                .taskList[index]
+                                                                .pptPrototypeid
+                                                        ? Container()
+                                                        : Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                reiterate
+                                                                        .taskList[
+                                                                            index]
+                                                                        .pptTasktext ??
+                                                                    "",
+                                                                style: GoogleFonts
+                                                                    .nunitoSans(
+                                                                  textStyle:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  /* Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .start,
@@ -952,43 +1122,46 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
                                                                 ),
                                                               ],
                                                             ),*/
-                                                            SizedBox(
-                                                              width: 30,
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .date_range,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  size: 12,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 6,
-                                                                ),
-                                                                Text(
-                                                                  reiterate.taskList[index].pptDuedate??"",
-                                                                  style: GoogleFonts
-                                                                      .nunitoSans(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        12,
+                                                                  SizedBox(
+                                                                    width: 30,
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    );
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .date_range,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        size:
+                                                                            12,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            6,
+                                                                      ),
+                                                                      Text(
+                                                                        reiterate.taskList[index].pptDuedate ??
+                                                                            "",
+                                                                        style: GoogleFonts
+                                                                            .nunitoSans(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              12,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          );
                                                   }),
                                         ],
                                       ),

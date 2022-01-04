@@ -143,12 +143,12 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
     });
   }
 
-  Future<String> getSprintAdmins(context) async {
+/*  Future<String> getSprintAdmins(context) async {
     String url = globals.urlLogin + "getsprintbyrights.php";
 
     http.post(url, body: {
 
-      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+      "sprintID" :  home.selectedSprintId,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
@@ -181,13 +181,13 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
         }
       }
     });
-  }
+  }*/
 
   @override
   void initState() {
     super.initState();
     updateStep4(context);
-    getSprintAdmins(context);
+  //  getSprintAdmins(context);
     getSprintsStatusesOfTeam(context);
     empathize.painPointsListAccToVotes = null;
     checkList = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,];
@@ -810,7 +810,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                 onTap: (){
                   print("profile.userID" + profile.userID.toString());
                   print("sprintCreatorId" + sprintCreatorId.toString());
-                  if(profile.userID == sprintCreatorId || sprintAdmins.toList().contains('1')){
+                  if(profile.userID == sprintCreatorId /*|| sprintAdmins.toList().contains('1')*/){
                     setState(() {
                       checkList[i] = !checkList[i];
                       empathize.selectedFinalPainPointId = empathize.painPointIdsListAccToVotes[i].toString();

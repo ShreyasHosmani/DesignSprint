@@ -34,9 +34,7 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
 
     http.post(url, body: {
       //"userID" : "37",//profile.userID,
-      "sprintID": home.sprintID == null || home.sprintID == "null"
-          ? home.selectedSprintId
-          : home.sprintID,
+      "sprintID":  home.selectedSprintId,
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -49,6 +47,8 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
 
       empathize.responseArrayGetPainPointsMsg =
           empathize.responseArrayGetPainPoints['message'].toString();
+      print("******************");
+
       print(empathize.responseArrayGetPainPointsMsg);
       if (statusCode == 200) {
         if (empathize.responseArrayGetPainPointsMsg == "Painpoint Data Found") {
