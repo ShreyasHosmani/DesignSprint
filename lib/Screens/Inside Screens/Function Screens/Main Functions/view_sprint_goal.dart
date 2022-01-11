@@ -65,6 +65,44 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
 
     });
   }
+  Future<String> editSprintGoal2(context) async {
+
+    String url = globals.urlLogin + "editsprintgoal.php";
+
+    http.post(url, body: {
+
+      "sprintID" : widget.sprintid,
+      "text" : goalEditController.text.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayEditGoal = jsonDecode(response.body);
+      print(responseArrayEditGoal);
+
+      var responseArrayEditGoalMsg = responseArrayEditGoal['message'].toString();
+
+      if(statusCode == 200){
+        if(responseArrayEditGoalMsg == "Goal Edited Successfully"){
+
+          goal.prInputGoal.hide();
+          // Fluttertoast.showToast(msg: goal.goalSaved, backgroundColor: Colors.black,
+          //   textColor: Colors.white,);
+
+        }else{
+
+          goal.prInputGoal.hide();
+          // Fluttertoast.showToast(msg: 'Please check your network connection!', backgroundColor: Colors.black,
+          //   textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
   Future<String> updateStep1(context) async {
 
     String url = globals.urlSignUp + "updatesprintstatus.php";
@@ -121,19 +159,22 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 10,),
-            buildName2Widget(context),
-            SizedBox(height: 25,),
-            buildName3Widget(context),
-            SizedBox(height: 40,),
-            buildGoalTextField(context),
-            SizedBox(height: 40,),
-            buildNextButton(context),
-          ],
+      body: GestureDetector(
+        onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 10,),
+              buildName2Widget(context),
+              SizedBox(height: 25,),
+              buildName3Widget(context),
+              SizedBox(height: 40,),
+              buildGoalTextField(context),
+              SizedBox(height: 40,),
+              buildNextButton(context),
+            ],
+          ),
         ),
       ),
     );
@@ -163,7 +204,11 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
+          onPressed: (){
+            editSprintGoal2(context).whenComplete((){
+              Navigator.of(context).pop();
+            });
+          },
           icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
         ),
       ),
@@ -398,6 +443,9 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
   }
 
   Widget buildGoalTextField(BuildContext context){
+
+    int currentTextLength = 0;
+
     return Padding(
       padding: const EdgeInsets.only(left: 36, right: 36),
       child: Container(
@@ -426,15 +474,30 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
             decoration: InputDecoration(
               border: InputBorder.none,
             ),
+            onChanged: (String newText){
+              if(newText[0] != '•'){
+                newText = '• ' + newText;
+                goalEditController.text = newText;
+                goalEditController.selection = TextSelection.fromPosition(TextPosition(offset: goalEditController.text.length));
+              }
+              if(newText[newText.length - 1] == '\n' && newText.length > currentTextLength){
+                goalEditController.text = newText + '• ';
+                goalEditController.selection = TextSelection.fromPosition(TextPosition(offset: goalEditController.text.length));
+              }
+              currentTextLength = goalEditController.text.length;
+            },
             validator: (value){
               if(value.isEmpty){
                 return 'Goal cannot be empty!';
               }
               return null;
             },
-            onChanged: (val){
+            onEditingComplete: (){
               editSprintGoal(context);
             },
+            // onChanged: (val){
+            //   editSprintGoal(context);
+            // },
           ) : Text(home.sprintGoalList,
             style: GoogleFonts.nunitoSans(
                 textStyle: TextStyle(
@@ -451,14 +514,16 @@ class _ViewSprintGoalState extends State<ViewSprintGoal> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => PersonaTutorial(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        editSprintGoal(context).whenComplete((){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => PersonaTutorial(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        });
       },
       child: Center(
         child: Container(

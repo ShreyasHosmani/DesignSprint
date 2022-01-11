@@ -38,7 +38,7 @@ class WareHousePainPointApiProvider{
 
         }else{
 
-          painPointWH.responseArrayWHPainPointsIdsList = null;
+          painPointWH.responseArrayWHPainPointsList = "1";
 
         }
       }

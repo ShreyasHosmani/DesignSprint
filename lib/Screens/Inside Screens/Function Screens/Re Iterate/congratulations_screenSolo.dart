@@ -1,72 +1,87 @@
-import 'package:design_sprint/APIs/reiterate_calls.dart';
+import 'dart:io';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
-import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
+import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen5.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:design_sprint/utils/home_screen_data.dart' as home;
-import 'package:design_sprint/utils/profile_data.dart' as profile;
-import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
-import 'package:design_sprint/utils/globals.dart' as globals;
 
 bool statusDrawer = false;
-class RoadMap extends StatefulWidget {
+
+class CongratulationsSolor extends StatefulWidget {
   @override
-  _RoadMapState createState() => _RoadMapState();
+  _CongratulationsSolorState createState() => _CongratulationsSolorState();
 }
 
-class _RoadMapState extends State<RoadMap> {
+class _CongratulationsSolorState extends State<CongratulationsSolor> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ReIterateApiProvider reIterateApiProvider = ReIterateApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    reIterateApiProvider.getRoadMapDataNotes(context).whenComplete((){
-      setState(() {
-        reIterateApiProvider.getRoadMapDataTasksAndTimeLines(context).whenComplete((){
-          Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-        });
-      });
-    });
-    setState(() {
-      reiterate.allPrototypeNotes = null;
-      reiterate.allPrototypeTasks = null;
-      reiterate.allPrototypeDueDates = null;
-    });
+    statusDrawer = false;
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
-      appBar: buildAppBar(context),
-      endDrawerEnableOpenDragGesture: true,
-      endDrawer: statusDrawer == true ? StatusDrawerUserTesting() : ProfileDrawerCommon(),
-      //bottomNavigationBar: buildNextButton(context),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 10,),
-            buildName2Widget(context),
-            SizedBox(height: 25,),
-            Row(
+    return Stack(
+      children: [
+        Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.white,
+          endDrawerEnableOpenDragGesture: true,
+          appBar: buildAppBar(context),
+          endDrawer: statusDrawer == true ? StatusDrawerPrototyping() : ProfileDrawerCommon(),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(bottom: 50),
+            child: Container(height:50,child: buildNextButton(context)),
+          ),
+          body: WillPopScope(
+            onWillPop: () => showDialog(
+              context: context,
+              builder: (context) => new AlertDialog(
+                title: new Text('Exit App!'),
+                content: new Text('Are you sure you want to exit the app?'),
+                actions: <Widget>[
+                  new GestureDetector(
+                    onTap: () => Navigator.of(context).pop(false),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("No"),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  new GestureDetector(
+                    onTap: () => exit(0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("Yes"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                buildSeperaterListView(context),
-                SizedBox(width: 47,),
-                buildRoadMapListViewBuilder(context),
+                buildImage(context),
+                SizedBox(height: 60,),
+                buildText(context),
+                SizedBox(height: 26,),
+                buildInfoText(context),
               ],
             ),
-            SizedBox(height: 40,),
-            buildNextButton(context),
-            SizedBox(height: 40,),
-          ],
+          ),
         ),
-      ),
+        Positioned(
+            top: 40,right: 0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 100),
+              child: statusBarDrawer(context),
+            ),
+          ),
+      ],
     );
   }
 
@@ -84,23 +99,6 @@ class _RoadMapState extends State<RoadMap> {
       backgroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
-      title: Padding(
-        padding: const EdgeInsets.only(top: 0),
-        child: Text(reiterate.title,
-          style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 15, top: 0),
-        child: IconButton(
-          onPressed: (){Navigator.of(context).pop();},
-          icon: Icon(Icons.arrow_back_ios,size: 20, color: Colors.grey.shade700,),
-        ),
-      ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 25, top: 18),
@@ -314,14 +312,21 @@ class _RoadMapState extends State<RoadMap> {
         onTap: _openEndDrawer,
         child: Container(
           height: 37,
-          width: 37,
+          width: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              )
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Center(child: Text("<<",style: GoogleFonts.nunitoSans(textStyle: TextStyle(color: Color(0xff787CD1), fontSize: 18)),)),
         ),
@@ -364,8 +369,8 @@ class _RoadMapState extends State<RoadMap> {
                       height: 8,
                       width: 8,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(color: Colors.grey)
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(width: 5,),
@@ -574,246 +579,40 @@ class _RoadMapState extends State<RoadMap> {
     );
   }
 
-  Widget buildName2Widget(BuildContext context){
+  Widget buildImage(BuildContext context){
+    return Container(
+      width: 282.15,
+      height: 192.54,
+      child: Image.asset("assets/images/congratulations.png"),
+    );
+  }
 
-    return Center(
-      child: Text(reiterate.roadMap,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
+  Widget buildText(BuildContext context){
+    return Text(
+      "Congratulations!",
+          style: GoogleFonts.nunitoSans(
+        textStyle: TextStyle(
+          fontSize: 25,
+          color: Color(0xff787CD1),
+        )
+      ),
+    );
+  }
+
+  Widget buildInfoText(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 35, right: 35),
+      child: Center(
+        child: Text(
+          "On completing your design sprint.",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 18,
                 color: Color(0xff707070),
-                fontSize: 20,
-                fontWeight: FontWeight.w200
-            )
-        ),
-      ),
-    );
-  }
-
-  Widget buildRoadMapListViewBuilder(BuildContext context){
-    return reiterate.allPrototypeNotes == null || reiterate.allPrototypeDueDates == null || reiterate.allPrototypeTasks == null || reiterate.prototypeAllImagesListOfStatusTwo == null ? Container() : Container(
-      width: 250,
-      child: ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: reiterate.allPrototypeNotes == null ? 0 : reiterate.allPrototypeNotes.length,
-        itemBuilder: (context, i) => Padding(
-          padding: const EdgeInsets.only(bottom: 40),
-          child: Center(
-            child: Container(
-              //height: 574,
-              width: 248,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                border: Border.all(color: Color(0xffF2F2F2)),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: 130,
-                        width: 248,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(7),
-                              topRight: Radius.circular(7),
-                              bottomRight: Radius.circular(0),
-                              bottomLeft: Radius.circular(0),
-                            ),
-                          image: DecorationImage(
-                            image: NetworkImage(globals.urlSignUp+reiterate.prototypeAllImagesListOfStatusTwo[i]),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            height: 24,
-                            width: 24,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              color: Color(0xff787cd1),
-                            ),
-                            child: Center(
-                              child: Text((i+1).toString(),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 27,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Note:",
-                          style: GoogleFonts.nunitoSans(
-                            color: Color(0xff787cd1),
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(height: 15,),
-                        Text(reiterate.allPrototypeNotes[i],
-                          style: GoogleFonts.nunitoSans(
-                            fontSize: 14,
-                          ),
-                        ),
-                        SizedBox(height: 15,),
-                        Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Center(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Color(0xffd4d4d4)),
-                                    borderRadius: BorderRadius.all(Radius.circular(7))
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Task:",
-                                        style: GoogleFonts.nunitoSans(
-                                            textStyle: TextStyle(
-                                              color: Color(0xff787cd1),
-                                              fontSize: 14,
-                                            )
-                                        ),
-                                      ),
-                                      SizedBox(height: 10,),
-                                      Text(reiterate.allPrototypeTasks[i],
-                                        style: GoogleFonts.nunitoSans(
-                                            textStyle: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                            )
-                                        ),
-                                      ),
-                                      SizedBox(height: 10,),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Icon(Icons.perm_identity, color: Colors.grey, size: 12,),
-                                              SizedBox(width: 6,),
-                                              Text("member name",
-                                                style: GoogleFonts.nunitoSans(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(width: 30,),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Icon(Icons.date_range, color: Colors.grey, size: 12,),
-                                              SizedBox(width: 6,),
-                                              Text(reiterate.allPrototypeDueDates[i],
-                                                style: GoogleFonts.nunitoSans(
-                                                  color: Colors.black,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+              )
           ),
         ),
-      ),
-    );
-  }
-
-  Widget buildSeperaterListView(BuildContext context){
-    return Container(
-      width: 20,
-      child: ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: reiterate.uploadedTaskList == null ? 0 : reiterate.uploadedTaskList.length,
-        itemBuilder: (context, i) => Column(
-          children: [
-            buildFilledContainer(context),
-            buildFilledContainerSeperater(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildNonFilledContainer(BuildContext context){
-    return Container(
-      height: 25,
-      width: 25,
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(50))
-      ),
-    );
-  }
-  Widget buildFilledContainer(BuildContext context){
-    return Container(
-      height: 25,
-      width: 25,
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(0xff787CD1),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(50))
-      ),
-    );
-  }
-
-  Widget buildContainerSeperater(BuildContext context){
-    return Container(
-      height: MediaQuery.of(context).size.height/13,
-      width: 1,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-      ),
-    );
-  }
-  Widget buildFilledContainerSeperater(BuildContext context){
-    return Container(
-      height: 330,
-      width: 2,
-      decoration: BoxDecoration(
-        color: Color(0xff787cd1),
       ),
     );
   }
@@ -822,6 +621,14 @@ class _RoadMapState extends State<RoadMap> {
     return GestureDetector(
       onTap: (){
         Navigator.of(context).popUntil((route) => route.isFirst);
+//        Navigator.push(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (c, a1, a2) => EmphatizeSections5(),
+//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+//            transitionDuration: Duration(milliseconds: 300),
+//          ),
+//        );
       },
       child: Center(
         child: Container(
@@ -832,7 +639,7 @@ class _RoadMapState extends State<RoadMap> {
               borderRadius: BorderRadius.all(Radius.circular(7))
           ),
           child: Center(
-            child: Text("Done",
+            child: Text("Go to Home",
               style: TextStyle(
                   color: Colors.white, letterSpacing: 1, fontSize: 16),
             ),

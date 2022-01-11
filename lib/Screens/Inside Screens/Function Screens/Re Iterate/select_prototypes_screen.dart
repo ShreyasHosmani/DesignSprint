@@ -4,6 +4,7 @@ import 'package:design_sprint/APIs/reiterate_calls.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/add_notes_and_timeline.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/congratulations_screenSolo.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
@@ -24,6 +25,8 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
   ReIterateApiProvider reIterateApiProvider = ReIterateApiProvider();
 
   Future<String> getPrototypeImagesPainPointWise(context) async {
+
+    print("((((()))))");
     print((home.sprintID == null || home.sprintID == "null"
         ? home.selectedSprintId
         : home.sprintID));
@@ -928,15 +931,22 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => AddNotesAndTimeLinePageViewBuilder(),
-            transitionsBuilder: (c, anim, a2, child) =>
-                FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        print(boolSelectedList.toList());
+        if(boolSelectedList.contains(true)){
+          print("Contains true");
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => AddNotesAndTimeLinePageViewBuilder(),
+              transitionsBuilder: (c, anim, a2, child) =>
+                  FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          showAlertDialogSave(context);
+          print("Does not contain true");
+        }
       },
       child: Center(
         child: Container(
@@ -956,6 +966,66 @@ class _SelectPrototypesState extends State<SelectPrototypes> {
       ),
     );
   }
+
+  showAlertDialogSave(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text(
+        "Cancel",
+        style: GoogleFonts.nunitoSans(),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text(
+        "Yes",
+        style: GoogleFonts.nunitoSans(),
+      ),
+      onPressed: () async {
+        Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => CongratulationsSolor(),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Are you sure?",
+        style: GoogleFonts.nunitoSans(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      content: Text(
+        "Are you sure you don't want to select any prototypes for ReIterate?",
+        style: GoogleFonts.nunitoSans(
+          color: Color(0xff7579cb),
+        ),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }
 
 var containerColorList = [

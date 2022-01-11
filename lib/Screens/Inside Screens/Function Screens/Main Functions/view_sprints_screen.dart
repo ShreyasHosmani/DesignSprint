@@ -26,6 +26,9 @@ var new1; var new2; var new3; var new4; var new5; var new6;
 var sprintIdsList2; var sprintTitlesList2; var sprintStatusList2;
  var decisionMakerIdsList2; var decisionMakerEmailsList2;
 
+ bool showScreen1 = false;
+ bool showScreen2 = false;
+
 class ViewSprints extends StatefulWidget {
   @override
   _ViewSprintsState createState() => _ViewSprintsState();
@@ -72,6 +75,8 @@ class _ViewSprintsState extends State<ViewSprints> {
             new4 = decisionMakerIdsList.toList();
             new5 = decisionMakerEmailsList.toList();
 
+            showScreen1 = true;
+
           });
 
           print(new1.toList()); //titles
@@ -92,6 +97,9 @@ class _ViewSprintsState extends State<ViewSprints> {
             home.sprintIdsList = [];
             home.sprintTitlesList = [];
             home.sprintStatusList = [];
+
+            showScreen1 = true;
+
           });
 
         }
@@ -144,7 +152,6 @@ class _ViewSprintsState extends State<ViewSprints> {
 //
 //            });
 
-
           });
 
           print(home.sprintIdsList.toList());
@@ -170,6 +177,8 @@ class _ViewSprintsState extends State<ViewSprints> {
 
             });
 
+            showScreen2 = true;
+
           });
           print(new1.toList()); //titles
           print(new2.toList()); //ids
@@ -184,6 +193,8 @@ class _ViewSprintsState extends State<ViewSprints> {
             sprintIdsList2 = null;
             sprintTitlesList2 = null;
             sprintStatusList2 = null;
+
+            showScreen2 = true;
           });
 
         }
@@ -196,6 +207,8 @@ class _ViewSprintsState extends State<ViewSprints> {
     // TODO: implement initState
     super.initState();
     setState(() {
+      showScreen1 = false;
+      showScreen2 = false;
       new1 = []; new2 = [];  new3 = [];  new4 = [];  new5 = [];  new6 = [];
       home.sprintIdsList = [];
       home.sprintTitlesList = [];
@@ -224,7 +237,7 @@ class _ViewSprintsState extends State<ViewSprints> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
-      body: SingleChildScrollView(
+      body: showScreen1 == true && showScreen2 == true ? SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -234,7 +247,7 @@ class _ViewSprintsState extends State<ViewSprints> {
             buildSprintsListViewBuilder(context),
           ],
         ),
-      ),
+      ) : Center(child: CircularProgressIndicator()),
     );
   }
 

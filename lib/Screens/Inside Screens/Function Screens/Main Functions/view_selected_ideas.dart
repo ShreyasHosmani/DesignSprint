@@ -8,7 +8,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/warehouse_ivsf_and_selected_ideas_data.dart' as ratingsWH;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/warehouse_ivsf_and_selected_ideas_data.dart' as ratingsWH;
+import 'dart:convert';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -18,15 +25,55 @@ class ViewSelectedIdeas extends StatefulWidget {
 }
 
 class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
+  Future<String> getIdeaImagesByStatus(context) async {
+
+    String url = globals.urlSignUp + "getideaimagesbystatus.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString(),
+      "status" : "2",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ratingsWH.responseArrayGetAllIdeaImagesByStatus = jsonDecode(response.body);
+      print(ratingsWH.responseArrayGetAllIdeaImagesByStatus);
+
+      ratingsWH.responseArrayGetAllIdeaImagesByStatusMsg = ratingsWH.responseArrayGetAllIdeaImagesByStatus['message'].toString();
+      print(ratingsWH.responseArrayGetAllIdeaImagesByStatusMsg);
+
+      if(ratingsWH.responseArrayGetAllIdeaImagesByStatusMsg == "Painpoint Data Found"){
+
+        setState(() {
+          ratingsWH.ideaAllImagesOfStatusTwo = List.generate(ratingsWH.responseArrayGetAllIdeaImagesByStatus['data'].length, (i) => ratingsWH.responseArrayGetAllIdeaImagesByStatus['data'][i]['iiImgpath'].toString());
+        });
+
+        print(ratingsWH.ideaAllImagesOfStatusTwo.toList());
+
+      }else{
+
+        setState(() {
+          ratingsWH.ideaAllImagesOfStatusTwo = "1";
+        });
+
+      }
+
+    });
+  }
   WareHouseratingsWHRatingsApiProvider wareHouseratingsWHRatingsApiProvider = WareHouseratingsWHRatingsApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    ratingsWH.ideaAllImagesOfStatusTwo = null;
-    wareHouseratingsWHRatingsApiProvider.getIdeaImagesByStatus(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    setState(() {
+      ratingsWH.ideaAllImagesOfStatusTwo = null;
     });
+    getIdeaImagesByStatus(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -298,7 +345,42 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
       child:
-      ratingsWH.ideaAllImagesOfStatusTwo == null ? Container() :
+      ratingsWH.ideaAllImagesOfStatusTwo == "1" ? Center(
+        child: Text("No Selected Ideas Found",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )
+          ),
+        ),
+      ) : ratingsWH.ideaAllImagesOfStatusTwo == null ? ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 2,
+        itemBuilder: (context, i) => InkWell(
+          onTap: (){
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 25),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: 302,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //color: Color(0xff96C3CB),
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ) :
       ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,

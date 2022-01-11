@@ -35,7 +35,7 @@ class GetWareHouseInsightsApiProvider{
 
       }else{
 
-        userTesting.wareHouseInsightsList = null;
+        userTesting.wareHouseInsightsList = "1";
 
       }
 

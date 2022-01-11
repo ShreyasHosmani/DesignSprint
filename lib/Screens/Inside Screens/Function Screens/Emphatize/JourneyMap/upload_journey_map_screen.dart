@@ -1087,7 +1087,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
           child: InkWell(
             onTap: () {
               if (empathize.journeyMapImageNamesList[i] == null ||
-                  empathize.journeyMapImageNamesList[i] == "null") {
+                  empathize.journeyMapImageNamesList[i] == "Digital Journey Map") {
               } else {
                 launch(empathize.journeyMapImageNamesList[i]);
               }
@@ -1104,8 +1104,8 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                       image: DecorationImage(
                           image: NetworkImage(empathize
                               .journeyMapImageNamesList[i] ==
-                              null
-                              ? "Digital Journey Map"
+                              "Digital Journey Map"
+                              ? "https://admin.dezyit.com/assets/media/favicons/favicon.png"
                               : empathize.journeyMapImageNamesList[i]),
                           fit: BoxFit.fill,
                           scale: 5)),
@@ -1345,16 +1345,24 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
       onTap: (){
 
         print("home.sprintId : "+home.sprintID.toString());
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
         //if(home.sprintID)
 
-        if(ppListStatic == null || ppListStatic.isEmpty){
-          Fluttertoast.showToast(msg: 'Please upload atleast one pain point!',
-            backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
-          );
-        }else{
-          empathize.prInputPainPoint.show();
-          getSprintsStatusesOfTeam2(context);
-        }
+        // if(ppListStatic == null || ppListStatic.isEmpty){
+        //   Fluttertoast.showToast(msg: 'Please upload atleast one pain point!',
+        //     backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
+        //   );
+        // }else{
+        //   empathize.prInputPainPoint.show();
+        //   getSprintsStatusesOfTeam2(context);
+        // }
       },
       child: Center(
         child: Container(

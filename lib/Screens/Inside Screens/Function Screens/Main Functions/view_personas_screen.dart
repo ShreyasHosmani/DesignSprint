@@ -211,7 +211,9 @@ class _ViewPersonasState extends State<ViewPersonas> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    empathize.personaNameList = "1";
+    setState(() {
+      empathize.personaNameList = "1";
+    });
     selectedPersonaId = null;
     getPersonas(context);
   }
@@ -514,7 +516,16 @@ class _ViewPersonasState extends State<ViewPersonas> {
   Widget buildPersonsListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: empathize.personaNameList == "1" ? ListView.builder(
+      child: empathize.personaNameList == null ? Center(
+        child: Text("No Personas Found",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )
+          ),
+        ),
+      ) : empathize.personaNameList == "1" ? ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,

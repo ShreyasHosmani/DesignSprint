@@ -1060,6 +1060,7 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        _controllerNew.pause();
         if (ideation.painPointsOfStatus2List.last ==
             ideation.painPointsOfStatus2List[ideation.pageIndex]) {
           print("Last index reached, You are a great man ever!");

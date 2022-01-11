@@ -40,7 +40,7 @@ class WareHouseratingsWHRatingsApiProvider{
 
         }else{
 
-          ratingsWH.impactRatingsList = null;
+          ratingsWH.impactRatingsList = "1";
 
         }
       }
@@ -77,7 +77,7 @@ class WareHouseratingsWHRatingsApiProvider{
 
       }else{
 
-        ratingsWH.ideaAllImagesOfStatusTwo = null;
+        ratingsWH.ideaAllImagesOfStatusTwo = "1";
 
       }
 

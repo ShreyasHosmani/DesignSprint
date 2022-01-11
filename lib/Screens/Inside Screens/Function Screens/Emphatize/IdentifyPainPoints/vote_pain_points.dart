@@ -29,12 +29,14 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
       GetPainPointsApiProvider();
 
   Future<String> getPainPoints(context) async {
-    print(home.selectedSprintId);
+
+    print("******** ::::::: "+ home.sprintID.toString());
+
     String url = globals.urlSignUp + "getpainpoint.php";
 
     http.post(url, body: {
       //"userID" : "37",//profile.userID,
-      "sprintID":  home.selectedSprintId,
+      "sprintID":  home.sprintID.toString(),
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 

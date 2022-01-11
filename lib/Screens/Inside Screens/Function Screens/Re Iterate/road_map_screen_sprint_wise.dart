@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:design_sprint/APIs/reiterate_calls.dart';
+import 'package:design_sprint/Helpers/helper.dart';
 import 'package:design_sprint/Models/TaskListParser.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_user_testing.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/congratulations_screenSolo.dart';
 import 'package:design_sprint/utils/reiterate_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -211,6 +213,12 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Container(
+            height: 60,
+            child: buildNextButton(context)),
+      ),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true
           ? StatusDrawerUserTesting()
@@ -242,6 +250,34 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNextButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Navigator.of(context).popUntil((route) => route.isFirst);
+        push(context, CongratulationsSolor());
+      },
+      child: Center(
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 3.0,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(7))),
+          child: Center(
+            child: Text(
+              "Next",
+              style: TextStyle(
+                  color: Colors.white, letterSpacing: 1, fontSize: 16),
+            ),
+          ),
         ),
       ),
     );

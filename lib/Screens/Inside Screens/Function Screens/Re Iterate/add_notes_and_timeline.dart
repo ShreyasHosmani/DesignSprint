@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:design_sprint/APIs/get_team_by_sprints.dart';
 import 'package:design_sprint/APIs/reiterate_calls.dart';
 import 'package:design_sprint/Helpers/helper.dart';
@@ -15,6 +17,10 @@ import 'package:design_sprint/utils/hint_texts.dart' as hint;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:design_sprint/utils/team_by_sprints_data.dart' as teamBySprints;
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/reiterate_data.dart' as reiterate;
 
 bool statusDrawer = false;
 ProgressDialog prTeam;
@@ -32,6 +38,65 @@ class _AddNotesAndTimeLinePageViewBuilderState
   GetTeamBySprintApiProvider getTeamBySprintApiProvider =
       GetTeamBySprintApiProvider();
 
+  Future<String> getPrototypeOfStatusTwo(context) async {
+
+    print("Sprint iD : "+home.sprintID.toString());
+
+    String url = globals.urlSignUp + "getprototypebystatus.php";
+
+    http.post(url, body: {
+      "sprintID": (home.sprintID == null || home.sprintID == "null"
+              ? home.selectedSprintId
+              : home.sprintID)
+          .toString(),
+      "status": "2",
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      setState(() {
+        reiterate.prototypeAllImagesListOfStatusTwo = null;
+        reiterate.prototypeAllImagesIdsListOfStatusTwo = null;
+        reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo =
+            jsonDecode(response.body);
+        print(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo);
+
+        reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg = reiterate
+            .responseArrayGetAllPrototypeImagesOfStatusTwo['message']
+            .toString();
+        print(reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg);
+      });
+
+      setState(() {
+        if (reiterate.responseArrayGetAllPrototypeImagesOfStatusTwoMsg ==
+            "Data Found") {
+
+          print("+++++++++");
+
+          reiterate.prototypeAllImagesListOfStatusTwo = List.generate(
+              reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo['data'].length,
+                  (i) => reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo['data'][i]
+              ['ptiImgpath']
+                  .toString());
+          reiterate.prototypeAllImagesIdsListOfStatusTwo = List.generate(
+              reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo['data'].length,
+                  (i) => reiterate.responseArrayGetAllPrototypeImagesOfStatusTwo['data'][i]
+              ['ptiID']
+                  .toString());
+
+          print(reiterate.prototypeAllImagesListOfStatusTwo.toList());
+          print(reiterate.prototypeAllImagesIdsListOfStatusTwo.toList());
+        } else {
+          reiterate.prototypeAllImagesListOfStatusTwo = null;
+        }
+      });
+
+    });
+  }
+
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -42,13 +107,7 @@ class _AddNotesAndTimeLinePageViewBuilderState
       selectedTeamMember = null;
     });
     getTeamBySprintApiProvider.getTeamdata2(context);
-    reIterateApiProvider.getPrototypeOfStatusTwo(context).whenComplete(() {
-      Future.delayed(const Duration(seconds: 3), () {
-        setState(() {
-
-        });
-      });
-    });
+    getPrototypeOfStatusTwo(context);
   }
 
   initLists() {
@@ -1062,192 +1121,231 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
             SizedBox(
               height: 25,
             ),
-            Container(
-              height: 352,
-              width: 302,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xffd4d4d4)),
-                  borderRadius: BorderRadius.all(Radius.circular(7))),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 35, right: 35),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25),
-                      child: Container(
-                        height: 130,
-                        width: 256,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xffd4d4d4)),
-                            borderRadius: BorderRadius.all(Radius.circular(7))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            autofocus: false,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.done,
-                            maxLines: 4,
-                            controller: reiterate.taskLineController,
-                            decoration: InputDecoration(
-                              hintText: hint.addTask,
-                              border: InputBorder.none,
-                            ),
-                            validator: (val) {
-                              if (val.isEmpty) {
-                                return hint.bioValidation;
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                   /* Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Theme(
-                          data: ThemeData(primaryColor: Color(0xff787cd1)),
-                          child: SearchableDropdown.single(
-                              items: teamBySprints
-                                          .teamMemberNamesBySprintsList2 ==
-                                      null
-                                  ? []
-                                  : teamBySprints.teamMemberNamesBySprintsList2
-                                      .map((String value) {
-                                      return new DropdownMenuItem<String>(
-                                        value: value,
-                                        child: new Text(
-                                          value[1] == "0" ||
-                                                  value[1] == "1" ||
-                                                  value[1] == "2" ||
-                                                  value[1] == "3" ||
-                                                  value[1] == "4" ||
-                                                  value[1] == "5" ||
-                                                  value[1] == "6" ||
-                                                  value[1] == "7" ||
-                                                  value[1] == "8" ||
-                                                  value[1] == "9"
-                                              ? value.substring(2)
-                                              : value.substring(1),
-                                        ),
-                                      );
-                                    }).toList(),
-                              value: selectedTeamMember == null
-                                  ? "Select member"
-                                  : selectedTeamMember,
-                              hint: "Select member",
-                              searchHint: "Select member",
-                              clearIcon: Icon(null),
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value[1] == "0" ||
-                                      value[1] == "1" ||
-                                      value[1] == "2" ||
-                                      value[1] == "3" ||
-                                      value[1] == "4" ||
-                                      value[1] == "5" ||
-                                      value[1] == "6" ||
-                                      value[1] == "7" ||
-                                      value[1] == "8" ||
-                                      value[1] == "9") {
-                                    teamBySprints.selectedTeamMemberIdForTasks =
-                                        value[0] + value[1];
-                                  } else {
-                                    teamBySprints.selectedTeamMemberIdForTasks =
-                                        value[0];
+            Stack(
+              children: [
+                Container(
+                  height: 352,
+                  width: 302,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xffd4d4d4)),
+                      borderRadius: BorderRadius.all(Radius.circular(7))),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 35, right: 35),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 25),
+                          child: Container(
+                            height: 130,
+                            width: 256,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xffd4d4d4)),
+                                borderRadius: BorderRadius.all(Radius.circular(7))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                autofocus: false,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.done,
+                                maxLines: 4,
+                                controller: reiterate.taskLineController,
+                                decoration: InputDecoration(
+                                  hintText: hint.addTask,
+                                  border: InputBorder.none,
+                                ),
+                                validator: (val) {
+                                  if (val.isEmpty) {
+                                    return hint.bioValidation;
                                   }
-                                  if (value[1] == "0" ||
-                                      value[1] == "1" ||
-                                      value[1] == "2" ||
-                                      value[1] == "3" ||
-                                      value[1] == "4" ||
-                                      value[1] == "5" ||
-                                      value[1] == "6" ||
-                                      value[1] == "7" ||
-                                      value[1] == "8" ||
-                                      value[1] == "9") {
-                                    selectedTeamMemberName =
-                                        value.toString().substring(2);
-                                  } else {
-                                    selectedTeamMemberName =
-                                        value.toString().substring(1);
-                                  }
-                                  print(selectedTeamMemberName);
-                                });
-                                print(
-                                    teamBySprints.selectedTeamMemberIdForTasks);
-//                                setState(() {
-//                                  //teamBySprints.selectedTeamMemberIdForTasks = teamBySprints.teamMemberIdsBySprintsList2[index];
-//                                });
-//                                //print(teamBySprints.selectedTeamMemberIdForTasks);
-                              },
-                              isExpanded: true),
-                          *//*
-                          TextFormField(
-                            autofocus:false ,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.done,
-                            maxLines: 1,
-                            controller: reiterate.teamMemberController,
-                            decoration: InputDecoration(
-                              hintText: hint.choseTeamMember,
-                            ),
-                            validator: (val){
-                              if(val.isEmpty){
-                                return hint.bioValidation;
-                              }
-                              return null;
-                            },
-                          ),
-
-                           *//*
-                        ),
-                      ),
-                    ),*/
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Theme(
-                          data: ThemeData(primaryColor: Color(0xff787cd1)),
-                          child: InkWell(
-                            onTap: () => _selectDate(context),
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 5, right: 5),
-                                    child: Text(
-                                      teamBySprints.dateForSending == ""
-                                          ? "Choose due date"
-                                          : teamBySprints.dateForSending
-                                              .toString()
-                                              .substring(0, 10),
-                                      style: GoogleFonts.nunitoSans(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: Colors.grey,
-                                  ),
-                                ],
+                                  return null;
+                                },
                               ),
                             ),
                           ),
                         ),
+                       /* Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Theme(
+                              data: ThemeData(primaryColor: Color(0xff787cd1)),
+                              child: SearchableDropdown.single(
+                                  items: teamBySprints
+                                              .teamMemberNamesBySprintsList2 ==
+                                          null
+                                      ? []
+                                      : teamBySprints.teamMemberNamesBySprintsList2
+                                          .map((String value) {
+                                          return new DropdownMenuItem<String>(
+                                            value: value,
+                                            child: new Text(
+                                              value[1] == "0" ||
+                                                      value[1] == "1" ||
+                                                      value[1] == "2" ||
+                                                      value[1] == "3" ||
+                                                      value[1] == "4" ||
+                                                      value[1] == "5" ||
+                                                      value[1] == "6" ||
+                                                      value[1] == "7" ||
+                                                      value[1] == "8" ||
+                                                      value[1] == "9"
+                                                  ? value.substring(2)
+                                                  : value.substring(1),
+                                            ),
+                                          );
+                                        }).toList(),
+                                  value: selectedTeamMember == null
+                                      ? "Select member"
+                                      : selectedTeamMember,
+                                  hint: "Select member",
+                                  searchHint: "Select member",
+                                  clearIcon: Icon(null),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value[1] == "0" ||
+                                          value[1] == "1" ||
+                                          value[1] == "2" ||
+                                          value[1] == "3" ||
+                                          value[1] == "4" ||
+                                          value[1] == "5" ||
+                                          value[1] == "6" ||
+                                          value[1] == "7" ||
+                                          value[1] == "8" ||
+                                          value[1] == "9") {
+                                        teamBySprints.selectedTeamMemberIdForTasks =
+                                            value[0] + value[1];
+                                      } else {
+                                        teamBySprints.selectedTeamMemberIdForTasks =
+                                            value[0];
+                                      }
+                                      if (value[1] == "0" ||
+                                          value[1] == "1" ||
+                                          value[1] == "2" ||
+                                          value[1] == "3" ||
+                                          value[1] == "4" ||
+                                          value[1] == "5" ||
+                                          value[1] == "6" ||
+                                          value[1] == "7" ||
+                                          value[1] == "8" ||
+                                          value[1] == "9") {
+                                        selectedTeamMemberName =
+                                            value.toString().substring(2);
+                                      } else {
+                                        selectedTeamMemberName =
+                                            value.toString().substring(1);
+                                      }
+                                      print(selectedTeamMemberName);
+                                    });
+                                    print(
+                                        teamBySprints.selectedTeamMemberIdForTasks);
+//                                setState(() {
+//                                  //teamBySprints.selectedTeamMemberIdForTasks = teamBySprints.teamMemberIdsBySprintsList2[index];
+//                                });
+//                                //print(teamBySprints.selectedTeamMemberIdForTasks);
+                                  },
+                                  isExpanded: true),
+                              */
+                        /*
+                              TextFormField(
+                                autofocus:false ,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.done,
+                                maxLines: 1,
+                                controller: reiterate.teamMemberController,
+                                decoration: InputDecoration(
+                                  hintText: hint.choseTeamMember,
+                                ),
+                                validator: (val){
+                                  if(val.isEmpty){
+                                    return hint.bioValidation;
+                                  }
+                                  return null;
+                                },
+                              ),
+
+                               *//*
+                            ),
+                          ),
+                        ),*/
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Theme(
+                              data: ThemeData(primaryColor: Color(0xff787cd1)),
+                              child: InkWell(
+                                onTap: () => _selectDate(context),
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 5, right: 5),
+                                        child: Text(
+                                          teamBySprints.dateForSending == ""
+                                              ? "Choose due date"
+                                              : teamBySprints.dateForSending
+                                                  .toString()
+                                                  .substring(0, 10),
+                                          style: GoogleFonts.nunitoSans(
+                                            color: Colors.grey.shade600,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(
+                                        color: Colors.grey,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 312, right: 30),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        reIterateApiProvider
+                            .uploadPrototypeTaksAndTimeLine(context)
+                            .whenComplete(() {
+                          setState(() {
+
+
+                            reiterate.uploadedTaskList.add(reiterate.taskLineController.text);
+                            print(reiterate.uploadedTaskList.toList());
+
+                            reiterate.uploadedTeamMemberList
+                                .add(selectedTeamMemberName.toString());
+                            print(reiterate.uploadedTeamMemberList.toList());
+
+                            reiterate.uploadedDueDateList
+                                .add(teamBySprints.dateForSending.toString());
+                            print(reiterate.uploadedDueDateList.toList());
+
+                            reiterate.taskLineController.clear();
+                          });
+                        });
+                      },
+                      child: Text(
+                        "Save",
+                        style: GoogleFonts.nunitoSans(color: Color(0xff787CD1)),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             )
           ],
         ),

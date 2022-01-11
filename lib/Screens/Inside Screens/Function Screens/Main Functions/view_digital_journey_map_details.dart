@@ -120,6 +120,9 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
   }
   Future<String> getTouchPoints(context) async {
 
+
+    print("widget.mapId" + widget.mapId.toString());
+
     String url = globals.urlSignUp + "gettouchpointbymapid.php";
 
     http.post(url, body: {
@@ -326,14 +329,14 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 10,),
             Container(
                 width: MediaQuery.of(context).size.width,
                 child: Center(child: buildName2Widget(context))),
-            SizedBox(height: 35,),
+            SizedBox(height: 40,),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1045,7 +1048,7 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
             ),
             Expanded(
               child: ListView.builder(
-                physics: ClampingScrollPhysics(),
+                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: touchPointsList == null ? 0 : touchPointsList.length,
@@ -1534,3 +1537,20 @@ List<String> touchPointIdListStorage;
 List<String> customerThoughtIdListStorage;
 List<String> customerExperienceIdListStorage;
 List<String> painPointIdListStorage;
+
+
+
+// Padding(
+// padding: const EdgeInsets.only(right: 25),
+// child: Container(
+// height: 95,
+// width: 254,
+// decoration: BoxDecoration(
+// borderRadius: BorderRadius.all(Radius.circular(7)),
+// border: Border.all(color: Colors.grey),
+// ),
+// child: Center(
+// child: Text(touchPointsList[i]),
+// ),
+// ),
+// )

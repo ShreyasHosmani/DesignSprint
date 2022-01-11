@@ -6,6 +6,12 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/user_testing_data.dart' as userTesting;
+import 'package:shimmer/shimmer.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/user_testing_data.dart' as userTesting;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -17,6 +23,46 @@ class ViewUserTestingInsights extends StatefulWidget {
 }
 
 class _ViewUserTestingInsightsState extends State<ViewUserTestingInsights> {
+  Future getWareHouseInsights(context) async {
+
+    String url = globals.urlSignUp + "getalldata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      userTesting.responseArrayGetWareHouseInsights = jsonDecode(response.body);
+      print(userTesting.responseArrayGetWareHouseInsights.toString());
+
+      userTesting.responseArrayGetWareHouseInsightsMsg = userTesting.responseArrayGetWareHouseInsights['message'].toString();
+      print(userTesting.responseArrayGetWareHouseInsightsMsg);
+
+      if(userTesting.responseArrayGetWareHouseInsightsMsg == "Data Found"){
+
+        setState(() {
+          userTesting.wareHouseInsightsList = List.generate(userTesting.responseArrayGetWareHouseInsights['data3'].length, (i) => userTesting.responseArrayGetWareHouseInsights['data3'][i]['insightText'].toString());
+        });
+
+        print(userTesting.wareHouseInsightsList.toList());
+
+      }else{
+
+        setState(() {
+          userTesting.wareHouseInsightsList = "1";
+        });
+
+      }
+
+    });
+
+  }
   GetWareHouseInsightsApiProvider getWareHouseInsightsApiProvider = GetWareHouseInsightsApiProvider();
   @override
   void initState() {
@@ -24,11 +70,9 @@ class _ViewUserTestingInsightsState extends State<ViewUserTestingInsights> {
     super.initState();
     setState(() {
       home.selectedSprintId = widget.sprintid.toString();
+      userTesting.wareHouseInsightsList = null;
     });
-    userTesting.wareHouseInsightsList = null;
-    getWareHouseInsightsApiProvider.getWareHouseInsights(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getWareHouseInsights(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -300,9 +344,40 @@ class _ViewUserTestingInsightsState extends State<ViewUserTestingInsights> {
   Widget buildInsightsListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: userTesting.wareHouseInsightsList == null || userTesting.wareHouseInsightsList.isEmpty ? Text("No insights found!",
-        style: GoogleFonts.nunitoSans(
-          fontSize: 18,
+      child: userTesting.wareHouseInsightsList == "1" ? Center(
+        child: Text("No Insights Found",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )
+          ),
+        ),
+      ) : userTesting.wareHouseInsightsList == null || userTesting.wareHouseInsightsList.isEmpty ? ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 2,
+        itemBuilder: (context, i) => InkWell(
+          onTap: (){
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 25),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: 302,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //color: Color(0xff96C3CB),
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
         ),
       ) :
       ListView.builder(

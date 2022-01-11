@@ -8,6 +8,7 @@ import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/warehouse_pain_points_data.dart' as painPointsWH;
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -26,7 +27,9 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    painPointsWH.wareHouseIdeaImagesList = null;
+    setState(() {
+      painPointsWH.wareHouseIdeaImagesList = null;
+    });
     wareHousePainPointApiProvider.getIdeaImagesPainPointWise(context).whenComplete((){
       Future.delayed(const Duration(seconds: 3), () {setState(() {});});
     });
@@ -301,7 +304,33 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
       child:
-      painPointsWH.wareHouseIdeaImagesList == null ? Container() :
+      painPointsWH.wareHouseIdeaImagesList == null ? ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 2,
+        itemBuilder: (context, i) => InkWell(
+          onTap: (){
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 25),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: 302,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //color: Color(0xff96C3CB),
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ) :
       ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,

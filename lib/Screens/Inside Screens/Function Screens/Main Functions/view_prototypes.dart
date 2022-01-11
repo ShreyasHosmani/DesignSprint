@@ -8,7 +8,15 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/prototyping_data.dart' as prototype;
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/material.dart';
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/prototyping_data.dart' as prototype;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -20,6 +28,45 @@ class ViewPrototypes extends StatefulWidget {
 }
 
 class _ViewPrototypesState extends State<ViewPrototypes> {
+  Future<String> getAllPrototypeImages(context) async {
+
+    String url = globals.urlSignUp + "getprototypeimagespainpointwise.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      prototype.responseArrayGetPrototypeImagesPainPointWise = jsonDecode(response.body);
+      print(prototype.responseArrayGetPrototypeImagesPainPointWise);
+
+      prototype.responseArrayGetPrototypeImagesPainPointWiseMsg = prototype.responseArrayGetPrototypeImagesPainPointWise['message'].toString();
+      print(prototype.responseArrayGetPrototypeImagesPainPointWiseMsg);
+
+      if(prototype.responseArrayGetPrototypeImagesPainPointWiseMsg == "Painpoint Data Found"){
+
+        setState(() {
+          prototype.prototypeImagesPPWiseList = List.generate(prototype.responseArrayGetPrototypeImagesPainPointWise['data'].length, (i) => prototype.responseArrayGetPrototypeImagesPainPointWise['data'][i]['ptiImgpath'].toString());
+        });
+
+        print(prototype.prototypeImagesPPWiseList.toList());
+
+      }else{
+
+        setState(() {
+          prototype.prototypeImagesPPWiseList = "1";
+        });
+
+      }
+
+    });
+  }
   GetWareHousePrototypesApiProvider getWareHousePrototypesApiProvider = GetWareHousePrototypesApiProvider();
   @override
   void initState() {
@@ -29,10 +76,10 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
       home.selectedSprintId = widget.sprintid.toString();
     });
     print(home.selectedSprintId);
-    prototype.prototypeImagesPPWiseList = null;
-    getWareHousePrototypesApiProvider.getAllPrototypeImages(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    setState(() {
+      prototype.prototypeImagesPPWiseList = null;
     });
+    getAllPrototypeImages(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -304,12 +351,42 @@ class _ViewPrototypesState extends State<ViewPrototypes> {
   Widget buildPrototypesListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: prototype.prototypeImagesPPWiseList == null ? Center(child: Text(
-        "No prototypes found!",
-        style: GoogleFonts.nunitoSans(
-          fontSize: 18,
+      child: prototype.prototypeImagesPPWiseList == "1" ? Center(
+        child: Text("No Prototypes Found",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )
+          ),
         ),
-      )) :
+      ) : prototype.prototypeImagesPPWiseList == null ? ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 2,
+        itemBuilder: (context, i) => InkWell(
+          onTap: (){
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 25),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: 302,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //color: Color(0xff96C3CB),
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ) :
       ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,

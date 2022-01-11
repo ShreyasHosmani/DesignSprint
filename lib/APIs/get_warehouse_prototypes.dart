@@ -37,7 +37,7 @@ class GetWareHousePrototypesApiProvider{
 
       }else{
 
-        prototype.prototypeImagesPPWiseList = null;
+        prototype.prototypeImagesPPWiseList = "1";
 
       }
 

@@ -66,7 +66,7 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
       }else{
 
         setState(() {
-          journeyMapWH.journeyMapWareHouseIdsList = null;
+          journeyMapWH.journeyMapWareHouseIdsList = "1";
         });
 
       }
@@ -78,7 +78,9 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    journeyMapWH.journeyMapWareHouseIdsList = null;
+    setState(() {
+      journeyMapWH.journeyMapWareHouseIdsList = null;
+    });
     print(home.selectedSprintId);
     getJourneyMapWareHouseData(context);
   }
@@ -380,7 +382,43 @@ class _ViewJourneyMapsState extends State<ViewJourneyMaps> {
   Widget buildJourneyMapsListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: journeyMapWH.journeyMapWareHouseIdsList == null ? Container() : ListView.builder(
+      child: journeyMapWH.journeyMapWareHouseIdsList == "1" ? Center(
+        child: Text("No Journey Maps Found",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )
+          ),
+        ),
+      ) : journeyMapWH.journeyMapWareHouseIdsList == null ? ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 2,
+        itemBuilder: (context, i) => InkWell(
+          onTap: (){
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 25),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: 302,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //color: Color(0xff96C3CB),
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ) :
+      ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,

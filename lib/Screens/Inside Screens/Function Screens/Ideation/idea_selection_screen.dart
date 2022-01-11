@@ -890,11 +890,12 @@ class _IdeaSelectionState extends State<IdeaSelection> {
             SizedBox(height: 20,),
             /*teamMemberStatuses.toList().contains("0") ? Container() :*/ GestureDetector(
               onTap: (){
-                print("sprintAdmins + " + sprintAdmins.toString());
+                // print("sprintAdmins + " + sprintAdmins.toString());
+                //
+                // print("dmID : " + dmIDd.toString());
+                // print("profile.userID : " + profile.userID.toString());
 
-                print("dmID : " + dmIDd.toString());
-                print("profile.userID : " + profile.userID.toString());
-
+                /*
                 if(dmIDd.toString() == "null"){
                   setState(() {
                     boolSelectedList[i] = !boolSelectedList[i];
@@ -984,6 +985,36 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                     );
                   }
                 }
+
+                 */
+                setState(() {
+                  boolSelectedList[i] = !boolSelectedList[i];
+                  if(boolSelectedList[i] == false){
+                    print("1111111");
+                    setState(() {
+                      counter--;
+                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                      ideation.selectedPainPointForPrototypingStatus = "0";
+                    });
+                    print(ideation.selectedPainPointIdForPrototyping);
+                    print(ideation.selectedPainPointForPrototypingStatus);
+                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                      getPainPointsByIvsFPriority(context);
+                    });
+                  }else{
+                    print("222222");
+                    setState(() {
+                      counter++;
+                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                      ideation.selectedPainPointForPrototypingStatus = "2";
+                    });
+                    print(ideation.selectedPainPointIdForPrototyping);
+                    print(ideation.selectedPainPointForPrototypingStatus);
+                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                      getPainPointsByIvsFPriority(context);
+                    });
+                  }
+                });
                 },
               child: Container(
                 width: 102,

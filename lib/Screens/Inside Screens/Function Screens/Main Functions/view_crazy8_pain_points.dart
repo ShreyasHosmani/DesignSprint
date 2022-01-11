@@ -8,6 +8,14 @@ import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/warehouse_pain_points_data.dart' as painPointWH;
+import 'package:shimmer/shimmer.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/warehouse_pain_points_data.dart' as painPointWH;
+import 'dart:convert';
+
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -17,16 +25,56 @@ class ViewCrazy8PainPoints extends StatefulWidget {
 }
 
 class _ViewCrazy8PainPointsState extends State<ViewCrazy8PainPoints> {
+  Future<String> getAllPainPoints(context) async {
+
+    String url = globals.urlSignUp + "getwarehousecrazydocuments.php";
+
+    http.post(url, body: {
+
+      "sprintID": home.selectedSprintId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      painPointWH.responseArrayWHPainPoints = jsonDecode(response.body);
+      print(painPointWH.responseArrayWHPainPoints);
+
+      painPointWH.responseArrayWHPainPointsMsg = painPointWH.responseArrayWHPainPoints['message'].toString();
+      print(painPointWH.responseArrayWHPainPointsMsg);
+      if(statusCode == 200){
+        if(painPointWH.responseArrayWHPainPointsMsg == "Painpoint Data Found"){
+
+          setState(() {
+            painPointWH.responseArrayWHPainPointsIdsList = List.generate(painPointWH.responseArrayWHPainPoints['data'].length, (i) => painPointWH.responseArrayWHPainPoints['data'][i]['ppID'].toString());
+            painPointWH.responseArrayWHPainPointsList = List.generate(painPointWH.responseArrayWHPainPoints['data'].length, (i) => painPointWH.responseArrayWHPainPoints['data'][i]['ppName'].toString());
+
+            print(painPointWH.responseArrayWHPainPointsIdsList.toList());
+            print(painPointWH.responseArrayWHPainPointsList.toList());
+          });
+
+        }else{
+
+          setState(() {
+            painPointWH.responseArrayWHPainPointsList = "1";
+          });
+
+        }
+      }
+    });
+  }
   WareHousePainPointApiProvider wareHousePainPointApiProvider = WareHousePainPointApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    painPointWH.responseArrayWHPainPointsList = null;
-    painPointWH.responseArrayWHPainPointsList = null;
-    wareHousePainPointApiProvider.getAllPainPoints(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
+    setState(() {
+      painPointWH.responseArrayWHPainPointsList = null;
     });
+    getAllPainPoints(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -298,7 +346,42 @@ class _ViewCrazy8PainPointsState extends State<ViewCrazy8PainPoints> {
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
       child:
-      painPointWH.responseArrayWHPainPointsList == null ? Container() :
+      painPointWH.responseArrayWHPainPointsList == "1" ? Center(
+        child: Text("No Pain Points Found",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )
+          ),
+        ),
+      ) : painPointWH.responseArrayWHPainPointsList == null ? ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 2,
+        itemBuilder: (context, i) => InkWell(
+          onTap: (){
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 25),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: 302,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //color: Color(0xff96C3CB),
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ) :
       ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,

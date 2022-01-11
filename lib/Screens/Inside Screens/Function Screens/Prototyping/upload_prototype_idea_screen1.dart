@@ -255,34 +255,30 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                           prototypeApiProvider
                               .uploadPrototypeImage(context)
                               .then((value) {
-                            prototypeApiProvider
-                                .uploadPrototypeImage(context)
-                                .then((value) {
-                              if (prototyping
-                                      .painPointsForPrototypingList.last ==
-                                  prototyping.painPointsForPrototypingList[
-                                      prototyping.pageIndex]) {
-                                print(
-                                    "Last index reached, You are a great man ever!");
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (c, a1, a2) =>
-                                        EmphatizeSections4(),
-                                    transitionsBuilder: (c, anim, a2, child) =>
-                                        FadeTransition(
-                                            opacity: anim, child: child),
-                                    transitionDuration:
-                                        Duration(milliseconds: 300),
-                                  ),
-                                );
-                              } else {
-                                print("You are a loser bro, try again!");
-                                widget.controller.nextPage(
-                                    duration: Duration(seconds: 1),
-                                    curve: Curves.easeIn);
-                              }
-                            });
+                            if (prototyping
+                                .painPointsForPrototypingList.last ==
+                                prototyping.painPointsForPrototypingList[
+                                prototyping.pageIndex]) {
+                              print(
+                                  "Last index reached, You are a great man ever!");
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (c, a1, a2) =>
+                                      EmphatizeSections4(),
+                                  transitionsBuilder: (c, anim, a2, child) =>
+                                      FadeTransition(
+                                          opacity: anim, child: child),
+                                  transitionDuration:
+                                  Duration(milliseconds: 300),
+                                ),
+                              );
+                            } else {
+                              print("You are a loser bro, try again!");
+                              widget.controller.nextPage(
+                                  duration: Duration(seconds: 1),
+                                  curve: Curves.easeIn);
+                            }
                           });
                         });
                       },

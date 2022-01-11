@@ -8,6 +8,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/warehouse_ivsf_and_selected_ideas_data.dart' as ratingsWH;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:shimmer/shimmer.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/warehouse_ivsf_and_selected_ideas_data.dart' as ratingsWH;
+import 'dart:convert';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -17,12 +24,57 @@ class ViewRatingsOfImpactAndFeasibility extends StatefulWidget {
 }
 
 class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactAndFeasibility> {
+  Future<String> getImpactAndFeasibilityRatings(context) async {
+
+    String url = globals.urlSignUp + "getWareHouseImpactsAndFeasibilityRatings.php";
+
+    http.post(url, body: {
+
+      "sprintID": home.selectedSprintId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ratingsWH.responseArrayGetWareHouseIvsF = jsonDecode(response.body);
+      print(ratingsWH.responseArrayGetWareHouseIvsF);
+
+      ratingsWH.responseArrayGetWareHouseIvsFMsg = ratingsWH.responseArrayGetWareHouseIvsF['message'].toString();
+      print(ratingsWH.responseArrayGetWareHouseIvsFMsg);
+      if(statusCode == 200){
+        if(ratingsWH.responseArrayGetWareHouseIvsFMsg == "Painpoint Data Found"){
+
+          setState(() {
+            ratingsWH.impactRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['ifImpact'].toString());
+            ratingsWH.feasibilityRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['ifFeasibility'].toString());
+            ratingsWH.ideaImagesList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['iiImgpath'].toString());
+
+            print(ratingsWH.impactRatingsList.toList());
+            print(ratingsWH.feasibilityRatingsList.toList());
+            print(ratingsWH.ideaImagesList.toList());
+          });
+
+        }else{
+
+          setState(() {
+            ratingsWH.impactRatingsList = "1";
+          });
+
+        }
+      }
+    });
+  }
   WareHouseratingsWHRatingsApiProvider wareHouseratingsWHRatingsApiProvider = WareHouseratingsWHRatingsApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    ratingsWH.impactRatingsList = null;
+    setState(() {
+      ratingsWH.impactRatingsList = null;
+    });
     //setState(() {
       borderColors = [Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),];
       colors1 = [Color(0xff787cd1),Colors.white,Colors.white,Colors.white,Colors.white,Colors.white,Colors.white,Colors.white,Colors.white,Colors.white,];
@@ -36,9 +88,7 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
       colors9 = [Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Colors.white,];
       colors10 = [Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1)];
     //});
-    wareHouseratingsWHRatingsApiProvider.getImpactAndFeasibilityRatings(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getImpactAndFeasibilityRatings(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -308,8 +358,43 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
 
   Widget buildRatingsListViewBuilder(BuildContext context){
     return Padding(
-      padding: const EdgeInsets.only(left: 35, right: 35),
-      child: ratingsWH.impactRatingsList == null ? Container() : ListView.builder(
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      child: ratingsWH.impactRatingsList == "1" ? Center(
+        child: Text("No Ratings Found",
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )
+          ),
+        ),
+      ) : ratingsWH.impactRatingsList == null ? ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 2,
+        itemBuilder: (context, i) => InkWell(
+          onTap: (){
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 25),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              highlightColor: Colors.grey.shade300,
+              child: Container(
+                width: 302,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //color: Color(0xff96C3CB),
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ) : ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,

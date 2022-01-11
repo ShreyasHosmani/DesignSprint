@@ -48,7 +48,6 @@ class _JourneyMapPainPointsListViewState
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   /* Future<String> uploadTouchPoints(
       context, saveTouchPointControllerText) async {
     String url = globals.urlSignUp + "createtouchpoint.php";
@@ -667,7 +666,6 @@ class _JourneyMapPainPointsListViewState
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     prJpHorizontal = ProgressDialog(context);
@@ -675,6 +673,12 @@ class _JourneyMapPainPointsListViewState
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Container(
+            height: 60,
+            child: buildNextButton(context)),
+      ),
       endDrawerEnableOpenDragGesture: true,
       endDrawer:
           statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
@@ -9938,17 +9942,16 @@ class _JourneyMapPainPointsListViewState
   }
 
   Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
+    return showSaveButton == true ? GestureDetector(
       onTap: () {
-        //inputPainPointsApiProvider.inputPainPoints(context);
-//        if(ppListStatic == null || ppListStatic.isEmpty){
-//          Fluttertoast.showToast(msg: 'Please upload atleast one pain point!',
-//            backgroundColor: Colors.black, textColor: Colors.white,
-//          );
-//        }else{
-        prJpHorizontal.show();
-        getSprintsStatusesOfTeam2(context);
-        //}
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => EmphatizeInsideSections3(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
       },
       child: Center(
         child: Container(
@@ -9969,7 +9972,7 @@ class _JourneyMapPainPointsListViewState
           ),
         ),
       ),
-    );
+    ) : Container();
   }
 
   showAlertDialog(BuildContext context) {
@@ -10197,7 +10200,7 @@ class _JourneyMapPainPointsListViewState
               backgroundColor: Colors.black,
               textColor: Colors.white);
           pop(context);  // closing progress dialog
-          pop(context);
+          //pop(context);
 
           // Navigator.push(
           //   context,
