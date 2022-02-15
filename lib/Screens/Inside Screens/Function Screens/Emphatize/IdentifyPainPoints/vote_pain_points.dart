@@ -36,7 +36,7 @@ class _VotePageViewBuilderState extends State<VotePageViewBuilder> {
 
     http.post(url, body: {
       //"userID" : "37",//profile.userID,
-      "sprintID":  home.sprintID.toString(),
+      "sprintID":  home.sprintID.toString() == null || home.sprintID.toString() == "null" ? home.selectedSprintId.toString() : home.sprintID.toString(),
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 

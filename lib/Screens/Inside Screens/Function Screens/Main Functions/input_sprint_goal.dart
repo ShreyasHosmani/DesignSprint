@@ -674,7 +674,7 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
           primaryColor: Color(0xff787CD1),
         ),
         child: Form(
-          key: goal.formKey,
+          //key: goal.formKey,
           child: TextFormField(
             maxLines: MediaQuery.of(context).size.height~/60,
             controller: goal.goalController,
@@ -726,9 +726,15 @@ class _InputSprintGoalState extends State<InputSprintGoal> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        if(goal.formKey.currentState.validate()){
+        if(goal.goalController.text.isNotEmpty){
           goal.prInputGoal.show();
           inputGoalApiProvider.inputSprintGoal(context);
+        }else{
+          Fluttertoast.showToast(
+            msg: "Goal cannot be empty",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
         }
       },
       child: Center(

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/LoginSignUp%20Screens/login_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -83,6 +86,8 @@ class _MyAppState extends State<MyApp> {
 
   initFCM() async {
 
+    //exit(0);
+
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 
     var android = new AndroidInitializationSettings('ic_stat_ic_launcher');
@@ -100,22 +105,22 @@ class _MyAppState extends State<MyApp> {
 
     fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
-        //showOnMessageNotification(message);
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: ListTile(
-              title: Text(message['notification']['title']),
-              subtitle: Text(message['notification']['body']),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-        );
+        showOnMessageNotification(message);
+        // showDialog(
+        //   context: context,
+        //   builder: (context) => AlertDialog(
+        //     content: ListTile(
+        //       title: Text(message['notification']['title']),
+        //       subtitle: Text(message['notification']['body']),
+        //     ),
+        //     actions: <Widget>[
+        //       FlatButton(
+        //         child: Text('Ok'),
+        //         onPressed: () => Navigator.of(context).pop(),
+        //       ),
+        //     ],
+        //   ),
+        // );
         print("onMessage.....: $message");
 
       },
@@ -150,6 +155,22 @@ class _MyAppState extends State<MyApp> {
     var android = new AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
         priority: Priority.High,importance: Importance.Max
+    );
+
+   var  _androidInitializationSettings = AndroidInitializationSettings('app_icon');
+   var _initializationSettings;
+   var _iosInitializationSettings;
+    _iosInitializationSettings = IOSInitializationSettings(
+      //onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
+    );
+    _initializationSettings = InitializationSettings(
+      _androidInitializationSettings,
+      _iosInitializationSettings,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      _initializationSettings,
+      onSelectNotification: onSelectNotification,
     );
 
     var iOS = new IOSNotificationDetails();
@@ -198,3 +219,10 @@ class _MyAppState extends State<MyApp> {
 }
 
 // https://dezy.page.link/toViewSprints
+// <key>LSApplicationQueriesSchemes</key>
+// <array>
+// <string>fbapi</string>
+// <string>fb-messenger-share-api</string>
+// <string>fbauth2</string>
+// <string>fbshareextension</string>
+// </array>

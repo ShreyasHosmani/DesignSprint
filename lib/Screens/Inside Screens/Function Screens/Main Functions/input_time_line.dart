@@ -281,7 +281,7 @@ class _InputTimelineState extends State<InputTimeline> {
   Widget buildName2Widget(BuildContext context){
 
     return Center(
-      child: Text(timeline.title,
+      child: Text("Select Timeline",
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
                 color: Color(0xff707070),
@@ -294,76 +294,101 @@ class _InputTimelineState extends State<InputTimeline> {
   }
 
   Widget buildTimeLine1Card(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-          timeline.selectedTimeline = "5";
-        });
-        print(timeline.selectedTimeline);
-        home.prCreateSprint.show();
-        updateTimelineApiProvider.updateTimeLine(context);
-      },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        child: Container(
-          width: 302,
-          height: 197.22,
-          decoration: BoxDecoration(
-              color: Color(0xfffab7b7),
-              borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text(timeline.timeline1Text1,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          )
-                      ),
-                    ),
+    return Center(
+      child: GestureDetector(
+        onTap: (){
+          setState(() {
+            timeline.selectedTimeline = "5";
+          });
+          print(timeline.selectedTimeline);
+          home.prCreateSprint.show();
+          updateTimelineApiProvider.updateTimeLine(context);
+        },
+        child: Stack(
+          children: [
+            Center(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                child: Container(
+                  width: 302,
+                  height: 197.22,
+                  decoration: BoxDecoration(
+                      color: Color(0xfffab7b7),
+                      borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text(timeline.timeline1Text2,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          )
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 29, left: 35),
+                            child: Text(timeline.timeline1Text1,
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, left: 35),
+                            child: Text(timeline.timeline1Text2,
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 35, bottom: 20),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(timeline.timeline1Text3,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        )
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 35, bottom: 20),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(timeline.timeline1Text3,
+                            style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 60, top: 25),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  onPressed: (){
+                    setState(() {
+                      timeline.selectedTimeline = "5";
+                    });
+                    print(timeline.selectedTimeline);
+                    home.prCreateSprint.show();
+                    updateTimelineApiProvider.updateTimeLine(context);
+                  },
+                  icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -379,68 +404,91 @@ class _InputTimelineState extends State<InputTimeline> {
         home.prCreateSprint.show();
         updateTimelineApiProvider.updateTimeLine(context);
       },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        child: Container(
-          width: 302,
-          height: 197.22,
-          decoration: BoxDecoration(
-              color: Color(0xff96C3CB),
-              borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text(timeline.timeline2Text1,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          )
+      child: Stack(
+        children: [
+          Center(
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Container(
+                width: 302,
+                height: 197.22,
+                decoration: BoxDecoration(
+                    color: Color(0xff96C3CB),
+                    borderRadius: BorderRadius.all(Radius.circular(15))
+                ),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 29, left: 35),
+                          child: Text(timeline.timeline2Text1,
+                            style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, left: 35),
+                          child: Text(timeline.timeline2Text2,
+                            style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 35, bottom: 20),
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(timeline.timeline2Text3,
+                          style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              )
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text(timeline.timeline2Text2,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          )
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 35, bottom: 20),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(timeline.timeline2Text3,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        )
-                    ),
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(right: 60, top: 25),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                onPressed: (){
+                  setState(() {
+                    timeline.selectedTimeline = "14";
+                  });
+                  print(timeline.selectedTimeline);
+                  home.prCreateSprint.show();
+                  updateTimelineApiProvider.updateTimeLine(context);
+                },
+                icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -455,68 +503,91 @@ class _InputTimelineState extends State<InputTimeline> {
         home.prCreateSprint.show();
         updateTimelineApiProvider.updateTimeLine(context);
       },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        child: Container(
-          width: 302,
-          height: 197.22,
-          decoration: BoxDecoration(
-              color: Color(0xffF1A042),
-              borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 29, left: 35),
-                    child: Text(timeline.timeline3Text1,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          )
+      child: Stack(
+        children: [
+          Center(
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Container(
+                width: 302,
+                height: 197.22,
+                decoration: BoxDecoration(
+                    color: Color(0xffF1A042),
+                    borderRadius: BorderRadius.all(Radius.circular(15))
+                ),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 29, left: 35),
+                          child: Text(timeline.timeline3Text1,
+                            style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, left: 35),
+                          child: Text(timeline.timeline3Text2,
+                            style: GoogleFonts.nunitoSans(
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 35, bottom: 20),
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(timeline.timeline3Text3,
+                          style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              )
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 35),
-                    child: Text(timeline.timeline3Text2,
-                      style: GoogleFonts.nunitoSans(
-                          textStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          )
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 35, bottom: 20),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(timeline.timeline3Text3,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        )
-                    ),
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(right: 60, top: 25),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                onPressed: (){
+                  setState(() {
+                    timeline.selectedTimeline = "30";
+                  });
+                  print(timeline.selectedTimeline);
+                  home.prCreateSprint.show();
+                  updateTimelineApiProvider.updateTimeLine(context);
+                },
+                icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

@@ -20,6 +20,7 @@ class TeamApiProvider {
       "userID" : profile.userID,
       "teamname" : team.teamNameController.text,
       "useremail" : profile.email.toString(),
+      "fullname": profile.name.toString(),
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;

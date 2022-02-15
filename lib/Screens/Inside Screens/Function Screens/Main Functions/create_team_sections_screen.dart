@@ -13,8 +13,10 @@ import 'dart:convert';
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:progress_dialog/progress_dialog.dart';
 
 bool statusDrawer = false;
+ProgressDialog prSolo;
 
 class CreateTeamSections extends StatefulWidget {
   @override
@@ -49,6 +51,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
       if(statusCode == 200){
         if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
           print("Status updated!!");
+          markSolo(context);
         }else{
 
         }
@@ -79,7 +82,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
 
       home.responseArrayGetSprintsMsg = home.responseArrayGetSprints['message'].toString();
       if(statusCode == 200){
-        if(home.responseArrayGetSprintsMsg == "Goal Added Successfully"){
+        if(home.responseArrayGetSprintsMsg == "Goal Added Successfully" || home.responseArrayGetSprintsMsg == "Goal Added Successfully, E-Mail Not Verified"){
 
           print("done....");
           updateStep1(context);
@@ -92,6 +95,49 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
     });
   }
 
+  Future<String> markSolo(context) async {
+
+    String url = globals.urlSignUp + "addstore.php";
+
+    http.post(url, body: {
+
+      "storeSprintType" : "Solo",
+      "storeSprintId" : home.sprintID.toString(),
+      "storeUserId" : profile.userID.toString(),
+      "storeteamID" : "null",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayStore = jsonDecode(response.body);
+      print(responseArrayStore);
+
+      var msg = responseArrayStore['message'].toString();
+      print(msg);
+
+      if(msg == "successfully"){
+        prSolo.hide();
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      }else{
+        prSolo.hide();
+        Fluttertoast.showToast(msg: "error selecting team", backgroundColor: Colors.black,
+          textColor: Colors.white,);
+      }
+
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -100,6 +146,7 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
 
   @override
   Widget build(BuildContext context) {
+    prSolo = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -123,19 +170,19 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
 //              buildManageTeamButton(context),
             ],
           ),
-          Positioned(
-            top: 40, right: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 40,),
-                  child: statusBarDrawer(context),
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 40, right: 0,
+          //   child: Container(
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Align(
+          //       alignment: Alignment.topRight,
+          //       child: Padding(
+          //         padding: EdgeInsets.only(top: 40,),
+          //         child: statusBarDrawer(context),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Positioned(
             top: 10,
             left: 0,
@@ -675,15 +722,8 @@ class _CreateTeamSectionsState extends State<CreateTeamSections> {
   Widget buildSoloButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        prSolo.show();
         addSprintStatus(context);
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => EmphatizeSections(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
       },
       child: Center(
         child: Container(

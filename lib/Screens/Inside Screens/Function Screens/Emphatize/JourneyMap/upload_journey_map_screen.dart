@@ -1083,7 +1083,9 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         itemCount: empathize.journeyMapImageNamesList == null
             ? 0
             : empathize.journeyMapImageNamesList.length,
-        itemBuilder: (context, i) => Center(
+        itemBuilder: (context, i) => empathize
+            .journeyMapImageNamesList[i] ==
+            "Digital Journey Map" ? Container() : Center(
           child: InkWell(
             onTap: () {
               if (empathize.journeyMapImageNamesList[i] == null ||
@@ -1236,7 +1238,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
           child: Form(
-            key: empathize.formKey3,
+            //key: empathize.formKey3,
             child: Column(
               children: [
                 TextFormField(
@@ -1273,7 +1275,7 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                         setState(() {
 
                         });
-                        if(empathize.formKey3.currentState.validate()){
+                        if(empathize.painPointController.text.isNotEmpty){
                           empathize.prInputPainPoint.show();
                           inputPainPointsApiProvider.inputPainPoints(context).whenComplete((){
                             setState(() {
@@ -1281,6 +1283,10 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
                             });
                             print(ppListStatic.toList());
                           });
+                        }else{
+                          Fluttertoast.showToast(msg: "Please upload atleast one pain point",
+                            backgroundColor: Colors.black, textColor: Colors.white
+                          );
                         }
                       },
                       child: Text("Done",

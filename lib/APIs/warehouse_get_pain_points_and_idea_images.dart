@@ -73,7 +73,7 @@ class WareHousePainPointApiProvider{
 
         }else{
 
-          painPointWH.wareHouseIdeaImagesList = null;
+          painPointWH.wareHouseIdeaImagesList = "1";
 
         }
       }

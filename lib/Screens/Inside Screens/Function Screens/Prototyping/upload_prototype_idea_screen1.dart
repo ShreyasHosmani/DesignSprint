@@ -27,6 +27,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 bool statusDrawer = false;
 bool showImages = false;
 
+var ppImage;
+var ppImageId;
+var ppPId;
+var ppPIdForComparingFirstAndLast;
+var ppNameList;
+
 class UploadPrototypeImagesPageViewBuilder extends StatefulWidget {
   @override
   _UploadPrototypeImagesPageViewBuilderState createState() =>
@@ -39,6 +45,57 @@ class _UploadPrototypeImagesPageViewBuilderState
   GetPainPointsApiProvider getPainPointsApiProvider =
       GetPainPointsApiProvider();
 
+  Future<String> getIdeaImagesOfStatusTwoWithPainPoint(context) async {
+
+    String url = globals.urlSignUp + "getIdeaImagesForPrototyping.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImages);
+
+      ideation.responseArrayGetAllIdeaImagesMsg = ideation.responseArrayGetAllIdeaImages['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesMsg == "Data Found"){
+
+        setState(() {
+          ppImage = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+          ppPId = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['ppID'].toString());
+          ppPIdForComparingFirstAndLast = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiID'].toString());
+          ppNameList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['ppName'].toString());
+          //setState(() {
+            _isLoaded = true;
+          //});
+        });
+
+        print("0000000000");
+        print(ppImage.toList());
+        print(ppPId.toList());
+        print(ppPIdForComparingFirstAndLast.toList());
+        print(ppNameList.toList());
+        print("0000000000");
+
+      }else{
+
+        setState(() {
+          ppImage = null;
+        });
+
+      }
+
+    });
+  }
+
   bool _isLoaded = false;
 
   @override
@@ -46,17 +103,18 @@ class _UploadPrototypeImagesPageViewBuilderState
     // TODO: implement initState
     super.initState();
     prototyping.pageIndex = 0;
-    getPainPointsApiProvider
-        .getPainPointsForPrototyping(context)
-        .whenComplete(() {
-      Future.delayed(const Duration(seconds: 3), () {
-        print("aaaaaaaaaaaaaa");
-        print(prototyping.painPointsForPrototypingList);
-        setState(() {
-          _isLoaded = true;
-        });
-      });
-    });
+    getIdeaImagesOfStatusTwoWithPainPoint(context);
+    // getPainPointsApiProvider
+    //     .getPainPointsForPrototyping(context)
+    //     .whenComplete(() {
+    //   Future.delayed(const Duration(seconds: 3), () {
+    //     print("aaaaaaaaaaaaaa");
+    //     print(prototyping.painPointsForPrototypingList);
+    //     setState(() {
+    //       _isLoaded = true;
+    //     });
+    //   });
+    // });
   }
 
   @override
@@ -67,13 +125,13 @@ class _UploadPrototypeImagesPageViewBuilderState
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : prototyping.painPointsForPrototypingList == null
+          : ppImage == null
               ? Container()
               : PageView.builder(
                   physics: new NeverScrollableScrollPhysics(),
-                  itemCount: prototyping.painPointsForPrototypingList == null
+                  itemCount: ppImage == null
                       ? 0
-                      : prototyping.painPointsForPrototypingList.length,
+                      : ppImage.length,
                   controller: controller,
                   onPageChanged: (index) {
                     setState(() {
@@ -103,6 +161,57 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   PrototypeApiProvider prototypeApiProvider = PrototypeApiProvider();
 
   final picker = ImagePicker();
+
+  Future<String> getIdeaImagesOfStatusTwoWithPainPoint(context) async {
+
+    String url = globals.urlSignUp + "getIdeaImagesForPrototyping.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImages);
+
+      ideation.responseArrayGetAllIdeaImagesMsg = ideation.responseArrayGetAllIdeaImages['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesMsg == "Data Found"){
+
+        setState(() {
+          ppImage = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+          ppPId = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['ppID'].toString());
+          ppPIdForComparingFirstAndLast = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiID'].toString());
+          ppNameList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['ppName'].toString());
+          //setState(() {
+          //_isLoaded = true;
+          //});
+        });
+
+        print("0000000000");
+        print(ppImage.toList());
+        print(ppPId.toList());
+        print(ppPIdForComparingFirstAndLast.toList());
+        print(ppNameList.toList());
+        print("0000000000");
+
+      }else{
+
+        setState(() {
+          ppImage = null;
+        });
+
+      }
+
+    });
+  }
 
   Future getImageOne() async {
     Navigator.of(context).pop();
@@ -135,7 +244,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
     print(url);
     print(home.sprintID);
     http.post(url, body: {
-      "sprintID": home.selectedSprintId,
+      "sprintID": home.selectedSprintId == null || home.selectedSprintId == "null" ? home.sprintID : home.selectedSprintId,
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -153,16 +262,18 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
 
       if (prototype.responseArrayGetPrototypeImagesPainPointWiseMsg ==
           "Painpoint Data Found") {
-        prototype.prototypeImagesPPWiseList = List.generate(
-            prototype
-                .responseArrayGetPrototypeImagesPainPointWise['data'].length,
-            (i) =>
-                "https://admin.dezyit.com/mobileapp/" +
-                prototype.responseArrayGetPrototypeImagesPainPointWise['data']
-                        [i]['ptiImgpath']
-                    .toString()
-                    .substring(6));
+        setState(() {
+          prototype.prototypeImagesPPWiseList = List.generate(
+              prototype
+                  .responseArrayGetPrototypeImagesPainPointWise['data'].length,
+                  (i) =>
+              "https://admin.dezyit.com/mobileapp/" +
+                  prototype.responseArrayGetPrototypeImagesPainPointWise['data']
+                  [i]['ptiImgpath']
+                      .toString()
+                      .substring(6));
 
+        });
         print(prototype.prototypeImagesPPWiseList.toList());
       } else {
         prototype.prototypeImagesPPWiseList = null;
@@ -196,29 +307,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                           prototypeApiProvider
                               .uploadPrototypeImage(context)
                               .then((value) {
-                            if (prototyping.painPointsForPrototypingList.last ==
-                                prototyping.painPointsForPrototypingList[
-                                    prototyping.pageIndex]) {
-                              print(
-                                  "Last index reached, You are a great man ever!");
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) =>
-                                      EmphatizeSections4(),
-                                  transitionsBuilder: (c, anim, a2, child) =>
-                                      FadeTransition(
-                                          opacity: anim, child: child),
-                                  transitionDuration:
-                                      Duration(milliseconds: 300),
-                                ),
-                              );
-                            } else {
-                              print("You are a loser bro, try again!");
-                              widget.controller.nextPage(
-                                  duration: Duration(seconds: 1),
-                                  curve: Curves.easeIn);
-                            }
+                            getPrototypeImagesPainPointWise(context);
                           });
                         });
                       },
@@ -251,34 +340,15 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
                     child: InkWell(
                       onTap: () {
+                        print("ppPId.last : "+ppPId.last.toString());
+                        print("ppPId[prototyping.pageIndex] : " + ppPId[
+                        prototyping.pageIndex].toString());
+                        print("ppPId list : "+ppPId.toString());
                         getImageOneGallery().then((value) {
                           prototypeApiProvider
                               .uploadPrototypeImage(context)
                               .then((value) {
-                            if (prototyping
-                                .painPointsForPrototypingList.last ==
-                                prototyping.painPointsForPrototypingList[
-                                prototyping.pageIndex]) {
-                              print(
-                                  "Last index reached, You are a great man ever!");
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) =>
-                                      EmphatizeSections4(),
-                                  transitionsBuilder: (c, anim, a2, child) =>
-                                      FadeTransition(
-                                          opacity: anim, child: child),
-                                  transitionDuration:
-                                  Duration(milliseconds: 300),
-                                ),
-                              );
-                            } else {
-                              print("You are a loser bro, try again!");
-                              widget.controller.nextPage(
-                                  duration: Duration(seconds: 1),
-                                  curve: Curves.easeIn);
-                            }
+                            getPrototypeImagesPainPointWise(context);
                           });
                         });
                       },
@@ -365,11 +435,12 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
     // TODO: implement initState
     super.initState();
     showImages = false;
-    getIdeaImagesByStatus(context);
+    getPrototypeImagesPainPointWise(context);
+    //getIdeaImagesByStatus(context);
     setState(() {
       prototyping.imageOne = null;
       prototyping.selectedPainPointIdForUploadingPrototypeImage =
-          prototyping.painPointIdsForPrototypingList[prototyping.pageIndex];
+          ppPId[prototyping.pageIndex];
     });
     print(prototyping.selectedPainPointIdForUploadingPrototypeImage);
   }
@@ -385,10 +456,10 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
       endDrawerEnableOpenDragGesture: true,
       endDrawer:
           statusDrawer == true ? StatusDrawerIdeation() : ProfileDrawerCommon(),
-     /* bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 50),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
         child: Container(height: 50, child: buildNextButton(context)),
-      ),*/
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -397,7 +468,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 52,
+                  height: 22,
                 ),
                 buildName3Widget(context),
                 SizedBox(
@@ -1135,7 +1206,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
         prototyping.uploadPrototypeHint1,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+            textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
       ),
     );
   }
@@ -1149,7 +1220,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
         child: LinearPercentIndicator(
           lineHeight: 10,
           percent: (prototyping.pageIndex + 1) /
-              prototyping.painPointsForPrototypingList.length,
+              ppImage.length,
           backgroundColor: Colors.grey.shade300,
           progressColor: Color(0xff787cd1),
         ),
@@ -1179,7 +1250,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildName4Widget(BuildContext context) {
     return Center(
       child: Text(
-        prototyping.painPointsForPrototypingList[prototyping.pageIndex],
+        ppNameList[prototyping.pageIndex],
         textAlign: TextAlign.center,
         style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
@@ -1190,7 +1261,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildIdeaImageContainer(BuildContext context) {
     return Stack(
       children: [
-        ideation.ideaAllImagesOfStatusTwo == null
+        ppImage == null
             ? Container(
                 height: 161,
                 width: 302,
@@ -1202,9 +1273,9 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
             : GestureDetector(
                 onTap: () {
                   print(globals.urlSignUp +
-                      ideation.ideaAllImagesOfStatusTwo[prototyping.pageIndex]);
+                      ppImage[prototyping.pageIndex]);
                   launch(globals.urlSignUp +
-                      ideation.ideaAllImagesOfStatusTwo[prototyping.pageIndex]);
+                      ppImage[prototyping.pageIndex]);
                 },
                 child: Container(
                   height: 161,
@@ -1214,7 +1285,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                     border: Border.all(color: Colors.grey),
                     image: DecorationImage(
                         image: NetworkImage(globals.urlSignUp +
-                            ideation.ideaAllImagesOfStatusTwo[
+                            ppImage[
                                 prototyping.pageIndex]),
                         fit: BoxFit.cover),
                   ),
@@ -1256,7 +1327,7 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
                             border: Border.all(color: Colors.grey),
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    globals.urlSignUp +prototyping.prototypeImagesPPWiseList[i]),
+                                    prototype.prototypeImagesPPWiseList[i]),
                                 fit: BoxFit.cover,
                                 scale: 5)),
                       )
@@ -1310,25 +1381,31 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
     );
   }
 
- /* Widget buildNextButton(BuildContext context) {
+  Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (prototyping.painPointsForPrototypingList.last ==
-            prototyping.painPointsForPrototypingList[prototyping.pageIndex]) {
-          print("Last index reached, You are a great man ever!");
+        if (ppPId.last ==
+            ppPId[
+            prototyping.pageIndex]) {
+          print(
+              "Last index reached, You are a great man ever!");
           Navigator.push(
             context,
             PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => EmphatizeSections4(),
+              pageBuilder: (c, a1, a2) =>
+                  EmphatizeSections4(),
               transitionsBuilder: (c, anim, a2, child) =>
-                  FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
+                  FadeTransition(
+                      opacity: anim, child: child),
+              transitionDuration:
+              Duration(milliseconds: 300),
             ),
           );
         } else {
           print("You are a loser bro, try again!");
-          widget.controller
-              .nextPage(duration: Duration(seconds: 1), curve: Curves.easeIn);
+          widget.controller.nextPage(
+              duration: Duration(seconds: 1),
+              curve: Curves.easeIn);
         }
       },
       child: Center(
@@ -1348,5 +1425,5 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
         ),
       ),
     );
-  }*/
+  }
 }

@@ -5,6 +5,7 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_empathize.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen3.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_inside_sections.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,7 @@ var ppiiStatus;
 
 var teamMemberStatuses;
 var sprintCreatorId;
-
+var sprintType;
 var sprintAdmins;
 
 class IdeaSelection extends StatefulWidget {
@@ -35,7 +36,6 @@ class _IdeaSelectionState extends State<IdeaSelection> {
   GetPainPointsApiProvider getPainPointsApiProvider = GetPainPointsApiProvider();
   VotePainPointsApiProvider votePainPointsApiProvider = VotePainPointsApiProvider();
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
-
 
   Future<String> getPainPointsByIvsFPriority(context) async {
 
@@ -100,9 +100,13 @@ class _IdeaSelectionState extends State<IdeaSelection> {
 
         setState(() {
           ideation.ideaAllImagesPainPointWiseList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+          ideation.ideaAllImagesPainPointWiseListIds = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiID'].toString());
         });
 
+        print("**********");
         print(ideation.ideaAllImagesPainPointWiseList.toList());
+        print(ideation.ideaAllImagesPainPointWiseListIds.toList());
+        print("**********");
 
       }else{
 
@@ -228,11 +232,51 @@ class _IdeaSelectionState extends State<IdeaSelection> {
     });
   }
 
+  Future<String> getStoreData(context) async {
+
+    String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
+
+    http.post(url, body: {
+
+      "storeSprintId" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+      "storeUserId" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      print("/////");
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      print(responseArrayGetSprintStatusesMsg);
+      print("/////");
+
+      if(responseArrayGetSprintStatusesMsg == "successfully"){
+        setState(() {
+          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+          sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+        });
+        print("sprintType : "+sprintType.toString());
+        print("storeUserId : "+sprintCreatorId.toString());
+      }
+
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      sprintType = null;
+      sprintCreatorId = null;
+    });
+    getStoreData(context);
     getSprintAdmins(context);
     getSprintsStatusesOfTeam(context);
     ideation.ideaAllImagesPainPointWiseList = null;
@@ -255,7 +299,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: ProfileDrawerCommon(),
-      bottomNavigationBar:/* teamMemberStatuses.toList().contains("0") ? null : */Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 50),
         child: Container(
             height: 50,
@@ -888,7 +932,7 @@ class _IdeaSelectionState extends State<IdeaSelection> {
               ],
             ),
             SizedBox(height: 20,),
-            /*teamMemberStatuses.toList().contains("0") ? Container() :*/ GestureDetector(
+    sprintType.toString() == "Collab" && sprintCreatorId.toString() != profile.userID.toString() ? Container() : GestureDetector(
               onTap: (){
                 // print("sprintAdmins + " + sprintAdmins.toString());
                 //
@@ -991,26 +1035,28 @@ class _IdeaSelectionState extends State<IdeaSelection> {
                   boolSelectedList[i] = !boolSelectedList[i];
                   if(boolSelectedList[i] == false){
                     print("1111111");
-                    setState(() {
-                      counter--;
-                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                    //setState(() {
+                      ideation.selectedPainPointIdForPrototyping = ideation.ideaAllImagesPainPointWiseListIds[i].toString();//ideation.painPointIdsByIvsFPriorityList[i].toString();
                       ideation.selectedPainPointForPrototypingStatus = "0";
-                    });
+                      counter--;
+                    //});
                     print(ideation.selectedPainPointIdForPrototyping);
                     print(ideation.selectedPainPointForPrototypingStatus);
-                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                    votePainPointsApiProvider.selectIdeaImagesForPrototyping(context).then((value){
                       getPainPointsByIvsFPriority(context);
                     });
                   }else{
                     print("222222");
-                    setState(() {
-                      counter++;
-                      ideation.selectedPainPointIdForPrototyping = ideation.painPointIdsByIvsFPriorityList[i].toString();
+                    print("idea images response array : "+ideation.responseArrayGetAllIdeaImages.toString());
+                    print("ideation.painPointIdsByIvsFPriorityList.toString() : "+ideation.painPointIdsByIvsFPriorityList.toString());
+                    //setState(() {
+                      ideation.selectedPainPointIdForPrototyping = ideation.ideaAllImagesPainPointWiseListIds[i].toString();//ideation.painPointIdsByIvsFPriorityList[i].toString();
                       ideation.selectedPainPointForPrototypingStatus = "2";
-                    });
+                      counter++;
+                    //});
                     print(ideation.selectedPainPointIdForPrototyping);
                     print(ideation.selectedPainPointForPrototypingStatus);
-                    votePainPointsApiProvider.selectFinalPainPointsForPrototyping(context).then((value){
+                    votePainPointsApiProvider.selectIdeaImagesForPrototyping(context).then((value){
                       getPainPointsByIvsFPriority(context);
                     });
                   }
@@ -1045,76 +1091,120 @@ class _IdeaSelectionState extends State<IdeaSelection> {
     return GestureDetector(
       onTap: (){
 
-       if(home.selectedSprintId == null || home.selectedSprintId == "null"){
-         if(ppiiStatus.contains('1')){
-           print("contains 1");
-           if(dmIDd == profile.userID){
-             print("i am a decision maker");
-             Navigator.push(
-               context,
-               PageRouteBuilder(
-                 pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                 transitionDuration: Duration(milliseconds: 300),
-               ),
-             );
-           }else{
-             print("i am not a decision maker");
-             Navigator.push(
-               context,
-               PageRouteBuilder(
-                 pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                 transitionDuration: Duration(milliseconds: 300),
-               ),
-             );
-           }
-         }else{
-           print("doesnt contain 1");
-           if(dmIDd == profile.userID){
-             print("i am a decision maker");
-             if(home.selectedSprintId == null || home.selectedSprintId == "null"){
-               Navigator.push(
-                 context,
-                 PageRouteBuilder(
-                   pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-                   transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                   transitionDuration: Duration(milliseconds: 300),
-                 ),
-               );
-             }else{
-               Fluttertoast.showToast(msg: 'Please select attest one of the ideas!',
-                 backgroundColor: Colors.black, textColor: Colors.white,
-               );
-             }
-           }else{
-             print("i am not a decision maker");
-             if(home.selectedSprintId == null || home.selectedSprintId == "null"){
-               Navigator.push(
-                 context,
-                 PageRouteBuilder(
-                   pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-                   transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                   transitionDuration: Duration(milliseconds: 300),
-                 ),
-               );
-             }else{
-               Fluttertoast.showToast(msg: 'Please wait until decision maker selects the final ideas!',
-                 backgroundColor: Colors.black, textColor: Colors.white,
-               );
-             }
-           }
-         }
-       }else{
-         Navigator.push(
-           context,
-           PageRouteBuilder(
-             pageBuilder: (c, a1, a2) => EmphatizeSections3(),
-             transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-             transitionDuration: Duration(milliseconds: 300),
-           ),
-         );
-       }
+        if(sprintType.toString() == "Solo"){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          if(sprintCreatorId.toString() == profile.userID.toString()){
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }else{
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => ViewSprints(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+        }
+
+        /*if(sprintType.toString() == "Collab" && sprintCreatorId.toString() != profile.userID.toString()){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => ViewSprints(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          getStoreData(context);
+
+          if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+            if(ppiiStatus.contains('1')){
+              print("contains 1");
+              if(sprintCreatorId == profile.userID){
+                print("i am a decision maker");
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                    transitionDuration: Duration(milliseconds: 300),
+                  ),
+                );
+              }else{
+                print("i am not a decision maker");
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                    transitionDuration: Duration(milliseconds: 300),
+                  ),
+                );
+              }
+            }else{
+              print("doesnt contain 1");
+              if(sprintCreatorId == profile.userID){
+                print("i am a decision maker");
+                if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                      transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                      transitionDuration: Duration(milliseconds: 300),
+                    ),
+                  );
+                }else{
+                  Fluttertoast.showToast(msg: 'Please select attest one of the ideas!',
+                    backgroundColor: Colors.black, textColor: Colors.white,
+                  );
+                }
+              }else{
+                print("i am not a decision maker");
+                if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                      transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                      transitionDuration: Duration(milliseconds: 300),
+                    ),
+                  );
+                }else{
+                  Fluttertoast.showToast(msg: 'Please wait until decision maker selects the final ideas!',
+                    backgroundColor: Colors.black, textColor: Colors.white,
+                  );
+                }
+              }
+            }
+          }else{
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeSections3(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+        }*/
 
       },
       child: Center(

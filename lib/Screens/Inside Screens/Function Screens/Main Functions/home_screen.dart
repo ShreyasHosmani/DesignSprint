@@ -13,6 +13,7 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%2
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:design_sprint/main.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+//import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -204,8 +205,8 @@ class _HomeState extends State<Home> {
     this.initDynamicLinks();
     fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
-        //showOnMessageNotification(message);
-        showDialog(
+        showOnMessageNotification(message);
+        /*showDialog(
           context: context,
           builder: (context) => AlertDialog(
             content: ListTile(
@@ -234,16 +235,23 @@ class _HomeState extends State<Home> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Ok',
+                child: Text('Continue',
                   style: GoogleFonts.nunito(
                     color: Colors.grey[700],
                   ),
                 ),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (c, a1, a2) => ViewSprints(),
+                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                    transitionDuration: Duration(milliseconds: 300),
+                  ),
+                )//Navigator.of(context).pop(),
               ),
             ],
           ),
-        );
+        );*/
         print("onMessage.....: $message");
 
       },
@@ -468,7 +476,16 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (c, a1, a2) => DesignSprintInside(),
+                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionDuration: Duration(milliseconds: 300),
+                      ),
+                    );
+                  },
                   icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
                 ),
               ),
@@ -534,7 +551,16 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (c, a1, a2) => TeamDataAndManageTeam2(),
+                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionDuration: Duration(milliseconds: 300),
+                      ),
+                    );
+                  },
                   icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
                 ),
               ),

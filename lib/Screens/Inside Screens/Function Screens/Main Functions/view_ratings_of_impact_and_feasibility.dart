@@ -24,7 +24,8 @@ class ViewRatingsOfImpactAndFeasibility extends StatefulWidget {
 }
 
 class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactAndFeasibility> {
-  Future<String> getImpactAndFeasibilityRatings(context) async {
+
+  /*Future<String> getImpactAndFeasibilityRatings(context) async {
 
     String url = globals.urlSignUp + "getWareHouseImpactsAndFeasibilityRatings.php";
 
@@ -48,8 +49,55 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
         if(ratingsWH.responseArrayGetWareHouseIvsFMsg == "Painpoint Data Found"){
 
           setState(() {
-            ratingsWH.impactRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['ifImpact'].toString());
-            ratingsWH.feasibilityRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['ifFeasibility'].toString());
+            ratingsWH.impactRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['imapctVote'].toString());
+            ratingsWH.feasibilityRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['feasibilityVote'].toString());
+            ratingsWH.ideaImagesList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['iiImgpath'].toString());
+
+            print(ratingsWH.impactRatingsList.toList());
+            print(ratingsWH.feasibilityRatingsList.toList());
+            print(ratingsWH.ideaImagesList.toList());
+          });
+
+        }else{
+
+          setState(() {
+            ratingsWH.impactRatingsList = "1";
+          });
+
+        }
+      }
+    });
+  }*/
+
+  Future<String> getImpactVsFeasibilityIdeaWarehouseData(context) async {
+
+    print("Getting ratings...");
+    print("ivSprintId : "+home.selectedSprintId.toString());
+
+    String url = globals.urlSignUp + "getIvsFIdeaWarehouseData.php";
+
+    http.post(url, body: {
+
+      "ivSprintId": home.selectedSprintId,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ratingsWH.responseArrayGetWareHouseIvsF = jsonDecode(response.body);
+      print(ratingsWH.responseArrayGetWareHouseIvsF);
+
+      ratingsWH.responseArrayGetWareHouseIvsFMsg = ratingsWH.responseArrayGetWareHouseIvsF['message'].toString();
+      print(ratingsWH.responseArrayGetWareHouseIvsFMsg);
+      if(statusCode == 200){
+        if(ratingsWH.responseArrayGetWareHouseIvsFMsg == "successfully"){
+
+          setState(() {
+            ratingsWH.impactRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['avgImpactvote'].toString());
+            ratingsWH.feasibilityRatingsList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['avgFeasiblevote'].toString());
             ratingsWH.ideaImagesList = List.generate(ratingsWH.responseArrayGetWareHouseIvsF['data'].length, (i) => ratingsWH.responseArrayGetWareHouseIvsF['data'][i]['iiImgpath'].toString());
 
             print(ratingsWH.impactRatingsList.toList());
@@ -67,6 +115,7 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
       }
     });
   }
+
   WareHouseratingsWHRatingsApiProvider wareHouseratingsWHRatingsApiProvider = WareHouseratingsWHRatingsApiProvider();
   @override
   void initState() {
@@ -88,7 +137,8 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
       colors9 = [Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Colors.white,];
       colors10 = [Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1),Color(0xff787cd1)];
     //});
-    getImpactAndFeasibilityRatings(context);
+    //getImpactAndFeasibilityRatings(context);
+    getImpactVsFeasibilityIdeaWarehouseData(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -438,11 +488,12 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
                     child: Container(
                       height: 20,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("Impact      :    1"),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 15,),
+                          Text("Average Impact      :    "+ratingsWH.impactRatingsList[i].toString()+" / 10"),
+                          /*SizedBox(width: 10,),
                           ListView.builder(
                             physics: ScrollPhysics(),
                             shrinkWrap: true,
@@ -536,7 +587,7 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
                             ),
                           ),
                           SizedBox(width: 10,),
-                          Text("10"),
+                          Text("10"),*/
                         ],
                       ),
                     ),
@@ -546,12 +597,12 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
                     child: Container(
                       height: 20,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("Feasibility :    1"),
-                          SizedBox(width: 10,),
-                          ListView.builder(
+                          SizedBox(width: 15,),
+                          Text("Average Feasibility      :    "+ratingsWH.feasibilityRatingsList[i].toString()+" / 10"),
+                          /*ListView.builder(
                             physics: ScrollPhysics(),
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
@@ -644,7 +695,7 @@ class _ViewRatingsOfImpactAndFeasibilityState extends State<ViewRatingsOfImpactA
                             ),
                           ),
                           SizedBox(width: 10,),
-                          Text("10"),
+                          Text("10"),*/
                         ],
                       ),
                     ),

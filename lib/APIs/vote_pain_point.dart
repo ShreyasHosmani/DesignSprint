@@ -151,6 +151,91 @@ class VotePainPointsApiProvider {
     });
   }
 
+  Future<String> voteIdeas(context) async {
+
+    print(ideation.selectedPainPointIdForVoteOfIvsF.toString());
+    print(ideation.impactRange.toString());
+    print(ideation.feasibilityRange.toString());
+    print(profile.userID.toString());
+
+    String url = globals.urlSignUp + "addideavotes.php";
+
+    http.post(url, body: {
+
+      "imageId": ideation.selectedPainPointIdForVoteOfIvsF.toString(),
+      "userID" : profile.userID.toString(),
+      "imapctVote": ideation.impactRange.toString(),
+      "feasibilityVote" : ideation.feasibilityRange.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayVoteImpactFeasibility = jsonDecode(response.body);
+      print(ideation.responseArrayVoteImpactFeasibility);
+
+      ideation.responseArrayVoteImpactFeasibilityMsg = ideation.responseArrayVoteImpactFeasibility['message'].toString();
+      print(ideation.responseArrayVoteImpactFeasibilityMsg);
+      if(statusCode == 200){
+        /* if(ideation.responseArrayVoteImpactFeasibilityMsg == "Vote Saved Successfully"){
+          Fluttertoast.showToast(msg: empathize.voteSaved, backgroundColor: Colors.black,
+            textColor: Colors.white,gravity: ToastGravity.CENTER).then((value){
+          });
+        }else{
+          Fluttertoast.showToast(msg: ideation.responseArrayVoteImpactFeasibilityMsg, backgroundColor: Colors.black,
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
+        }*/
+      }
+    });
+  }
+
+  Future<String> voteIdeasForStore(context) async {
+
+    print("++++++++");
+    print(ideation.selectedPainPointIdForVoteOfIvsF.toString());
+    print(ideation.impactRange.toString());
+    print(ideation.feasibilityRange.toString());
+    print(profile.userID.toString());
+    print("++++++++");
+
+    String url = globals.urlSignUp + "storeIvsFIdeaVotes.php";
+
+    http.post(url, body: {
+
+      "ivSprintId" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "ivImageID": ideation.selectedPainPointIdForVoteOfIvsF.toString(),
+      "ivUserId" : profile.userID.toString(),
+      "ivImpactVote": ideation.impactRange.toString(),
+      "ivFeasibilityVote" : ideation.feasibilityRange.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayVoteImpactFeasibility = jsonDecode(response.body);
+      print(ideation.responseArrayVoteImpactFeasibility);
+
+      ideation.responseArrayVoteImpactFeasibilityMsg = ideation.responseArrayVoteImpactFeasibility['message'].toString();
+      print(ideation.responseArrayVoteImpactFeasibilityMsg);
+      if(statusCode == 200){
+        /* if(ideation.responseArrayVoteImpactFeasibilityMsg == "Vote Saved Successfully"){
+          Fluttertoast.showToast(msg: empathize.voteSaved, backgroundColor: Colors.black,
+            textColor: Colors.white,gravity: ToastGravity.CENTER).then((value){
+          });
+        }else{
+          Fluttertoast.showToast(msg: ideation.responseArrayVoteImpactFeasibilityMsg, backgroundColor: Colors.black,
+            textColor: Colors.white,gravity: ToastGravity.CENTER);
+        }*/
+      }
+    });
+  }
+
   Future<String> votePainPointsAccToIvsF(context) async {
 
     print(ideation.selectedPainPointIdForVoteOfIvsF.toString());
@@ -188,6 +273,47 @@ class VotePainPointsApiProvider {
           Fluttertoast.showToast(msg: ideation.responseArrayVoteImpactFeasibilityMsg, backgroundColor: Colors.black,
             textColor: Colors.white,gravity: ToastGravity.CENTER);
         }*/
+      }
+    });
+  }
+
+  Future<String> selectIdeaImagesForPrototyping(context) async {
+
+    print(empathize.selectedFinalPainPointId);
+    print(empathize.painPointStatus);
+
+    String url = globals.urlSignUp + "updateIdeaImageStatus.php";
+
+    http.post(url, body: {
+
+      "imageID": ideation.selectedPainPointIdForPrototyping.toString(),
+      "status" : ideation.selectedPainPointForPrototypingStatus,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayUpdateImpactPriority = jsonDecode(response.body);
+      print(ideation.responseArrayUpdateImpactPriority);
+
+      ideation.responseArrayUpdateImpactPriorityMsg = ideation.responseArrayUpdateImpactPriority['message'].toString();
+      print(ideation.responseArrayUpdateImpactPriorityMsg);
+      if(statusCode == 200){
+        if(ideation.responseArrayUpdateImpactPriorityMsg == "priority updated Successfully"){
+          if(ideation.selectedPainPointForPrototypingStatus == "2"){
+            /*  Fluttertoast.showToast(msg: empathize.painPointSelected, backgroundColor: Colors.black,
+              textColor: Colors.white,gravity: ToastGravity.CENTER);*/
+            updateStep8(context);
+          }else{
+
+          }
+        }else{
+          Fluttertoast.showToast(msg: ideation.responseArrayUpdateImpactPriorityMsg, backgroundColor: Colors.black,
+              textColor: Colors.white,gravity: ToastGravity.CENTER);
+        }
       }
     });
   }

@@ -4,6 +4,7 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen2.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprint_inside_sections.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_sprints_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,10 +17,9 @@ import 'package:http/http.dart' as http;
 
 bool statusDrawer = false;
 var ppStatus;
-
+var sprintType;
 var teamMemberStatuses;
 var sprintCreatorId;
-
 var sprintAdmins;
 
 class SelectFinalPainPoints extends StatefulWidget {
@@ -125,22 +125,63 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
 
           setState(() {
             teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep4'].toString());
-            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+            //sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
           });
 
           print(teamMemberStatuses);
-          print(sprintCreatorId);
+          //print(sprintCreatorId);
 
         }else{
 
           setState(() {
             teamMemberStatuses = ['1'];
-            sprintCreatorId = profile.userID.toString();
+            //sprintCreatorId = profile.userID.toString();
           });
 
         }
       }
     });
+  }
+
+  Future<String> getStoreData(context) async {
+
+    String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
+
+    http.post(url, body: {
+
+      "storeSprintId" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+      "storeUserId" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      print("/////");
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      print(responseArrayGetSprintStatusesMsg);
+      print("/////");
+
+      if(responseArrayGetSprintStatusesMsg == "successfully"){
+        setState(() {
+          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+          sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+        });
+        print("sprintType : "+sprintType.toString());
+        print("storeUserId : "+sprintCreatorId.toString());
+      }
+
+    });
+  }
+
+  Future<Null> refreshData() async {
+    getSprintsStatusesOfTeam(context);
+    getStoreData(context);
   }
 
 /*  Future<String> getSprintAdmins(context) async {
@@ -186,7 +227,11 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      sprintType = null;
+    });
     updateStep4(context);
+    getStoreData(context);
   //  getSprintAdmins(context);
     getSprintsStatusesOfTeam(context);
     empathize.painPointsListAccToVotes = null;
@@ -207,25 +252,28 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
       endDrawer: statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      bottomNavigationBar: /*teamMemberStatuses.toList().contains("0") ? null :*/ Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 50),
         child: Container(
             height: 50,
             child: buildNextButton(context)),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 10,),
-            buildName2Widget(context),
-            SizedBox(height: 20,),
-            buildName3Widget(context),
-            SizedBox(height: 35,),
-            buildPainPointsList(context),
-            SizedBox(height: 40,),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () => refreshData(),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10,),
+              buildName2Widget(context),
+              SizedBox(height: 20,),
+              buildName3Widget(context),
+              SizedBox(height: 35,),
+              buildPainPointsList(context),
+              SizedBox(height: 40,),
+            ],
+          ),
         ),
       ),
     );
@@ -806,11 +854,11 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                 ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width/50,),
-              /*teamMemberStatuses.toList().contains("0") ? Container() : */GestureDetector(
+              sprintType.toString() == "Collab" && sprintCreatorId.toString() != profile.userID.toString() ? Container() : GestureDetector(
                 onTap: (){
                   print("profile.userID" + profile.userID.toString());
                   print("sprintCreatorId" + sprintCreatorId.toString());
-                  if(profile.userID == sprintCreatorId /*|| sprintAdmins.toList().contains('1')*/){
+                  //if(profile.userID == sprintCreatorId /*|| sprintAdmins.toList().contains('1')*/){
                     setState(() {
                       checkList[i] = !checkList[i];
                       empathize.selectedFinalPainPointId = empathize.painPointIdsListAccToVotes[i].toString();
@@ -825,11 +873,11 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
                     votePainPointsApiProvider.selectFinalPainPoints(context).whenComplete((){
                       getPainPointsAccordingToVotes(context);
                     });
-                  }else{
-                    Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final pain points!',
-                      backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
-                    );
-                  }
+                  // }else{
+                  //   Fluttertoast.showToast(msg: 'Please wait until the decision maker selects the final pain points!',
+                  //     backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
+                  //   );
+                  // }
                 },
                 child: Container(
                   height: 20,
@@ -850,9 +898,9 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   }
 
   Widget buildNextButton(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: (){
-        if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+        if(sprintType.toString() == "Solo"){
           Navigator.push(
             context,
             PageRouteBuilder(
@@ -862,7 +910,36 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
             ),
           );
         }else{
-
+          if(sprintCreatorId.toString() == profile.userID.toString()){
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }else{
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => ViewSprints(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+        }
+        /*if(home.selectedSprintId == null || home.selectedSprintId == "null"){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
           if(ppStatus.contains('1')){
             print("contains 1");
             if(dmIDd == profile.userID){
@@ -891,16 +968,16 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
             if(dmIDd == profile.userID){
               print("i am a decision maker");
               Fluttertoast.showToast(msg: 'Please select atleast one pain point!',
-                backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
+                backgroundColor: Colors.black, textColor: Colors.white,
               );
             }else{
               print("i am not a decision maker");
               Fluttertoast.showToast(msg: 'Please wait untill decision maker selects the final pain points!',
-                backgroundColor: Colors.black, textColor: Colors.white,gravity: ToastGravity.CENTER
+                backgroundColor: Colors.black, textColor: Colors.white,
               );
             }
           }
-        }
+        }*/
       },
       child: Center(
         child: Container(

@@ -1,3 +1,4 @@
+import 'package:design_sprint/Helpers/helper.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/identify_painpoint_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/select_final_painpoints.dart';
@@ -7,7 +8,10 @@ import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideati
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/i_vs_f_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Ideation/idea_selection_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/create_team_sections_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/manage_team_screen_seperate.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/selection_message_screen_to_team_member.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/selection_message_screen_to_team_member_ideas.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/team_data_and_manage_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/tutorial_sprint_goal.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/view_empathize_inside_sections.dart';
@@ -52,6 +56,10 @@ var status11;
 var step3StatusList;
 var step4StatusList;
 
+var sprintType;
+var sprintCreatorId;
+var teamNameidFromSprints;
+
 //step3StatusList = List.generate(responseArrayGetSprintStatuses['data'].length, (index) =>
 //responseArrayGetSprintStatuses['data'][index]['sprintstatusStep3']);
 
@@ -65,14 +73,63 @@ class ShowInsideSections extends StatefulWidget {
 
 class _ShowInsideSectionsState extends State<ShowInsideSections> {
 
+  Future<String> getStoreData(context) async {
+
+    String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
+
+    http.post(url, body: {
+
+      "storeSprintId" : widget.sprintid.toString(),
+      "storeUserId" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      print("/////");
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      print(responseArrayGetSprintStatusesMsg);
+      print("/////");
+
+      if(responseArrayGetSprintStatusesMsg == "successfully"){
+        setState(() {
+          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+          sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+          teamNameidFromSprints = responseArrayGetSprintStatuses['data']['teamNameid'].toString();
+        });
+        print("sprintType : "+sprintType.toString());
+        print("storeUserId : "+sprintCreatorId.toString());
+        print("teamNameidFromSprints : "+teamNameidFromSprints.toString());
+      }
+
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      sprintCreatorId = null;
+      sprintType = null;
+    });
+    getStoreData(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      //key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: ProfileDrawerCommon(),
+      //endDrawer: ProfileDrawerCommon(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -91,8 +148,8 @@ class _ShowInsideSectionsState extends State<ShowInsideSections> {
             buildUserTestingCard(context),
             SizedBox(height: 21,),
             buildReIterateCard(context),
-            // SizedBox(height: 21,),
-            // buildTeamCard(context),
+            sprintType == "Solo" ? Container() : SizedBox(height: 21,),
+            sprintType == "Solo" ? Container() : buildTeamCard(context),
             SizedBox(height: 40,),
           ],
         ),
@@ -460,7 +517,16 @@ class _ShowInsideSectionsState extends State<ShowInsideSections> {
   Widget buildIdeationCard(BuildContext context){
     return GestureDetector(
       onTap: (){
-        if(status2 == "0"){
+        print("clicking this");
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ViewIdeationInsideSections(widget.sprintid, widget.decsionMakersId),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+        /*if(status2 == "0"){
           Fluttertoast.showToast(msg: 'Please complete Empathize section to proceed with Ideation',
             backgroundColor: Colors.black, textColor: Colors.white,
           );
@@ -482,7 +548,7 @@ class _ShowInsideSectionsState extends State<ShowInsideSections> {
               transitionDuration: Duration(milliseconds: 300),
             ),
           );
-        }
+        }*/
       },
       child: Container(
         width: 302,
@@ -703,14 +769,21 @@ class _ShowInsideSectionsState extends State<ShowInsideSections> {
   Widget buildTeamCard(BuildContext context){
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => ViewTeamBySprints(widget.sprintid),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );
+        //getStoreData(context);
+        push(
+            context,
+            ManageTeamSeperate(
+                1,
+                teamNameidFromSprints,
+                "Team Members"));
+        // Navigator.push(
+        //   context,
+        //   PageRouteBuilder(
+        //     pageBuilder: (c, a1, a2) => ViewTeamBySprints(widget.sprintid),
+        //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+        //     transitionDuration: Duration(milliseconds: 300),
+        //   ),
+        // );
       },
       child: Container(
         width: 302,
@@ -769,6 +842,59 @@ class ViewSprintInsideSections extends StatefulWidget {
 }
 
 class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
+
+  Future<String> getStoreData(context) async {
+
+    String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
+
+    http.post(url, body: {
+
+      "storeSprintId" : widget.sprintid.toString(),
+      "storeUserId" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      print("/////");
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      print(responseArrayGetSprintStatusesMsg);
+      print("/////");
+
+      if(responseArrayGetSprintStatusesMsg == "successfully"){
+        setState(() {
+          home.selectedSprintId = widget.sprintid.toString();
+          dmIDd = widget.decsionMakersId.toString();
+          dmEmailId = widget.dmEmail.toString();
+          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+          sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+        });
+        print("sprintType : "+sprintType.toString());
+        print("storeUserId : "+sprintCreatorId.toString());
+
+        if(sprintType.toString() == "Solo"){
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => ShowInsideSections(widget.sprintid, widget.decsionMakersId),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          getSprintsStatusesOfTeam(context);
+        }
+
+      }
+
+    });
+  }
 
   Future<String> getSprintsStatuses(context) async {
 
@@ -840,11 +966,19 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => CreateTeamSections(),
+                  pageBuilder: (c, a1, a2) => EmphatizeSections(),
                   transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
+              // Navigator.pushReplacement(
+              //   context,
+              //   PageRouteBuilder(
+              //     pageBuilder: (c, a1, a2) => CreateTeamSections(),
+              //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              //     transitionDuration: Duration(milliseconds: 300),
+              //   ),
+              // );
             }else if(status1 == "1" && status2 == "1" && status3 == "0" && status4 == "0" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
               print("Goal & Personas have been uploaded...");
@@ -1014,6 +1148,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
               }
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
+              print("pushing to 1st (painpoint) selection message screen");
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1024,6 +1159,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
               );
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "0"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
+              print("pushing to Crazyyyy 8 screen");
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1034,6 +1170,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
               );
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
                 && status7 == "0" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
+              print("pushing to IvsF tutorial screen");
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1044,16 +1181,18 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
               );
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
                 && status7 == "1" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
+              print("pushing to 2nd (idea) selection screen");
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => ShowSelectionMessage(),
+                  pageBuilder: (c, a1, a2) => ShowSelectionMessageIdeas(),
                   transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                   transitionDuration: Duration(milliseconds: 300),
                 ),
               );
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
                 && status7 == "1" && status8 == "0" && status9 == "0" && status10 == "0" && status11 == "0"){
+              print("pushing to Proto tutorial screen");
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1064,6 +1203,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
               );
             }else if(status1 == "1" && status2 == "1" && status3 == "1" && status4 == "1" && status5 == "0" && status6 == "1"
                 && status7 == "1" && status8 == "0" && status9 == "1" && status10 == "0" && status11 == "0"){
+              print("pushing to User Testing Sections screen");
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -1164,7 +1304,7 @@ class _ViewSprintInsideSectionsState extends State<ViewSprintInsideSections> {
     // TODO: implement initState
     super.initState();
     //getSprintsStatuses(context);
-    getSprintsStatusesOfTeam(context);
+    getStoreData(context);
     setState(() {
       status1 = null;
       status2 = null;

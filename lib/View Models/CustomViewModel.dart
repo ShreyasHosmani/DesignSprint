@@ -31,6 +31,8 @@ class CustomViewModel extends ChangeNotifier {
           }
         }
 
+        print(data);
+
         notifyListeners();
         return "success";
       } else {
@@ -97,6 +99,8 @@ class CustomViewModel extends ChangeNotifier {
       var responseDecoded = jsonDecode(utf8.decode(response.bodyBytes));
 
       var message = responseDecoded['message'];
+
+      print(responseDecoded);
 
       if (message == "Profile Found") {
         var data = responseDecoded['data'];

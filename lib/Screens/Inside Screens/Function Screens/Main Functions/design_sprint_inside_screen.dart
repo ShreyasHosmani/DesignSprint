@@ -167,7 +167,9 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: IconButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      showAlertDialog(context);
+                    },
                     icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
                   ),
                 ),
@@ -239,7 +241,16 @@ class _DesignSprintInsideState extends State<DesignSprintInside> {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: IconButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (c, a1, a2) => ViewSprints(),
+                          transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                          transitionDuration: Duration(milliseconds: 300),
+                        ),
+                      );
+                    },
                     icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
                   ),
                 ),

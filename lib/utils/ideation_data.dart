@@ -85,6 +85,7 @@ var ideaImagesPainPointWiseList;
 var responseArrayGetAllIdeaImages;
 var responseArrayGetAllIdeaImagesMsg;
 var ideaAllImagesPainPointWiseList;
+var ideaAllImagesPainPointWiseListIds;
 var responseArrayGetAllIdeaImagesByStatus;
 var responseArrayGetAllIdeaImagesByStatusMsg;
 var ideaAllImagesOfStatusTwo;

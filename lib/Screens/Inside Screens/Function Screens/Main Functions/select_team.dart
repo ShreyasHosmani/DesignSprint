@@ -17,6 +17,8 @@ import 'design_sprint_sections_screen.dart';
 bool statusDrawer = false;
 var selectedTeam;
 ProgressDialog prSelect;
+var teamNmIdsList;
+var selectedTeamNameId;
 
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -52,10 +54,12 @@ class _SelectTeamState extends State<SelectTeam> {
           setState(() {
             team.teamNamesList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnName'].toString());
             team.teamNamesIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['tnID'].toString());
+            teamNmIdsList = List.generate(team.responseArrayTeamNames['data'].length, (i) => team.responseArrayTeamNames['data'][i]['teamNameid'].toString());
           });
 
           print(team.teamNamesList.toList());
           print(team.teamNamesIdsList.toList());
+          print(teamNmIdsList.toList());
 
         }else{
 
@@ -125,26 +129,79 @@ class _SelectTeamState extends State<SelectTeam> {
       if(statusCode == 200){
         if(msg == "Edited Successfully"){
           team.prTeam.hide();
-          Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
-            textColor: Colors.white,).whenComplete((){
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => EmphatizeSections(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
-          });
+          storeCollabData(context);
+          // Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
+          //   textColor: Colors.white,).whenComplete((){
+          //   Navigator.push(
+          //     context,
+          //     PageRouteBuilder(
+          //       pageBuilder: (c, a1, a2) => EmphatizeSections(),
+          //       transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          //       transitionDuration: Duration(milliseconds: 300),
+          //     ),
+          //   );
+          // });
         }else{
           team.prTeam.hide();
-          Fluttertoast.showToast(msg: "error deleting team", backgroundColor: Colors.black,
+          Fluttertoast.showToast(msg: "error selecting team", backgroundColor: Colors.black,
             textColor: Colors.white,);
         }
       }
 
     });
   }
+
+  Future<String> storeCollabData(context) async {
+
+    String url = globals.urlSignUp + "addstore.php";
+
+
+    print({
+
+      "storeSprintType" : "Collab",
+      "storeSprintId" : home.sprintID.toString(),
+      "storeUserId" : profile.userID.toString(),
+      "storeteamID" : selectedTeam.toString(),
+
+    });
+
+    http.post(url, body: {
+
+      "storeSprintType" : "Collab",
+      "storeSprintId" : home.sprintID.toString(),
+      "storeUserId" : profile.userID.toString(),
+      "storeteamID" : selectedTeam.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayStore = jsonDecode(response.body);
+      print(responseArrayStore);
+
+      var msg = responseArrayStore['message'].toString();
+      print(msg);
+
+      if(msg == "successfully"){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      }else{
+        Fluttertoast.showToast(msg: "error selecting team", backgroundColor: Colors.black,
+          textColor: Colors.white,);
+      }
+
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -769,6 +826,14 @@ class _SelectTeamState extends State<SelectTeam> {
             print(selectedTeamIdForDeleting);
             print(selectedTeam);
             team.prTeam.show();
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
             selectTeam(context);
           }
         },
@@ -807,14 +872,17 @@ class _SelectTeamState extends State<SelectTeam> {
                       child: PopupMenuButton<String>(
                         onSelected: (val){
                           if(val == "Edit Team"){
-                            // Navigator.push(
-                            //   context,
-                            //   PageRouteBuilder(
-                            //     pageBuilder: (c, a1, a2) => ManageTeamSeperate(team.teamNamesIdsList[i], team.teamNamesList[i]),
-                            //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                            //     transitionDuration: Duration(milliseconds: 300),
-                            //   ),
-                            // );
+                            print("index : "+i.toString());
+                            print("teamNmIdsList[i] : "+teamNmIdsList[i].toString());
+                            print("team.teamNamesList : "+team.teamNamesList[i].toString());
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (c, a1, a2) => ManageTeamSeperate(i,teamNmIdsList[i], team.teamNamesList[i]),
+                                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                                transitionDuration: Duration(milliseconds: 300),
+                              ),
+                            );
                           }else{
                             setState(() {
                               selectedTeamIdForDeleting = team.teamNamesIdsList[i];
@@ -851,7 +919,7 @@ class _SelectTeamState extends State<SelectTeam> {
                         ),
                         color: Colors.white,
                         itemBuilder: (BuildContext context) {
-                          return {'Edit Team','Delete Team'}.map((String choice) {
+                          return {'Edit Team'}.map((String choice) {
                             return PopupMenuItem<String>(
                               value: choice,
                               textStyle: GoogleFonts.nunitoSans(
@@ -933,7 +1001,7 @@ class _SelectTeamState extends State<SelectTeam> {
           team.prTeam.show();
           teamApiProvider.createTeamName2(context).whenComplete((){
             Future.delayed(const Duration(seconds: 2), () {
-              teamApiProvider.getTeamNames(context).whenComplete((){
+              getTeamNames(context).whenComplete((){
                 Future.delayed(const Duration(seconds: 2), () {
                   setState(() {});
                 });
@@ -1042,6 +1110,8 @@ class _SelectTeamState extends State<SelectTeam> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        print("home.sprintID.toString() : "+home.sprintID.toString());
+        print("profile.userID.toString() : "+profile.userID.toString());
         Navigator.push(
           context,
           PageRouteBuilder(

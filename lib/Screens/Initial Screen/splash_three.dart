@@ -73,6 +73,7 @@ class _SplashThreeState extends State<SplashThree> {
         SizedBox(height: 15,),
         Text("Provides useful tips by assisting", style: textStyle(),),
         Text("you to right direction of sprints", style: textStyle(),),
+        SizedBox(height: 40,),
         GestureDetector(
           onTap: (){
             Navigator.pushReplacement(
@@ -84,12 +85,15 @@ class _SplashThreeState extends State<SplashThree> {
               ),
             );
           },
-          child: Container(
-            height: 50, width: 100,
-            child: Center(
-              child: Text("Get Started",
-                style: GoogleFonts.nunitoSans(
-                  textStyle: TextStyle(fontSize: 18,color: Color(0xff787CD1),letterSpacing: 0),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Container(
+              height: 50, width: 100,
+              child: Center(
+                child: Text("Get Started",
+                  style: GoogleFonts.nunitoSans(
+                    textStyle: TextStyle(fontSize: 18,color: Color(0xff787CD1),letterSpacing: 0),
+                  ),
                 ),
               ),
             ),

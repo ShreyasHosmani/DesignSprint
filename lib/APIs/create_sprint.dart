@@ -41,6 +41,7 @@ class CreateSprintApiProvider{
 
           Fluttertoast.showToast(msg: home.sprintNameSaved, backgroundColor: Colors.black,
             textColor: Colors.white,).whenComplete((){
+            home.sprintNameController.clear();
             Navigator.of(context).pop();
             Navigator.push(
               context,

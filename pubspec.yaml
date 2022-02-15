@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+17
+version: 1.0.0+19
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -40,9 +40,9 @@ dependencies:
   searchable_dropdown: ^1.1.3
   google_sign_in: ^4.5.1
   firebase_messaging: ^6.0.9
-  #firebase_core: ^0.4.3+3
-  #cloud_firestore: ^0.13.1+1
-  #firebase_auth: ^0.15.4
+  firebase_core: ^0.4.3+3
+  cloud_firestore: ^0.13.1+1
+  firebase_auth: ^0.15.4
   flutter_local_notifications: ^1.1.6
   flutter_webview_plugin: ^0.3.10+1
   flutter_facebook_login: ^3.0.0
@@ -58,6 +58,7 @@ dependencies:
   sign_in_with_apple: ^3.0.0
   provider: ^4.0.2
   timer_count_down: ^2.2.1
+  flutter_restart: ^0.0.3
 
   #keyboard_actions: ^3.3.1+1
 
@@ -118,6 +119,16 @@ flutter:
     - assets/images/journey.png
     - assets/images/dezylogo.png
     - assets/images/
+    - assets/WebImages/
+    - assets/WebImages/Tiles/
+    - assets/WebImages/NavBarButton/
+    - assets/WebImages/SprintTimeLines/
+    - assets/WebImages/EmpathizeAssets/
+    - assets/WebImages/EmpathizeAssets/CreatePersona/
+    - assets/WebImages/GreyAssets/
+    - assets/WebImages/IdeationAssets/
+    - assets/WebImages/PrototypeAssets/
+    - assets/WebImages/UserTestingAssets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

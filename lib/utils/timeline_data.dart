@@ -1,6 +1,6 @@
 library main_app.timelineglobals;
 
-String title = "Timeline";
+String title = "Select Timeline";
 String timeline1Text1 = "5 Days";
 String timeline1Text2 = "- 6 hours a day";
 String timeline1Text3 = "This is the Fastest iteration process";

@@ -782,6 +782,9 @@ class _TeamDataAndManageTeam2State extends State<TeamDataAndManageTeam2> {
                 itemBuilder: (context, i) {
                   return InkWell(
                     onTap: () {
+                      print("index : "+i.toString());
+                      print("providerListener.teamsList[i].teamNameid : "+providerListener.teamsList[i].teamNameid.toString());
+                      print("providerListener.teamsList[i].tnName : "+providerListener.teamsList[i].tnName.toString());
                       push(
                           context,
                           ManageTeamSeperate(

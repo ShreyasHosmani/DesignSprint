@@ -57,6 +57,7 @@ class PrototypeApiProvider{
     http.post(url, body: {
 
       "painpointid" : prototype.selectedPainPointIdForUploadingPrototypeImage.toString(),
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
       "image" : prototype.base64PrototypeImage,
       "name": prototype.fileNamePrototypeImage,
 

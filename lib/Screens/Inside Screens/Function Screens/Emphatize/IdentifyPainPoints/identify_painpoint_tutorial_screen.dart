@@ -2,14 +2,24 @@ import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_team.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Emphatize/IdentifyPainPoints/vote_pain_points.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:video_player/video_player.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 bool statusDrawer = false;
+var teamMemberStatuses;
+var sprintCreatorId;
+var sprintType;
 
 class IdentifyPainPointTutorial extends StatefulWidget {
   @override
@@ -20,9 +30,93 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   VideoPlayerController _controller;
   FlickManager flickManager;
+
+  Future<String> getSprintsStatusesOfTeam(context) async {
+
+    String url = globals.urlLogin + "getsprintstatusdata.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      if(statusCode == 200){
+        if(responseArrayGetSprintStatusesMsg == "Data Found"){
+
+          //1- Goal ; 2-Persona ; 3-JourneyMap ; 4-Add PainPoint ; 5- Vote PP ; 6- Select PP ; 7- Upload Ideas ; 8- Select Ideas ; 9- Upload Prototypes ; 10- Upload Insights ; 11- ReIterate
+
+          setState(() {
+            teamMemberStatuses = List.generate(responseArrayGetSprintStatuses['data'].length, (index) => responseArrayGetSprintStatuses['data'][index]['sprintstatusStep4'].toString());
+            sprintCreatorId = responseArrayGetSprintStatuses['data'][0]['sprintUserid'].toString();
+          });
+
+          print(teamMemberStatuses);
+          print(sprintCreatorId);
+
+        }else{
+
+          setState(() {
+            teamMemberStatuses = ['1'];
+            sprintCreatorId = profile.userID.toString();
+          });
+
+        }
+      }
+    });
+  }
+
+  Future<String> getStoreData(context) async {
+
+    String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
+
+    http.post(url, body: {
+
+      "storeSprintId" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+      "storeUserId" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      print("/////");
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      print(responseArrayGetSprintStatusesMsg);
+      print("/////");
+
+      if(responseArrayGetSprintStatusesMsg == "successfully"){
+        setState(() {
+          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+        });
+        print("sprintType : "+sprintType.toString());
+      }
+
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getSprintsStatusesOfTeam(context);
+    getStoreData(context);
+    setState(() {
+      sprintType = null;
+    });
     _controller = VideoPlayerController.network(
         'https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/painpoints.mp4')
       ..initialize().then((_) {
@@ -670,6 +764,8 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+
+        print("sprint type ::: +++ "+sprintType.toString());
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
@@ -678,6 +774,29 @@ class _IdentifyPainPointTutorialState extends State<IdentifyPainPointTutorial> {
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
+        /*if(sprintType.toString() == "Solo"){
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => VotePageViewBuilder(),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          if(sprintType.toString() == "Collab" && teamMemberStatuses.toList().contains('0')){
+            Fluttertoast.showToast(msg: 'Please wait until rest of the team members upload pain points.', backgroundColor: Colors.black, textColor: Colors.white);
+          }else{
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => VotePageViewBuilder(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }
+        }*/
       },
       child: Center(
         child: Container(

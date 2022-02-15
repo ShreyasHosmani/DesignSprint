@@ -1,6 +1,7 @@
 import 'package:design_sprint/APIs/add_insights.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/congratulations_screenSolo.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/reiterate_tutorial_screen.dart';
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/User%20Testing/Mapping%20Insights/congratulations_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/user_testing_data.dart' as userTesting;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:design_sprint/utils/ideation_data.dart' as ideation;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:progress_dialog/progress_dialog.dart';
+
 
 bool statusDrawer = false;
 bool showSecondStep = false;
 bool showPainPoint = false;
 TextEditingController painPointController = new TextEditingController();
 FocusNode focus = FocusNode();
+var sprintCreatorId;
+var sprintType;
+ProgressDialog prAddInsights;
 
 class InsightsForm extends StatefulWidget {
   @override
@@ -22,13 +37,136 @@ class InsightsForm extends StatefulWidget {
 }
 
 class _InsightsFormState extends State<InsightsForm> {
+
   InsightsApiProvider insightsApiProvider = InsightsApiProvider();
    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<String> getStoreData(context) async {
+
+    String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
+
+    http.post(url, body: {
+
+      "storeSprintId" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
+      "storeUserId" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      print("/////");
+      var responseArrayGetSprintStatuses = jsonDecode(response.body);
+      print(responseArrayGetSprintStatuses);
+
+      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+      print(responseArrayGetSprintStatusesMsg);
+      print("/////");
+
+      if(responseArrayGetSprintStatusesMsg == "successfully"){
+        setState(() {
+          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+          sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+        });
+        print("sprintType : "+sprintType.toString());
+        print("storeUserId : "+sprintCreatorId.toString());
+      }
+
+    });
+  }
+
+  Future<String> updateStep10(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "10",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+  Future<String> addInsights(context) async {
+
+    String url = globals.urlSignUp + "createinsight.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "text" : userTesting.painPointController.text,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      userTesting.responseArrayAddInsights = jsonDecode(response.body);
+      print(userTesting.responseArrayAddInsights);
+
+      userTesting.responseArrayAddInsightsMsg = userTesting.responseArrayAddInsights['message'].toString();
+      print(userTesting.responseArrayAddInsightsMsg);
+      if(statusCode == 200){
+        if(userTesting.responseArrayAddInsightsMsg == "Insights Added Successfully"){
+          print("Insight saved");
+          Fluttertoast.showToast(
+            msg: "Insight saved",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
+          prAddInsights.hide();
+          setState(() {
+            userTesting.uploadedInsightsList.add(userTesting.painPointController.text);
+          });
+          print(userTesting.uploadedInsightsList.toList());
+          userTesting.painPointController.clear();
+          updateStep10(context);
+        }else{
+          Fluttertoast.showToast(
+            msg: "Error, please try again!",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
+          prAddInsights.hide();
+          print("error");
+        }
+      }
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      sprintCreatorId = null;
+      sprintType = null;
+    });
+    getStoreData(context);
     userTesting.uploadedInsightsList = [];
     statusDrawer = false;
     showSecondStep = false;
@@ -37,6 +175,7 @@ class _InsightsFormState extends State<InsightsForm> {
 
   @override
   Widget build(BuildContext context) {
+    prAddInsights = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
@@ -843,27 +982,32 @@ class _InsightsFormState extends State<InsightsForm> {
                     GestureDetector(
                       onTap: () {
                         focus.unfocus();
-                        if (userTesting.painPointController.text == null ||
-                            userTesting.painPointController.text == "") {
+                        print("Length ::: "+userTesting.painPointController.text.length.toString());
+
+                        if (userTesting.painPointController.text.isEmpty) {
                           Fluttertoast.showToast(
                             msg: "Insight cannot be empty!",
                             backgroundColor: Colors.black,
                             textColor: Colors.white,
                           );
                         } else {
-                          Fluttertoast.showToast(
-                            msg: "Adding insight...",
-                            backgroundColor: Colors.black,
-                            textColor: Colors.white,
-                          );
-                          insightsApiProvider
-                              .addInsights(context)
-                              .then((value) {
-                            Future.delayed(Duration(seconds: 3), () {
-                              setState(() {});
-                            });
-                          });
+                          if(userTesting.painPointController.text.replaceAll(' ', '').length == 0){
+                            Fluttertoast.showToast(
+                              msg: "Insight cannot be empty!",
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,
+                            );
+                          }else{
+                            Fluttertoast.showToast(
+                              msg: "Adding insight...",
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,
+                            );
+                            prAddInsights.show();
+                            addInsights(context);
+                          }
                         }
+
                       },
                       child: Text(
                         userTesting.done,
@@ -883,25 +1027,33 @@ class _InsightsFormState extends State<InsightsForm> {
   Widget buildAddInsightButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (userTesting.painPointController.text == null ||
-            userTesting.painPointController.text == "") {
+        focus.unfocus();
+        print("Length ::: "+userTesting.painPointController.text.length.toString());
+
+        if (userTesting.painPointController.text.isEmpty) {
           Fluttertoast.showToast(
             msg: "Insight cannot be empty!",
             backgroundColor: Colors.black,
             textColor: Colors.white,
           );
         } else {
-          Fluttertoast.showToast(
-            msg: "Adding insight...",
-            backgroundColor: Colors.black,
-            textColor: Colors.white,
-          );
-          insightsApiProvider.addInsights(context).then((value) {
-            Future.delayed(Duration(seconds: 3), () {
-              setState(() {});
-            });
-          });
+          if(userTesting.painPointController.text.replaceAll(' ', '').length == 0){
+            Fluttertoast.showToast(
+              msg: "Insight cannot be empty!",
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+            );
+          }else{
+            Fluttertoast.showToast(
+              msg: "Adding insight...",
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+            );
+            prAddInsights.show();
+            addInsights(context);
+          }
         }
+
       },
       child: Center(
         child: Container(
@@ -925,16 +1077,18 @@ class _InsightsFormState extends State<InsightsForm> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-       /* Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => Congratulations(),
-            transitionsBuilder: (c, anim, a2, child) =>
-                FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        );*/
-        Navigator.push(
+        if(sprintType.toString() == "Collab" && sprintCreatorId.toString() != profile.userID.toString()){
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => CongratulationsSolor(),
+              transitionsBuilder: (c, anim, a2, child) =>
+                  FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+        }else{
+          Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => ReIterateTutorial(),
@@ -943,6 +1097,7 @@ class _InsightsFormState extends State<InsightsForm> {
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
+        }
       },
       child: Center(
         child: Container(

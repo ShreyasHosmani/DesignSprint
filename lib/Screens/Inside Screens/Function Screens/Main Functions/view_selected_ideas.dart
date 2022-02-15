@@ -17,6 +17,10 @@ import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/warehouse_ivsf_and_selected_ideas_data.dart' as ratingsWH;
 import 'dart:convert';
 
+var ppImage;
+var ppPId;
+var ppNameList;
+
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ViewSelectedIdeas extends StatefulWidget {
@@ -25,7 +29,8 @@ class ViewSelectedIdeas extends StatefulWidget {
 }
 
 class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
-  Future<String> getIdeaImagesByStatus(context) async {
+
+  /*Future<String> getIdeaImagesByStatus(context) async {
 
     String url = globals.urlSignUp + "getideaimagesbystatus.php";
 
@@ -64,16 +69,67 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
       }
 
     });
+  }*/
+
+  Future<String> getIdeaImagesOfStatusTwoWithPainPoint(context) async {
+
+    String url = globals.urlSignUp + "getIdeaImagesForPrototyping.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.selectedSprintId.toString(),//home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImages);
+
+      ideation.responseArrayGetAllIdeaImagesMsg = ideation.responseArrayGetAllIdeaImages['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesMsg == "Data Found"){
+
+        setState(() {
+          ppImage = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+          ppPId = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['ppID'].toString());
+          ppNameList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['ppName'].toString());
+          //setState(() {
+          //_isLoaded = true;
+          //});
+        });
+
+        print("02938923475r9");
+        print("0000000000");
+        print(ppImage.toList());
+        print(ppPId.toList());
+        print(ppNameList.toList());
+        print("0000000000");
+
+      }else{
+
+        setState(() {
+          ppImage = "1";
+        });
+
+      }
+
+    });
   }
+
   WareHouseratingsWHRatingsApiProvider wareHouseratingsWHRatingsApiProvider = WareHouseratingsWHRatingsApiProvider();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
-      ratingsWH.ideaAllImagesOfStatusTwo = null;
+      ppImage = null;
     });
-    getIdeaImagesByStatus(context);
+    getIdeaImagesOfStatusTwoWithPainPoint(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -345,7 +401,7 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
       child:
-      ratingsWH.ideaAllImagesOfStatusTwo == "1" ? Center(
+      ppImage == "1" ? Center(
         child: Text("No Selected Ideas Found",
           style: GoogleFonts.nunitoSans(
               textStyle: TextStyle(
@@ -354,7 +410,7 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
               )
           ),
         ),
-      ) : ratingsWH.ideaAllImagesOfStatusTwo == null ? ListView.builder(
+      ) : ppImage == null ? ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
@@ -385,12 +441,12 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: ratingsWH.ideaAllImagesOfStatusTwo == null ? 0 : ratingsWH.ideaAllImagesOfStatusTwo.length,
+        itemCount: ppImage == null ? 0 : ppImage.length,
         itemBuilder: (context, i) => Padding(
           padding: const EdgeInsets.only(bottom: 45),
           child: GestureDetector(
             onTap: (){
-              launch(globals.urlSignUp+ratingsWH.ideaAllImagesOfStatusTwo[i]);
+              launch(globals.urlSignUp+ppImage[i]);
             },
             child: Container(
               width: 302,
@@ -399,7 +455,7 @@ class _ViewSelectedIdeasState extends State<ViewSelectedIdeas> {
                 borderRadius: BorderRadius.all(Radius.circular(7)),
                 border: Border.all(color: Color(0xffEBEBEB)),
                   image: DecorationImage(
-                    image: NetworkImage(globals.urlSignUp+ratingsWH.ideaAllImagesOfStatusTwo[i]),
+                    image: NetworkImage(globals.urlSignUp+ppImage[i]),
                   )
               ),
             ),

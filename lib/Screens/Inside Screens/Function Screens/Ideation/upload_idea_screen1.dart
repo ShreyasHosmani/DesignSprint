@@ -34,13 +34,59 @@ class UploadIdeaImagePageViewBuilder extends StatefulWidget {
 
 class _UploadIdeaImagePageViewBuilderState
     extends State<UploadIdeaImagePageViewBuilder> {
+
   final controller = PageController(viewportFraction: 1);
+
+  Future<String> getAllIdeaImages(context) async {
+
+    String url = globals.urlSignUp + "getideaimagespainpointwise.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImages);
+
+      ideation.responseArrayGetAllIdeaImagesMsg = ideation.responseArrayGetAllIdeaImages['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesMsg == "Painpoint Data Found"){
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+          ideation.ideaAllImagesPainPointWiseListIds = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['ppID'].toString());
+        });
+
+        print("**********");
+        print(ideation.ideaAllImagesPainPointWiseList.toList());
+        print(ideation.ideaAllImagesPainPointWiseListIds.toList());
+        print("**********");
+
+      }else{
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = null;
+        });
+
+      }
+
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     ideation.pageIndexIdea = 0;
     print(ideation.pageIndexIdea);
+    //getAllIdeaImages(context);
   }
 
   @override
@@ -248,7 +294,9 @@ class _UploadIdea1State extends State<UploadIdea1> {
           _isVisible = true;
         });
 
+        print("0000000000");
         print(ideation.ideaImagesPainPointWiseList.toList());
+        print("0000000000");
       } else {
         setState(() {
           ideation.ideaImagesPainPointWiseList = null;

@@ -32,6 +32,51 @@ class _ImpactVsFeasibilityPageViewBuilderState
       GetPainPointsApiProvider();
   UploadIdeaApiProvider uploadIdeaApiProvider = UploadIdeaApiProvider();
 
+  Future<String> getAllIdeaImages(context) async {
+
+    String url = globals.urlSignUp + "getideaimagespainpointwise.php";
+
+    http.post(url, body: {
+
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      ideation.responseArrayGetAllIdeaImages = jsonDecode(response.body);
+      print(ideation.responseArrayGetAllIdeaImages);
+
+      ideation.responseArrayGetAllIdeaImagesMsg = ideation.responseArrayGetAllIdeaImages['message'].toString();
+      print(ideation.responseArrayGetAllIdeaImagesMsg);
+
+      if(ideation.responseArrayGetAllIdeaImagesMsg == "Painpoint Data Found"){
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiImgpath'].toString());
+          ideation.ideaAllImagesPainPointWiseListIds = List.generate(ideation.responseArrayGetAllIdeaImages['data'].length, (i) => ideation.responseArrayGetAllIdeaImages['data'][i]['iiID'].toString());
+        });
+
+        print("**********");
+        print(ideation.ideaAllImagesPainPointWiseList.toList());
+        print(ideation.ideaAllImagesPainPointWiseListIds.toList());
+        print("**********");
+
+      }else{
+
+        setState(() {
+          ideation.ideaAllImagesPainPointWiseList = null;
+          ideation.ideaAllImagesPainPointWiseListIds = null;
+        });
+
+      }
+
+    });
+  }
+
   Future<String> getPainPointsOfStatusTwo2(context) async {
 
     String url = globals.urlSignUp + "getpainpointpriority.php";
@@ -73,6 +118,7 @@ class _ImpactVsFeasibilityPageViewBuilderState
     super.initState();
     ideation.pageIndexIvsF = 0;
     getPainPointsOfStatusTwo2(context);
+    getAllIdeaImages(context);
   }
 
   @override
@@ -85,15 +131,18 @@ class _ImpactVsFeasibilityPageViewBuilderState
             )
           : PageView.builder(
               physics: new NeverScrollableScrollPhysics(),
-              itemCount: ideation.painPointsOfStatus2List2 == null
-                  ? 0
-                  : ideation.painPointsOfStatus2List2.length,
+              itemCount: ideation.ideaAllImagesPainPointWiseListIds == null ? 0 :
+              int.parse(ideation.ideaAllImagesPainPointWiseListIds.length.toString()),
+              // ideation.painPointsOfStatus2List2 == null
+              //     ? 0
+              //     : ideation.painPointsOfStatus2List2.length,
               controller: controller,
               onPageChanged: (index) {
                 setState(() {
                   ideation.pageIndexIvsF = index;
-                  ideation.selectedPainPointIdForVoteOfIvsF = ideation
-                      .painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+                  ideation.selectedPainPointIdForVoteOfIvsF = ideation.ideaAllImagesPainPointWiseListIds[ideation.pageIndexIvsF];
+                  // ideation
+                  //     .painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
                 });
                 print(ideation.pageIndexIvsF);
               },
@@ -129,13 +178,13 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           ideation.selectedPainPointIdForUploadIdeaImage =
-              ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
+          ideation.ideaAllImagesPainPointWiseListIds[ideation.pageIndexIvsF];
+          ideation.selectedPainPointIdForVoteOfIvsF =
+          ideation.ideaAllImagesPainPointWiseListIds[ideation.pageIndexIvsF];
         });
         print(ideation.selectedPainPointIdForUploadIdeaImage);
       });
     });
-    ideation.selectedPainPointIdForVoteOfIvsF =
-        ideation.painPointsIdsOfStatus2List2[ideation.pageIndexIvsF];
     print(ideation.selectedPainPointIdForVoteOfIvsF);
     containerColorList = [
       Colors.white,
@@ -174,15 +223,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
           ? StatusDrawerEmpathize()
           : ProfileDrawerCommon(),
       body: WillPopScope(
-        onWillPop: () => Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (c, a1, a2) => IvsFTutorial(),
-            transitionsBuilder: (c, anim, a2, child) =>
-                FadeTransition(opacity: anim, child: child),
-            transitionDuration: Duration(milliseconds: 300),
-          ),
-        ),
+        onWillPop: (){},
         child: SingleChildScrollView(
           child: Stack(
             children: [
@@ -270,7 +311,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
           ),
         ),
       ),
-      leading: Padding(
+      /*leading: Padding(
         padding: const EdgeInsets.only(left: 15, top: 0),
         child: IconButton(
           onPressed: () {
@@ -290,7 +331,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
             color: Colors.grey.shade700,
           ),
         ),
-      ),
+      ),*/
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 25, top: 18),
@@ -944,8 +985,8 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
       child: Center(
         child: LinearPercentIndicator(
           lineHeight: 10,
-          percent: (ideation.pageIndexIvsF + 1) /
-              ideation.painPointsOfStatus2List2.length,
+          percent: (ideation.pageIndexIvsF + 1) / ideation.ideaAllImagesPainPointWiseListIds.length,
+              //ideation.painPointsOfStatus2List2.length,
           backgroundColor: Colors.grey.shade300,
           progressColor: Color(0xff787CD1),
         ),
@@ -972,7 +1013,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
   }
 
   Widget buildImageContainer(BuildContext context) {
-    return ideation.ideaImagesPainPointWiseList == null
+    return ideation.ideaAllImagesPainPointWiseListIds == null
         ? Container(
             height: 161,
             width: 302,
@@ -984,7 +1025,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
         : InkWell(
             onTap: () {
               launch(
-                  globals.urlSignUp + ideation.ideaImagesPainPointWiseList[0]);
+                  globals.urlSignUp + ideation.ideaAllImagesPainPointWiseList[ideation.pageIndexIvsF]);
             },
             child: Container(
               height: 161,
@@ -994,7 +1035,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                 border: Border.all(color: Colors.grey),
                 image: DecorationImage(
                     image: NetworkImage(globals.urlSignUp +
-                        ideation.ideaImagesPainPointWiseList[0]),
+                        ideation.ideaAllImagesPainPointWiseList[ideation.pageIndexIvsF]),
                     fit: BoxFit.cover),
               ),
             ),
@@ -1047,7 +1088,7 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                         var impactRangeTemp = (i + 1).toString();
                         ideation.impactRange = impactRangeTemp.toString();
                         ideation.selectedPainPointIdForVoteOfIvsF =
-                            ideation.painPointsIdsOfStatus2List2[
+                            ideation.ideaAllImagesPainPointWiseListIds[
                                 ideation.pageIndexIvsF];
                       });
                       print(ideation.impactRange);
@@ -1115,17 +1156,18 @@ class _IvsFEvaluation1State extends State<IvsFEvaluation1> {
                           ideation.feasibilityRange =
                               feasibilityRangeTemp.toString();
                           ideation.selectedPainPointIdForVoteOfIvsF =
-                              ideation.painPointsIdsOfStatus2List2[
+                              ideation.ideaAllImagesPainPointWiseListIds[
                                   ideation.pageIndexIvsF];
                         });
                         print(ideation.feasibilityRange);
                         print(ideation.selectedPainPointIdForVoteOfIvsF);
                         setColorState2(context, selectedIndex2);
+                        votePainPointsApiProvider.voteIdeasForStore(context);
                         votePainPointsApiProvider
-                            .votePainPointsAccToIvsF(context)
+                            .voteIdeas(context)
                             .then((value) {
-                          if (ideation.painPointsIdsOfStatus2List2.last ==
-                              ideation.painPointsIdsOfStatus2List2[
+                          if (ideation.ideaAllImagesPainPointWiseListIds.last ==
+                              ideation.ideaAllImagesPainPointWiseListIds[
                                   ideation.pageIndexIvsF]) {
                             print(
                                 "Last index reached, You are a great man ever!");

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:design_sprint/Models/TaskListParser.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Re%20Iterate/add_notes_and_timeline.dart';
 import 'package:design_sprint/utils/reiterate_data.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -246,6 +247,7 @@ class ReIterateApiProvider {
       "tasktext": reiterate.taskLineController.text,
       "userID": ( prefs.getString("userID")??"").toString(),
       "duedate": teamBySprints.dateForSending,
+      "pptTeamName" : sprintType.toString() == "Solo" ? "null" : reiterate.teamMemberController.text.toString(),
     });
 
     http.post(url, body: {
@@ -258,6 +260,7 @@ class ReIterateApiProvider {
       "tasktext": reiterate.taskLineController.text,
       "userID": ( prefs.getString("userID")??"").toString(),
       "duedate": teamBySprints.dateForSending,
+      "pptTeamName" : sprintType.toString() == "Solo" ? "null" : reiterate.teamMemberController.text.toString(),
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -282,7 +285,7 @@ class ReIterateApiProvider {
         //insertTaskAndTimeLine();
 
         reiterate.taskLineController.clear();
-        reiterate.teamMemberController.clear();
+        //reiterate.teamMemberController.clear();
         reiterate.dueDateController.clear();
       } else {
         Fluttertoast.showToast(

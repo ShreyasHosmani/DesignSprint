@@ -17,6 +17,8 @@ import 'package:http/http.dart' as http;
 
 bool statusDrawer = false;
 
+var namesList;
+
 class RoadMapSprintWise extends StatefulWidget {
   final sprintid;
 
@@ -113,9 +115,17 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
               reiterate.responseArrayGetRoadTasksMap['images'].length,
               (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]
                   ['pptDuedate']);
+          namesList = List.generate(
+              reiterate.responseArrayGetRoadTasksMap['images'].length,
+                  (i) => reiterate.responseArrayGetRoadTasksMap['images'][i]
+              ['pptTeamName']);
 
+          print("++++++++++");
           print(reiterate.allPrototypeTasks.toList());
           print(reiterate.allPrototypeDueDates.toList());
+          print(namesList.toList());
+          print("++++++++++");
+
           getRoadMapPrototypeOfStatusTwo(context);
         } else {
           reiterate.allPrototypeTasks = null;
@@ -223,33 +233,36 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
       endDrawer: statusDrawer == true
           ? StatusDrawerUserTesting()
           : ProfileDrawerCommon(),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            buildName2Widget(context),
-            SizedBox(
-              height: 25,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 47,
-                ),
-                buildSeperaterListView(context),
-                SizedBox(
-                  width: 47,
-                ),
-                buildRoadMapListViewBuilder(context),
-              ],
-            ),
-          ],
+      body: WillPopScope(
+        onWillPop: (){},
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              buildName2Widget(context),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 47,
+                  ),
+                  buildSeperaterListView(context),
+                  SizedBox(
+                    width: 47,
+                  ),
+                  buildRoadMapListViewBuilder(context),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -308,19 +321,19 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
           ),
         ),
       ),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 15, top: 0),
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Colors.grey.shade700,
-          ),
-        ),
-      ),
+      // leading: Padding(
+      //   padding: const EdgeInsets.only(left: 15, top: 0),
+      //   child: IconButton(
+      //     onPressed: () {
+      //       Navigator.of(context).pop();
+      //     },
+      //     icon: Icon(
+      //       Icons.arrow_back_ios,
+      //       size: 20,
+      //       color: Colors.grey.shade700,
+      //     ),
+      //   ),
+      // ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 25, top: 18),
@@ -1069,7 +1082,7 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Task:",
+                                      namesList[i].toString() == "null" ? "Task: " : "Task: "+namesList[i].toString(),
                                             style: GoogleFonts.nunitoSans(
                                                 textStyle: TextStyle(
                                               color: Color(0xff787cd1),

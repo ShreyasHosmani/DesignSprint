@@ -20,11 +20,14 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 var decisionMakerIdsList;
 var decisionMakerEmailsList;
+var decisionMakerIdsList2;
+var decisionMakerEmailsList2;
 
 var new1; var new2; var new3; var new4; var new5; var new6;
 
+var selectedTab;
+
 var sprintIdsList2; var sprintTitlesList2; var sprintStatusList2;
- var decisionMakerIdsList2; var decisionMakerEmailsList2;
 
  bool showScreen1 = false;
  bool showScreen2 = false;
@@ -69,34 +72,30 @@ class _ViewSprintsState extends State<ViewSprints> {
             decisionMakerIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintUserid'].toString());
             decisionMakerEmailsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['userEmail'].toString());
 
-            new1 = home.sprintTitlesList.toList();
-            new2 = home.sprintIdsList.toList();
-            new3 = home.sprintStatusList.toList();
-            new4 = decisionMakerIdsList.toList();
-            new5 = decisionMakerEmailsList.toList();
+            // new1 = home.sprintTitlesList.toList();
+            // new2 = home.sprintIdsList.toList();
+            // new3 = home.sprintStatusList.toList();
+            // new4 = decisionMakerIdsList.toList();
+            // new5 = decisionMakerEmailsList.toList();
 
             showScreen1 = true;
 
           });
 
-          print(new1.toList()); //titles
-          print(new2.toList()); //ids
-          print(new3.toList()); //statusus
-          print(new4.toList()); //dm ids
-          print(new5.toList()); //dm emails
-
+          print("////////");
           print(home.sprintIdsList.toList());
           print(home.sprintTitlesList.toList());
           print(home.sprintStatusList.toList());
           print(decisionMakerIdsList.toList());
           print(decisionMakerEmailsList.toList());
+          print("////////");
 
         }else{
 
           setState(() {
-            home.sprintIdsList = [];
-            home.sprintTitlesList = [];
-            home.sprintStatusList = [];
+            home.sprintIdsList = null;
+            home.sprintTitlesList = null;
+            home.sprintStatusList = null;
 
             showScreen1 = true;
 
@@ -134,11 +133,11 @@ class _ViewSprintsState extends State<ViewSprints> {
         if(getSoloSprintsMsg == "Data Found"){
 
           setState(() {
-            sprintIdsList2 = List.generate(getSoloSprints['data'].length, (i) => home.sprintIdsList.add(getSoloSprints['data'][i]['sprintID'].toString()));
-            sprintTitlesList2 = List.generate(getSoloSprints['data'].length, (i) => home.sprintTitlesList.add(getSoloSprints['data'][i]['sprintName'].toString()));
-            sprintStatusList2 = List.generate(getSoloSprints['data'].length, (i) => home.sprintStatusList.add(getSoloSprints['data'][i]['sprintStatus'].toString()));
-            decisionMakerIdsList2 = List.generate(getSoloSprints['data'].length, (i) => decisionMakerIdsList.add(getSoloSprints['data'][i]['sprintUserid'].toString()));
-            decisionMakerEmailsList2 = List.generate(getSoloSprints['data'].length, (i) => decisionMakerEmailsList.add(getSoloSprints['data'][i]['userEmail'].toString()));
+            home.sprintIdsList2 = List.generate(getSoloSprints['data'].length, (i) => getSoloSprints['data'][i]['sprintID'].toString());
+            home.sprintTitlesList2 = List.generate(getSoloSprints['data'].length, (i) => getSoloSprints['data'][i]['sprintName'].toString());
+            home.sprintStatusList2 = List.generate(getSoloSprints['data'].length, (i) => getSoloSprints['data'][i]['sprintStatus'].toString());
+            decisionMakerIdsList2 = List.generate(getSoloSprints['data'].length, (i) => getSoloSprints['data'][i]['sprintUserid'].toString());
+            decisionMakerEmailsList2 = List.generate(getSoloSprints['data'].length, (i) => getSoloSprints['data'][i]['userEmail'].toString());
 
 //            sprintIdsList2.forEach((element) {
 //
@@ -152,45 +151,22 @@ class _ViewSprintsState extends State<ViewSprints> {
 //
 //            });
 
-          });
-
-          print(home.sprintIdsList.toList());
-          print(home.sprintTitlesList.toList());
-          print(home.sprintStatusList.toList());
-          print(decisionMakerIdsList.toList());
-          print(decisionMakerEmailsList.toList());
-
-          setState(() {
-
-            new1 = home.sprintTitlesList.toSet().toList();
-
-            new1.forEach((element){
-
-              int idx = home.sprintTitlesList.indexOf(element);
-
-              new2.add(home.sprintIdsList[idx]);
-              new3.add(home.sprintStatusList[idx]);
-              new4.add(decisionMakerIdsList[idx]);
-              new5.add(decisionMakerEmailsList[idx]);
-
-              print("new2 list : "+ new2.toList().toString());
-
-            });
-
             showScreen2 = true;
-
           });
-          print(new1.toList()); //titles
-          print(new2.toList()); //ids
-          print(new3.toList()); //statusus
-          print(new4.toList()); //dm ids
-          print(new5.toList()); //dm emails
+
+          print("*********");
+          print(home.sprintIdsList2.toList());
+          print(home.sprintTitlesList2.toList());
+          print(home.sprintStatusList2.toList());
+          print(decisionMakerIdsList2.toList());
+          print(decisionMakerEmailsList2.toList());
+          print("*********");
 
         }else{
 
           setState(() {
-            new1 = null;
-            sprintIdsList2 = null;
+           // new1 = null;
+            home.sprintIdsList2 = null;
             sprintTitlesList2 = null;
             sprintStatusList2 = null;
 
@@ -207,6 +183,7 @@ class _ViewSprintsState extends State<ViewSprints> {
     // TODO: implement initState
     super.initState();
     setState(() {
+      selectedTab = 1;
       showScreen1 = false;
       showScreen2 = false;
       new1 = []; new2 = [];  new3 = [];  new4 = [];  new5 = [];  new6 = [];
@@ -221,9 +198,10 @@ class _ViewSprintsState extends State<ViewSprints> {
       //home.sprintTitlesList = "1";
     });
     getSprints(context);
-    Future.delayed(const Duration(seconds: 3), () {
-      getSprintsByUserId(context);
-    });
+    getSprintsByUserId(context);
+    // Future.delayed(const Duration(seconds: 3), () {
+    //   getSprintsByUserId(context);
+    // });
     //getSprintsByUserId(context);
 //    createSprintApiProvider.getSprints(context).whenComplete((){
 //      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
@@ -233,10 +211,10 @@ class _ViewSprintsState extends State<ViewSprints> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      //key: _scaffoldKey,
       appBar: buildAppBar(context),
       endDrawerEnableOpenDragGesture: true,
-      endDrawer: ProfileDrawerCommon(),
+      //endDrawer: ProfileDrawerCommon(),
       body: showScreen1 == true && showScreen2 == true ? SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -244,7 +222,46 @@ class _ViewSprintsState extends State<ViewSprints> {
             SizedBox(height: 10,),
             buildName2Widget(context),
             SizedBox(height: 25,),
-            buildSprintsListViewBuilder(context),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: (){
+                    setState(() {
+                      selectedTab = 1;
+                    });
+                  },
+                  child: Text("My Sprints",
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                            color: selectedTab == 1 ? Color(0xff787CD1) : Color(0xff707070),
+                            fontSize: 20,
+                            fontWeight: selectedTab == 1 ? FontWeight.w400 : FontWeight.w200
+                        )
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: (){
+                    setState(() {
+                      selectedTab = 2;
+                    });
+                  },
+                  child: Text("Team Sprints",
+                    style: GoogleFonts.nunitoSans(
+                        textStyle: TextStyle(
+                            color: selectedTab == 2 ? Color(0xff787CD1) : Color(0xff707070),
+                            fontSize: 20,
+                            fontWeight: selectedTab == 2 ? FontWeight.w400 : FontWeight.w200
+                        )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 30,),
+            selectedTab == 1 ? buildSprintsListViewBuilder2(context) : buildSprintsListViewBuilder(context),
           ],
         ),
       ) : Center(child: CircularProgressIndicator()),
@@ -498,38 +515,12 @@ class _ViewSprintsState extends State<ViewSprints> {
 
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child: new1 == [] ? ListView.builder(
+      child: ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: 2,
-        itemBuilder: (context, i) => InkWell(
-          onTap: (){
-
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: Shimmer.fromColors(
-              baseColor: Colors.white,
-              highlightColor: Colors.grey.shade300,
-              child: Container(
-                width: 302,
-                height: 130,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  //color: Color(0xff96C3CB),
-                  color: Colors.grey.shade400,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ) : ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: new1 == null ? 0 : new1.length,
-        itemBuilder: (context, i) => new1 == null ? Center(child: Text("You've not created any sprints yet.")) :
+        itemCount: home.sprintIdsList == null ? 0 : home.sprintIdsList.length,
+        itemBuilder: (context, i) => home.sprintIdsList == null ? Center(child: Text("You've not created any sprints yet.")) :
 //        (i>0 && new1.toList()[i].toString() == new1.toList()[i-1].toString()) ? Container()
 //          :
         InkWell(
@@ -537,7 +528,7 @@ class _ViewSprintsState extends State<ViewSprints> {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(new2.reversed.toList()[i],new4.reversed.toList()[i], new5.reversed.toList()[i]),
+                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(home.sprintIdsList.toList()[i],decisionMakerIdsList.toList()[i], decisionMakerEmailsList.toList()[i]),
                 transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
                 transitionDuration: Duration(milliseconds: 300),
               ),
@@ -566,7 +557,7 @@ class _ViewSprintsState extends State<ViewSprints> {
                             alignment: Alignment.topLeft,
                             child: Container(
                               constraints: BoxConstraints(maxWidth: 250),
-                              child: Text(new1.reversed.toList()[i],
+                              child: Text(home.sprintTitlesList.toList()[i],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.nunitoSans(
@@ -584,7 +575,7 @@ class _ViewSprintsState extends State<ViewSprints> {
                           padding: const EdgeInsets.only(right: 30, bottom: 30),
                           child: Align(
                             alignment: Alignment.bottomRight,
-                            child: Text(new3.reversed.toList()[i] == "0" ? "Completed" : "Ongoing",
+                            child: Text(home.sprintStatusList.toList()[i] == "0" ? "Completed" : "Ongoing",
                               style: GoogleFonts.nunitoSans(
                                   textStyle: TextStyle(
                                     fontSize: 18,
@@ -599,20 +590,129 @@ class _ViewSprintsState extends State<ViewSprints> {
                     ),
                   ),
                 ),
-                new4[i] == profile.userID ? Padding(
+                decisionMakerIdsList[i] == profile.userID ? Padding(
                   padding: const EdgeInsets.only(right: 20),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       icon: Icon(Icons.close, color: Colors.white,size: 20,),
                       onPressed: (){
-                        if(new4[i] == profile.userID){
+                        if(decisionMakerIdsList[i] == profile.userID){
                           print("i am a decision maker");
                         }else{
                           print("i am not a decision maker");
                         }
                         setState(() {
-                          home.selectedSprintIdForDeleting = new2.reversed.toList()[i];
+                          home.selectedSprintIdForDeleting = home.sprintIdsList.reversed.toList()[i];
+                        });
+                        print(home.selectedSprintIdForDeleting);
+                        showAlertDialogDelete(context);
+                      },
+                    ),
+                  ),
+                ) : Container(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSprintsListViewBuilder2(BuildContext context){
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 35, right: 35),
+      child: ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: home.sprintIdsList2 == null ? 0 : home.sprintIdsList2.length,
+        itemBuilder: (context, i) => home.sprintIdsList2 == null ? Center(child: Text("You've not created any sprints yet.")) :
+//        (i>0 && new1.toList()[i].toString() == new1.toList()[i-1].toString()) ? Container()
+//          :
+        InkWell(
+          onTap: (){
+            print("Sprint Name & Sprint ID : "+home.sprintTitlesList2[i]+home.sprintIdsList2[i]);
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => ViewSprintInsideSections(home.sprintIdsList2.toList()[i],decisionMakerIdsList2.toList()[i], decisionMakerEmailsList2.toList()[i]),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 21),
+            child: Stack(
+              children: [
+                Center(
+                  child: Container(
+                    width: 302,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color(0xff96C3CB),
+                    ),
+                    child: Stack(
+                      children: [
+                        Container(
+                            width: 302,
+                            child: Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,)),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30, top: 30),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              constraints: BoxConstraints(maxWidth: 250),
+                              child: Text(home.sprintTitlesList2.toList()[i].toString() ?? "",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.nunitoSans(
+                                    textStyle: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    )
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30, bottom: 30),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(home.sprintStatusList2.toList()[i] == "0" ? "Completed" : "Ongoing",
+                              style: GoogleFonts.nunitoSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                decisionMakerIdsList2[i] == profile.userID ? Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(Icons.close, color: Colors.white,size: 20,),
+                      onPressed: (){
+                        if(decisionMakerIdsList2[i] == profile.userID){
+                          print("i am a decision maker");
+                        }else{
+                          print("i am not a decision maker");
+                        }
+                        setState(() {
+                          home.selectedSprintIdForDeleting = home.sprintIdsList2.reversed.toList()[i];
                         });
                         print(home.selectedSprintIdForDeleting);
                         showAlertDialogDelete(context);

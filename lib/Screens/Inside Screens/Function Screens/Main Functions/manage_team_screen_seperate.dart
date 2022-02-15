@@ -781,14 +781,21 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
   }
 
   Widget buildName2Widget(BuildContext context) {
+    final providerListener = Provider.of<CustomViewModel>(context);
     return Center(
-      child: Text(
-        widget.teamName,
-        style: GoogleFonts.nunitoSans(
-            textStyle: TextStyle(
-                color: Color(0xff707070),
-                fontSize: 20,
-                fontWeight: FontWeight.w200)),
+      child: GestureDetector(
+        onTap: (){
+          initTask();
+          print("providerListener.teamsList[widget.index].teamUserid ::: "+providerListener.teamsList[widget.index].teamUserid.toString());
+        },
+        child: Text(
+          widget.teamName,
+          style: GoogleFonts.nunitoSans(
+              textStyle: TextStyle(
+                  color: Color(0xff707070),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w200)),
+        ),
       ),
     );
   }
@@ -852,7 +859,8 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                                             height: 5,
                                           ),
                                           Text(
-                                            (providerListener.membersList[i]
+                                            providerListener.membersList[i]
+                                                .teamMemberName.isEmpty ? "Sprint Master" : (providerListener.membersList[i]
                                                     .teamMemberName ??
                                                 ""),
                                             maxLines: 1,
@@ -981,10 +989,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                           ),
                         ),
                       ),
-                      (providerListener.teamsList[widget.index].teamUserid) !=
-                              (profile.userID ?? "")
-                          ? Container()
-                          : (profile.email ?? "") ==
+                      (profile.email ?? "") ==
                                   (providerListener
                                           .membersList[i].teamMemberEmail ??
                                       "")
@@ -996,8 +1001,8 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                                     alignment: Alignment.centerRight,
                                     child: PopupMenuButton<String>(
                                       onSelected: (val) {
-                                        if (val == "Make Decision Maker") {
-                                          print("Make Decision Maker called");
+                                        if (val == "Make Sprint Master") {
+                                          print("Make Sprint Master called");
                                           team.prTeam.show();
 
                                           Provider.of<CustomViewModel>(context,
@@ -1098,7 +1103,7 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                                         return {
                                           'Delete Member',
                                           'Edit Details',
-                                          'Make Decision Maker'
+                                          'Make Sprint Master'
                                         }.map((String choice) {
                                           return PopupMenuItem<String>(
                                             value: choice,

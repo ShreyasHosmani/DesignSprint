@@ -10,6 +10,12 @@ import 'package:design_sprint/utils/ideation_data.dart' as ideation;
 import 'package:design_sprint/utils/warehouse_pain_points_data.dart' as painPointsWH;
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:http/http.dart' as http;
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/warehouse_pain_points_data.dart' as painPointWH;
+import 'dart:convert';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -23,6 +29,47 @@ class ViewCrazy8Ideas extends StatefulWidget {
 
 class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
   WareHousePainPointApiProvider wareHousePainPointApiProvider = WareHousePainPointApiProvider();
+
+  Future<String> getIdeaImagesPainPointWise(context) async {
+
+    String url = globals.urlSignUp + "getwarehouseideas.php";
+
+    http.post(url, body: {
+
+      "painpointiD": painPointWH.selectedPainPointIdForIdeaImage.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      painPointWH.responseArrayWareHouseIdeaImages = jsonDecode(response.body);
+      print(painPointWH.responseArrayWareHouseIdeaImages);
+
+      painPointWH.responseArrayWareHouseIdeaImagesMsg = painPointWH.responseArrayWareHouseIdeaImages['message'].toString();
+      print(painPointWH.responseArrayWareHouseIdeaImagesMsg);
+      if(statusCode == 200){
+        if(painPointWH.responseArrayWareHouseIdeaImagesMsg == "Painpoint Data Found"){
+
+          setState(() {
+            painPointWH.wareHouseIdeaImagesList = List.generate(painPointWH.responseArrayWareHouseIdeaImages['data'].length, (i) => painPointWH.responseArrayWareHouseIdeaImages['data'][i]['iiImgpath'].toString());
+            print(painPointWH.wareHouseIdeaImagesList.toList());
+          });
+
+        }else{
+
+          setState(() {
+            painPointWH.wareHouseIdeaImagesList = "1";
+          });
+          print("painPointWH.wareHouseIdeaImagesList : "+painPointWH.wareHouseIdeaImagesList.toString());
+
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -30,9 +77,7 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
     setState(() {
       painPointsWH.wareHouseIdeaImagesList = null;
     });
-    wareHousePainPointApiProvider.getIdeaImagesPainPointWise(context).whenComplete((){
-      Future.delayed(const Duration(seconds: 3), () {setState(() {});});
-    });
+    getIdeaImagesPainPointWise(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -303,7 +348,9 @@ class _ViewCrazy8IdeasState extends State<ViewCrazy8Ideas> {
   Widget buildIdeaImagesListViewBuilder(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
-      child:
+      child:painPointsWH.wareHouseIdeaImagesList == "1" ? Center(
+        child: Text("No idea images found")
+      ) :
       painPointsWH.wareHouseIdeaImagesList == null ? ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,

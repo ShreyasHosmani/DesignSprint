@@ -679,8 +679,11 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
                       ) : Container(),
                     ],
                   ),
-                  dmIDd == profile.userID ? PopupMenuButton<String>(
+                  dmIDd == profile.userID ?
+                  PopupMenuButton<String>(
                     onSelected: (val){
+                      print("dmIDd : "+dmIDd.toString());
+                      print("profile.userID : "+profile.userID.toString());
                       if(val == "Remove Member"){
                         setState(() {
                           selectedMemberIdSeperate = teamBySprints.teamMemberIdsBySprintsList[i].toString();
@@ -736,7 +739,8 @@ class _ViewTeamBySprintsState extends State<ViewTeamBySprints> {
                         );
                       }).toList();
                     },
-                  ) : Container(),
+                  )
+                      : Container(),
                 ],
               ),
             ),

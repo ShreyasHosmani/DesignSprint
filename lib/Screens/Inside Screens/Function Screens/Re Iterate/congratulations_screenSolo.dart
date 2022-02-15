@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_prototype.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/home_screen.dart';
+import 'package:design_sprint/main.dart';
 import 'package:design_sprint/utils/profile_data.dart' as profile;
 import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen5.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_restart/flutter_restart.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 bool statusDrawer = false;
@@ -74,13 +77,13 @@ class _CongratulationsSolorState extends State<CongratulationsSolor> {
             ),
           ),
         ),
-        Positioned(
-            top: 40,right: 0,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 100),
-              child: statusBarDrawer(context),
-            ),
-          ),
+        // Positioned(
+        //     top: 40,right: 0,
+        //     child: Padding(
+        //       padding: const EdgeInsets.only(top: 100),
+        //       child: statusBarDrawer(context),
+        //     ),
+        //   ),
       ],
     );
   }
@@ -619,16 +622,17 @@ class _CongratulationsSolorState extends State<CongratulationsSolor> {
 
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        Navigator.of(context).popUntil((route) => route.isFirst);
-//        Navigator.push(
-//          context,
-//          PageRouteBuilder(
-//            pageBuilder: (c, a1, a2) => EmphatizeSections5(),
-//            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-//            transitionDuration: Duration(milliseconds: 300),
-//          ),
-//        );
+      onTap: () async {
+        await FlutterRestart.restartApp();
+        //Navigator.of(context).popUntil((route) => route.isFirst);
+       // Navigator.push(
+       //   context,
+       //   PageRouteBuilder(
+       //     pageBuilder: (c, a1, a2) => Home(),
+       //     transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+       //     transitionDuration: Duration(milliseconds: 300),
+       //   ),
+       // );
       },
       child: Center(
         child: Container(

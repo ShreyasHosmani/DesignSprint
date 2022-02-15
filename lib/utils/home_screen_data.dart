@@ -52,9 +52,14 @@ var responseArrayTimelineMsg;
 //Sprints Warehouse Data
 var responseArrayGetSprints;
 var responseArrayGetSprintsMsg;
+
 var sprintTitlesList;
 var sprintIdsList;
 var sprintStatusList;
+
+var sprintTitlesList2;
+var sprintIdsList2;
+var sprintStatusList2;
 
 //Sprints : Goal
 var selectedSprintId;
