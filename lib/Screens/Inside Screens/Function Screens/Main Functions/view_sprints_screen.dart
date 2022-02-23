@@ -525,6 +525,7 @@ class _ViewSprintsState extends State<ViewSprints> {
 //          :
         i != 0 && home.sprintTitlesList.toList()[i].toString() == home.sprintTitlesList.toList()[i-1].toString() ? Container() : InkWell(
           onTap: (){
+            print("home.sprintIdsList.toList()[i] :: "+home.sprintIdsList.toList()[i]);
             Navigator.push(
               context,
               PageRouteBuilder(

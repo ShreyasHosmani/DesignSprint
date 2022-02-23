@@ -147,6 +147,7 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
           setState(() {
             touchPointsList = List.generate(responseArrayGetTouchPoints['data'].length, (i) => responseArrayGetTouchPoints['data'][i]['tpText'].toString());
           });
+          print("TP TP TP TP TP TP TP TP");
           print(touchPointsList.toList());
 
         }else{
@@ -1018,57 +1019,46 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
   Widget buildTouchPointRow(BuildContext context){
     return Container(
       height: 95,
-      child: Container(
-        height: 95,
-        width: MediaQuery.of(context).size.width,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Container(
-                height: 95,
-                width: 127,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Center(
-                  child: Text(empathize.touchPoints,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          color: Color(0xff787cd1),
-                          fontSize: 20,
-                        )
-                    ),
-                  ),
+      child: ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: touchPointsList == null ? 0 : touchPointsList.length+1,
+        itemBuilder: (context, i) => i == 0 ?
+        Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 127,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Center(
+              child: Text(empathize.touchPoints,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunitoSans(
+                    textStyle: TextStyle(
+                      color: Color(0xff787cd1),
+                      fontSize: 20,
+                    )
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: touchPointsList == null ? 0 : touchPointsList.length,
-                itemBuilder: (context, i) => Padding(
-                  padding: const EdgeInsets.only(right: 25),
-                  child: Container(
-                    height: 95,
-                    width: 254,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Center(
-                      child: Text(touchPointsList[i]),
-                    ),
-                  ),
-                ),
-              ),
+          ),
+        ) : Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 254,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
             ),
-          ],
+            child: Center(
+              child: Text(touchPointsList[i-1]),
+            ),
+          ),
         ),
       ),
     );
@@ -1077,57 +1067,46 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
   Widget buildCustomerThoughtsRow(BuildContext context){
     return Container(
       height: 95,
-      child: Container(
-        height: 95,
-        width: MediaQuery.of(context).size.width,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Container(
-                height: 95,
-                width: 127,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Center(
-                  child: Text(empathize.customerThoughts,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          color: Color(0xff787cd1),
-                          fontSize: 20,
-                        )
-                    ),
-                  ),
+      child: ListView.builder(
+        physics: ClampingScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: customerThoughtsList == null ? 0 : customerThoughtsList.length+1,
+        itemBuilder: (context, i) => i == 0 ?
+        Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 127,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Center(
+              child: Text(empathize.customerThoughts,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunitoSans(
+                    textStyle: TextStyle(
+                      color: Color(0xff787cd1),
+                      fontSize: 20,
+                    )
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                physics: ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: customerThoughtsList == null ? 0 : customerThoughtsList.length,
-                itemBuilder: (context, i) => Padding(
-                  padding: const EdgeInsets.only(right: 25),
-                  child: Container(
-                    height: 95,
-                    width: 254,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Center(
-                      child: Text(customerThoughtsList[i]),
-                    ),
-                  ),
-                ),
-              ),
+          ),
+        ) : Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 254,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
             ),
-          ],
+            child: Center(
+              child: Text(customerThoughtsList[i-1]),
+            ),
+          ),
         ),
       ),
     );
@@ -1136,57 +1115,46 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
   Widget buildCustomerExperienceRow(BuildContext context){
     return Container(
       height: 95,
-      child: Container(
-        height: 95,
-        width: MediaQuery.of(context).size.width,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Container(
-                height: 95,
-                width: 127,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Center(
-                  child: Text(empathize.customerExperience,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          color: Color(0xff787cd1),
-                          fontSize: 20,
-                        )
-                    ),
-                  ),
+      child: ListView.builder(
+        physics: ClampingScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: customerExperiencesList == null ? 0 : customerExperiencesList.length+1,
+        itemBuilder: (context, i) => i == 0 ?
+        Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 127,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Center(
+              child: Text(empathize.customerExperience,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunitoSans(
+                    textStyle: TextStyle(
+                      color: Color(0xff787cd1),
+                      fontSize: 20,
+                    )
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                physics: ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: customerExperiencesList == null ? 0 : customerExperiencesList.length,
-                itemBuilder: (context, i) => Padding(
-                  padding: const EdgeInsets.only(right: 25),
-                  child: Container(
-                    height: 95,
-                    width: 254,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Center(
-                      child: Text(customerExperiencesList[i]),
-                    ),
-                  ),
-                ),
-      ),
+          ),
+        ) : Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 254,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
             ),
-          ],
+            child: Center(
+              child: Text(customerExperiencesList[i-1]),
+            ),
+          ),
         ),
       ),
     );
@@ -1195,57 +1163,46 @@ class _ViewDigitalJourneyMapDetailsState extends State<ViewDigitalJourneyMapDeta
   Widget buildPainPointsRow(BuildContext context){
     return Container(
       height: 95,
-      child: Container(
-        height: 95,
-        width: MediaQuery.of(context).size.width,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Container(
-                height: 95,
-                width: 127,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Center(
-                  child: Text(empathize.painPoints,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.nunitoSans(
-                        textStyle: TextStyle(
-                          color: Color(0xff787cd1),
-                          fontSize: 20,
-                        )
-                    ),
-                  ),
+      child: ListView.builder(
+        physics: ClampingScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: painPointsList == null ? 0 : painPointsList.length+1,
+        itemBuilder: (context, i) => i == 0 ?
+        Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 127,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Center(
+              child: Text(empathize.painPoints,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunitoSans(
+                    textStyle: TextStyle(
+                      color: Color(0xff787cd1),
+                      fontSize: 20,
+                    )
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                physics: ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: painPointsList == null ? 0 : painPointsList.length,
-                itemBuilder: (context, i) => Padding(
-                  padding: const EdgeInsets.only(right: 25),
-                  child: Container(
-                    height: 95,
-                    width: 254,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Center(
-                      child: Text(painPointsList[i]),
-                    ),
-                  ),
-                ),
-              ),
+          ),
+        ) : Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: Container(
+            height: 95,
+            width: 254,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+              border: Border.all(color: Colors.grey),
             ),
-          ],
+            child: Center(
+              child: Text(painPointsList[i-1]),
+            ),
+          ),
         ),
       ),
     );

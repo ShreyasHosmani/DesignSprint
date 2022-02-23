@@ -682,134 +682,131 @@ class _JourneyMapPainPointsListViewState
       endDrawerEnableOpenDragGesture: true,
       endDrawer:
           statusDrawer == true ? StatusDrawerTeam() : ProfileDrawerCommon(),
-      body: WillPopScope(
-        onWillPop: () => showAlertDialog(context),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(child: buildName2Widget(context))),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 35),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                buildTouchPointRow(context),
-                                SizedBox(
-                                  height: 30,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(child: buildName2Widget(context))),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 35),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              buildTouchPointRow(context),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              buildCustomerThoughtsRow(context),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              buildCustomerExperienceRow(context),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              buildPainPointsRow(context),
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              counter++;
+                              showSaveButton = false;
+                            });
+                          },
+                          child: Container(
+                            width: 45,
+                            height: 465,
+                            decoration: BoxDecoration(
+                              //color: Color(0xff787cd1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  offset: Offset(
+                                      0, 1), // changes position of shadow
                                 ),
-                                buildCustomerThoughtsRow(context),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                buildCustomerExperienceRow(context),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                buildPainPointsRow(context),
                               ],
                             ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                counter++;
-                                showSaveButton = false;
-                              });
-                            },
-                            child: Container(
-                              width: 45,
-                              height: 465,
-                              decoration: BoxDecoration(
-                                //color: Color(0xff787cd1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5)),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 2,
-                                    blurRadius: 10,
-                                    offset: Offset(
-                                        0, 1), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Text(
-                                      "Add Column",
-                                      style: GoogleFonts.nunitoSans(
-                                        fontSize: 16,
-                                        color: Color(0xff787cd1),
-                                      ),
-                                    )),
-                              ),
+                            child: Center(
+                              child: RotatedBox(
+                                  quarterTurns: 3,
+                                  child: Text(
+                                    "Add Column",
+                                    style: GoogleFonts.nunitoSans(
+                                      fontSize: 16,
+                                      color: Color(0xff787cd1),
+                                    ),
+                                  )),
                             ),
                           ),
-                          SizedBox(width: 20),
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: 20),
+                      ],
                     ),
-                    SizedBox(
-                      height: 40,
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        saveButton(context),
+                        newPersonaButton(context),
+                      ],
                     ),
-                    Container(
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                 /* Container(
                       width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          saveButton(context),
-                          newPersonaButton(context),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                   /* Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(child: buildNextButton(context))),*/
-                    SizedBox(
-                      height: 40,
-                    ),
-                  ],
-                ),
+                      child: Center(child: buildNextButton(context))),*/
+                  SizedBox(
+                    height: 40,
+                  ),
+                ],
               ),
-              Positioned(
-                top: 80,
-                right: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: statusBarDrawer(context),
-                ),
+            ),
+            Positioned(
+              top: 80,
+              right: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: statusBarDrawer(context),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -10145,7 +10142,7 @@ class _JourneyMapPainPointsListViewState
       ),
       onPressed: () async {
         Navigator.of(context).pop();
-        prJpHorizontal.show();
+        //prJpHorizontal.show();
         setState(() {
           saveTouchPointControllerText = "";
           saveCustomerThoughtsText = "";
@@ -10195,6 +10192,7 @@ class _JourneyMapPainPointsListViewState
                 (saveCustomerExperienceText).toString().replaceAll("•", ""),
                 (savePainPointText).toString().replaceAll("•", ""))
             .then((value) async {
+          //prJpHorizontal.hide();
           Fluttertoast.showToast(
               msg: 'Data saved successfully!',
               backgroundColor: Colors.black,

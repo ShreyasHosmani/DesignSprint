@@ -233,36 +233,33 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
       endDrawer: statusDrawer == true
           ? StatusDrawerUserTesting()
           : ProfileDrawerCommon(),
-      body: WillPopScope(
-        onWillPop: (){},
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              buildName2Widget(context),
-              SizedBox(
-                height: 25,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 47,
-                  ),
-                  buildSeperaterListView(context),
-                  SizedBox(
-                    width: 47,
-                  ),
-                  buildRoadMapListViewBuilder(context),
-                ],
-              ),
-            ],
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            buildName2Widget(context),
+            SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 47,
+                ),
+                buildSeperaterListView(context),
+                SizedBox(
+                  width: 47,
+                ),
+                buildRoadMapListViewBuilder(context),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -1294,4 +1291,5 @@ class _RoadMapSprintWiseState extends State<RoadMapSprintWise> {
       ),
     );
   }
+
 }

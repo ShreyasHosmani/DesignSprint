@@ -936,6 +936,7 @@ class _MappingInsightsTutorialState extends State<MappingInsightsTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        flickManager.flickControlManager.pause();
         Navigator.push(
           context,
           PageRouteBuilder(

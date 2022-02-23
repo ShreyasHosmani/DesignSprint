@@ -149,9 +149,12 @@ class _AddNotesAndTimeLinePageViewBuilderState
           setState(() {
             sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
             sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+            teamNameIdForTeamMembers = responseArrayGetSprintStatuses['data']['storeteamID'].toString();
           });
           print("sprintType : "+sprintType.toString());
           print("storeUserId : "+sprintCreatorId.toString());
+
+          initTask();
 
         }
 
@@ -181,9 +184,13 @@ class _AddNotesAndTimeLinePageViewBuilderState
           setState(() {
             sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
             sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+            teamNameIdForTeamMembers = responseArrayGetSprintStatuses['data']['storeteamID'].toString();
           });
           print("sprintType : "+sprintType.toString());
           print("storeUserId : "+sprintCreatorId.toString());
+          print("teamNameIdForTeamMembers : "+teamNameIdForTeamMembers.toString());
+
+          initTask();
 
         }
 
@@ -195,7 +202,6 @@ class _AddNotesAndTimeLinePageViewBuilderState
     // TODO: implement initState
     super.initState();
     reiterate.pageIndexNotesAndTimeLine = 0;
-    initLists();
     getStoreData(context);
     setState(() {
       _currentSelectedValue = null;
@@ -359,6 +365,13 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // Provider.of<CustomViewModel>(context, listen: false)
+    //     .getTeamMembersList(widget.teamid)
+    //     .then((value) async {
+    //   setState(() {
+    //
+    //   });
+    // });
     setState(() {
       teamBySprints.dateForSending = "";
       datePicked = false;

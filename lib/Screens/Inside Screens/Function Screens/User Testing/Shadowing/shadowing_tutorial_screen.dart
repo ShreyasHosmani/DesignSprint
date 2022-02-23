@@ -26,14 +26,14 @@ class _ShadowingTutorialState extends State<ShadowingTutorial> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-        'https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/createuserpersona.mp4')
+        'https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/Shadowing.mp4')
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
       });
     flickManager = FlickManager(
       videoPlayerController:
-      VideoPlayerController.network("https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/createuserpersona.mp4"),
+      VideoPlayerController.network("https://admin.dezyit.com/mobileapp/mailerimages/DezyVideos/Shadowing.mp4"),
     );
   }
   @override
@@ -769,6 +769,7 @@ class _ShadowingTutorialState extends State<ShadowingTutorial> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        flickManager.flickControlManager.pause();
         Navigator.push(
           context,
           PageRouteBuilder(

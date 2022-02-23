@@ -1384,9 +1384,9 @@ class _UploadPrototype1State extends State<UploadPrototype1> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (ppPId.last ==
-            ppPId[
-            prototyping.pageIndex]) {
+        if (ppPId.length ==
+            (
+            prototyping.pageIndex+1)) {
           print(
               "Last index reached, You are a great man ever!");
           Navigator.push(

@@ -12,9 +12,19 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
 import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:design_sprint/utils/empathize_data.dart' as empathize;
+import 'package:design_sprint/utils/profile_data.dart' as profile;
+import 'package:design_sprint/utils/home_screen_data.dart' as home;
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool enableSave = false;
 bool lastStep = false;
+ProgressDialog prClo;
 
 class CreateDigitalPersona extends StatefulWidget {
   @override
@@ -39,6 +49,120 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
     setState(() {
       empathize.imageOne = File(pickedFile.path);
       enableSave = true;
+    });
+  }
+
+  Future<String> updateStep2(context) async {
+
+    String url = globals.urlSignUp + "updatesprintstatus.php";
+
+    http.post(url, body: {
+
+      "userID" : profile.email,
+      "sprintID" : home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "stepID" : "2",
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayUpdateStatus = jsonDecode(response.body);
+      print(responseArrayUpdateStatus);
+
+      var responseArrayUpdateStatusMsg = responseArrayUpdateStatus['message'].toString();
+      print(responseArrayUpdateStatusMsg);
+      if(statusCode == 200){
+        if(responseArrayUpdateStatusMsg == "Timeline updated Successfully"){
+          print("Status updated!!");
+        }else{
+
+        }
+      }
+    });
+  }
+
+  Future<String> createDigitalPersona(context) async {
+
+    print("empathize.imageOne : "+empathize.imageOne.toString());
+
+    String url = globals.urlSignUp + "createpersonadigitally.php";
+
+    if(empathize.imageOne == null || empathize.imageOne.toString() == "null"){
+
+    }else{
+      empathize.baseImage = base64Encode(empathize.imageOne.readAsBytesSync());
+
+      empathize.fileName = empathize.imageOne.path.split("/").last;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('test_image', empathize.imageOne.path);
+    }
+
+    http.post(url, body: {
+
+      "userID" : profile.userID,
+      "sprintID": home.sprintID == null || home.sprintID == "null" ? home.selectedSprintId : home.sprintID,
+      "emapathizeid" : "null",
+      "image" : empathize.baseImage.toString(),
+      "imagename" : empathize.fileName.toString(),
+      "name" : empathize.nameController.text,
+      "age" : empathize.ageController.text,
+      "location" : empathize.locationController.text,
+      "education" : empathize.educationController.text,
+      "job" : empathize.jobController.text,
+      "bio" : empathize.bioController.text,
+      "goals" : empathize.goalsAndMotivationController.text,
+      "fears" : "null",
+      "callerID" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      empathize.responseArrayCreatePersonaDigitally = jsonDecode(response.body);
+      print(empathize.responseArrayCreatePersonaDigitally);
+
+      empathize.responseArrayCreatePersonaDigitallyMsg = empathize.responseArrayCreatePersonaDigitally['message'].toString();
+      print(empathize.responseArrayCreatePersonaDigitallyMsg);
+      if(statusCode == 200){
+        if(empathize.responseArrayCreatePersonaDigitallyMsg == "Persona Added Successfully"){
+          prClo.hide().whenComplete((){
+            //clearFields(context);
+            setState(() {
+              enableSave = false;
+              empathize.nameController.clear();
+              empathize.ageController.clear();
+              empathize.locationController.clear();
+              empathize.educationController.clear();
+              empathize.jobController.clear();
+              empathize.bioController.clear();
+              empathize.goalsAndMotivationController.clear();
+              empathize.fearsAndFrustrationController.clear();
+              empathize.imageOne = null;
+              enableSave = false;
+            });
+            updateStep2(context);
+            Fluttertoast.showToast(msg: empathize.personaSaved, backgroundColor: Colors.black,
+              textColor: Colors.white,);
+          });
+        }else if(empathize.responseArrayCreatePersonaDigitallyMsg == "Unable To Add Persona"){
+          prClo.hide().whenComplete((){
+            Fluttertoast.showToast(msg: empathize.responseArrayCreatePersonaDigitallyMsg, backgroundColor: Colors.black,
+              textColor: Colors.white,);
+          });
+        }else{
+          prClo.hide().whenComplete((){
+            Fluttertoast.showToast(msg: empathize.responseArrayCreatePersonaDigitallyMsg, backgroundColor: Colors.black,
+              textColor: Colors.white,);
+          });
+        }
+      }
     });
   }
 
@@ -125,6 +249,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
 
   void clearFields(BuildContext context){
     setState(() {
+      enableSave = false;
       empathize.nameController.clear();
       empathize.ageController.clear();
       empathize.locationController.clear();
@@ -137,6 +262,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       enableSave = false;
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -147,6 +273,7 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
   }
   @override
   Widget build(BuildContext context) {
+    prClo = ProgressDialog(context);
     empathize.prDigitalPersona = ProgressDialog(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -1179,16 +1306,11 @@ class _CreateDigitalPersonaState extends State<CreateDigitalPersona> {
       onTap: (){
         if(enableSave == true){
           if(empathize.formKey.currentState.validate()){
-            empathize.prDigitalPersona.show();
+            prClo.show();
             setState(() {
               lastStep = true;
             });
-            createPersonaApiProvider.createDigitalPersona(context).whenComplete((){
-              setState(() {
-                enableSave = false;
-                clearFields(context);
-              });
-            });
+            createDigitalPersona(context);
           }
         }else{
           Fluttertoast.showToast(msg: "You've not entered anything", backgroundColor: Colors.black,

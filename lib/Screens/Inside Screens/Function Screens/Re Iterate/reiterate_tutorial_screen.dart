@@ -901,9 +901,9 @@ class _ReIterateTutorialState extends State<ReIterateTutorial> {
     return GestureDetector(
       onTap: () {
 
-        _controller.pause();
-        pop(context);
-        push(context, ReIterateTutorial());
+        flickManager.flickControlManager.pause();
+        // pop(context);
+        // push(context, ReIterateTutorial());
         Navigator.push(
           context,
           PageRouteBuilder(
