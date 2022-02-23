@@ -1308,7 +1308,14 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
   Widget buildAddPainPointWidget(BuildContext context){
     return GestureDetector(
       onTap: (){
-        if(empathize.formKey3.currentState.validate()){
+        focus.unfocus();
+        setState(() {
+          showPainPoint = true;
+        });
+        setState(() {
+
+        });
+        if(empathize.painPointController.text.isNotEmpty){
           empathize.prInputPainPoint.show();
           inputPainPointsApiProvider.inputPainPoints(context).whenComplete((){
             setState(() {
@@ -1316,6 +1323,10 @@ class _UploadJourneyMapState extends State<UploadJourneyMap> {
             });
             print(ppListStatic.toList());
           });
+        }else{
+          Fluttertoast.showToast(msg: "Please upload atleast one pain point",
+              backgroundColor: Colors.black, textColor: Colors.white
+          );
         }
       },
       child: Column(

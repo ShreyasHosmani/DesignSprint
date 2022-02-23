@@ -14,7 +14,9 @@ import 'package:design_sprint/utils/empathize_data.dart' as empathize;
 import 'package:design_sprint/utils/globals.dart' as globals;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
 
+ProgressDialog prCheck;
 bool statusDrawer = false;
 var ppStatus;
 var sprintType;
@@ -145,38 +147,230 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
 
   Future<String> getStoreData(context) async {
 
+    print("home.selectedSprintId.toString() : "+home.selectedSprintId.toString());
+    print("home.sprintID.toString() : "+home.sprintID.toString());
+
     String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
 
-    http.post(url, body: {
+    if(home.selectedSprintId.toString() == "null" || home.selectedSprintId == null){
+      http.post(url, body: {
 
-      "storeSprintId" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
-      "storeUserId" : profile.userID.toString(),
+        "storeSprintId" : home.selectedSprintId.toString(),
+        "storeUserId" : profile.userID.toString(),
 
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
+      }).then((http.Response response) async {
+        final int statusCode = response.statusCode;
 
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
+        if (statusCode != 200 || json == null) {
+          throw new Exception("Error fetching data");
+        }
 
-      print("/////");
-      var responseArrayGetSprintStatuses = jsonDecode(response.body);
-      print(responseArrayGetSprintStatuses);
+        print("/////");
+        var responseArrayGetSprintStatuses = jsonDecode(response.body);
+        print(responseArrayGetSprintStatuses);
 
-      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
-      print(responseArrayGetSprintStatusesMsg);
-      print("/////");
+        var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+        print(responseArrayGetSprintStatusesMsg);
+        print("/////");
 
-      if(responseArrayGetSprintStatusesMsg == "successfully"){
-        setState(() {
-          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
-          sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
-        });
-        print("sprintType : "+sprintType.toString());
-        print("storeUserId : "+sprintCreatorId.toString());
-      }
+        if(responseArrayGetSprintStatusesMsg == "successfully"){
+          setState(() {
+            sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+            sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+          });
+          print("sprintType : "+sprintType.toString());
+          print("storeUserId : "+sprintCreatorId.toString());
 
-    });
+          prCheck.hide();
+          print(sprintType.toString());
+          if(sprintType.toString() == "Solo"){
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }else{
+            if(sprintCreatorId.toString() == profile.userID.toString()){
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }else{
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => ViewSprints(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }
+          }
+
+        }else{
+          prCheck.hide();
+        }
+
+      });
+    }else{
+      http.post(url, body: {
+
+        "storeSprintId" : home.selectedSprintId.toString(),
+        "storeUserId" : profile.userID.toString(),
+
+      }).then((http.Response response) async {
+        final int statusCode = response.statusCode;
+
+        if (statusCode != 200 || json == null) {
+          throw new Exception("Error fetching data");
+        }
+
+        print("/////");
+        var responseArrayGetSprintStatuses = jsonDecode(response.body);
+        print(responseArrayGetSprintStatuses);
+
+        var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+        print(responseArrayGetSprintStatusesMsg);
+        print("/////");
+
+        if(responseArrayGetSprintStatusesMsg == "successfully"){
+          setState(() {
+            sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+            sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+          });
+          print("sprintType : "+sprintType.toString());
+          print("storeUserId : "+sprintCreatorId.toString());
+
+          prCheck.hide();
+          print(sprintType.toString());
+          if(sprintType.toString() == "Solo"){
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
+          }else{
+            if(sprintCreatorId.toString() == profile.userID.toString()){
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => EmphatizeSections2(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }else{
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (c, a1, a2) => ViewSprints(),
+                  transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                  transitionDuration: Duration(milliseconds: 300),
+                ),
+              );
+            }
+          }
+
+        }else{
+          prCheck.hide();
+        }
+
+      });
+    }
+  }
+
+  Future<String> getStoreData2(context) async {
+
+    print("home.selectedSprintId.toString() : "+home.selectedSprintId.toString());
+    print("home.sprintID.toString() : "+home.sprintID.toString());
+
+    String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
+
+    if(home.selectedSprintId.toString() == "null" || home.selectedSprintId == null){
+      http.post(url, body: {
+
+        "storeSprintId" : home.selectedSprintId.toString(),
+        "storeUserId" : profile.userID.toString(),
+
+      }).then((http.Response response) async {
+        final int statusCode = response.statusCode;
+
+        if (statusCode != 200 || json == null) {
+          throw new Exception("Error fetching data");
+        }
+
+        print("/////");
+        var responseArrayGetSprintStatuses = jsonDecode(response.body);
+        print(responseArrayGetSprintStatuses);
+
+        var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+        print(responseArrayGetSprintStatusesMsg);
+        print("/////");
+
+        if(responseArrayGetSprintStatusesMsg == "successfully"){
+          setState(() {
+            sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+            sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+          });
+          print("sprintType : "+sprintType.toString());
+          print("storeUserId : "+sprintCreatorId.toString());
+
+          prCheck.hide();
+          print(sprintType.toString());
+
+        }else{
+          prCheck.hide();
+        }
+
+      });
+    }else{
+      http.post(url, body: {
+
+        "storeSprintId" : home.selectedSprintId.toString(),
+        "storeUserId" : profile.userID.toString(),
+
+      }).then((http.Response response) async {
+        final int statusCode = response.statusCode;
+
+        if (statusCode != 200 || json == null) {
+          throw new Exception("Error fetching data");
+        }
+
+        print("/////");
+        var responseArrayGetSprintStatuses = jsonDecode(response.body);
+        print(responseArrayGetSprintStatuses);
+
+        var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+        print(responseArrayGetSprintStatusesMsg);
+        print("/////");
+
+        if(responseArrayGetSprintStatusesMsg == "successfully"){
+          setState(() {
+            sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+            sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+          });
+          print("sprintType : "+sprintType.toString());
+          print("storeUserId : "+sprintCreatorId.toString());
+
+          prCheck.hide();
+          print(sprintType.toString());
+
+        }else{
+          prCheck.hide();
+        }
+
+      });
+    }
   }
 
   Future<Null> refreshData() async {
@@ -231,7 +425,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
       sprintType = null;
     });
     updateStep4(context);
-    getStoreData(context);
+    getStoreData2(context);
   //  getSprintAdmins(context);
     getSprintsStatusesOfTeam(context);
     empathize.painPointsListAccToVotes = null;
@@ -240,6 +434,7 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   }
   @override
   Widget build(BuildContext context) {
+    prCheck = ProgressDialog(context);
    // getSprintsStatusesOfTeam(context);
     return empathize.painPointsListAccToVotes == null ? Scaffold(
       backgroundColor: Colors.white,
@@ -900,36 +1095,8 @@ class _SelectFinalPainPointsState extends State<SelectFinalPainPoints> {
   Widget buildNextButton(BuildContext context) {
     return InkWell(
       onTap: (){
-        if(sprintType.toString() == "Solo"){
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => EmphatizeSections2(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-              transitionDuration: Duration(milliseconds: 300),
-            ),
-          );
-        }else{
-          if(sprintCreatorId.toString() == profile.userID.toString()){
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => EmphatizeSections2(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
-          }else{
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ViewSprints(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
-          }
-        }
+        prCheck.show();
+        getStoreData(context);
         /*if(home.selectedSprintId == null || home.selectedSprintId == "null"){
           Navigator.push(
             context,

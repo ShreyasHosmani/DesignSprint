@@ -523,7 +523,7 @@ class _ViewSprintsState extends State<ViewSprints> {
         itemBuilder: (context, i) => home.sprintIdsList == null ? Center(child: Text("You've not created any sprints yet.")) :
 //        (i>0 && new1.toList()[i].toString() == new1.toList()[i-1].toString()) ? Container()
 //          :
-        InkWell(
+        i != 0 && home.sprintTitlesList.toList()[i].toString() == home.sprintTitlesList.toList()[i-1].toString() ? Container() : InkWell(
           onTap: (){
             Navigator.push(
               context,
@@ -631,7 +631,7 @@ class _ViewSprintsState extends State<ViewSprints> {
         itemBuilder: (context, i) => home.sprintIdsList2 == null ? Center(child: Text("You've not created any sprints yet.")) :
 //        (i>0 && new1.toList()[i].toString() == new1.toList()[i-1].toString()) ? Container()
 //          :
-        InkWell(
+        i != 0 && home.sprintTitlesList2.toList()[i].toString() == home.sprintTitlesList2.toList()[i-1].toString() ? Container() : InkWell(
           onTap: (){
             print("Sprint Name & Sprint ID : "+home.sprintTitlesList2[i]+home.sprintIdsList2[i]);
             Navigator.push(

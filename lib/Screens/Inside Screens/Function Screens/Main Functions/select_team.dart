@@ -823,6 +823,7 @@ class _SelectTeamState extends State<SelectTeam> {
               selectedTeamIdForDeleting = team.teamNamesIdsList[i];
               selectedTeam = team.teamNamesIdsList[i];
             });
+            print("selectedTeam :::: "+selectedTeam.toString());
             print(selectedTeamIdForDeleting);
             print(selectedTeam);
             team.prTeam.show();

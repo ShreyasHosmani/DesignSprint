@@ -1061,8 +1061,8 @@ class _CrazyEightEvaluation1State extends State<CrazyEightEvaluation1> {
     return GestureDetector(
       onTap: () {
         _controllerNew.pause();
-        if (ideation.painPointsOfStatus2List.last ==
-            ideation.painPointsOfStatus2List[ideation.pageIndex]) {
+        if (ideation.painPointsOfStatus2List.length ==
+            (ideation.pageIndex+1)) {
           print("Last index reached, You are a great man ever!");
           Navigator.push(
             context,

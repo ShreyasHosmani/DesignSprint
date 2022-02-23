@@ -119,43 +119,76 @@ class _AddNotesAndTimeLinePageViewBuilderState
 
   Future<String> getStoreData(context) async {
 
+    print("home.selectedSprintId.toString() : "+home.selectedSprintId.toString());
+    print("home.sprintID.toString() : "+home.sprintID.toString());
+
     String url = "https://admin.dezyit.com/mobileapp/api/users/getstore.php";
 
-    http.post(url, body: {
+    if(home.selectedSprintId.toString() == "null" || home.selectedSprintId == null){
+      http.post(url, body: {
 
-      "storeSprintId" : home.selectedSprintId.toString() == null || home.selectedSprintId.toString() == "null" ? home.sprintID.toString() : home.selectedSprintId.toString(),
-      "storeUserId" : profile.userID.toString(),
+        "storeSprintId" : home.sprintID.toString(),
+        "storeUserId" : profile.userID.toString(),
 
-    }).then((http.Response response) async {
-      final int statusCode = response.statusCode;
+      }).then((http.Response response) async {
+        final int statusCode = response.statusCode;
 
-      if (statusCode != 200 || json == null) {
-        throw new Exception("Error fetching data");
-      }
+        if (statusCode != 200 || json == null) {
+          throw new Exception("Error fetching data");
+        }
 
-      print("/////");
-      var responseArrayGetSprintStatuses = jsonDecode(response.body);
-      print(responseArrayGetSprintStatuses);
+        print("/////");
+        var responseArrayGetSprintStatuses = jsonDecode(response.body);
+        print(responseArrayGetSprintStatuses);
 
-      var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
-      print(responseArrayGetSprintStatusesMsg);
-      print("/////");
+        var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+        print(responseArrayGetSprintStatusesMsg);
+        print("/////");
 
-      if(responseArrayGetSprintStatusesMsg == "successfully"){
-        setState(() {
-          sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
-          sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
-          teamNameIdForTeamMembers = responseArrayGetSprintStatuses['data']['storeteamID'].toString();
-        });
-        print("sprintType : "+sprintType.toString());
-        print("storeUserId : "+sprintCreatorId.toString());
-        print("teamNameIdForTeamMembers : "+teamNameIdForTeamMembers.toString());
+        if(responseArrayGetSprintStatusesMsg == "successfully"){
+          setState(() {
+            sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+            sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+          });
+          print("sprintType : "+sprintType.toString());
+          print("storeUserId : "+sprintCreatorId.toString());
 
+        }
 
-        initTask();
-      }
+      });
+    }else{
+      http.post(url, body: {
 
-    });
+        "storeSprintId" : home.selectedSprintId.toString(),
+        "storeUserId" : profile.userID.toString(),
+
+      }).then((http.Response response) async {
+        final int statusCode = response.statusCode;
+
+        if (statusCode != 200 || json == null) {
+          throw new Exception("Error fetching data");
+        }
+
+        print("/////");
+        var responseArrayGetSprintStatuses = jsonDecode(response.body);
+        print(responseArrayGetSprintStatuses);
+
+        var responseArrayGetSprintStatusesMsg = responseArrayGetSprintStatuses['message'].toString();
+        print(responseArrayGetSprintStatusesMsg);
+        print("/////");
+
+        if(responseArrayGetSprintStatusesMsg == "successfully"){
+          setState(() {
+            sprintType = responseArrayGetSprintStatuses['data']['storeSprintType'].toString();
+            sprintCreatorId = responseArrayGetSprintStatuses['data']['storeUserId'].toString();
+          });
+          print("sprintType : "+sprintType.toString());
+          print("storeUserId : "+sprintCreatorId.toString());
+
+        }
+
+      });
+    }
   }
 
   void initState() {

@@ -1326,8 +1326,11 @@ class _UploadIdea1State extends State<UploadIdea1> {
                   textColor: Colors.white,
                 );
               } else {
-                if (ideation.painPointsOfStatus2List.last ==
-                    ideation.painPointsOfStatus2List[ideation.pageIndexIdea]) {
+                print("ideation.painPointsOfStatus2List.last : "+ideation.painPointsOfStatus2List.last.toString());
+                print("ideation.painPointsOfStatus2List[ideation.pageIndexIdea] : "+ideation.painPointsOfStatus2List[ideation.pageIndexIdea].toString());
+                print("ideation.pageIndexIdea : "+ideation.pageIndexIdea.toString());
+                if (ideation.painPointsOfStatus2List.length ==
+                    (ideation.pageIndexIdea+1)) {
                   /*  print("Last index reached, You are a great man ever!");
             prCheck.show();
             getSprintsStatusesOfTeam2(context);*/

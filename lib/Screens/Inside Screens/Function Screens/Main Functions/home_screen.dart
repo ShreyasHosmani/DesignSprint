@@ -205,8 +205,8 @@ class _HomeState extends State<Home> {
     this.initDynamicLinks();
     fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
-        showOnMessageNotification(message);
-        /*showDialog(
+        //showOnMessageNotification(message);
+        showDialog(
           context: context,
           builder: (context) => AlertDialog(
             content: ListTile(
@@ -235,23 +235,16 @@ class _HomeState extends State<Home> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Continue',
+                child: Text('Okay',
                   style: GoogleFonts.nunito(
                     color: Colors.grey[700],
                   ),
                 ),
-                onPressed: () => Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (c, a1, a2) => ViewSprints(),
-                    transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                    transitionDuration: Duration(milliseconds: 300),
-                  ),
-                )//Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           ),
-        );*/
+        );
         print("onMessage.....: $message");
 
       },

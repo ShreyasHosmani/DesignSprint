@@ -288,6 +288,7 @@ class VotePainPointsApiProvider {
 
       "imageID": ideation.selectedPainPointIdForPrototyping.toString(),
       "status" : ideation.selectedPainPointForPrototypingStatus,
+      "sprintID" : home.sprintID,
 
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
