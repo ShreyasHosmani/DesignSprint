@@ -11,7 +11,7 @@ import 'package:email_validator/email_validator.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+//import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/login_data.dart' as login;
 import 'dart:convert' as JSON;
@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
   String your_client_id = "963311327761537";
   String your_redirect_url = "https://www.facebook.com/connect/login_success.html";
 
-  loginWithFacebook() async{
+  /*loginWithFacebook() async{
     final result = await login.facebookLogin.logIn(['email']);
 
     switch (result.status) {
@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
         break;
     }
 
-  }
+  }*/
 
   Future<void> _handleSignIn() async {
     try {
@@ -721,7 +721,7 @@ class _LoginState extends State<Login> {
     return InkWell(
       onTap: (){
         login.prLogin.show();
-        loginWithFacebook();
+        //loginWithFacebook();
       },
       child: Card(
         shape: RoundedRectangleBorder(

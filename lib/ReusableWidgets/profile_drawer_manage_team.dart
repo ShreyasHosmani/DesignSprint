@@ -464,7 +464,7 @@ class _ProfileDrawerCommonManageTeamState extends State<ProfileDrawerCommonManag
         preferences.clear();
         Navigator.of(context).pop();
         login.googleSignIn.disconnect();
-        login.facebookLogin.logOut();
+        //login.facebookLogin.logOut();
         Future.delayed(const Duration(seconds: 1), () {
           main();
           Navigator.pushReplacement(

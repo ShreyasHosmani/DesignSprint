@@ -166,7 +166,7 @@ class LoginApiProvider {
           );
         });
       }else{
-        login.facebookLogin.logOut();
+        //login.facebookLogin.logOut();
         Fluttertoast.showToast(msg: 'You have already used this email for sign up!', backgroundColor: Colors.black,
           textColor: Colors.white,);
         login.prLogin.hide();

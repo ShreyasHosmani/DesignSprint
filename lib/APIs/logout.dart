@@ -31,7 +31,7 @@ class LogoutApiProvider{
       if(statusCode == 200){
         if(mainData.responseArrayDeleteFcmTokenMsg == "FCM updated Successfully"){
           login.googleSignIn.disconnect();
-          login.facebookLogin.logOut();
+          //login.facebookLogin.logOut();
         }else{
 
         }
