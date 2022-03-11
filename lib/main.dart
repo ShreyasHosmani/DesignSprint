@@ -34,9 +34,8 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color(0xff302b70)
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Color(0xff302b70)));
   runApp(MyApp());
   //initFCM();
 }
@@ -47,7 +46,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -61,16 +59,17 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => CustomViewModel(),
-            child:  MaterialApp(
-              debugShowCheckedModeBanner: false,
-              routes: <String, WidgetBuilder>{
-                '/initial': (context) => InitialScreen(),
-                '/trial': (context) => ManageTeam(),
-                '/Login': (context) => Login(),
-              },
-              home: InitialScreen(),
-            ),),
+          create: (context) => CustomViewModel(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            routes: <String, WidgetBuilder>{
+              '/initial': (context) => InitialScreen(),
+              '/trial': (context) => ManageTeam(),
+              '/Login': (context) => Login(),
+            },
+            home: InitialScreen(),
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -84,8 +83,21 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  initFCM() async {
+  Future<void> onSelectNotification(String payload) async {
+    print("***** On select notification called *****");
 
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (c, a1, a2) => ViewSprints(),
+        transitionsBuilder: (c, anim, a2, child) =>
+            FadeTransition(opacity: anim, child: child),
+        transitionDuration: Duration(milliseconds: 300),
+      ),
+    );
+  }
+
+  initFCM() async {
     //exit(0);
 
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
@@ -103,81 +115,44 @@ class _MyAppState extends State<MyApp> {
 
     //sendToken(context);
 
-    fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        showOnMessageNotification(message);
-        // showDialog(
-        //   context: context,
-        //   builder: (context) => AlertDialog(
-        //     content: ListTile(
-        //       title: Text(message['notification']['title']),
-        //       subtitle: Text(message['notification']['body']),
-        //     ),
-        //     actions: <Widget>[
-        //       FlatButton(
-        //         child: Text('Ok'),
-        //         onPressed: () => Navigator.of(context).pop(),
-        //       ),
-        //     ],
-        //   ),
-        // );
-        print("onMessage.....: $message");
+    //   fcm.onIosSettingsRegistered.listen((IosNotificationSettings setting) {
+    //     print("ios settings registered");
+    //   });
+    // }
 
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        showOnMessageNotification(message);
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        showOnMessageNotification(message);
-        print("onResume: $message");
-      },
-    );
-    fcm.requestNotificationPermissions(
-        const IosNotificationSettings(
-          sound: true,
-          alert: true,
-          badge: true,
-        )
-    );
+    showOnMessageNotification(var message) async {
+      //message = message['notification']['title'].toString() + "\n" + message['notification']['body'].toString();
+      //title = message['notification']['title'].toString();
 
-    fcm.onIosSettingsRegistered.listen((IosNotificationSettings setting){
-      print("ios settings registered");
+      var android = new AndroidNotificationDetails(
+          'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+          priority: Priority.High, importance: Importance.Max);
 
-    });
-  }
+      var _androidInitializationSettings =
+          AndroidInitializationSettings('app_icon');
+      var _initializationSettings;
+      var _iosInitializationSettings;
+      _iosInitializationSettings = IOSInitializationSettings(
+          //onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
+          );
+      _initializationSettings = InitializationSettings(
+        _androidInitializationSettings,
+        _iosInitializationSettings,
+      );
 
-  showOnMessageNotification(var message) async {
+      await flutterLocalNotificationsPlugin.initialize(
+        _initializationSettings,
+        onSelectNotification: onSelectNotification,
+      );
 
-    //message = message['notification']['title'].toString() + "\n" + message['notification']['body'].toString();
-    //title = message['notification']['title'].toString();
-
-    var android = new AndroidNotificationDetails(
-        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-        priority: Priority.High,importance: Importance.Max
-    );
-
-   var  _androidInitializationSettings = AndroidInitializationSettings('app_icon');
-   var _initializationSettings;
-   var _iosInitializationSettings;
-    _iosInitializationSettings = IOSInitializationSettings(
-      //onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
-    );
-    _initializationSettings = InitializationSettings(
-      _androidInitializationSettings,
-      _iosInitializationSettings,
-    );
-
-    await flutterLocalNotificationsPlugin.initialize(
-      _initializationSettings,
-      onSelectNotification: onSelectNotification,
-    );
-
-    var iOS = new IOSNotificationDetails();
-    var platform = new NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(
-        1, message['notification']['title'].toString(), message['notification']['body'].toString(), platform,
-        payload: '');
+      var iOS = new IOSNotificationDetails();
+      var platform = new NotificationDetails(android, iOS);
+      await flutterLocalNotificationsPlugin.show(
+          1,
+          message['notification']['title'].toString(),
+          message['notification']['body'].toString(),
+          platform,
+          payload: '');
 
 //    showDialog<bool>(
 //      context: context,
@@ -199,23 +174,58 @@ class _MyAppState extends State<MyApp> {
 //        ],
 //      ),
 //    );
+    }
+    // fcm.configure(
+    // onMessage: (Map<String, dynamic> message) async {
+    //   showOnMessageNotification(message);
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     content: ListTile(
+    //       title: Text(message['notification']['title']),
+    //       subtitle: Text(message['notification']['body']),
+    //     ),
+    //     actions: <Widget>[
+    //       FlatButton(
+    //         child: Text('Ok'),
+    //         onPressed: () => Navigator.of(context).pop(),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    //     print("onMessage.....: $message");
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     showOnMessageNotification(message);
+    //     print("onLaunch: $message");
+    //   },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     showOnMessageNotification(message);
+    //     print("onResume: $message");
+    //   },
+    // );
 
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      showOnMessageNotification(notification);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      showOnMessageNotification(message);
+      print("onMessageOpenedApp: $message");
+    });
+
+    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) {
+      showOnMessageNotification(message);
+      print("onBackgroundMessage: $message");
+    });
+
+    fcm.requestNotificationPermissions(const IosNotificationSettings(
+      sound: true,
+      alert: true,
+      badge: true,
+    ));
   }
-
-  Future onSelectNotification(String payload) {
-
-    print("***** On select notification called *****");
-
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (c, a1, a2) => ViewSprints(),
-        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-        transitionDuration: Duration(milliseconds: 300),
-      ),
-    );
-  }
-
 }
 
 // https://dezy.page.link/toViewSprints

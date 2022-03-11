@@ -29,7 +29,7 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="Dezy It"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -58,6 +58,9 @@
             <meta-data
                     android:name="com.google.firebase.messaging.default_notification_channel_id"
                     android:value="fcm_default_channel"/>
+             <meta-data
+                    android:name="flutterEmbedding"
+                    android:value="2" />
 
 
             <!-- Displays an Android View that continues showing the launch screen
