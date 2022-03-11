@@ -31,17 +31,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   void initDynamicLinks() async {
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
 
-    if (deepLink != null && deepLink.toString() == "https://dezy.page.link/toSprints") {
+    if (deepLink != null &&
+        deepLink.toString() == "https://dezy.page.link/toSprints") {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
           pageBuilder: (c, a1, a2) => ViewSprints(),
-          transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          transitionsBuilder: (c, anim, a2, child) =>
+              FadeTransition(opacity: anim, child: child),
           transitionDuration: Duration(milliseconds: 300),
         ),
       );
@@ -49,24 +51,24 @@ class _HomeState extends State<Home> {
 
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
-          final Uri deepLink = dynamicLink?.link;
+      final Uri deepLink = dynamicLink?.link;
 
-          if (deepLink != null && deepLink.toString() == "https://dezy.page.link/toSprints") {
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ViewSprints(),
-                transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 300),
-              ),
-            );
-          }
-        },
-        onError: (OnLinkErrorException e) async {
-          print('onLinkError');
-          print(e.message);
-        }
-    );
+      if (deepLink != null &&
+          deepLink.toString() == "https://dezy.page.link/toSprints") {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ViewSprints(),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -75,15 +77,12 @@ class _HomeState extends State<Home> {
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
   CreateSprintApiProvider createSprintApiProvider = CreateSprintApiProvider();
   Future<String> getSprints(context) async {
-
     print(profile.email.toString());
     String url = globals.urlLogin + "getsprintbyuserid.php";
 
     http.post(url, body: {
-
       //"userID" : profile.userID,
-      "userEmail" : profile.email.toString(),
-
+      "userEmail": profile.email.toString(),
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -94,41 +93,49 @@ class _HomeState extends State<Home> {
       home.responseArrayGetSprints = jsonDecode(response.body);
       print(home.responseArrayGetSprints);
 
-      home.responseArrayGetSprintsMsg = home.responseArrayGetSprints['message'].toString();
-      if(statusCode == 200){
-        if(home.responseArrayGetSprintsMsg == "Data Found"){
-
+      home.responseArrayGetSprintsMsg =
+          home.responseArrayGetSprints['message'].toString();
+      if (statusCode == 200) {
+        if (home.responseArrayGetSprintsMsg == "Data Found") {
           setState(() {
-            home.sprintIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintID'].toString());
-            home.sprintTitlesList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintName'].toString());
-            home.sprintStatusList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintStatus'].toString());
-            decisionMakerIdsList = List.generate(home.responseArrayGetSprints['data'].length, (i) => home.responseArrayGetSprints['data'][i]['sprintUserid'].toString());
+            home.sprintIdsList = List.generate(
+                home.responseArrayGetSprints['data'].length,
+                (i) => home.responseArrayGetSprints['data'][i]['sprintID']
+                    .toString());
+            home.sprintTitlesList = List.generate(
+                home.responseArrayGetSprints['data'].length,
+                (i) => home.responseArrayGetSprints['data'][i]['sprintName']
+                    .toString());
+            home.sprintStatusList = List.generate(
+                home.responseArrayGetSprints['data'].length,
+                (i) => home.responseArrayGetSprints['data'][i]['sprintStatus']
+                    .toString());
+            decisionMakerIdsList = List.generate(
+                home.responseArrayGetSprints['data'].length,
+                (i) => home.responseArrayGetSprints['data'][i]['sprintUserid']
+                    .toString());
           });
 
           print(home.sprintIdsList.toList());
           print(home.sprintTitlesList.toList());
           print(home.sprintStatusList.toList());
           print(decisionMakerIdsList.toList());
-
-        }else{
-
+        } else {
           setState(() {
             home.sprintIdsList = null;
             home.sprintTitlesList = null;
             home.sprintStatusList = null;
           });
-
         }
       }
     });
   }
+
   Future<String> getProfile(context) async {
     String url = globals.urlLogin + "getprofile.php";
 
     http.post(url, body: {
-
-      "userID" : profile.userID,
-
+      "userID": profile.userID,
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -140,10 +147,14 @@ class _HomeState extends State<Home> {
       print(profile.responseArrayProfile);
 
       setState(() {
-        profile.email = profile.responseArrayProfile['data']['userEmail'].toString();
-        profile.name = profile.responseArrayProfile['data']['userFullname'].toString();
-        profile.mobileNo = profile.responseArrayProfile['data']['userPhoneno'].toString();
-        profile.profilePicImage = profile.responseArrayProfile['data']['userProfilepic'].toString();
+        profile.email =
+            profile.responseArrayProfile['data']['userEmail'].toString();
+        profile.name =
+            profile.responseArrayProfile['data']['userFullname'].toString();
+        profile.mobileNo =
+            profile.responseArrayProfile['data']['userPhoneno'].toString();
+        profile.profilePicImage =
+            profile.responseArrayProfile['data']['userProfilepic'].toString();
         profile.nameList = profile.name.split(' ');
       });
 
@@ -152,28 +163,30 @@ class _HomeState extends State<Home> {
       print(profile.profilePicImage);
       print(profile.nameList.toList());
       getSprints(context);
-
     });
   }
+
   getSideBarProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     profile.userID = prefs.getString("userID").toString();
     print(profile.userID);
   }
-  showOnMessageNotification(var message) async {
 
+  showOnMessageNotification(var message) async {
     //message = message['notification']['title'].toString() + "\n" + message['notification']['body'].toString();
     //title = message['notification']['title'].toString();
 
     var android = new AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-        priority: Priority.High,importance: Importance.Max
-    );
+        priority: Priority.High, importance: Importance.Max);
 
     var iOS = new IOSNotificationDetails();
     var platform = new NotificationDetails(android, iOS);
     await flutterLocalNotificationsPlugin.show(
-        1, message['notification']['title'].toString(), message['notification']['body'].toString(), platform,
+        1,
+        message['notification']['title'].toString(),
+        message['notification']['body'].toString(),
+        platform,
         payload: '');
 
 //    showDialog<bool>(
@@ -196,8 +209,8 @@ class _HomeState extends State<Home> {
 //        ],
 //      ),
 //    );
-
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -211,21 +224,22 @@ class _HomeState extends State<Home> {
           builder: (context) => AlertDialog(
             content: ListTile(
               leading: Container(
-                width: 40, height: 40,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     image: DecorationImage(
-                        image: AssetImage("assets/images/dezylogo.png")
-                    )
-                ),
+                        image: AssetImage("assets/images/dezylogo.png"))),
               ),
-              title: Text(message['notification']['title'],
+              title: Text(
+                message['notification']['title'],
                 style: GoogleFonts.nunito(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
               ),
-              subtitle: Text(message['notification']['body'],
+              subtitle: Text(
+                message['notification']['body'],
                 style: GoogleFonts.nunito(
                   fontWeight: FontWeight.w500,
                   color: Color(0xff787cd1),
@@ -235,7 +249,8 @@ class _HomeState extends State<Home> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Okay',
+                child: Text(
+                  'Okay',
                   style: GoogleFonts.nunito(
                     color: Colors.grey[700],
                   ),
@@ -246,7 +261,6 @@ class _HomeState extends State<Home> {
           ),
         );
         print("onMessage.....: $message");
-
       },
       onLaunch: (Map<String, dynamic> message) async {
         showOnMessageNotification(message);
@@ -263,62 +277,77 @@ class _HomeState extends State<Home> {
     profile.mobileNo = null;
     profile.nameList = null;
   }
+
   @override
   Widget build(BuildContext context) {
-    return profile.nameList == null ? Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(child: CircularProgressIndicator(),)) : Scaffold(
-      key: _scaffoldKey,
-      appBar: buildAppBar(context),
-      backgroundColor: Colors.white,
-      endDrawerEnableOpenDragGesture: true,
-      endDrawer: ProfileDrawerHomeScreen(),
-      body: WillPopScope(
-        onWillPop: () => _scaffoldKey.currentState.isEndDrawerOpen ? {Navigator.pop(context)} : showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit the App'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text("No"),
+    return profile.nameList == null
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: CircularProgressIndicator(),
+            ))
+        : Scaffold(
+            key: _scaffoldKey,
+            appBar: buildAppBar(context),
+            backgroundColor: Colors.white,
+            endDrawerEnableOpenDragGesture: true,
+            endDrawer: ProfileDrawerHomeScreen(),
+            body: WillPopScope(
+              onWillPop: () => _scaffoldKey.currentState.isEndDrawerOpen
+                  ? {Navigator.pop(context)}
+                  : showDialog(
+                      context: context,
+                      builder: (context) => new AlertDialog(
+                        title: new Text('Are you sure?'),
+                        content: new Text('Do you want to exit the App'),
+                        actions: <Widget>[
+                          new GestureDetector(
+                            onTap: () => Navigator.of(context).pop(false),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Text("No"),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          new GestureDetector(
+                            onTap: () => exit(0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Text("Yes"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    buildNameWidget(context),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    buildDesignSprintCard(context),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    buildManageTeamCard(context),
+                    SizedBox(
+                      height: 40,
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => exit(0),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text("Yes"),
-                ),
-              ),
-            ],
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(height: 10,),
-              buildNameWidget(context),
-              SizedBox(height: 25,),
-              buildDesignSprintCard(context),
-              SizedBox(height: 25,),
-              buildManageTeamCard(context),
-              SizedBox(height: 40,),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 
-  Widget buildAppBar(BuildContext context){
-
-    Container line = Container(height:1, width:25, color: Colors.black,child: Divider());
+  Widget buildAppBar(BuildContext context) {
+    Container line =
+        Container(height: 1, width: 25, color: Colors.black, child: Divider());
     void _openEndDrawer() {
       _scaffoldKey.currentState.openEndDrawer();
     }
@@ -330,7 +359,8 @@ class _HomeState extends State<Home> {
       leading: Container(),
       title: Padding(
         padding: const EdgeInsets.only(top: 0),
-        child: Text(home.home,
+        child: Text(
+          home.home,
           style: GoogleFonts.nunitoSans(
             textStyle: TextStyle(
               color: Colors.black,
@@ -350,10 +380,18 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   line,
-                  SizedBox(height: 6,),
+                  SizedBox(
+                    height: 6,
+                  ),
                   line,
-                  SizedBox(height: 6,),
-                  Container(height:1,width:20, color: Colors.black,child: Divider()),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                      height: 1,
+                      width: 20,
+                      color: Colors.black,
+                      child: Divider()),
                 ],
               ),
             ),
@@ -363,29 +401,26 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildNameWidget(BuildContext context){
-
-    Text hello = Text(home.hello,
+  Widget buildNameWidget(BuildContext context) {
+    Text hello = Text(
+      home.hello,
       style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
               color: Color(0xff707070),
               fontSize: 30,
-              fontWeight: FontWeight.w200
-          )
-      ),
+              fontWeight: FontWeight.w200)),
     );
-    Text name = Text(profile.nameList[0]+"!",
+    Text name = Text(
+      profile.nameList[0] + "!",
       style: GoogleFonts.nunitoSans(
           textStyle: TextStyle(
               color: Color(0xff707070),
               fontSize: 30,
-              fontWeight: FontWeight.w500
-          )
-      ),
+              fontWeight: FontWeight.w500)),
     );
 
     return Padding(
-      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/7),
+      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 7),
       child: Row(
         children: [
           hello,
@@ -395,14 +430,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildDesignSprintCard(BuildContext context){
+  Widget buildDesignSprintCard(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => DesignSprintInside(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
@@ -431,35 +467,37 @@ class _HomeState extends State<Home> {
         height: 286.22,
         decoration: BoxDecoration(
             color: Color(0xffF1A042),
-            borderRadius: BorderRadius.all(Radius.circular(15))
-        ),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Stack(
           children: [
-            Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+            Image.asset(
+              "assets/images/circleDots.png",
+              fit: BoxFit.cover,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 29, left: 35),
-                  child: Text(home.designSprint,
+                  child: Text(
+                    home.designSprint,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        )
-                    ),
+                      fontSize: 30,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    )),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 35),
-                  child: Text(home.designSprintHint,
+                  child: Text(
+                    home.designSprintHint,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        )
-                    ),
+                      fontSize: 14,
+                      color: Colors.white,
+                    )),
                   ),
                 ),
               ],
@@ -469,17 +507,22 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (c, a1, a2) => DesignSprintInside(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionsBuilder: (c, anim, a2, child) =>
+                            FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
                     );
                   },
-                  icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+                  icon: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                    size: 25,
+                  ),
                 ),
               ),
             )
@@ -489,14 +532,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildManageTeamCard(BuildContext context){
+  Widget buildManageTeamCard(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (c, a1, a2) => TeamDataAndManageTeam2(),
-            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
             transitionDuration: Duration(milliseconds: 300),
           ),
         );
@@ -506,35 +550,37 @@ class _HomeState extends State<Home> {
         height: 286.22,
         decoration: BoxDecoration(
             color: Color(0xff787CD1),
-            borderRadius: BorderRadius.all(Radius.circular(15))
-        ),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Stack(
           children: [
-            Image.asset("assets/images/circleDots.png",fit: BoxFit.cover,),
+            Image.asset(
+              "assets/images/circleDots.png",
+              fit: BoxFit.cover,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 29, left: 35),
-                  child: Text(home.manageTeam,
+                  child: Text(
+                    home.manageTeam,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        )
-                    ),
+                      fontSize: 30,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    )),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 35),
-                  child: Text(home.manageTeamHint,
+                  child: Text(
+                    home.manageTeamHint,
                     style: GoogleFonts.nunitoSans(
                         textStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        )
-                    ),
+                      fontSize: 14,
+                      color: Colors.white,
+                    )),
                   ),
                 ),
               ],
@@ -544,17 +590,22 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (c, a1, a2) => TeamDataAndManageTeam2(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionsBuilder: (c, anim, a2, child) =>
+                            FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
                     );
                   },
-                  icon: Icon(Icons.arrow_forward, color: Colors.white,size: 25,),
+                  icon: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                    size: 25,
+                  ),
                 ),
               ),
             )
@@ -564,7 +615,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildProfileDrawer(BuildContext context){
+  Widget buildProfileDrawer(BuildContext context) {
     return Drawer(
       elevation: 20.0,
       child: Container(
@@ -576,21 +627,20 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (c, a1, a2) => EditProfile(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionsBuilder: (c, anim, a2, child) =>
+                            FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
-                    ).whenComplete((){
+                    ).whenComplete(() {
                       profileApiProvider.getSideBarProfile();
-                      profileApiProvider.getProfile(context).whenComplete((){
+                      profileApiProvider.getProfile(context).whenComplete(() {
                         Future.delayed(const Duration(seconds: 4), () {
-                          setState(() {
-
-                          });
+                          setState(() {});
                         });
                       });
                     });
@@ -619,59 +669,72 @@ class _HomeState extends State<Home> {
                             color: Colors.grey.shade100,
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             image: DecorationImage(
-                              image: NetworkImage(globals.urlSignUp+profile.profilePicImage),
+                              image: NetworkImage(
+                                  globals.urlSignUp + profile.profilePicImage),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        SizedBox(width: 15,),
+                        SizedBox(
+                          width: 15,
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Hi, " + profile.name + "!",
+                            Text(
+                              "Hi, " + profile.name + "!",
                               style: GoogleFonts.nunitoSans(
                                   textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  )
-                              ),
+                                color: Colors.white,
+                                fontSize: 18,
+                              )),
                             ),
-                            SizedBox(height: 5,),
-                            Text(profile.email,
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              profile.email,
                               style: GoogleFonts.nunitoSans(
                                   textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                  )
-                              ),
+                                color: Colors.white,
+                                fontSize: 13,
+                              )),
                             ),
-                            SizedBox(height: 5,),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Container(
                               height: 20,
                               child: RaisedButton(
                                 color: Colors.white,
-                                onPressed: (){
+                                onPressed: () {
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
                                       pageBuilder: (c, a1, a2) => EditProfile(),
-                                      transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
-                                      transitionDuration: Duration(milliseconds: 300),
+                                      transitionsBuilder:
+                                          (c, anim, a2, child) =>
+                                              FadeTransition(
+                                                  opacity: anim, child: child),
+                                      transitionDuration:
+                                          Duration(milliseconds: 300),
                                     ),
-                                  ).whenComplete((){
+                                  ).whenComplete(() {
                                     profileApiProvider.getSideBarProfile();
-                                    profileApiProvider.getProfile(context).whenComplete((){
-                                      Future.delayed(const Duration(seconds: 4), () {
-                                        setState(() {
-
-                                        });
+                                    profileApiProvider
+                                        .getProfile(context)
+                                        .whenComplete(() {
+                                      Future.delayed(const Duration(seconds: 4),
+                                          () {
+                                        setState(() {});
                                       });
                                     });
                                   });
                                 },
                                 child: Center(
-                                  child: Text("Edit profile",
+                                  child: Text(
+                                    "Edit profile",
                                     style: TextStyle(
                                       color: Color(0xff787cd1),
                                       fontSize: 12,
@@ -686,173 +749,244 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 InkWell(
-                  onTap: (){
-                    Fluttertoast.showToast(msg: "You're on the homepage", backgroundColor: Colors.black,
-                      textColor: Colors.white,);
+                  onTap: () {
+                    Fluttertoast.showToast(
+                      msg: "You're on the homepage",
+                      backgroundColor: Colors.black,
+                      textColor: Colors.white,
+                    );
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
-                      Text(home.sideBarHeadingHome,
+                      SizedBox(
+                        width: 62,
+                      ),
+                      Icon(
+                        Icons.image,
+                        color: Colors.grey.shade500,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        home.sideBarHeadingHome,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (c, a1, a2) => ViewSprints(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionsBuilder: (c, anim, a2, child) =>
+                            FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
                     );
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
-                      Text(home.sideBarHeadingDesignSprint,
+                      SizedBox(
+                        width: 62,
+                      ),
+                      Icon(
+                        Icons.image,
+                        color: Colors.grey.shade500,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        home.sideBarHeadingDesignSprint,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (c, a1, a2) => ViewTips(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionsBuilder: (c, anim, a2, child) =>
+                            FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
                     );
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
-                      Text(home.sideBarHeadingTips,
+                      SizedBox(
+                        width: 62,
+                      ),
+                      Icon(
+                        Icons.image,
+                        color: Colors.grey.shade500,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        home.sideBarHeadingTips,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (c, a1, a2) => TeamDataAndManageTeam2(),
-                        transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+                        transitionsBuilder: (c, anim, a2, child) =>
+                            FadeTransition(opacity: anim, child: child),
                         transitionDuration: Duration(milliseconds: 300),
                       ),
                     );
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
-                      Text(home.sideBarHeadingManageTeam,
+                      SizedBox(
+                        width: 62,
+                      ),
+                      Icon(
+                        Icons.image,
+                        color: Colors.grey.shade500,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        home.sideBarHeadingManageTeam,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingFAQs,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingFAQs,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 Row(
                   children: [
-                    SizedBox(width: 62,),
-                    Icon(Icons.image, color: Colors.grey.shade500,),
-                    SizedBox(width: 10,),
-                    Text(home.sideBarHeadingLegalPolicy,
+                    SizedBox(
+                      width: 62,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.grey.shade500,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      home.sideBarHeadingLegalPolicy,
                       style: GoogleFonts.nunitoSans(
                           textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )
-                      ),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      )),
                     ),
                   ],
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     showAlertDialogLogout(context);
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 62,),
-                      Icon(Icons.image, color: Colors.grey.shade500,),
-                      SizedBox(width: 10,),
-                      Text(home.logout,
+                      SizedBox(
+                        width: 62,
+                      ),
+                      Icon(
+                        Icons.image,
+                        color: Colors.grey.shade500,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        home.logout,
                         style: GoogleFonts.nunitoSans(
                             textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            )
-                        ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 42,),
+                SizedBox(
+                  height: 42,
+                ),
               ],
             ),
           ),
@@ -862,17 +996,16 @@ class _HomeState extends State<Home> {
   }
 
   showAlertDialogLogout(BuildContext context) {
-
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = FlatButton(
       child: Text("Continue"),
-      onPressed:  () async {
+      onPressed: () async {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
         Navigator.of(context).pop();
@@ -882,18 +1015,21 @@ class _HomeState extends State<Home> {
             context,
             PageRouteBuilder(
               pageBuilder: (c, a1, a2) => InitialScreen(),
-              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionsBuilder: (c, anim, a2, child) =>
+                  FadeTransition(opacity: anim, child: child),
               transitionDuration: Duration(milliseconds: 300),
             ),
           );
         });
-        Fluttertoast.showToast(msg: "Logged out", backgroundColor: Colors.black,
-          textColor: Colors.white,);
+        Fluttertoast.showToast(
+          msg: "Logged out",
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+        );
         Future.delayed(const Duration(seconds: 3), () {
           logoutApiProvider.Logout(context);
         });
       },
-
     );
 
     // set up the AlertDialog
@@ -914,7 +1050,6 @@ class _HomeState extends State<Home> {
       },
     );
   }
-
 }
 
 class Load extends StatefulWidget {
@@ -923,16 +1058,16 @@ class Load extends StatefulWidget {
 }
 
 class _LoadState extends State<Load> {
-
   ProfileApiProvider profileApiProvider = ProfileApiProvider();
 
-  jumpScreen(){
+  jumpScreen() {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
           pageBuilder: (c, a1, a2) => Home(),
-          transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          transitionsBuilder: (c, anim, a2, child) =>
+              FadeTransition(opacity: anim, child: child),
           transitionDuration: Duration(milliseconds: 300),
         ),
       );
@@ -944,7 +1079,7 @@ class _LoadState extends State<Load> {
     // TODO: implement initState
     super.initState();
     profileApiProvider.getSideBarProfile();
-    profileApiProvider.getProfile(context).whenComplete((){
+    profileApiProvider.getProfile(context).whenComplete(() {
       jumpScreen();
     });
   }
