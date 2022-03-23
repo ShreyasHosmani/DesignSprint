@@ -816,7 +816,18 @@ class _SelectTeamState extends State<SelectTeam> {
       itemCount: team.teamNamesList == null ? 0 : team.teamNamesList.length,
       itemBuilder: (context, i) => (i > 0 && team.teamNamesList[i].toString() == team.teamNamesList[i-1].toString()) ? Container() : InkWell(
         onTap: (){
-          if(selectedTeam == team.teamNamesIdsList[i]){
+          print("index : "+i.toString());
+          print("teamNmIdsList[i] : "+teamNmIdsList[i].toString());
+          print("team.teamNamesList : "+team.teamNamesList[i].toString());
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) => ManageTeamSeperate(i,teamNmIdsList[i], team.teamNamesList[i]),
+              transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          );
+          /*if(selectedTeam == team.teamNamesIdsList[i]){
             Fluttertoast.showToast(msg: 'You have already selected the team!', backgroundColor: Colors.black, textColor: Colors.white);
           }else{
             print("select team called");
@@ -837,7 +848,7 @@ class _SelectTeamState extends State<SelectTeam> {
             Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
             Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
             selectTeam(context);
-          }
+          }*/
         },
         child: Padding(
           padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
@@ -885,6 +896,29 @@ class _SelectTeamState extends State<SelectTeam> {
                                 transitionDuration: Duration(milliseconds: 300),
                               ),
                             );
+                          }else if(val == "Select Team"){
+                            if(selectedTeam == team.teamNamesIdsList[i]){
+                              Fluttertoast.showToast(msg: 'You have already selected the team!', backgroundColor: Colors.black, textColor: Colors.white);
+                            }else{
+                              print("select team called");
+                              setState(() {
+                                selectedTeamIdForDeleting = team.teamNamesIdsList[i];
+                                selectedTeam = team.teamNamesIdsList[i];
+                              });
+                              print("selectedTeam :::: "+selectedTeam.toString());
+                              print(selectedTeamIdForDeleting);
+                              print(selectedTeam);
+                              team.prTeam.show();
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+                              selectTeam(context);
+                            }
                           }else{
                             setState(() {
                               selectedTeamIdForDeleting = team.teamNamesIdsList[i];
@@ -921,7 +955,7 @@ class _SelectTeamState extends State<SelectTeam> {
                         ),
                         color: Colors.white,
                         itemBuilder: (BuildContext context) {
-                          return {'Edit Team'}.map((String choice) {
+                          return {'Edit Team','Select Team'}.map((String choice) {
                             return PopupMenuItem<String>(
                               value: choice,
                               textStyle: GoogleFonts.nunitoSans(

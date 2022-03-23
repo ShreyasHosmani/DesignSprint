@@ -16,6 +16,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:design_sprint/utils/login_data.dart' as login;
 import 'dart:convert' as JSON;
 import 'package:http/http.dart' as http;
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -500,7 +502,63 @@ class _LoginState extends State<Login> {
 
   Widget buildLoginButton(BuildContext context){
     return GestureDetector(
-      onTap: (){
+      onTap: () async {
+        // String username = 'dezyit2021@gmail.com';
+        // String password = 'Dezyit2021@*#\$';
+        //
+        // var smtpServer = SmtpServer('mail.evyaas.com',username: 'noreply@evyaas.com',password: 'radar1234');
+        // //final smtpServer = gmail(username,password);
+        //
+        // final message = Message()
+        //   ..from = Address('noreply@dezyit.com', 'Design Sprint')
+        //   ..recipients.add('info.gathrr@gmail.com')
+        //   ..ccRecipients.addAll(['jeet044@gmail.com', 'coolshreyas1996123@gmail.com'])
+        //   ..bccRecipients.add(Address('farmreta@gmail.com'))
+        //   ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
+        //   ..text = 'This is the plain text.\nThis is line 2 of the text part.'
+        //   ..html = "<head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><title>Dezyit Email Design</title> <meta name='viewport' content='width=device-width, initial-scale=1.0'/> <style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300&display=swap');</style> <style type='text/css'>a[x-apple-data-detectors] {color: inherit !important;}</style></head> <body style='margin: 0; padding: 0;background: rgb(120, 124, 209);'> <table role='presentation' border='0' cellpadding='0' cellspacing='0' width='100%'> <tr> <td style='padding: 20px 0 30px 0;'> <table align='center' border='0' cellpadding='0' cellspacing='0' width='600' style='border-collapse: collapse; border: 1px solid #cccccc;'> <tr> <td align='center' bgcolor='#302b70' style='padding: 40px 0 30px 0;'> <img src='https://admin.dezyit.com/mobileapp/mailerimages/dezy.gif' alt='Creating Email Magic.' width='300' height='150px;' style='display: block;' /></td></tr> <tr> <td bgcolor='#ffffff' style='padding: 40px 30px 40px 30px;'> <table border='0' cellpadding='0' cellspacing='0' width='100%' style='border-collapse: collapse;'> <tr> <td style='color: #153643; font-family: Arial, sans-serif;'> <h1 style='font-size: 24px; margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>Team Member Add</h1></td></tr><tr><td style='color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; padding: 20px 0 30px 0;'><p style='margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>You have been added to the design sprint team</p></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><a href='http://onelink.to/equmbp' target='_blank' style='text-decoration: none;margin-top: 15px; border-radius: 100px;min-width: 140px;background:rgb(120, 124, 209);padding-top: 15px;padding-bottom: 15px;border:none;outline : none;font-size:14px;color:#fff;text-transform:capitalize;margin: 0 auto;padding-left: 20px;padding-right: 20px;font-family: Nunito Sans, sans-serif;'>You have been added to the design sprint team</a></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><p style='font-family: Nunito Sans, sans-serif;'>Follow Us.:</p><a href='https://www.facebook.com/DezyIt/' target='_blank'><img src='https://admin.dezyit.com/mobileapp/mailerimages/facebook.png' height='28' width='28' alt='facebook'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://in.pinterest.com/Dezy_It/'><img src='https://admin.dezyit.com/mobileapp/mailerimages/pinterest.png' height='28' width='28' alt='Pinterest'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://twitter.com/dezy_it'><img src='https://admin.dezyit.com/mobileapp/mailerimages/twitter.png' height='28' width='28' alt='Twitter'></a></td></tr></table></td></tr></table></td></tr></table></body>";
+        //
+        // final equivalentMessage = Message()
+        //   ..from = Address('noreply@dezyit.com', 'Design Sprint')
+        //   ..recipients.add(Address('info.gathrr@gmail.com'))
+        //   ..ccRecipients.addAll(['jeet044@gmail.com', 'coolshreyas1996123@gmail.com'])
+        //   ..bccRecipients.add('farmreta@gmail.com')
+        //   ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
+        //   ..text = 'This is the plain text.\nThis is line 2 of the text part.'
+        //   ..html = "<head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><title>Dezyit Email Design</title> <meta name='viewport' content='width=device-width, initial-scale=1.0'/> <style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300&display=swap');</style> <style type='text/css'>a[x-apple-data-detectors] {color: inherit !important;}</style></head> <body style='margin: 0; padding: 0;background: rgb(120, 124, 209);'> <table role='presentation' border='0' cellpadding='0' cellspacing='0' width='100%'> <tr> <td style='padding: 20px 0 30px 0;'> <table align='center' border='0' cellpadding='0' cellspacing='0' width='600' style='border-collapse: collapse; border: 1px solid #cccccc;'> <tr> <td align='center' bgcolor='#302b70' style='padding: 40px 0 30px 0;'> <img src='https://admin.dezyit.com/mobileapp/mailerimages/dezy.gif' alt='Creating Email Magic.' width='300' height='150px;' style='display: block;' /></td></tr> <tr> <td bgcolor='#ffffff' style='padding: 40px 30px 40px 30px;'> <table border='0' cellpadding='0' cellspacing='0' width='100%' style='border-collapse: collapse;'> <tr> <td style='color: #153643; font-family: Arial, sans-serif;'> <h1 style='font-size: 24px; margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>Team Member Add</h1></td></tr><tr><td style='color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; padding: 20px 0 30px 0;'><p style='margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>You have been added to the design sprint team</p></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><a href='http://onelink.to/equmbp' target='_blank' style='text-decoration: none;margin-top: 15px; border-radius: 100px;min-width: 140px;background:rgb(120, 124, 209);padding-top: 15px;padding-bottom: 15px;border:none;outline : none;font-size:14px;color:#fff;text-transform:capitalize;margin: 0 auto;padding-left: 20px;padding-right: 20px;font-family: Nunito Sans, sans-serif;'>You have been added to the design sprint team</a></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><p style='font-family: Nunito Sans, sans-serif;'>Follow Us.:</p><a href='https://www.facebook.com/DezyIt/' target='_blank'><img src='https://admin.dezyit.com/mobileapp/mailerimages/facebook.png' height='28' width='28' alt='facebook'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://in.pinterest.com/Dezy_It/'><img src='https://admin.dezyit.com/mobileapp/mailerimages/pinterest.png' height='28' width='28' alt='Pinterest'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://twitter.com/dezy_it'><img src='https://admin.dezyit.com/mobileapp/mailerimages/twitter.png' height='28' width='28' alt='Twitter'></a></td></tr></table></td></tr></table></td></tr></table></body>";
+        //
+        //
+        // //final sendReport2 = await send(equivalentMessage, smtpServer);
+        //
+        // var connection = PersistentConnection(smtpServer);
+        //
+        // await connection.send(message);
+        //
+        // await connection.send(equivalentMessage);
+        //
+        // await connection.close();
+        // final MailerResponse response = await FlutterMailer.send(mailOptions);
+        // String platformResponse;
+        // switch (response) {
+        //   case MailerResponse.saved: /// ios only
+        //     platformResponse = 'mail was saved to draft';
+        //     break;
+        //   case MailerResponse.sent: /// ios only
+        //     platformResponse = 'mail was sent';
+        //     break;
+        //   case MailerResponse.cancelled: /// ios only
+        //     platformResponse = 'mail was cancelled';
+        //     break;
+        //   case MailerResponse.android:
+        //     platformResponse = 'intent was successful';
+        //     break;
+        //   default:
+        //     platformResponse = 'unknown';
+        //     break;
+        // }
+        //print("platformResponse ::::: " + platformResponse.toString());
+
+
         if(login.formKey.currentState.validate()){
           login.prLogin.show();
           apiProviderLogin.Login(context);

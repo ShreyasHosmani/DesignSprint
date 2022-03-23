@@ -59,6 +59,7 @@ dependencies:
   provider: ^4.0.2
   timer_count_down: ^2.2.1
   flutter_restart: ^0.0.3
+  mailer: ^3.3.0
 
   #keyboard_actions: ^3.3.1+1
 

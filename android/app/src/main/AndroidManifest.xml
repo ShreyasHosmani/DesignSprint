@@ -29,7 +29,7 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="${applicationName}"
+        android:name="io.flutter.app.FlutterApplication"
         android:label="Dezy It"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -49,7 +49,7 @@
                 />
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
-                android:resource="@drawable/app_icon" />
+                android:resource="@drawable/ic_stat_ic_launcher" />
 
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"

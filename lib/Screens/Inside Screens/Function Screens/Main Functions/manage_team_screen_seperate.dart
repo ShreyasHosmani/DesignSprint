@@ -2,6 +2,7 @@ import 'package:design_sprint/APIs/create_add_team.dart';
 import 'package:design_sprint/Helpers/helper.dart';
 import 'package:design_sprint/ReusableWidgets/profile_drawer_common.dart';
 import 'package:design_sprint/ReusableWidgets/status_drawer_sprint_goal.dart';
+import 'package:design_sprint/Screens/Inside%20Screens/Function%20Screens/Main%20Functions/design_sprint_sections_screen.dart';
 import 'package:design_sprint/View%20Models/CustomViewModel.dart';
 import 'package:design_sprint/main.dart';
 import 'package:design_sprint/utils/main_data.dart';
@@ -14,6 +15,8 @@ import 'package:design_sprint/utils/home_screen_data.dart' as home;
 import 'package:design_sprint/utils/hint_texts.dart' as hint;
 import 'package:http/http.dart' as http;
 import 'package:design_sprint/utils/globals.dart' as globals;
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'dart:convert';
 
 import 'package:progress_dialog/progress_dialog.dart';
@@ -23,6 +26,11 @@ bool statusDrawer = false;
 
 var memberNameControllerEdit = new TextEditingController();
 var memberEmailControllerEdit = new TextEditingController();
+
+var selectedTeam;
+ProgressDialog prSelect;
+var teamNmIdsList;
+var selectedTeamNameId;
 
 class ManageTeamSeperate extends StatefulWidget {
   final index;
@@ -37,6 +45,103 @@ class ManageTeamSeperate extends StatefulWidget {
 
 class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
   bool _isloaded = false;
+
+  Future<String> storeCollabData(context) async {
+
+    String url = globals.urlSignUp + "addstore.php";
+
+
+    print({
+
+      "storeSprintType" : "Collab",
+      "storeSprintId" : home.sprintID.toString(),
+      "storeUserId" : profile.userID.toString(),
+      "storeteamID" : selectedTeam.toString(),
+
+    });
+
+    http.post(url, body: {
+
+      "storeSprintType" : "Collab",
+      "storeSprintId" : home.sprintID.toString(),
+      "storeUserId" : profile.userID.toString(),
+      "storeteamID" : selectedTeam.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayStore = jsonDecode(response.body);
+      print(responseArrayStore);
+
+      var msg = responseArrayStore['message'].toString();
+      print(msg);
+
+      if(msg == "successfully"){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => EmphatizeSections(),
+            transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      }else{
+        Fluttertoast.showToast(msg: "error selecting team", backgroundColor: Colors.black,
+          textColor: Colors.white,);
+      }
+
+    });
+  }
+
+  Future<String> selectTeam(context) async {
+
+    String url = globals.urlSignUp + "selectteam.php";
+
+    http.post(url, body: {
+
+      "teamID" : selectedTeam.toString(),
+      "sprintID" : home.sprintID.toString(),
+      "callerID" : profile.userID.toString(),
+
+    }).then((http.Response response) async {
+      final int statusCode = response.statusCode;
+
+      if (statusCode != 200 || json == null) {
+        throw new Exception("Error fetching data");
+      }
+
+      var responseArrayDeleteTeam = jsonDecode(response.body);
+      print(responseArrayDeleteTeam);
+
+      var msg = responseArrayDeleteTeam['message'].toString();
+      if(statusCode == 200){
+        if(msg == "Edited Successfully"){
+          team.prTeam.hide();
+          storeCollabData(context);
+          // Fluttertoast.showToast(msg: "removing...", backgroundColor: Colors.black,
+          //   textColor: Colors.white,).whenComplete((){
+          //   Navigator.push(
+          //     context,
+          //     PageRouteBuilder(
+          //       pageBuilder: (c, a1, a2) => EmphatizeSections(),
+          //       transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+          //       transitionDuration: Duration(milliseconds: 300),
+          //     ),
+          //   );
+          // });
+        }else{
+          team.prTeam.hide();
+          Fluttertoast.showToast(msg: "error selecting team", backgroundColor: Colors.black,
+            textColor: Colors.white,);
+        }
+      }
+
+    });
+  }
 
   Future initTask() async {
     Provider.of<CustomViewModel>(context, listen: false)
@@ -93,6 +198,10 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
                         height: 75,
                       ),
                       buildAddMemberWidget(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildNextButton(context),
                       SizedBox(
                         height: MediaQuery.of(context).size.height / 7,
                       ),
@@ -1168,6 +1277,50 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
     );
   }
 
+  Widget buildNextButton(BuildContext context) {
+    return InkWell(
+      onTap: (){
+            print("select team called");
+            setState(() {
+              selectedTeamIdForDeleting = widget.teamid;
+              selectedTeam = widget.teamid;
+            });
+            print("selectedTeam :::: "+selectedTeam.toString());
+            print(selectedTeamIdForDeleting);
+            print(selectedTeam);
+            team.prTeam.show();
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            Fluttertoast.showToast(msg: 'One moment,notifying your team...', backgroundColor: Colors.black, textColor: Colors.white, timeInSecForIosWeb: 5);
+            selectTeam(context);
+      },
+      child: Center(
+        child: Container(
+          height: 50,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 2.6,
+          decoration: BoxDecoration(
+              color: Color(0xff7579cb),
+              borderRadius: BorderRadius.all(Radius.circular(7))
+          ),
+          child: Center(
+            child: Text("Select Team",
+              style: TextStyle(
+                  color: Colors.white, letterSpacing: 1, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   showAlertDialogAddTeamMember(BuildContext context) {
     Widget textField = Theme(
         data: ThemeData(
@@ -1203,6 +1356,40 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
       onTap: () async {
         if (team.formKey2.currentState.validate()) {
           team.prTeam.show();
+          String username = 'dezyit2021@gmail.com';
+          String password = 'Dezyit2021@*#\$';
+
+          var smtpServer = SmtpServer('mail.evyaas.com',username: 'noreply@evyaas.com',password: 'radar1234');
+          //final smtpServer = gmail(username,password);
+
+          final message = Message()
+            ..from = Address('noreply@dezyit.com', 'Design Sprint')
+            ..recipients.addAll(['${team.memberEmailController.text.toString()}'])
+            ..ccRecipients.addAll(['info.gathrr@gmail.com'])
+            ..bccRecipients.add(Address('farmreta@gmail.com'))
+            ..subject = 'You joined a new Team'
+            ..text = ''
+            ..html = "<head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><title>Dezy It</title> <meta name='viewport' content='width=device-width, initial-scale=1.0'/> <style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300&display=swap');</style> <style type='text/css'>a[x-apple-data-detectors] {color: inherit !important;}</style></head> <body style='margin: 0; padding: 0;background: rgb(120, 124, 209);'> <table role='presentation' border='0' cellpadding='0' cellspacing='0' width='100%'> <tr> <td style='padding: 20px 0 30px 0;'> <table align='center' border='0' cellpadding='0' cellspacing='0' width='600' style='border-collapse: collapse; border: 1px solid #cccccc;'> <tr> <td align='center' bgcolor='#302b70' style='padding: 40px 0 30px 0;'> <img src='https://admin.dezyit.com/mobileapp/mailerimages/dezy.gif' alt='Creating Email Magic.' width='300' height='150px;' style='display: block;' /></td></tr> <tr> <td bgcolor='#ffffff' style='padding: 40px 30px 40px 30px;'> <table border='0' cellpadding='0' cellspacing='0' width='100%' style='border-collapse: collapse;'> <tr> <td style='color: #153643; font-family: Arial, sans-serif;'> <h1 style='font-size: 24px; margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>You joined a new Team</h1></td></tr><tr><td style='color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; padding: 20px 0 30px 0;'><p style='margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>You have been added to a new team by ${profile.email}</p></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><a href='http://onelink.to/equmbp' target='_blank' style='text-decoration: none;margin-top: 15px; border-radius: 100px;min-width: 140px;background:rgb(120, 124, 209);padding-top: 15px;padding-bottom: 15px;border:none;outline : none;font-size:14px;color:#fff;text-transform:capitalize;margin: 0 auto;padding-left: 20px;padding-right: 20px;font-family: Nunito Sans, sans-serif;'>Open App</a></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><p style='font-family: Nunito Sans, sans-serif;'>Follow Us.:</p><a href='https://www.facebook.com/DezyIt/' target='_blank'><img src='https://admin.dezyit.com/mobileapp/mailerimages/facebook.png' height='28' width='28' alt='facebook'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://in.pinterest.com/Dezy_It/'><img src='https://admin.dezyit.com/mobileapp/mailerimages/pinterest.png' height='28' width='28' alt='Pinterest'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://twitter.com/dezy_it'><img src='https://admin.dezyit.com/mobileapp/mailerimages/twitter.png' height='28' width='28' alt='Twitter'></a></td></tr></table></td></tr></table></td></tr></table></body>";
+
+          final equivalentMessage = Message()
+            ..from = Address('noreply@dezyit.com', 'Design Sprint')
+            ..recipients.addAll(['${team.memberEmailController.text.toString()}'])
+            ..ccRecipients.addAll(['info.gathrr@gmail.com'])
+            ..bccRecipients.add('farmreta@gmail.com')
+            ..subject = 'You joined a new Team'
+            ..text = ''
+            ..html = "<head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><title>Dezy It</title> <meta name='viewport' content='width=device-width, initial-scale=1.0'/> <style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300&display=swap');</style> <style type='text/css'>a[x-apple-data-detectors] {color: inherit !important;}</style></head> <body style='margin: 0; padding: 0;background: rgb(120, 124, 209);'> <table role='presentation' border='0' cellpadding='0' cellspacing='0' width='100%'> <tr> <td style='padding: 20px 0 30px 0;'> <table align='center' border='0' cellpadding='0' cellspacing='0' width='600' style='border-collapse: collapse; border: 1px solid #cccccc;'> <tr> <td align='center' bgcolor='#302b70' style='padding: 40px 0 30px 0;'> <img src='https://admin.dezyit.com/mobileapp/mailerimages/dezy.gif' alt='Creating Email Magic.' width='300' height='150px;' style='display: block;' /></td></tr> <tr> <td bgcolor='#ffffff' style='padding: 40px 30px 40px 30px;'> <table border='0' cellpadding='0' cellspacing='0' width='100%' style='border-collapse: collapse;'> <tr> <td style='color: #153643; font-family: Arial, sans-serif;'> <h1 style='font-size: 24px; margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>You joined a new Team</h1></td></tr><tr><td style='color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; padding: 20px 0 30px 0;'><p style='margin: 0;text-align: center;font-family: Nunito Sans, sans-serif;'>You have been added to a new team by ${profile.email}</p></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><a href='http://onelink.to/equmbp' target='_blank' style='text-decoration: none;margin-top: 15px; border-radius: 100px;min-width: 140px;background:rgb(120, 124, 209);padding-top: 15px;padding-bottom: 15px;border:none;outline : none;font-size:14px;color:#fff;text-transform:capitalize;margin: 0 auto;padding-left: 20px;padding-right: 20px;font-family: Nunito Sans, sans-serif;'>Open App</a></td></tr><tr><td align='center' style='color: #153643; font-family: Arial, sans-serif;padding-bottom:120px;'><p style='font-family: Nunito Sans, sans-serif;'>Follow Us.:</p><a href='https://www.facebook.com/DezyIt/' target='_blank'><img src='https://admin.dezyit.com/mobileapp/mailerimages/facebook.png' height='28' width='28' alt='facebook'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://in.pinterest.com/Dezy_It/'><img src='https://admin.dezyit.com/mobileapp/mailerimages/pinterest.png' height='28' width='28' alt='Pinterest'></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://twitter.com/dezy_it'><img src='https://admin.dezyit.com/mobileapp/mailerimages/twitter.png' height='28' width='28' alt='Twitter'></a></td></tr></table></td></tr></table></td></tr></table></body>";
+
+
+          //final sendReport2 = await send(equivalentMessage, smtpServer);
+
+          var connection = PersistentConnection(smtpServer);
+
+          await connection.send(message);
+
+          await connection.send(equivalentMessage);
+
+          await connection.close();
 
           Provider.of<CustomViewModel>(context, listen: false)
               .addTeamMember(
@@ -1459,3 +1646,5 @@ class _ManageTeamSeperateState extends State<ManageTeamSeperate> {
     );
   }
 }
+
+var selectedTeamIdForDeleting;

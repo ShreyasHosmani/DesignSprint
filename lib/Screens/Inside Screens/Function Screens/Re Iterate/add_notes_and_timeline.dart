@@ -201,6 +201,7 @@ class _AddNotesAndTimeLinePageViewBuilderState
   void initState() {
     // TODO: implement initState
     super.initState();
+    initLists();
     reiterate.pageIndexNotesAndTimeLine = 0;
     getStoreData(context);
     setState(() {
@@ -324,7 +325,7 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
           .toString(),
       "prototypeID":
       reiterate.selectedPrototypeIdForUploadingNotesAndTimeLine.toString(),
-      "notetext": reiterate.notesController.text,
+      "notetext": reiterate.notesController.text.toString(),
     }).then((http.Response response) async {
       final int statusCode = response.statusCode;
 
@@ -421,7 +422,83 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
               SizedBox(
                 height: 40,
               ),
-              buildNotesArea(context),
+              reiterate.noteUploaded == true
+                  ? Center(
+                child: Container(
+                  height: 148,
+                  width: 302,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xffd4d4d4)),
+                      borderRadius: BorderRadius.all(Radius.circular(7))),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Text(
+                        reiterate.notesController.text.toString(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+                  : InkWell(
+                onTap: (){
+                  reiterate.notesFocus.requestFocus();
+                },
+                child: Center(
+                  child: Container(
+                    width: 302,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          reiterate.addNotes,
+                          style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              )),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        Container(
+                          height: 148,
+                          width: 302,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Color(0xffd4d4d4)),
+                              borderRadius: BorderRadius.all(Radius.circular(7))),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 35, right: 35),
+                            child: new TextFormField(
+                              //autofocus: true,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+                              focusNode: reiterate.notesFocus,
+                              maxLines: 4,
+                              controller: reiterate.notesController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              validator: (val) {
+                                if (val.isEmpty) {
+                                  return hint.bioValidation;
+                                }
+                                return null;
+                              },
+                              onEditingComplete: () {
+                                reiterate.notesFocus.unfocus();
+                                uploadPrototypeNote(context);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -431,7 +508,7 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
                 padding: const EdgeInsets.only(right: 0),
                 child: Align(
                     alignment: Alignment.center,
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: () {
                         print("reiterate.noteUploaded : "+reiterate.noteUploaded.toString());
                         //reiterate.notesFocus.requestFocus();
@@ -1183,59 +1260,64 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
               ),
             ),
           )
-        : Center(
-                child: Container(
-                  width: 302,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        reiterate.addNotes,
-                        style: GoogleFonts.nunitoSans(
-                            textStyle: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                        )),
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Container(
-                        height: 148,
-                        width: 302,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xffd4d4d4)),
-                            borderRadius: BorderRadius.all(Radius.circular(7))),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 35, right: 35),
-                          child: new TextFormField(
-                            autofocus: true,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.done,
-                            focusNode: reiterate.notesFocus,
-                            maxLines: 4,
-                            controller: reiterate.notesController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
+        : GestureDetector(
+            onTap: (){
+              reiterate.notesFocus.requestFocus();
+            },
+          child: Center(
+                  child: Container(
+                    width: 302,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          reiterate.addNotes,
+                          style: GoogleFonts.nunitoSans(
+                              textStyle: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                          )),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        Container(
+                          height: 148,
+                          width: 302,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Color(0xffd4d4d4)),
+                              borderRadius: BorderRadius.all(Radius.circular(7))),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 35, right: 35),
+                            child: new TextFormField(
+                              //autofocus: true,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+                              focusNode: reiterate.notesFocus,
+                              maxLines: 4,
+                              controller: reiterate.notesController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              validator: (val) {
+                                if (val.isEmpty) {
+                                  return hint.bioValidation;
+                                }
+                                return null;
+                              },
+                              onEditingComplete: () {
+                                reiterate.notesFocus.unfocus();
+                                uploadPrototypeNote(context);
+                              },
                             ),
-                            validator: (val) {
-                              if (val.isEmpty) {
-                                return hint.bioValidation;
-                              }
-                              return null;
-                            },
-                            onEditingComplete: () {
-                              reiterate.notesFocus.unfocus();
-                              uploadPrototypeNote(context);
-                            },
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              );
+        );
   }
 
   Widget buildTimeLineArea(BuildContext context) {
@@ -1815,11 +1897,16 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
   Widget buildNextButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print("hey ... ");
+        print("roadMapNotesList : "+reiterate.roadMapNotesList.toString());
         if (reiterate.roadMapNotesList != null) {
+          print("here 1 ...");
             if (reiterate.uploadedTaskList != null) {
+              print("here 2 ...");
               if (reiterate.prototypeAllImagesIdsListOfStatusTwo.last ==
                   reiterate.prototypeAllImagesIdsListOfStatusTwo[
                       reiterate.pageIndexNotesAndTimeLine]) {
+                print("here 3 ...");
                 print("Last index reached, You are a great man ever!");
                 Navigator.push(
                   context,
@@ -1834,14 +1921,17 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
                   ),
                 );
               } else {
+                print("here 4 ...");
                 print("You are a loser bro, try again!");
                 widget.controller.nextPage(
                     duration: Duration(seconds: 1), curve: Curves.easeIn);
               }
             } else {
+              print("here 5 ...");
               commonToast(context, "Please add task");
             }
         } else {
+          print("here 6 ...");
           commonToast(context, "Please add notes1");
         }
       },
@@ -1864,11 +1954,12 @@ class _AddNotesAndTimeLineState extends State<AddNotesAndTimeLine> {
     );
   }
 
-  insertNotes() {
+  Future insertNotes() async {
     setState(() {
       reiterate.noteUploaded = true;
       if (reiterate.pageIndexNotesAndTimeLine == 0) {
-        reiterate.roadMapNotesList.add(reiterate.notesController.text);
+        print("reiterate.notesController.text :::: "+reiterate.notesController.text.toString());
+        reiterate.roadMapNotesList.add(reiterate.notesController.text.toString());
         print(reiterate.roadMapNotesList.toList());
       } else if (reiterate.pageIndexNotesAndTimeLine == 1) {
         reiterate.roadMapNotesList1.add(reiterate.notesController.text);

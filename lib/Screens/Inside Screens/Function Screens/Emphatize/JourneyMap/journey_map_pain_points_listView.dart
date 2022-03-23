@@ -9974,16 +9974,16 @@ class _JourneyMapPainPointsListViewState
 
   showAlertDialog(BuildContext context) {
     // set up the buttons
-   /* Widget cancelButton = FlatButton(
+   Widget cancelButton = FlatButton(
       child: Text(
-        "Cancel",
+        "Don't discard",
         style: GoogleFonts.nunitoSans(),
       ),
       onPressed: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
       },
-    );*/
+    );
     Widget continueButton = FlatButton(
       child: Text(
         "Discard",
@@ -10007,7 +10007,7 @@ class _JourneyMapPainPointsListViewState
         style: GoogleFonts.nunitoSans(),
       ),
       actions: [
-      /*  cancelButton,*/
+        cancelButton,
         continueButton,
       ],
     );
@@ -10197,7 +10197,7 @@ class _JourneyMapPainPointsListViewState
               msg: 'Data saved successfully!',
               backgroundColor: Colors.black,
               textColor: Colors.white);
-          pop(context);  // closing progress dialog
+          //pop(context);  // closing progress dialog
           //pop(context);
 
           // Navigator.push(
